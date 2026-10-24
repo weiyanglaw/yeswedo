@@ -1,18 +1,18 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>德威陽｜有法度 YES, WE DO!</title><style>
-*{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;background:#c4eaff;color:#4b3650}button{font:inherit;cursor:pointer}#top{position:fixed;top:8px;left:8px;right:8px;z-index:8;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}#brand{pointer-events:auto;background:#fffdf3ef;border:1px solid #e4c987;border-radius:16px;display:flex;align-items:center;gap:8px;padding:6px 10px;box-shadow:0 4px 20px #7b579522}#brand img{width:49px;height:49px;object-fit:contain}#brand b{font-size:17px}#brand small{display:block;color:#9a7d56;font-size:11px}.buttons{display:flex;gap:5px;pointer-events:auto}.buttons button,.chip{border:1px solid #e4c987;background:#fff9ebeb;color:#5d4763;border-radius:11px;padding:9px;font-size:12px;box-shadow:0 3px 10px #8d6c7b22}#hud{position:fixed;top:83px;left:8px;z-index:7;background:#fffdf3ee;padding:9px 12px;border-radius:12px;font-size:12px;max-width:270px}#status{font-size:11px;color:#94704b;margin-top:4px}#panel{position:fixed;right:8px;top:83px;z-index:7;display:flex;flex-direction:column;gap:5px;max-height:55vh;overflow:auto}#panel button{min-width:98px;text-align:left}#dialog{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);z-index:45;width:min(92vw,490px);background:#fffdf7f5;border:2px solid #e6c278;border-radius:18px;box-shadow:0 10px 35px #45335844;padding:16px;display:none;line-height:1.65}#dialog h3{margin:0 0 7px}#dialog p{margin:0 0 10px;font-size:14px}#dialog button{border:0;border-radius:10px;background:#bb8a36;color:white;padding:7px 14px}#joy{position:fixed;left:20px;bottom:24px;width:112px;height:112px;border-radius:50%;background:#ffffff80;border:2px solid #ffffffc7;z-index:7;touch-action:none;display:grid;place-items:center}#knob{width:49px;height:49px;border-radius:50%;background:#c590c9c9;box-shadow:0 3px 8px #5555;pointer-events:none}#controls{position:fixed;right:12px;bottom:20px;z-index:7;display:flex;flex-direction:column;gap:7px}#controls button{background:#fff9e8ee;border:1px solid #e5c98a;border-radius:12px;padding:10px;font-size:13px}#hint{position:fixed;bottom:3px;left:150px;right:110px;z-index:7;text-align:center;font-size:10px;color:#4b4d67;text-shadow:0 1px white}a{color:#85621d}@media(max-width:420px){#brand b{font-size:14px}#brand img{width:39px;height:39px}#panel button{min-width:84px;font-size:11px;padding:7px}#hud{max-width:185px}#hint{display:none}}#creator{position:fixed;inset:0;z-index:100;background:#312b4d9c;display:flex;align-items:center;justify-content:center;padding:18px}#creatorCard{width:min(94vw,410px);background:#fffaf0;border:2px solid #d9b46c;border-radius:24px;padding:22px;text-align:center;box-shadow:0 15px 60px #25203766}#creatorCard h2{margin:0 0 10px}#creatorCard p{font-size:13px;line-height:1.6}#creatorCard label{display:block;text-align:left;margin:13px 0 5px;font-weight:600}#creatorCard input,#creatorCard select{width:100%;padding:12px;border:1px solid #d7bc91;border-radius:10px;font:inherit;background:white}#creatorCard button{margin-top:18px;width:100%;border:0;border-radius:12px;padding:13px;background:#a77735;color:white;font-weight:700}#creatorCard .preview{font-size:45px;margin:12px}#creator{padding:10px}#creatorCard{width:min(96vw,820px);max-height:94dvh;display:flex;flex-direction:column;padding:14px;overflow:hidden}#creatorCard h2{font-size:19px;margin:0 0 3px}#creatorCard>p{margin:0 0 8px}#creatorCard .creatorLayout{display:grid;grid-template-columns:minmax(125px,0.85fr) minmax(170px,1.15fr);gap:12px;min-height:0;flex:1;text-align:left}#creatorCard .previewPane{background:linear-gradient(#d8efff,#fff3df);border-radius:16px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch}#creatorCard #avatarCanvas{width:100%!important;height:auto!important;max-width:240px!important;aspect-ratio:1;object-fit:contain;margin:5px auto!important}#creatorCard .previewCaption{font-weight:700;font-size:13px;text-align:center}#creatorCard .previewHint{font-size:11px;color:#77677a;text-align:center}#creatorCard .optionsPane{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 7px 8px 0}#creatorCard .optionsPane label{font-size:12px;margin:9px 0 4px}#creatorCard .optionsPane input,#creatorCard .optionsPane select{font-size:13px;padding:8px;min-height:36px}#creatorCard .optionsPane input[type=color]{height:35px!important}#creatorCard #startExplore{flex-shrink:0;margin-top:10px;padding:12px}@media(max-width:440px){#creatorCard{width:98vw;padding:10px;border-radius:17px}#creatorCard .creatorLayout{grid-template-columns:minmax(115px,0.86fr) minmax(160px,1.14fr);gap:8px}#creatorCard .previewPane{padding:5px 2px}#creatorCard .previewHint{font-size:10px}#creatorCard .optionsPane{padding-right:2px}#creatorCard h2{font-size:17px}} #panel{display:none!important}#creator{display:flex}#creator.finished{display:none!important}#creatorCard{position:relative}#creatorCard .optionsPane{overflow-y:auto!important}#creatorCard .previewPane{position:sticky;top:0} </style></head><body>
-<div id="creator"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><label for="visitorName">角色名稱</label><input id="visitorName" maxlength="14" placeholder="法律探險家" value="法律探險家"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"><label for="avatarTopStyle">上衣款式</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option><option value="shirt">襯衫</option><option value="blazer">西裝外套</option></select><label for="avatarOutfit">下半身／連身服裝</label><select id="avatarOutfit"><option value="pants">上衣＋長褲</option><option value="shorts">上衣＋短褲</option><option value="skirt">上衣＋裙子</option><option value="dress">洋裝</option><option value="longskirt">上衣＋長裙</option><option value="suitpants">上衣／西裝外套＋西裝褲</option><option value="suit">整套西裝</option></select><label for="avatarTopColor">上衣／洋裝顏色</label><input id="avatarTopColor" type="color" value="#6c89ca" style="width:100%;height:40px;padding:2px"><label for="avatarBottomColor">褲子／裙子顏色</label><input id="avatarBottomColor" type="color" value="#374b75" style="width:100%;height:40px;padding:2px"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
+*{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;background:#c4eaff;color:#4b3650}button{font:inherit;cursor:pointer}#top{position:fixed;top:8px;left:8px;right:8px;z-index:8;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}#brand{pointer-events:auto;background:#fffdf3ef;border:1px solid #e4c987;border-radius:16px;display:flex;align-items:center;gap:8px;padding:6px 10px;box-shadow:0 4px 20px #7b579522}#brand img{width:49px;height:49px;object-fit:contain}#brand b{font-size:17px}#brand small{display:block;color:#9a7d56;font-size:11px}.buttons{display:flex;gap:5px;pointer-events:auto}.buttons button,.chip{border:1px solid #e4c987;background:#fff9ebeb;color:#5d4763;border-radius:11px;padding:9px;font-size:12px;box-shadow:0 3px 10px #8d6c7b22}#hud{position:fixed;top:83px;left:8px;z-index:7;background:#fffdf3ee;padding:9px 12px;border-radius:12px;font-size:12px;max-width:270px}#status{font-size:11px;color:#94704b;margin-top:4px}#panel{position:fixed;right:8px;top:83px;z-index:7;display:flex;flex-direction:column;gap:5px;max-height:55vh;overflow:auto}#panel button{min-width:98px;text-align:left}#dialog{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);z-index:45;width:min(92vw,490px);background:#fffdf7f5;border:2px solid #e6c278;border-radius:18px;box-shadow:0 10px 35px #45335844;padding:16px;display:none;line-height:1.65}#dialog h3{margin:0 0 7px}#dialog p{margin:0 0 10px;font-size:14px}#dialog button{border:0;border-radius:10px;background:#bb8a36;color:white;padding:7px 14px}#joy{position:fixed;left:20px;bottom:24px;width:112px;height:112px;border-radius:50%;background:#ffffff80;border:2px solid #ffffffc7;z-index:7;touch-action:none;display:grid;place-items:center}#knob{width:49px;height:49px;border-radius:50%;background:#c590c9c9;box-shadow:0 3px 8px #5555;pointer-events:none}#controls{position:fixed;right:12px;bottom:20px;z-index:7;display:flex;flex-direction:column;gap:7px}#controls button{background:#fff9e8ee;border:1px solid #e5c98a;border-radius:12px;padding:10px;font-size:13px}#hint{position:fixed;bottom:3px;left:150px;right:110px;z-index:7;text-align:center;font-size:10px;color:#4b4d67;text-shadow:0 1px white}a{color:#85621d}@media(max-width:420px){#brand b{font-size:14px}#brand img{width:39px;height:39px}#panel button{min-width:84px;font-size:11px;padding:7px}#hud{max-width:185px}#hint{display:none}}#creator{position:fixed;inset:0;z-index:100;background:#312b4d9c;display:flex;align-items:center;justify-content:center;padding:18px}#creatorCard{width:min(94vw,410px);background:#fffaf0;border:2px solid #d9b46c;border-radius:24px;padding:22px;text-align:center;box-shadow:0 15px 60px #25203766}#creatorCard h2{margin:0 0 10px}#creatorCard p{font-size:13px;line-height:1.6}#creatorCard label{display:block;text-align:left;margin:13px 0 5px;font-weight:600}#creatorCard input,#creatorCard select{width:100%;padding:12px;border:1px solid #d7bc91;border-radius:10px;font:inherit;background:white}#creatorCard button{margin-top:18px;width:100%;border:0;border-radius:12px;padding:13px;background:#a77735;color:white;font-weight:700}#creatorCard .preview{font-size:45px;margin:12px}#creator{padding:10px}#creatorCard{width:min(96vw,820px);max-height:94dvh;display:flex;flex-direction:column;padding:14px;overflow:hidden}#creatorCard h2{font-size:19px;margin:0 0 3px}#creatorCard>p{margin:0 0 8px}#creatorCard .creatorLayout{display:grid;grid-template-columns:minmax(125px,0.85fr) minmax(170px,1.15fr);gap:12px;min-height:0;flex:1;text-align:left}#creatorCard .previewPane{background:linear-gradient(#d8efff,#fff3df);border-radius:16px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch}#creatorCard #avatarCanvas{width:100%!important;height:auto!important;max-width:240px!important;aspect-ratio:1;object-fit:contain;margin:5px auto!important}#creatorCard .previewCaption{font-weight:700;font-size:13px;text-align:center}#creatorCard .previewHint{font-size:11px;color:#77677a;text-align:center}#creatorCard .optionsPane{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 7px 8px 0}#creatorCard .optionsPane label{font-size:12px;margin:9px 0 4px}#creatorCard .optionsPane input,#creatorCard .optionsPane select{font-size:13px;padding:8px;min-height:36px}#creatorCard .optionsPane input[type=color]{height:35px!important}#creatorCard #startExplore{flex-shrink:0;margin-top:10px;padding:12px}@media(max-width:440px){#creatorCard{width:98vw;padding:10px;border-radius:17px}#creatorCard .creatorLayout{grid-template-columns:minmax(115px,0.86fr) minmax(160px,1.14fr);gap:8px}#creatorCard .previewPane{padding:5px 2px}#creatorCard .previewHint{font-size:10px}#creatorCard .optionsPane{padding-right:2px}#creatorCard h2{font-size:17px}} #panel{display:none!important}#creator{display:flex}#creator.finished{display:none!important}#creatorCard{position:relative}#creatorCard .optionsPane{overflow-y:auto!important}#creatorCard .previewPane{position:sticky;top:0} #creatorCard{max-height:94dvh;overflow-y:auto;overscroll-behavior:contain}#creatorCard .wardrobeHeading{margin-top:17px;padding:11px;background:#f3e5cf;border-radius:12px;font-weight:800;color:#73533b}#creatorCard .wearTip{text-align:left;font-size:10px;color:#917458;margin-top:3px}#creatorCard select{background:#fffdf7;border:1px solid #c9a77d;border-radius:10px}#creatorCard label{color:#58433e}</style></head><body>
+<div id="creator"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><label for="visitorName">角色名稱</label><input id="visitorName" maxlength="14" placeholder="法律探險家" value="法律探險家"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"><div class="wardrobeHeading">🎀 自由換裝｜每件衣服獨立搭配</div><label for="avatarTopStyle">① 上衣（單獨選擇）</label><select id="avatarTopStyle"><option value="tshirt">短袖 T 恤</option><option value="longsleeve">長袖 T 恤</option><option value="shirt">襯衫</option><option value="polo">Polo 衫</option><option value="hoodie">帽 T</option><option value="knit">針織衫</option></select><div class="wearTip" id="tip_avatarTopStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarBottomStyle">② 下半身（單獨選擇）</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="jeans">牛仔長褲</option><option value="casual">休閒長褲</option><option value="suitpants">西裝褲</option><option value="pleated">百褶短裙</option><option value="longskirt">長裙</option></select><div class="wearTip" id="tip_avatarBottomStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarJacket">③ 外套（可選擇不穿）</label><select id="avatarJacket"><option value="none">不穿外套</option><option value="blazer">西裝外套</option><option value="cardigan">針織外套</option><option value="denim">牛仔外套</option><option value="ziphood">連帽外套</option><option value="trench">風衣</option></select><div class="wearTip" id="tip_avatarJacket">選擇款式後，3D 人物會直接更換造型</div><label for="avatarOnepiece">④ 連身服裝（會取代上衣與下半身）</label><select id="avatarOnepiece"><option value="none">不穿連身服裝</option><option value="casualdress">休閒洋裝</option><option value="princess">公主洋裝</option><option value="shirtdress">襯衫洋裝</option><option value="formaldress">正式洋裝</option><option value="jumpsuit">連身褲</option></select><div class="wearTip" id="tip_avatarOnepiece">選擇款式後，3D 人物會直接更換造型</div><label for="avatarShoes">⑤ 鞋子</label><select id="avatarShoes"><option value="sneakers">白色球鞋</option><option value="casualshoes">休閒鞋</option><option value="leather">皮鞋</option><option value="maryjane">瑪莉珍鞋</option><option value="boots">短靴</option><option value="sandals">涼鞋</option></select><div class="wearTip" id="tip_avatarShoes">選擇款式後，3D 人物會直接更換造型</div><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca" style="width:100%;height:40px;padding:2px"><label for="avatarBottomColor">褲子／裙子顏色</label><input id="avatarBottomColor" type="color" value="#374b75" style="width:100%;height:40px;padding:2px"><label for="avatarJacketColor">外套顏色</label><input id="avatarJacketColor" type="color" value="#8e6580" style="width:100%;height:40px;padding:2px"><label for="avatarDressColor">連身服裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8" style="width:100%;height:40px;padding:2px"><label for="avatarShoeColor">鞋子顏色</label><input id="avatarShoeColor" type="color" value="#f7f2e7" style="width:100%;height:40px;padding:2px"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
 <div id="dialog"><h3 id="dialogTitle"></h3><p id="dialogText"></p><button id="next">下一則／關閉</button></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 拖曳旋轉視角 · 點人物可互動 · 首次載入需等候</div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script><script>
 /* Role creation must remain usable even if a 3D island model fails to load. */
 (()=>{
 const $=id=>document.getElementById(id);
-const fields=['avatarGender','avatarSkin','avatarHair','avatarHairColor','avatarTopStyle','avatarOutfit','avatarTopColor','avatarBottomColor'];
+const fields=['avatarGender','avatarSkin','avatarHair','avatarHairColor','avatarTopStyle','avatarBottomStyle','avatarJacket','avatarOnepiece','avatarShoes','avatarTopColor','avatarBottomColor','avatarJacketColor','avatarDressColor','avatarShoeColor'];
 function update(){drawAvatar();try{window.weiyangRefreshAvatar?.()}catch(err){console.warn('3D 更新失敗',err)}}
 const canvas=$('avatarCanvas'),ctx=canvas.getContext('2d');
 function drawAvatar(){
  if(!ctx)return;
- const g=$('avatarGender').value, hair=$('avatarHair').value,skin=$('avatarSkin').value,hc=$('avatarHairColor').value,outfit=$('avatarOutfit').value,top=$('avatarTopColor').value,bottom=$('avatarBottomColor').value;
+ const g=$('avatarGender').value, hair=$('avatarHair').value,skin=$('avatarSkin').value,hc=$('avatarHairColor').value,outfit=$('avatarBottomStyle').value,onepiece=$('avatarOnepiece').value,top=$('avatarTopColor').value,bottom=$('avatarBottomColor').value;
  const w=canvas.width=320,h=canvas.height=380;ctx.clearRect(0,0,w,h);
  const ellipse=(x,y,rx,ry,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill()};
  const rect=(x,y,ww,hh,c,r=8)=>{ctx.fillStyle=c;ctx.beginPath();ctx.roundRect(x,y,ww,hh,r);ctx.fill()};
@@ -28,8 +28,8 @@ function drawAvatar(){
  ellipse(91,266,18,49,top);ellipse(229,266,18,49,top);
  ellipse(91,303,15,19,skin);ellipse(229,303,15,19,skin);
  ellipse(160,260,61,68,top);
- if(outfit==='dress'){ctx.fillStyle=top;ctx.beginPath();ctx.moveTo(120,257);ctx.lineTo(200,257);ctx.lineTo(231,329);ctx.lineTo(90,329);ctx.closePath();ctx.fill()}
- else if(outfit==='skirt'||outfit==='longskirt'){ctx.fillStyle=bottom;ctx.beginPath();ctx.moveTo(120,280);ctx.lineTo(200,280);ctx.lineTo(222,outfit==='longskirt'?340:317);ctx.lineTo(99,outfit==='longskirt'?340:317);ctx.closePath();ctx.fill()}
+ if(onepiece!=='none'&&onepiece!=='jumpsuit'){ctx.fillStyle=top;ctx.beginPath();ctx.moveTo(120,257);ctx.lineTo(200,257);ctx.lineTo(231,329);ctx.lineTo(90,329);ctx.closePath();ctx.fill()}
+ else if(outfit==='pleated'||outfit==='longskirt'){ctx.fillStyle=bottom;ctx.beginPath();ctx.moveTo(120,280);ctx.lineTo(200,280);ctx.lineTo(222,outfit==='longskirt'?340:317);ctx.lineTo(99,outfit==='longskirt'?340:317);ctx.closePath();ctx.fill()}
  else {rect(113,285,43,outfit==='shorts'?31:54,bottom,9);rect(165,285,43,outfit==='shorts'?31:54,bottom,9)}
  // big head
  ellipse(160,147,88,93,skin);
@@ -54,7 +54,7 @@ function enterIsland(){
  const chosen=industry.value, other=$('otherIndustry').value.trim();
  if(!chosen){alert('請選擇職業類別（也可以選擇不願透露）');industry.focus();return}
  if(chosen==='其他'&&!other){alert('請填寫您的職業或產業');$('otherIndustry').focus();return}
- const profile={name:$('visitorName').value.trim()||'法律探險家',industry:chosen==='其他'?'其他：'+other:chosen,gender:$('avatarGender').value,skin:$('avatarSkin').value,hair:$('avatarHair').value,hairColor:$('avatarHairColor').value,topStyle:$('avatarTopStyle').value,outfit:$('avatarOutfit').value,top:$('avatarTopColor').value,bottom:$('avatarBottomColor').value};
+ const profile={name:$('visitorName').value.trim()||'法律探險家',industry:chosen==='其他'?'其他：'+other:chosen,gender:$('avatarGender').value,skin:$('avatarSkin').value,hair:$('avatarHair').value,hairColor:$('avatarHairColor').value,topStyle:$('avatarTopStyle').value,bottomStyle:$('avatarBottomStyle').value,jacket:$('avatarJacket').value,onepiece:$('avatarOnepiece').value,shoes:$('avatarShoes').value,top:$('avatarTopColor').value,bottom:$('avatarBottomColor').value,jacketColor:$('avatarJacketColor').value,dressColor:$('avatarDressColor').value,shoeColor:$('avatarShoeColor').value};
  try{localStorage.setItem('weiyangVisitorProfile',JSON.stringify(profile))}catch(err){}
  $('creator').style.display='none';$('creator').classList.add('finished');
  $('where').textContent='🏰 '+profile.name+'｜德威陽城堡';
@@ -177,8 +177,11 @@ function makeChibi(settings){
  const add=(geometry,material,x,y,z,sx=1,sy=1,sz=1)=>{const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);g.add(m);return m};
  const ball=new THREE.SphereGeometry(1,20,16);
  // Large head and tiny body: deliberately toy-like proportions.
- add(ball,skinMat,0,1.74,0,0.58,0.57,0.51);
- add(ball,hairMat,0,2.08,-.12,.60,.34,.52);
+ add(ball,skinMat,0,1.76,0,.66,.64,.57);
+ add(ball,skinMat,-.43,1.54,.26,.24,.20,.28);add(ball,skinMat,.43,1.54,.26,.24,.20,.28);
+ add(ball,hairMat,0,2.13,-.13,.68,.38,.59);
+ // Sculpted fringe tufts instead of a flat hair cap.
+ for(const [x,y,z,r] of [[-.42,2.18,.34,.23],[-.16,2.22,.43,.22],[.12,2.20,.44,.21],[.39,2.17,.35,.22]])add(ball,hairMat,x,y,z,r,.18,.20);
  const female=settings.gender==='female';
  if(settings.hair==='bob'||settings.hair==='long'||settings.hair==='ponytail'||settings.hair==='twintail'){
   for(const x of [-.51,.51])add(ball,hairMat,x,1.69,-.10,.16,settings.hair==='long'?.62:.36,.34);
@@ -195,39 +198,88 @@ function makeChibi(settings){
  if(settings.hair==='curly')for(let i=0;i<11;i++){const angle=i/11*Math.PI*2;add(ball,hairMat,Math.cos(angle)*.52,2.05+Math.sin(angle)*.22,-.08,.20,.22,.20)}
  // Fringe, eyes, blush, small smiling mouth. Face points toward positive Z.
  for(const x of [-.23,.23]){
-  add(ball,whiteMat,x,1.78,.462,.132,.17,.055);
-  add(ball,eyeMat,x,1.77,.512,.082,.116,.042);
-  add(ball,pinkMat,x*1.56,1.60,.455,.12,.065,.035);
+  add(ball,mat('#45353d'),x,1.82,.523,.167,.207,.069);
+  add(ball,whiteMat,x,1.83,.579,.142,.174,.044);
+  add(ball,eyeMat,x,1.81,.614,.112,.150,.035);
+  add(ball,whiteMat,x-.040,1.882,.648,.047,.061,.018);
+  add(ball,whiteMat,x+.047,1.756,.648,.021,.028,.014);
+  add(ball,pinkMat,x*1.74,1.57,.477,.135,.062,.029);
  }
- add(ball,mat('#9e575e'),0,1.52,.50,.09,.025,.025);
+ add(ball,mat('#c77b78'),0,1.58,.565,.038,.026,.021);
+ const smile=new THREE.Mesh(new THREE.TorusGeometry(.105,.016,6,18,Math.PI),mat('#98545b'));smile.position.set(0,1.49,.567);smile.rotation.z=Math.PI;g.add(smile);
+ for(const x of [-.23,.23])add(ball,mat('#674a47'),x,2.045,.532,.11,.022,.019);
  if(female){add(ball,mat('#ffe3ee'),.46,2.12,.20,.11,.09,.07);add(ball,mat('#fff9ff'),.46,2.12,.27,.045,.045,.025);}
- const dress=settings.outfit==='dress',suit=settings.outfit==='suit', skirt=['skirt','longskirt'].includes(settings.outfit), blazer=settings.topStyle==='blazer'||suit, longSleeve=['longsleeve','shirt','blazer'].includes(settings.topStyle)||suit;
- add(ball,topMat,0,.96,0,.38,.47,.29);
+
+ // Five independent wardrobe categories; silhouettes change rather than only their color.
+ const topStyle=settings.topStyle,bottomStyle=settings.bottomStyle,jacket=settings.jacket,onepiece=settings.onepiece,shoes=settings.shoes;
+ const full=onepiece!=='none', isDress=['casualdress','princess','shirtdress','formaldress'].includes(onepiece), isJump=onepiece==='jumpsuit';
+ const jacketMat=mat(settings.jacketColor),dressMat=mat(settings.dressColor),shoeColorMat=mat(settings.shoeColor);
+ const darkTrim=mat('#453e51'),lightTrim=mat('#fff5e5'),metalTrim=mat('#d4b579');
+ const cyl=(topR,bottomR,h,m,x,y,z,n=18)=>add(new THREE.CylinderGeometry(topR,bottomR,h,n),m,x,y,z);
+ // Separate legs and shoes with visually distinct toe/shaft profiles.
+ for(const x of [-.19,.19]){
+   add(ball,skinMat,x,.36,0,.125,.23,.13);
+   if(shoes==='boots'){add(ball,shoeColorMat,x,.21,.01,.17,.24,.18);add(ball,shoeColorMat,x,.105,.16,.245,.12,.34)}
+   else if(shoes==='sandals'){add(ball,skinMat,x,.115,.12,.22,.12,.31);add(ball,shoeColorMat,x,.07,.14,.24,.052,.32);add(ball,shoeColorMat,x,.14,.31,.18,.035,.035)}
+   else {add(ball,shoeColorMat,x,.13,.13,shoes==='leather'?.22:.245,.14,shoes==='maryjane'?.27:.34);if(shoes==='sneakers')add(ball,lightTrim,x,.105,.40,.15,.04,.025);if(shoes==='maryjane')add(ball,darkTrim,x,.19,.31,.16,.032,.028);if(shoes==='casualshoes')add(ball,metalTrim,x,.13,.38,.14,.03,.02)}
+ }
+ // Top is physically different for each style: sleeve length, collar, hood and knit texture.
+ const bodyMat=full?dressMat:topMat;
+ add(ball,bodyMat,0,.98,0,.345,.39,.30);
+ add(ball,skinMat,0,1.33,.05,.14,.14,.13);
  for(const x of [-.47,.47]){
-  add(ball,topMat,x,1.05,0,.17,.21,.19);
-  add(ball,longSleeve?topMat:skinMat,x*1.17,.78,0,.12,.24,.12);
-  add(ball,skinMat,x*1.17,.56,.01,.13,.13,.13);
+   const longSleeve=full||['longsleeve','shirt','hoodie','knit'].includes(topStyle);
+   add(ball,bodyMat,x,1.04,0,.17,longSleeve?.31:.19,.19);
+   add(ball,longSleeve?bodyMat:skinMat,x*1.16,.78,0,.12,longSleeve?.22:.24,.13);
+   add(ball,skinMat,x*1.16,.56,.01,.13,.13,.13);
  }
- if(blazer){for(const x of [-.15,.15])add(ball,mat('#f6e8d5'),x,1.06,.28,.09,.32,.03);for(const x of [-.31,.31])add(ball,topMat,x,1.02,.22,.13,.36,.10);add(ball,mat('#cda76e'),0,.89,.36,.038,.038,.018);}
- if(settings.topStyle==='shirt'&&!dress){add(ball,mat('#fff7e9'),0,1.18,.27,.14,.20,.035);}
- if(dress||skirt){
-  const h=settings.outfit==='longskirt'?.70:.46;
-  const geo=new THREE.CylinderGeometry(.30,.55,h,20,1);
-  add(geo,dress?topMat:bottomMat,0,.69-(h-.46)/2,0);
+ if(!full){
+   if(topStyle==='shirt'){for(const x of [-.10,.10])add(ball,lightTrim,x,1.21,.278,.12,.14,.03);for(const y of [.90,1.02,1.14])add(ball,darkTrim,0,y,.306,.016,.016,.014)}
+   if(topStyle==='polo'){for(const x of [-.10,.10])add(ball,lightTrim,x,1.23,.26,.10,.085,.025);add(ball,darkTrim,0,1.13,.309,.017,.07,.016)}
+   if(topStyle==='hoodie'){add(ball,bodyMat,0,1.20,-.27,.29,.27,.17);add(ball,bodyMat,0,.82,.30,.23,.14,.06);for(const x of [-.07,.07])add(ball,lightTrim,x,1.19,.30,.012,.13,.015)}
+   if(topStyle==='knit'){for(let k=0;k<6;k++)add(ball,lightTrim,-.25+k*.10,.91,.292,.012,.28,.013);add(ball,lightTrim,0,1.24,.27,.17,.05,.035)}
+   if(topStyle==='longsleeve')for(const x of [-.55,.55])add(ball,lightTrim,x,.64,.01,.13,.035,.13);
+ }
+ if(isDress){
+   const princess=onepiece==='princess',formal=onepiece==='formaldress',shirtDress=onepiece==='shirtdress';
+   const h=princess?.74:formal?.66:.61;
+   cyl(formal?.31:.33,princess?.86:formal?.42:.61,h,dressMat,0,.64,0,princess?28:20);
+   if(princess){add(ball,lightTrim,0,.97,.32,.28,.09,.055);for(let i=0;i<10;i++){const a=i*Math.PI*2/10;add(ball,dressMat,Math.cos(a)*.62,.33,Math.sin(a)*.48,.18,.12,.16)}}
+   if(shirtDress){for(let i=0;i<4;i++)add(ball,darkTrim,0,.98-i*.13,.337,.016,.016,.016);add(ball,lightTrim,0,.70,.37,.30,.05,.025)}
+   if(formal){add(ball,metalTrim,0,.86,.30,.28,.035,.028)}
+ }else if(bottomStyle==='pleated'||bottomStyle==='longskirt'){
+   const h=bottomStyle==='longskirt'?.76:.43;
+   cyl(.30,bottomStyle==='longskirt'?.56:.63,h,bottomMat,0,.69-(h-.43)/2,0,24);
+   if(bottomStyle==='pleated')for(let i=0;i<12;i++){const a=i*Math.PI*2/12;const x=Math.sin(a)*.50,z=Math.cos(a)*.46;const pleat=add(ball,mat(settings.bottom),x,.46,z,.045,.20,.045);}
  }else{
-  for(const x of [-.19,.19])add(ball,bottomMat,x,.55,0,.20,settings.outfit==='shorts'?.21:.38,.23);
+   const short=bottomStyle==='shorts';const wide=bottomStyle==='casual';const tailored=bottomStyle==='suitpants';
+   for(const x of [-.19,.19]){
+     add(ball,bottomMat,x,short?.70:.51,0,wide?.245:tailored?.16:.19,short?.21:.38,.22);
+     if(bottomStyle==='jeans'){add(ball,lightTrim,x,.68,.218,.012,.16,.008);add(ball,metalTrim,x,.84,.22,.025,.018,.014)}
+     if(tailored)add(ball,darkTrim,x,.55,.222,.012,.31,.012);
+     if(short)add(ball,lightTrim,x,.55,.18,.18,.035,.018);
+   }
  }
- for(const x of [-.20,.20]){
-  add(ball,skinMat,x,.27,0,.13,.20,.13);
-  add(ball,shoeMat,x,.14,.09,.22,.13,.30);
+ if(isJump){for(const x of [-.19,.19])add(ball,dressMat,x,.52,0,.205,.39,.22);add(ball,metalTrim,0,.91,.305,.32,.045,.027)}
+ // Outerwear layers; long trench and hood create distinctive 3D silhouettes.
+ if(jacket!=='none'){
+   const long=jacket==='trench', hood=jacket==='ziphood',blazer=jacket==='blazer';
+   for(const x of [-.32,.32])add(ball,jacketMat,x,long?.82:.99,.24,.17,long?.55:.38,.10);
+   for(const x of [-.48,.48])add(ball,jacketMat,x,.90,.015,.18,.38,.20);
+   if(blazer){for(const x of [-.15,.15])add(ball,lightTrim,x,1.13,.32,.12,.20,.025);add(ball,metalTrim,0,.88,.36,.028,.028,.017)}
+   if(hood){add(ball,jacketMat,0,1.28,-.28,.31,.27,.19);add(ball,lightTrim,0,.92,.35,.024,.28,.015)}
+   if(jacket==='denim'){for(const x of [-.20,.20])add(ball,lightTrim,x,1.00,.35,.105,.085,.017);for(const x of [-.52,.52])add(ball,lightTrim,x,.67,.10,.13,.035,.13)}
+   if(jacket==='cardigan')for(let i=0;i<4;i++)add(ball,metalTrim,0,.82+i*.10,.37,.014,.014,.014);
+   if(long){for(const x of [-.29,.29])add(ball,jacketMat,x,.46,.20,.19,.28,.10);add(ball,metalTrim,0,.82,.35,.34,.035,.025)}
  }
+
  return g;
 }
-function getAvatarSettings(){return {gender:document.getElementById('avatarGender').value,skin:document.getElementById('avatarSkin').value,hair:document.getElementById('avatarHair').value,hairColor:document.getElementById('avatarHairColor').value,outfit:document.getElementById('avatarOutfit').value,topStyle:document.getElementById('avatarTopStyle').value,top:document.getElementById('avatarTopColor').value,bottom:document.getElementById('avatarBottomColor').value}}
+function getAvatarSettings(){const val=id=>document.getElementById(id).value;return {gender:val('avatarGender'),skin:val('avatarSkin'),hair:val('avatarHair'),hairColor:val('avatarHairColor'),topStyle:val('avatarTopStyle'),bottomStyle:val('avatarBottomStyle'),jacket:val('avatarJacket'),onepiece:val('avatarOnepiece'),shoes:val('avatarShoes'),top:val('avatarTopColor'),bottom:val('avatarBottomColor'),jacketColor:val('avatarJacketColor'),dressColor:val('avatarDressColor'),shoeColor:val('avatarShoeColor')}}
 let avatarBody=null,previewBody=null;
 const previewCanvas=document.createElement('canvas');previewCanvas.width=360;previewCanvas.height=420;previewCanvas.style.height='min(42vh,310px)';previewCanvas.style.width='100%';
-const previewScene=new THREE.Scene();previewScene.background=new THREE.Color('#e5f3ff');
-const previewCamera=new THREE.PerspectiveCamera(36,360/420,.1,100);previewCamera.position.set(3.3,2.4,7.8);previewCamera.lookAt(0,1.23,0);
+const previewScene=new THREE.Scene();previewScene.background=new THREE.Color('#f4e9e3');
+const previewCamera=new THREE.PerspectiveCamera(36,360/420,.1,100);previewCamera.position.set(2.0,2.3,6.4);previewCamera.lookAt(0,1.23,0);
 previewScene.add(new THREE.HemisphereLight(0xffffff,0x91b5d6,3));const previewLight=new THREE.DirectionalLight(0xffffff,3);previewLight.position.set(3,6,5);previewScene.add(previewLight);
 const originalPreview=document.getElementById('avatarCanvas');
 const previewHost=originalPreview.parentElement;
@@ -356,9 +408,9 @@ function animateStaff(dt,elapsed){
 
 
 // Detailed second-level dollhouse office. All desks and objects are genuine 3D geometry.
-const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#dce8ed');
-officeScene.add(new THREE.HemisphereLight(0xffffff,0xa8a0a0,2.4));
-const roomLight=new THREE.DirectionalLight(0xfff0d4,3.0);roomLight.position.set(-6,18,15);officeScene.add(roomLight);
+const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#b5c5ca');
+officeScene.add(new THREE.HemisphereLight(0xfff1de,0x777083,1.85));
+const roomLight=new THREE.DirectionalLight(0xffe8c4,2.6);roomLight.position.set(-6,18,15);officeScene.add(roomLight);
 const roomRoot=new THREE.Group();officeScene.add(roomRoot);
 const roomMat=(c,metalness=0)=>new THREE.MeshStandardMaterial({color:c,roughness:metalness?.34:.76,metalness});
 const roomClickable=[];
@@ -366,12 +418,12 @@ function roomBox(x,y,z,w,h,d,c,group=roomRoot){const o=new THREE.Mesh(new THREE.
 function roomBall(x,y,z,r,c,group=roomRoot){const o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function roomCylinder(x,y,z,rt,rb,h,c,group=roomRoot){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,18),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function registerOffice(obj,zone){obj.userData.officeZone=zone;roomClickable.push(obj);return obj;}
-function officeSign(label,x,y,z,w=3,fg='#3b3546'){
+function officeSign(label,x,y,z,w=3,fg='#3b3546',zone=null){
  const canvas=document.createElement('canvas');canvas.width=768;canvas.height=160;
- const c=canvas.getContext('2d');c.fillStyle='#fff9ef';c.strokeStyle='#c99f62';c.lineWidth=7;c.beginPath();c.roundRect(8,8,752,144,32);c.fill();c.stroke();
+ const c=canvas.getContext('2d');c.fillStyle='#f5e9d7';c.strokeStyle='#c99f62';c.lineWidth=10;c.beginPath();c.roundRect(8,8,752,144,32);c.fill();c.stroke();
  c.fillStyle=fg;c.font='bold 58px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(label,384,83,710);
  const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
- const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));spr.scale.set(w,w*160/768,1);spr.position.set(x,y,z);spr.renderOrder=15;roomRoot.add(spr);return spr;
+ const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));spr.scale.set(w,w*160/768,1);spr.position.set(x,y,z);spr.renderOrder=15;roomRoot.add(spr);if(zone!==null)registerOffice(spr,zone);return spr;
 }
 function screen(x,y,z,zone,color='#2e4b66'){
  const bezel=registerOffice(roomBox(x,y,z,1.08,.76,.12,color),zone);
@@ -423,7 +475,7 @@ function framedArt(x,y,z,w,h,color){
  roomBox(x,y,z+.107,w*.47,h*.08,.02,color);
 }
 function sofa(x,z){
- const cushion=roomBox(x,.55,z,2.45,.60,1.14,'#e3c8b0');cushion.rotation.y=.05;
+ const cushion=roomBox(x,.55,z,2.45,.60,1.14,'#bfa28e');cushion.rotation.y=.05;
  roomBox(x,1.03,z-.53,2.5,1.02,.28,'#b9957d');
  for(const dx of [-1.15,1.15])roomBox(x+dx,.77,z,.27,.76,1.20,'#b9957d');
  for(const dx of [-.58,.58]){const p=roomBox(x+dx,.88,z+.05,1.06,.17,.85,'#f7ead8');p.rotation.z=dx*.012;}
@@ -438,12 +490,12 @@ function plant(x,z){
  }
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
-roomBox(0,-.24,0,27,.48,22,'#c8a782');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#f3e7d7');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#e8dccc');
-roomBox(13.3,3.7,0,.40,7.4,22,'#e8dccc');
-for(let x=-12.5;x<=12.5;x+=1.8)roomBox(x,.009,0,.022,.016,21.6,'#b79776');
-for(let z=-9.7;z<=9.7;z+=3.5)roomBox(0,.012,z,26,.012,.018,'#b79776');
+roomBox(0,-.24,0,27,.48,22,'#9d7959');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#d8c3a9');
+roomBox(-13.3,3.7,0,.40,7.4,22,'#c6ad94');
+roomBox(13.3,3.7,0,.40,7.4,22,'#c6ad94');
+for(let x=-12.5;x<=12.5;x+=1.8)roomBox(x,.009,0,.022,.016,21.6,'#80644e');
+for(let z=-9.7;z<=9.7;z+=3.5)roomBox(0,.012,z,26,.012,.018,'#80644e');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 for(const x of [-8,0,8]){
@@ -453,30 +505,60 @@ for(const x of [-8,0,8]){
 // Official user-supplied logo, used as an unchanged image on the back brand wall.
 const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.3,4.3),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('official-logo.png'),side:THREE.DoubleSide})),0);
 logoOffice.position.set(0,4.4,-10.51);roomRoot.add(logoOffice);
-officeSign('點擊 Logo｜事務所介紹',0,1.98,-10.1,4.2);
+officeSign('👆 點我｜認識德威陽國際法律事務所',0,1.98,-10.1,5.5,'#3b3546',0);
+// Executive suite: distinguished from the staff workstations by dark walnut, brass,
+// a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
+roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#51443d');
+roomBox(-8.45,.073,-5.8,8.15,.027,7.3,'#846d5b');
+for(const x of [-12.4,-4.48]){
+ roomCylinder(x,2.0,-2.0,.09,.09,4.0,'#b58b54');
+ const panel=roomBox(x,2.20,-2.0,.11,2.75,1.4,'#a4afb0');
+ panel.material.transparent=true;panel.material.opacity=.35;
+}
+roomBox(-8.4,5.7,-9.8,8.7,.15,.35,'#7e5a3d');
+for(const x of [-10.6,-8.4,-6.2]){
+ roomCylinder(x,5.3,-6.5,.34,.43,.18,'#d2b47c');
+ roomBall(x,5.08,-6.5,.22,'#ffe6b2');
+}
+// Gold-edged executive wall panels and awards.
+for(const x of [-10.7,-5.9]){
+ roomBox(x,3.9,-10.40,1.85,2.5,.10,'#604d43');
+ roomBox(x,3.9,-10.31,1.63,2.25,.04,'#a68d70');
+ roomBox(x,3.9,-10.27,1.48,2.08,.025,'#e4d1b5');
+}
+// Executive visitor chairs and an elegant meeting coffee table.
+for(const x of [-10.3,-6.5]){
+ roomCylinder(x,.54,-1.45,.55,.52,.24,'#394a55');
+ roomBox(x,1.08,-1.81,.98,.95,.23,'#344651');
+ roomCylinder(x,.25,-1.45,.10,.16,.45,'#ad895d');
+}
+roomCylinder(-8.4,.42,-1.7,.63,.68,.11,'#8d6447');
+roomCylinder(-8.4,.31,-1.7,.14,.14,.55,'#b99a64');
 // Lawyer desk at back left, with certificates and books.
-desk(-8.4,-5.0,4.5,'#775039',1);elegantDeskDetails(-8.4,-5,4.5,'#79573e');
+desk(-8.4,-5.0,5.2,'#4b3028',5);elegantDeskDetails(-8.4,-5,5.2,'#50362b');
+roomBox(-8.4,1.17,-4.2,4.95,.07,.08,'#d2ad71');
+roomBox(-8.4,.82,-4.14,4.75,.08,.10,'#b99259');
 shelf(-11.6,-8.6,2.4);
 roomBox(-7.8,4.1,-10.49,1.3,1.65,.13,'#a47a4c');
 roomBox(-7.8,4.1,-10.39,1.05,1.40,.04,'#f9f5e9');
-officeSign('林柏均律師｜辦公桌',-8.2,3.2,-4.4,4.1);
+officeSign('👑 林柏均律師｜所長辦公室　點擊介紹',-8.2,3.7,-3.8,5.4,5);
 plant(-5.2,-7.7);
 // Three individual, decorated staff desks along the right, with clear labels.
-desk(5.0,-6.2,3.05,'#e9d5bd',1);elegantDeskDetails(5,-6.2,3.05,'#f2d8c4');
-officeSign('夢奇奇飼養者｜辦公桌',5.0,3.1,-5.9,4.3);
+desk(5.0,-6.2,3.05,'#c6a98d',6);elegantDeskDetails(5,-6.2,3.05,'#f2d8c4');
+officeSign('👆 夢奇奇飼養者｜點擊介紹',5.0,3.1,-5.9,4.6,'#3b3546',6);
 roomBall(6.15,1.28,-5.7,.20,'#f4b4c6');
-desk(10.0,-5.4,3.05,'#c3a996',1);elegantDeskDetails(10,-5.4,3.05,'#aa8c78');screen(10.8,1.61,-5.75,1);
-officeSign('哈姆太郎｜辦公桌',10.0,3.1,-5.0,3.9);
+desk(10.0,-5.4,3.05,'#a68b78',7);elegantDeskDetails(10,-5.4,3.05,'#aa8c78');screen(10.8,1.61,-5.75,7);
+officeSign('👆 哈姆太郎｜點擊介紹',10.0,3.1,-5.0,4.1,'#3b3546',7);
 roomBall(11.1,1.28,-5.0,.21,'#e6b46a');
-desk(9.1,1.1,3.25,'#d9c0ae',1);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
-officeSign('薪水掌門人｜辦公桌',9.1,3.1,1.5,4.2);
+desk(9.1,1.1,3.25,'#b89d8c',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
+officeSign('👆 薪水掌門人｜點擊介紹',9.1,3.1,1.5,4.5,'#3b3546',8);
 roomBox(10.15,1.2,1.3,.5,.13,.40,'#efb7c8');
 // Curved reception desk with marble counter and gold trim.
-const reception=registerOffice(roomCylinder(0,1.05,4.7,2.45,2.45,1.75,'#f1e8dd'),2);
+const reception=registerOffice(roomCylinder(0,1.05,4.7,2.45,2.45,1.75,'#d9c5ad'),2);
 reception.scale.set(1.42,1,.48);
 roomCylinder(0,1.99,4.7,3.45,3.45,.18,'#c9a267').scale.set(1,.99,.38);
 screen(0,2.58,4.43,2);
-officeSign('接待櫃檯',0,3.55,4.6,3.5);
+officeSign('👆 接待櫃檯｜諮詢與聯絡',0,3.55,4.6,4.4,'#3b3546',2);
 plant(-4.3,5.3);plant(4.3,5.3);
 // Comic production workstation: monitor is the IG link trigger.
 desk(-8.0,2.3,4.7,'#b98d68',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
@@ -529,7 +611,11 @@ const zones=[
  {name:'律師與員工辦公區',text:['林柏均律師｜台灣律師、紐約州律師；Emory University LL.M.、University of La Verne MBA。','夢奇奇飼養者、哈姆太郎與薪水掌門人都有自己的辦公桌；室內由夢奇奇帶領參觀。']},
  {name:'櫃檯接待',text:['歡迎來到德威陽國際法律事務所！','法律諮詢及聯繫方式：LINE @wylaw；官網 weiandyang.com。']},
  {name:'德威陽漫畫製作區',text:['這裡是《德威陽｜有法度》與《事務所今天又怎麼了？》漫畫製作區。','點擊下方 Instagram 連結即可閱讀漫畫系列。']},
- {name:'夢奇奇飼養者',text:['歡迎來到德威陽的辦公室！我是夢奇奇飼養者。','你可以點擊牆上的官方 Logo、每個人的辦公桌、接待櫃檯，還有漫畫電腦！','想看漫畫？到左邊的漫畫製作區點擊電腦就可以前往 Instagram。']}
+ {name:'夢奇奇飼養者',text:['歡迎來到德威陽的辦公室！我是夢奇奇飼養者。','你可以點擊牆上的官方 Logo、每個人的辦公桌、接待櫃檯，還有漫畫電腦！','想看漫畫？到左邊的漫畫製作區點擊電腦就可以前往 Instagram。']},
+ {name:'林柏均律師｜所長辦公室',text:['這裡是林柏均律師的專屬所長辦公室，採用深色胡桃木、金屬飾邊及獨立會客空間。','林柏均律師具台灣律師、紐約州律師資格；Emory University LL.M.、University of La Verne MBA。','專業領域包括跨國商務契約、公司治理、智慧財產及民刑事訴訟。']},
+ {name:'夢奇奇飼養者｜辦公位置',text:['這裡是夢奇奇飼養者的辦公桌！','想認識德威陽？可以點擊後方的官方 Logo 形象牆。']},
+ {name:'哈姆太郎｜辦公位置',text:['這裡是哈姆太郎的辦公桌！','想了解企業合約、勞動爭議或營業秘密相關服務，可以透過本所 LINE @wylaw 洽詢。']},
+ {name:'薪水掌門人｜辦公位置',text:['這裡是薪水掌門人的辦公桌！','如需法律諮詢，歡迎至前方接待櫃檯了解聯絡方式。']}
 ];
 let insideOffice=false;
 const officeCam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,180);officeCam.position.set(19,19,25);officeCam.lookAt(0,1.3,-.5);
