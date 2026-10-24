@@ -1,0 +1,349 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>德威陽｜有法度 YES, WE DO!</title><style>
+*{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;background:#c4eaff;color:#4b3650}button{font:inherit;cursor:pointer}#top{position:fixed;top:8px;left:8px;right:8px;z-index:8;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}#brand{pointer-events:auto;background:#fffdf3ef;border:1px solid #e4c987;border-radius:16px;display:flex;align-items:center;gap:8px;padding:6px 10px;box-shadow:0 4px 20px #7b579522}#brand img{width:49px;height:49px;object-fit:contain}#brand b{font-size:17px}#brand small{display:block;color:#9a7d56;font-size:11px}.buttons{display:flex;gap:5px;pointer-events:auto}.buttons button,.chip{border:1px solid #e4c987;background:#fff9ebeb;color:#5d4763;border-radius:11px;padding:9px;font-size:12px;box-shadow:0 3px 10px #8d6c7b22}#hud{position:fixed;top:83px;left:8px;z-index:7;background:#fffdf3ee;padding:9px 12px;border-radius:12px;font-size:12px;max-width:270px}#status{font-size:11px;color:#94704b;margin-top:4px}#panel{position:fixed;right:8px;top:83px;z-index:7;display:flex;flex-direction:column;gap:5px;max-height:55vh;overflow:auto}#panel button{min-width:98px;text-align:left}#dialog{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);z-index:10;width:min(92vw,490px);background:#fffdf7f5;border:2px solid #e6c278;border-radius:18px;box-shadow:0 10px 35px #45335844;padding:16px;display:none;line-height:1.65}#dialog h3{margin:0 0 7px}#dialog p{margin:0 0 10px;font-size:14px}#dialog button{border:0;border-radius:10px;background:#bb8a36;color:white;padding:7px 14px}#joy{position:fixed;left:20px;bottom:24px;width:112px;height:112px;border-radius:50%;background:#ffffff80;border:2px solid #ffffffc7;z-index:7;touch-action:none;display:grid;place-items:center}#knob{width:49px;height:49px;border-radius:50%;background:#c590c9c9;box-shadow:0 3px 8px #5555;pointer-events:none}#controls{position:fixed;right:12px;bottom:20px;z-index:7;display:flex;flex-direction:column;gap:7px}#controls button{background:#fff9e8ee;border:1px solid #e5c98a;border-radius:12px;padding:10px;font-size:13px}#hint{position:fixed;bottom:3px;left:150px;right:110px;z-index:7;text-align:center;font-size:10px;color:#4b4d67;text-shadow:0 1px white}a{color:#85621d}@media(max-width:420px){#brand b{font-size:14px}#brand img{width:39px;height:39px}#panel button{min-width:84px;font-size:11px;padding:7px}#hud{max-width:185px}#hint{display:none}}#creator{position:fixed;inset:0;z-index:100;background:#312b4d9c;display:flex;align-items:center;justify-content:center;padding:18px}#creatorCard{width:min(94vw,410px);background:#fffaf0;border:2px solid #d9b46c;border-radius:24px;padding:22px;text-align:center;box-shadow:0 15px 60px #25203766}#creatorCard h2{margin:0 0 10px}#creatorCard p{font-size:13px;line-height:1.6}#creatorCard label{display:block;text-align:left;margin:13px 0 5px;font-weight:600}#creatorCard input,#creatorCard select{width:100%;padding:12px;border:1px solid #d7bc91;border-radius:10px;font:inherit;background:white}#creatorCard button{margin-top:18px;width:100%;border:0;border-radius:12px;padding:13px;background:#a77735;color:white;font-weight:700}#creatorCard .preview{font-size:45px;margin:12px}#creator{padding:10px}#creatorCard{width:min(96vw,820px);max-height:94dvh;display:flex;flex-direction:column;padding:14px;overflow:hidden}#creatorCard h2{font-size:19px;margin:0 0 3px}#creatorCard>p{margin:0 0 8px}#creatorCard .creatorLayout{display:grid;grid-template-columns:minmax(125px,0.85fr) minmax(170px,1.15fr);gap:12px;min-height:0;flex:1;text-align:left}#creatorCard .previewPane{background:linear-gradient(#d8efff,#fff3df);border-radius:16px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch}#creatorCard #avatarCanvas{width:100%!important;height:auto!important;max-width:240px!important;aspect-ratio:1;object-fit:contain;margin:5px auto!important}#creatorCard .previewCaption{font-weight:700;font-size:13px;text-align:center}#creatorCard .previewHint{font-size:11px;color:#77677a;text-align:center}#creatorCard .optionsPane{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 7px 8px 0}#creatorCard .optionsPane label{font-size:12px;margin:9px 0 4px}#creatorCard .optionsPane input,#creatorCard .optionsPane select{font-size:13px;padding:8px;min-height:36px}#creatorCard .optionsPane input[type=color]{height:35px!important}#creatorCard #startExplore{flex-shrink:0;margin-top:10px;padding:12px}@media(max-width:440px){#creatorCard{width:98vw;padding:10px;border-radius:17px}#creatorCard .creatorLayout{grid-template-columns:minmax(115px,0.86fr) minmax(160px,1.14fr);gap:8px}#creatorCard .previewPane{padding:5px 2px}#creatorCard .previewHint{font-size:10px}#creatorCard .optionsPane{padding-right:2px}#creatorCard h2{font-size:17px}} #panel{display:none!important}#creator{display:flex}#creator.finished{display:none!important}#creatorCard{position:relative}#creatorCard .optionsPane{overflow-y:auto!important}#creatorCard .previewPane{position:sticky;top:0} </style></head><body>
+<div id="creator"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><label for="visitorName">角色名稱</label><input id="visitorName" maxlength="14" placeholder="法律探險家" value="法律探險家"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"><label for="avatarOutfit">服裝款式</label><select id="avatarOutfit"><option value="pants">上衣＋長褲</option><option value="shorts">上衣＋短褲</option><option value="skirt">上衣＋裙子</option><option value="dress">洋裝</option><option value="longskirt">上衣＋長裙</option></select><label for="avatarTopColor">上衣／洋裝顏色</label><input id="avatarTopColor" type="color" value="#6c89ca" style="width:100%;height:40px;padding:2px"><label for="avatarBottomColor">褲子／裙子顏色</label><input id="avatarBottomColor" type="color" value="#374b75" style="width:100%;height:40px;padding:2px"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
+<div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
+<div id="dialog"><h3 id="dialogTitle"></h3><p id="dialogText"></p><button id="next">下一則／關閉</button></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 拖曳旋轉視角 · 點人物可互動 · 首次載入需等候</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script><script>
+/* Role creation must remain usable even if a 3D island model fails to load. */
+(()=>{
+const $=id=>document.getElementById(id);
+const fields=['avatarGender','avatarSkin','avatarHair','avatarHairColor','avatarOutfit','avatarTopColor','avatarBottomColor'];
+function update(){drawAvatar();try{window.weiyangRefreshAvatar?.()}catch(err){console.warn('3D 更新失敗',err)}}
+const canvas=$('avatarCanvas'),ctx=canvas.getContext('2d');
+function drawAvatar(){
+ if(!ctx)return;
+ const g=$('avatarGender').value, hair=$('avatarHair').value,skin=$('avatarSkin').value,hc=$('avatarHairColor').value,outfit=$('avatarOutfit').value,top=$('avatarTopColor').value,bottom=$('avatarBottomColor').value;
+ const w=canvas.width=320,h=canvas.height=380;ctx.clearRect(0,0,w,h);
+ const ellipse=(x,y,rx,ry,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill()};
+ const rect=(x,y,ww,hh,c,r=8)=>{ctx.fillStyle=c;ctx.beginPath();ctx.roundRect(x,y,ww,hh,r);ctx.fill()};
+ ellipse(160,355,70,12,'#c4d7e8');
+ // hair behind head
+ if(['long','ponytail','twintail','bob'].includes(hair)){ellipse(160,164,91,hair==='long'?118:88,hc)}
+ if(hair==='ponytail')ellipse(232,159,27,83,hc);
+ if(hair==='twintail'){ellipse(69,169,26,70,hc);ellipse(251,169,26,70,hc)}
+ // feet and legs
+ rect(123,302,26,44,skin,10);rect(173,302,26,44,skin,10);
+ ellipse(133,346,27,14,'#fffaf0');ellipse(190,346,27,14,'#fffaf0');
+ // arms and hands
+ ellipse(91,266,18,49,top);ellipse(229,266,18,49,top);
+ ellipse(91,303,15,19,skin);ellipse(229,303,15,19,skin);
+ ellipse(160,260,61,68,top);
+ if(outfit==='dress'){ctx.fillStyle=top;ctx.beginPath();ctx.moveTo(120,257);ctx.lineTo(200,257);ctx.lineTo(231,329);ctx.lineTo(90,329);ctx.closePath();ctx.fill()}
+ else if(outfit==='skirt'||outfit==='longskirt'){ctx.fillStyle=bottom;ctx.beginPath();ctx.moveTo(120,280);ctx.lineTo(200,280);ctx.lineTo(222,outfit==='longskirt'?340:317);ctx.lineTo(99,outfit==='longskirt'?340:317);ctx.closePath();ctx.fill()}
+ else {rect(113,285,43,outfit==='shorts'?31:54,bottom,9);rect(165,285,43,outfit==='shorts'?31:54,bottom,9)}
+ // big head
+ ellipse(160,147,88,93,skin);
+ // bangs / hair cap
+ ellipse(160,83,89,43,hc);ellipse(111,110,39,35,hc);
+ if(hair==='curly')for(let i=0;i<9;i++){let a=Math.PI+(i/8)*Math.PI;ellipse(160+78*Math.cos(a),110+39*Math.sin(a),24,26,hc)}
+ if(hair==='short')ellipse(207,100,33,20,hc);
+ if(hair==='bob'){ellipse(78,158,18,60,hc);ellipse(242,158,18,60,hc)}
+ // gender features: distinct eyelashes and hair accessory
+ for(const x of [129,191]){ellipse(x,151,14,19,'#fff');ellipse(x,153,9,15,'#302c40');ellipse(x-3,148,3,5,'#fff');if(g==='female'){ctx.strokeStyle='#392b32';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-12,138);ctx.lineTo(x-18,131);ctx.stroke()}}
+ ellipse(102,181,16,7,'#eea0a6');ellipse(218,181,16,7,'#eea0a6');ellipse(160,180,5,4,'#bc8075');
+ ctx.strokeStyle='#b05c72';ctx.lineWidth=3;ctx.beginPath();ctx.arc(160,191,10,0.18,Math.PI-.18);ctx.stroke();
+ if(g==='female'){ellipse(222,89,13,13,'#f5c5d5');ellipse(240,89,13,13,'#f5c5d5');ellipse(231,89,7,7,'#fff7f9')}
+}
+window.weiyangDrawAvatar=drawAvatar;
+
+fields.forEach(id=>{const el=$(id);if(el){el.addEventListener('input',update);el.addEventListener('change',update)}});
+const industry=$('visitorIndustry');
+function updateOther(){const other=industry.value==='其他';$('otherIndustryWrap').style.display=other?'block':'none';$('otherIndustry').required=other}
+industry.addEventListener('change',updateOther);updateOther();drawAvatar();
+function enterIsland(){
+ const chosen=industry.value, other=$('otherIndustry').value.trim();
+ if(!chosen){alert('請選擇職業類別（也可以選擇不願透露）');industry.focus();return}
+ if(chosen==='其他'&&!other){alert('請填寫您的職業或產業');$('otherIndustry').focus();return}
+ const profile={name:$('visitorName').value.trim()||'法律探險家',industry:chosen==='其他'?'其他：'+other:chosen,gender:$('avatarGender').value,skin:$('avatarSkin').value,hair:$('avatarHair').value,hairColor:$('avatarHairColor').value,outfit:$('avatarOutfit').value,top:$('avatarTopColor').value,bottom:$('avatarBottomColor').value};
+ try{localStorage.setItem('weiyangVisitorProfile',JSON.stringify(profile))}catch(err){}
+ $('creator').style.display='none';$('creator').classList.add('finished');
+ $('where').textContent='🏰 '+profile.name+'｜德威陽城堡';
+}
+$('startExplore').addEventListener('click',enterIsland);
+})();
+</script>
+<script type="module">
+import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+const MANIFEST={"castle":["assets/castle_00.part","assets/castle_01.part","assets/castle_02.part","assets/castle_03.part","assets/castle_04.part","assets/castle_05.part","assets/castle_06.part"],"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-66],[62,-20],[39,54],[-39,54],[-62,-20]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0x94b5c0,2.8));const sun=new THREE.DirectionalLight(0xfff2d3,3.2);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#ff5e8a','#ffa449','#ffe866','#63dcb1','#5fc9ff','#aa82ec'];const rm=rainbow.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.14,roughness:.55}));
+async function getGLB(key){const chunks=MANIFEST[key];let arrays=[],total=0;for(let i=0;i<chunks.length;i++){const r=await fetch(chunks[i]);if(!r.ok)throw Error(chunks[i]+': '+r.status);const a=await r.arrayBuffer();arrays.push(new Uint8Array(a));total+=a.byteLength;status.textContent='正在讀取 '+key+' '+(i+1)+'/'+chunks.length;}const all=new Uint8Array(total);let at=0;for(const a of arrays){all.set(a,at);at+=a.byteLength}arrays=[];return await new Promise((res,rej)=>loader.parse(all.buffer,'',res,rej))}
+function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);parent.add(m);return m}
+const groups=[];for(let i=0;i<6;i++){const g=new THREE.Group();g.position.set(xy[i][0],0,xy[i][1]);scene.add(g);groups.push(g);const r=i===0?21:17;mesh(new THREE.CylinderGeometry(r,r*.82,6,12),mats.grass,g,0,-3,0);const cone=mesh(new THREE.ConeGeometry(r*.78,19,12),mats.rock,g,0,-15,0);cone.rotation.z=Math.PI;const ring=mesh(new THREE.TorusGeometry(r-.2,.32,8,90),mats.gold,g,0,.1,0);ring.rotation.x=Math.PI/2;for(let k=0;k<10;k++){const a=k*Math.PI*2/10;const flower=mesh(new THREE.SphereGeometry(.45,8,8),rm[(k+i)%6],g,Math.cos(a)*(r-1.2),.55,Math.sin(a)*(r-1.2));}}
+// Floating island nameplates: anchored above each island, always facing the camera.
+const islandLabels=[];
+function createIslandLabel(i){
+  const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=256;
+  const ctx=canvas.getContext('2d');
+  ctx.shadowColor='rgba(55,38,72,.28)';ctx.shadowBlur=18;ctx.shadowOffsetY=9;
+  ctx.fillStyle='rgba(255,252,239,.95)';ctx.strokeStyle='#d6ae65';ctx.lineWidth=8;
+  ctx.beginPath();ctx.roundRect(18,20,988,204,66);ctx.fill();ctx.shadowColor='transparent';ctx.stroke();
+  ctx.fillStyle='#594466';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='bold 79px sans-serif';ctx.fillText(emoji[i]+' '+names[i],512,124);
+  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthWrite:false,depthTest:false}));
+  sprite.scale.set(i===0?23:21,i===0?5.75:5.25,1);
+  sprite.position.set(0,i===0?19:16,0);sprite.userData.islandIndex=i;
+  sprite.renderOrder=30;groups[i].add(sprite);islandLabels.push(sprite);
+}
+for(let i=0;i<6;i++)createIslandLabel(i);
+function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
+const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261024-castle-upright-3'):await getGLB(keys[i]);const model=g.scene;
+if(i===0){
+  // This GLB was authored Z-up. Three.js is Y-up: map +Z to +Y.
+  model.rotation.set(-Math.PI/2,0,0);
+  model.updateMatrixWorld(true);
+}
+if(i===0){
+  // Remove original entrance ball and six raised steps from the GLB scene, not merely cover them.
+  // part_72 is the large protruding triangular entrance ramp (confirmed from GLB bounds); parts 83-88 are the stairs.
+  const oldSteps=[];
+  model.traverse(obj=>{if(/^part_(72|78|83|84|85|86|87|88)$/.test(obj.name))oldSteps.push(obj)});
+  oldSteps.forEach(obj=>obj.parent?.remove(obj));
+}
+fit(model,widths[i]);
+if(i===0){
+  // The GLB includes its own floating island. Nest its lower rock section
+  // into the existing central platform rather than stacking both surfaces.
+  model.position.y-=5.0;
+}
+groups[i].add(model);
+if(i===0){
+   // Castle entrance redesign: level paved plaza, small facade seal, globe fountain.
+   // These objects are in the island's Y-up world coordinates, not GLB-local Z-up.
+   const court=new THREE.Group();groups[0].add(court);
+   const stone=new THREE.MeshStandardMaterial({color:0xffefd6,roughness:.87});
+   const gold=new THREE.MeshStandardMaterial({color:0xd9ae55,metalness:.42,roughness:.33});
+   const blue=new THREE.MeshPhysicalMaterial({color:0x40c6f2,transparent:true,opacity:.85,roughness:.12,metalness:.02});
+   const flat=new THREE.Mesh(new THREE.CylinderGeometry(12.8,12.8,.18,96),stone);
+   flat.position.set(0,.59,8.7);court.add(flat);
+   const tileRing=new THREE.Mesh(new THREE.TorusGeometry(11.9,.13,8,96),gold);
+   tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.71,8.7);court.add(tileRing);
+   // Small real official logo integrated above the entrance; never a billboard.
+   const logoTex=new THREE.TextureLoader().load('official-logo.png?v=20261024-entrance-fixed');
+   logoTex.colorSpace=THREE.SRGBColorSpace;
+   const logoFrame=new THREE.Mesh(new THREE.CylinderGeometry(1.48,1.48,.13,64),gold);
+   logoFrame.rotation.x=Math.PI/2;logoFrame.position.set(0,9.25,2.2);court.add(logoFrame);
+   const logoPanel=new THREE.Mesh(new THREE.CircleGeometry(1.38,64),new THREE.MeshBasicMaterial({map:logoTex,side:THREE.DoubleSide}));
+   logoPanel.position.set(0,9.25,2.30);court.add(logoPanel);
+   // Circular water basin with recognizable blue-green globe and arcing water jets.
+   const fountain=new THREE.Group();fountain.position.set(0,0,12.1);court.add(fountain);
+   const base=new THREE.Mesh(new THREE.CylinderGeometry(4.7,4.85,.28,96),stone);
+   base.position.y=.85;fountain.add(base);
+   const basin=new THREE.Mesh(new THREE.CylinderGeometry(4.27,4.27,.11,96),blue);
+   basin.position.y=1.035;fountain.add(basin);
+   const rim=new THREE.Mesh(new THREE.TorusGeometry(4.45,.27,14,96),gold);
+   rim.rotation.x=Math.PI/2;rim.position.y=1.10;fountain.add(rim);
+   const plinth=new THREE.Mesh(new THREE.CylinderGeometry(.95,1.2,1.10,48),stone);
+   plinth.position.y=1.65;fountain.add(plinth);
+   const crown=new THREE.Mesh(new THREE.CylinderGeometry(1.24,1.24,.17,48),gold);
+   crown.position.y=2.27;fountain.add(crown);
+   const globeCanvas=document.createElement('canvas');globeCanvas.width=1024;globeCanvas.height=512;
+   const gc=globeCanvas.getContext('2d');gc.fillStyle='#168cdd';gc.fillRect(0,0,1024,512);
+   gc.fillStyle='#69cb68';
+   const land=[[[90,80],[145,60],[205,83],[232,125],[207,159],[175,168],[165,218],[131,228],[116,183],[82,146]],[[200,222],[253,234],[270,289],[245,344],[224,402],[199,448],[180,388],[188,326]],[[480,100],[545,76],[617,88],[675,114],[732,103],[812,140],[832,188],[770,200],[738,249],[678,247],[631,217],[590,227],[551,181],[493,167]],[[535,216],[603,221],[633,268],[621,340],[589,403],[552,384],[534,325],[515,263]],[[790,333],[853,318],[895,355],[887,398],[837,412],[801,381]]];
+   for(const poly of land){gc.beginPath();poly.forEach(([x,y],i)=>i?gc.lineTo(x,y):gc.moveTo(x,y));gc.closePath();gc.fill()}
+   gc.fillStyle='#effaff';gc.fillRect(0,0,1024,14);gc.fillRect(0,498,1024,14);
+   const globeTex=new THREE.CanvasTexture(globeCanvas);globeTex.colorSpace=THREE.SRGBColorSpace;
+   const globe=new THREE.Mesh(new THREE.SphereGeometry(1.63,48,32),new THREE.MeshStandardMaterial({map:globeTex,roughness:.35}));
+   globe.position.y=4.04;globe.rotation.y=.4;fountain.add(globe);
+   const jetMat=new THREE.MeshBasicMaterial({color:0xb9f5ff,transparent:true,opacity:.83});
+   for(let k=0;k<12;k++){
+     const a=k*Math.PI*2/12;
+     const p0=new THREE.Vector3(Math.cos(a)*3.75,1.15,Math.sin(a)*3.75);
+     const p1=new THREE.Vector3(Math.cos(a)*1.7,3.7,Math.sin(a)*1.7);
+     const mid=p0.clone().lerp(p1,.5);mid.y+=1.25;
+     const curve=new THREE.QuadraticBezierCurve3(p0,mid,p1);
+     fountain.add(new THREE.Mesh(new THREE.TubeGeometry(curve,28,.072,7,false),jetMat));
+   }
+   // Decorative edging, no ramp or stairs between the door and the basin.
+   const light=new THREE.PointLight(0xffe7b3,1.3,20);light.position.set(0,7,5);court.add(light);
+  // Make entrance the first clear view once the player finishes creating a character.
+  window.__weiyangEntrance={logo:logoPanel,fountain};
+}
+status.textContent='已載入 '+names[i];}catch(e){console.error(e);status.textContent=names[i]+' 讀取失敗：'+e.message}}
+const bridges=[];for(let i=1;i<6;i++){const a=new THREE.Vector3(xy[0][0],.65,xy[0][1]),b=new THREE.Vector3(xy[i][0],.65,xy[i][1]);const d=b.clone().sub(a),len=d.length();const group=new THREE.Group();group.position.copy(a.clone().add(b).multiplyScalar(.5));group.rotation.y=Math.atan2(d.x,d.z);scene.add(group);bridges.push({group,len});mesh(new THREE.BoxGeometry(5.8,.65,len+1),mats.white,group);for(let k=0;k<Math.ceil(len/2.5);k++){const z=-len/2+(k+.5)*len/Math.ceil(len/2.5);mesh(new THREE.BoxGeometry(5.65,.08,len/Math.ceil(len/2.5)+.01),rm[k%6],group,0,.37,z)}for(const side of [-1,1]){mesh(new THREE.BoxGeometry(.24,.22,len),mats.gold,group,side*2.8,1.65,0);for(let k=0;k<=Math.ceil(len/4);k++){const z=-len/2+k*len/Math.ceil(len/4);mesh(new THREE.CylinderGeometry(.12,.17,1.45,8),mats.gold,group,side*2.8,.9,z);mesh(new THREE.IcosahedronGeometry(.36,0),rm[k%6],group,side*2.8,1.94,z)}}}
+// Bridge source mesh is isolated: bamboo, trees, rocks, ground and water are excluded.
+async function addOriginalBridge(){try{const gltf=await getGLB('bridge');const orig=gltf.scene;let source=null;orig.traverse(o=>{if(o.name.startsWith('Bridge.001'))source=o});if(!source){status.textContent='彩虹橋已完成（原橋造型無法辨識）';return}for(const {group,len} of bridges){const clone=source.clone(true);fit(clone,5.1);clone.position.y=.42;group.add(clone)}status.textContent='六座島與五條彩虹橋已完成載入';}catch(e){console.warn('bridge',e)}}
+// Simple walkable avatar and three staff members, selectable by raycasting.
+// The same modular chibi avatar is used for the live preview and in-world player.
+const actor=new THREE.Group();scene.add(actor);actor.position.set(7,0,12);
+function makeChibi(settings){
+ const g=new THREE.Group(), mat=(color)=>new THREE.MeshStandardMaterial({color,roughness:.82});
+ const skinMat=mat(settings.skin), hairMat=mat(settings.hairColor),topMat=mat(settings.top),bottomMat=mat(settings.bottom),shoeMat=mat('#fff8ef'),eyeMat=mat('#302a31'),whiteMat=mat('#ffffff'),pinkMat=mat('#ef98a4');
+ const add=(geometry,material,x,y,z,sx=1,sy=1,sz=1)=>{const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);g.add(m);return m};
+ const ball=new THREE.SphereGeometry(1,20,16);
+ // Large head and tiny body: deliberately toy-like proportions.
+ add(ball,skinMat,0,1.74,0,0.58,0.57,0.51);
+ add(ball,hairMat,0,2.08,-.12,.60,.34,.52);
+ const female=settings.gender==='female';
+ if(settings.hair==='bob'||settings.hair==='long'||settings.hair==='ponytail'||settings.hair==='twintail'){
+  for(const x of [-.51,.51])add(ball,hairMat,x,1.69,-.10,.16,settings.hair==='long'?.62:.36,.34);
+ }
+ if(settings.hair==='long')add(ball,hairMat,0,1.33,-.43,.48,.58,.18);
+ if(settings.hair==='ponytail')add(ball,hairMat,.42,1.85,-.47,.23,.52,.23);
+ if(settings.hair==='twintail')for(const x of [-.65,.65])add(ball,hairMat,x,1.62,-.15,.22,.42,.25);
+ if(settings.hair==='curly')for(let i=0;i<11;i++){const angle=i/11*Math.PI*2;add(ball,hairMat,Math.cos(angle)*.52,2.05+Math.sin(angle)*.22,-.08,.20,.22,.20)}
+ // Fringe, eyes, blush, small smiling mouth. Face points toward positive Z.
+ for(const x of [-.23,.23]){
+  add(ball,whiteMat,x,1.78,.462,.132,.17,.055);
+  add(ball,eyeMat,x,1.77,.512,.082,.116,.042);
+  add(ball,pinkMat,x*1.56,1.60,.455,.12,.065,.035);
+ }
+ add(ball,mat('#9e575e'),0,1.52,.50,.09,.025,.025);
+ if(female){add(ball,mat('#ffe3ee'),.46,2.12,.20,.11,.09,.07);add(ball,mat('#fff9ff'),.46,2.12,.27,.045,.045,.025);}
+ const dress=settings.outfit==='dress', skirt=['skirt','longskirt'].includes(settings.outfit);
+ add(ball,topMat,0,.96,0,.38,.47,.29);
+ for(const x of [-.47,.47]){
+  add(ball,topMat,x,1.05,0,.17,.21,.19);
+  add(ball,skinMat,x*1.17,.78,0,.12,.24,.12);
+  add(ball,skinMat,x*1.17,.56,.01,.13,.13,.13);
+ }
+ if(dress||skirt){
+  const h=settings.outfit==='longskirt'?.70:.46;
+  const geo=new THREE.CylinderGeometry(.30,.55,h,20,1);
+  add(geo,dress?topMat:bottomMat,0,.69-(h-.46)/2,0);
+ }else{
+  for(const x of [-.19,.19])add(ball,bottomMat,x,.55,0,.20,settings.outfit==='shorts'?.21:.38,.23);
+ }
+ for(const x of [-.20,.20]){
+  add(ball,skinMat,x,.27,0,.13,.20,.13);
+  add(ball,shoeMat,x,.14,.09,.22,.13,.30);
+ }
+ return g;
+}
+function getAvatarSettings(){return {gender:document.getElementById('avatarGender').value,skin:document.getElementById('avatarSkin').value,hair:document.getElementById('avatarHair').value,hairColor:document.getElementById('avatarHairColor').value,outfit:document.getElementById('avatarOutfit').value,top:document.getElementById('avatarTopColor').value,bottom:document.getElementById('avatarBottomColor').value}}
+let avatarBody=null,previewBody=null;
+const previewCanvas=document.createElement('canvas');previewCanvas.width=360;previewCanvas.height=420;previewCanvas.style.height='min(42vh,310px)';previewCanvas.style.width='100%';
+const previewScene=new THREE.Scene();previewScene.background=new THREE.Color('#e5f3ff');
+const previewCamera=new THREE.PerspectiveCamera(36,360/420,.1,100);previewCamera.position.set(3.3,2.4,7.8);previewCamera.lookAt(0,1.23,0);
+previewScene.add(new THREE.HemisphereLight(0xffffff,0x91b5d6,3));const previewLight=new THREE.DirectionalLight(0xffffff,3);previewLight.position.set(3,6,5);previewScene.add(previewLight);
+const originalPreview=document.getElementById('avatarCanvas');
+const previewHost=originalPreview.parentElement;
+previewCanvas.style.display='block';previewCanvas.style.margin='8px auto';previewCanvas.style.maxWidth='100%';previewCanvas.style.borderRadius='18px';
+previewCanvas.style.height='min(42vh,310px)';
+previewHost.insertBefore(previewCanvas,originalPreview);
+originalPreview.style.display='none';
+const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,1.5));previewRenderer.setSize(360,420,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
+function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
+window.weiyangRefreshAvatar=refreshChibi;
+refreshChibi();
+
+// Four fully three-dimensional, animated chibi NPCs, generated inside Three.js.
+// No external image files are needed; their meshes are part of the live game.
+const clickable=[],staffNPCs=[];
+const staffDefs=[
+ {name:'林柏均律師',alias:'林律師',x:-6,z:6,skin:'#f2c6a5',hair:'#352a28',top:'#24364f',bottom:'#26344c',kind:'lawyer',range:3.4,speed:.52},
+ {name:'夢奇奇飼養者',x:-9,z:9,skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail',range:3.0,speed:.62},
+ {name:'哈姆太郎',x:-5,z:10,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.8,speed:.75},
+ {name:'薪水掌門人',x:-2,z:8,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:3.0,speed:.57}
+];
+function makeStaffChibi(def){
+ const root=new THREE.Group(),body=new THREE.Group();root.add(body);
+ const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.73});
+ const skin=mat(def.skin),hair=mat(def.hair),top=mat(def.top),bottom=mat(def.bottom);
+ const white=mat('#fffaf5'),dark=mat('#302b37'),pink=mat('#f1a1aa'),gold=mat('#c99d52');
+ const ball=new THREE.SphereGeometry(1,20,16);
+ const part=(geo,m,x,y,z,sx=1,sy=1,sz=1,group=body)=>{
+  const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);group.add(o);return o;
+ };
+ const orb=(m,x,y,z,sx,sy,sz,group)=>part(ball,m,x,y,z,sx,sy,sz,group);
+ // Big rounded head, small soft body and short legs.
+ orb(top,0,.93,0,.39,.49,.30);
+ for(const side of [-1,1]){
+  orb(top,side*.43,1.04,0,.16,.24,.17);
+  orb(skin,side*.53,.75,.01,.12,.21,.12);
+  orb(skin,side*.54,.55,.06,.12,.12,.12);
+  orb(bottom,side*.19,.48,0,.18,.30,.21);
+  orb(white,side*.19,.15,.11,.21,.13,.27);
+ }
+ if(def.kind==='lawyer'){
+  // Navy tailored suit, white shirt, blue tie, gold jacket buttons.
+  orb(white,0,1.05,.288,.18,.27,.025);
+  part(new THREE.ConeGeometry(.09,.35,4),mat('#416ba0'),0,1.03,.323);
+  for(const y of [.88,.73])orb(gold,.09,y,.31,.035,.035,.025);
+  orb(mat('#1a2b43'),-.22,1.10,.285,.13,.31,.02);
+  orb(mat('#1a2b43'),.22,1.10,.285,.13,.31,.02);
+ } else if(def.kind==='ponytail'){
+  orb(mat('#f2b8c8'),.07,1.04,.298,.08,.09,.025);
+ } else if(def.kind==='short'){
+  orb(mat('#fff4df'),.12,1.01,.298,.10,.10,.02);
+ } else {
+  orb(white,0,1.04,.298,.13,.18,.02);
+ }
+ const head=new THREE.Group();head.position.set(0,1.76,0);body.add(head);
+ orb(skin,0,0,0,.58,.57,.51,head);
+ // Hair caps, side locks and characteristic ponytail / bun / short hairstyle.
+ orb(hair,0,.35,-.12,.60,.31,.51,head);
+ orb(hair,-.39,.29,.12,.25,.20,.34,head);
+ if(def.kind==='ponytail'){
+  orb(hair,.45,.33,-.30,.23,.25,.24,head);
+  orb(hair,.58,.15,-.44,.25,.46,.25,head);
+  orb(mat('#f4a7bf'),.47,.32,-.35,.13,.12,.13,head);
+  orb(hair,-.52,-.10,-.06,.12,.29,.24,head);
+ }else if(def.kind==='bun'){
+  orb(hair,0,.69,-.20,.32,.30,.32,head);
+  orb(hair,-.49,.05,-.09,.14,.28,.23,head);
+  orb(hair,.49,.05,-.09,.14,.28,.23,head);
+ }else if(def.kind==='short'){
+  for(let i=0;i<5;i++)orb(hair,-.37+i*.19,.44,-.06,.19,.19,.28,head);
+ }else{
+  orb(hair,.31,.42,-.03,.29,.21,.30,head);
+ }
+ const eyes=[];
+ for(const x of [-.23,.23]){
+  orb(white,x,.035,.461,.137,.17,.054,head);
+  const pupil=orb(dark,x,.025,.514,.084,.118,.042,head);
+  eyes.push(pupil);
+  orb(white,x-.025,.08,.553,.025,.032,.014,head);
+  orb(pink,x*1.60,-.15,.454,.105,.055,.022,head);
+ }
+ // Smile and nose.
+ orb(mat('#b87374'),0,-.26,.467,.095,.026,.024,head);
+ orb(skin,0,-.12,.505,.035,.026,.022,head);
+ if(def.kind!=='lawyer'){
+  orb(mat('#f6d8e1'),.48,.34,.21,.085,.075,.06,head);
+ }
+ root.userData.label=def.name;
+ root.traverse(o=>{if(o.isMesh){o.userData.label=def.name;clickable.push(o)}});
+ return {root,body,head,eyes};
+}
+staffDefs.forEach((def,i)=>{
+ const model=makeStaffChibi(def);
+ groups[0].add(model.root);model.root.position.set(def.x,0,def.z);
+ model.root.rotation.y=(i%2?-.3:.4);
+ staffNPCs.push({...model,def,origin:new THREE.Vector3(def.x,0,def.z),
+  goal:new THREE.Vector3(def.x,0,def.z),idle:1+i*.8,phase:i*1.4,blink:0});
+});
+function animateStaff(dt,elapsed){
+ for(const npc of staffNPCs){
+  const {def,root,origin,goal,body,head,eyes}=npc;
+  if(npc.idle>0){npc.idle-=dt;}
+  else {
+   const dx=goal.x-root.position.x,dz=goal.z-root.position.z;
+   const distance=Math.hypot(dx,dz);
+   if(distance<.25){
+    npc.idle=1.0+Math.random()*2.2;
+    const a=Math.random()*Math.PI*2,r=.8+Math.random()*def.range;
+    goal.set(origin.x+Math.cos(a)*r,0,origin.z+Math.sin(a)*r);
+   }else{
+    const step=Math.min(distance,def.speed*dt);
+    root.position.x+=dx/distance*step;
+    root.position.z+=dz/distance*step;
+    root.rotation.y=Math.atan2(dx,dz);
+    npc.phase+=dt*10;
+   }
+  }
+  const walking=npc.idle<=0;
+  body.position.y=walking?Math.abs(Math.sin(npc.phase))*.065:Math.sin(elapsed*1.8+npc.phase)*.022;
+  head.rotation.z=Math.sin(elapsed*1.5+npc.phase)*.035;
+  // Short, natural blink once in a while.
+  const blink=Math.sin(elapsed*.8+npc.phase*2.7)> .995;
+  for(const eye of eyes)eye.scale.y=blink?.012:.118;
+ }
+}
+const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'夢奇奇飼養者':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'哈姆太郎':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'薪水掌門人':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('dialog').style.display='block'}document.getElementById('next').onclick=()=>{const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
+let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
+function goto(i){actor.position.set(xy[i][0],0,xy[i][1]+(i===0?9:7));document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(76,102,145);orbit.target.set(0,0,0)};document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
+renderer.domElement.addEventListener('pointerup',e=>{if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){goto(labelHits[0].object.userData.islandIndex)}});
+document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);animateStaff(dt,clock.elapsedTime);if(document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));actor.position.addScaledVector(v,dt*10);const onIsland=xy.some(([x,z],i)=>Math.hypot(actor.position.x-x,actor.position.z-z)<(i===0?20:16));const onBridge=bridges.some(({group,len})=>{const p=actor.position.clone();group.worldToLocal(p);return Math.abs(p.x)<3.2&&Math.abs(p.z)<len/2});if(!onIsland&&!onBridge)actor.position.addScaledVector(v,-dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,2,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}orbit.update();renderer.render(scene,camera);if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='六座島嶼、五條彩虹橋載入完畢';})();
+</script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>
