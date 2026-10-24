@@ -107,41 +107,48 @@ if(i===0){
 }
 groups[i].add(model);
 if(i===0){
-  // New entrance: one level forecourt, large original WEIYANG logo, then fountain.
-  // No stairs, ramp, mound, or ball in front of the door.
+  // Castle forecourt: completely level; no entrance stairs or ramps.
   const court=new THREE.Group();groups[0].add(court);
-  const paving=new THREE.MeshStandardMaterial({color:0xf8edd9,roughness:.84});
-  const edge=new THREE.MeshStandardMaterial({color:0xd6ad5a,metalness:.3,roughness:.42});
-  const water=new THREE.MeshPhysicalMaterial({color:0x54cde8,roughness:.12,metalness:.1,transparent:true,opacity:.88});
-  // Continuous flat walkway from the castle doorway to the fountain (no elevation change).
-  const walk=new THREE.Mesh(new THREE.BoxGeometry(8.2,.24,10.2),paving);
-  walk.position.set(0,.66,8.4);court.add(walk);
-  const walkBorderL=new THREE.Mesh(new THREE.BoxGeometry(.19,.08,10.2),edge);
-  walkBorderL.position.set(-4.06,.82,8.4);court.add(walkBorderL);
-  const walkBorderR=walkBorderL.clone();walkBorderR.position.x=4.06;court.add(walkBorderR);
-  // Gold-framed large logo at the castle door, facing visitors arriving from +Z.
-  const logoFrame=new THREE.Mesh(new THREE.BoxGeometry(9.4,9.4,.22),edge);
-  logoFrame.position.set(0,6.2,4.5);court.add(logoFrame);
+  const paving=new THREE.MeshStandardMaterial({color:0xfff0d6,roughness:.82});
+  const edge=new THREE.MeshStandardMaterial({color:0xd5aa54,metalness:.35,roughness:.4});
+  const water=new THREE.MeshPhysicalMaterial({color:0x51c8f0,roughness:.12,metalness:.06,transparent:true,opacity:.84});
+  const flat=new THREE.Mesh(new THREE.CylinderGeometry(12.5,12.5,.18,80),paving);
+  flat.position.set(0,.68,9.0);court.add(flat);
+  // A modest official logo placed ON the facade, not a billboard blocking the castle.
   const logoTex=new THREE.TextureLoader().load('official-logo.png');
   logoTex.colorSpace=THREE.SRGBColorSpace;
-  const logoPanel=new THREE.Mesh(new THREE.PlaneGeometry(9.0,9.0),new THREE.MeshBasicMaterial({map:logoTex,transparent:false,side:THREE.DoubleSide}));
-  logoPanel.position.set(0,6.2,4.65);logoPanel.renderOrder=11;court.add(logoPanel);
-  // A recognizable tiered fountain: broad circular basin, water surface, small tier and water jets.
-  const fountain=new THREE.Group();fountain.position.set(0,0,15.3);court.add(fountain);
-  const base=new THREE.Mesh(new THREE.CylinderGeometry(5.2,5.4,.42,64),paving);base.position.y=.65;fountain.add(base);
-  const rim=new THREE.Mesh(new THREE.TorusGeometry(4.55,.42,14,72),edge);rim.rotation.x=Math.PI/2;rim.position.y=.93;fountain.add(rim);
-  const pool=new THREE.Mesh(new THREE.CylinderGeometry(4.36,4.36,.13,64),water);pool.position.y=.91;fountain.add(pool);
-  const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(.65,.98,1.5,32),edge);pedestal.position.y=1.7;fountain.add(pedestal);
-  const tier=new THREE.Mesh(new THREE.CylinderGeometry(1.9,1.35,.28,48),paving);tier.position.y=2.45;fountain.add(tier);
-  const tierWater=new THREE.Mesh(new THREE.CylinderGeometry(1.65,1.65,.09,48),water);tierWater.position.y=2.62;fountain.add(tierWater);
-  const jetMat=new THREE.MeshBasicMaterial({color:0x9aefff,transparent:true,opacity:.83});
-  const centerJet=new THREE.Mesh(new THREE.CylinderGeometry(.12,.22,2.15,12),jetMat);centerJet.position.y=3.65;fountain.add(centerJet);
-  for(let k=0;k<8;k++){
-    const a=k*Math.PI*2/8;
-    const x=Math.cos(a)*2.65,z=Math.sin(a)*2.65;
-    const jet=new THREE.Mesh(new THREE.CylinderGeometry(.07,.11,1.1,10),jetMat);
-    jet.position.set(x,1.6,z);jet.rotation.z=Math.cos(a)*.27;jet.rotation.x=Math.sin(a)*.27;fountain.add(jet);
+  const logoFrame=new THREE.Mesh(new THREE.CylinderGeometry(1.72,1.72,.12,64),edge);
+  logoFrame.rotation.x=Math.PI/2;logoFrame.position.set(0,10.3,1.55);court.add(logoFrame);
+  const logoPanel=new THREE.Mesh(new THREE.CircleGeometry(1.60,64),new THREE.MeshBasicMaterial({map:logoTex,side:THREE.DoubleSide,transparent:false}));
+  logoPanel.position.set(0,10.3,1.65);logoPanel.renderOrder=11;court.add(logoPanel);
+  // Globe fountain immediately in front of the entrance on the same level.
+  const fountain=new THREE.Group();fountain.position.set(0,0,11.5);court.add(fountain);
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(5.3,5.5,.33,72),paving);base.position.y=.86;fountain.add(base);
+  const pool=new THREE.Mesh(new THREE.CylinderGeometry(4.65,4.65,.15,72),water);pool.position.y=1.07;fountain.add(pool);
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(4.86,.36,16,96),edge);rim.rotation.x=Math.PI/2;rim.position.y=1.12;fountain.add(rim);
+  const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(.82,1.2,1.22,40),edge);pedestal.position.y=1.82;fountain.add(pedestal);
+  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.35,1.35,.22,48),paving);plinth.position.y=2.51;fountain.add(plinth);
+  // A globe (blue oceans, green continents) rather than the previous plain ball.
+  const globeCanvas=document.createElement('canvas');globeCanvas.width=1024;globeCanvas.height=512;
+  const gc=globeCanvas.getContext('2d');gc.fillStyle='#1589d9';gc.fillRect(0,0,1024,512);
+  gc.fillStyle='#5bd16e';
+  const continents=[[[90,80],[145,60],[205,83],[232,125],[207,159],[175,168],[165,218],[131,228],[116,183],[82,146]],[[200,222],[253,234],[270,289],[245,344],[224,402],[199,448],[180,388],[188,326]],[[480,100],[545,76],[617,88],[675,114],[732,103],[812,140],[832,188],[770,200],[738,249],[678,247],[631,217],[590,227],[551,181],[493,167]],[[535,216],[603,221],[633,268],[621,340],[589,403],[552,384],[534,325],[515,263]],[[790,333],[853,318],[895,355],[887,398],[837,412],[801,381]]];
+  for(const poly of continents){gc.beginPath();poly.forEach(([x,y],i)=>i?gc.lineTo(x,y):gc.moveTo(x,y));gc.closePath();gc.fill()}
+  gc.fillStyle='#ecfaff';gc.fillRect(0,0,1024,20);gc.fillRect(0,492,1024,20);
+  const globeTexture=new THREE.CanvasTexture(globeCanvas);globeTexture.colorSpace=THREE.SRGBColorSpace;
+  const globe=new THREE.Mesh(new THREE.SphereGeometry(1.75,48,32),new THREE.MeshStandardMaterial({map:globeTexture,roughness:.48,metalness:.04}));
+  globe.position.y=4.40;globe.rotation.y=.4;fountain.add(globe);
+  const jetMat=new THREE.MeshBasicMaterial({color:0xb7f7ff,transparent:true,opacity:.85});
+  for(let k=0;k<10;k++){
+    const a=k*Math.PI*2/10;
+    const r=3.4;
+    const start=new THREE.Vector3(Math.cos(a)*r,1.20,Math.sin(a)*r);
+    const end=new THREE.Vector3(Math.cos(a)*1.65,3.85,Math.sin(a)*1.65);
+    const control=start.clone().lerp(end,.5).add(new THREE.Vector3(0,1.15,0));
+    const curve=new THREE.QuadraticBezierCurve3(start,control,end);
+    fountain.add(new THREE.Mesh(new THREE.TubeGeometry(curve,24,.075,8,false),jetMat));
   }
+  const light=new THREE.PointLight(0xffe7b3,1.5,22);light.position.set(0,7,6);court.add(light);
   // Make entrance the first clear view once the player finishes creating a character.
   window.__weiyangEntrance={logo:logoPanel,fountain};
 }
@@ -159,7 +166,7 @@ function makeChibi(settings){
  const ball=new THREE.SphereGeometry(1,20,16);
  // Large head and tiny body: deliberately toy-like proportions.
  add(ball,skinMat,0,1.74,0,0.58,0.57,0.51);
- add(ball,hairMat,0,2.04,-.09,.61,.42,.52);
+ add(ball,hairMat,0,2.08,-.12,.60,.34,.52);
  const female=settings.gender==='female';
  if(settings.hair==='bob'||settings.hair==='long'||settings.hair==='ponytail'||settings.hair==='twintail'){
   for(const x of [-.51,.51])add(ball,hairMat,x,1.69,-.10,.16,settings.hair==='long'?.62:.36,.34);
@@ -170,12 +177,12 @@ function makeChibi(settings){
  if(settings.hair==='curly')for(let i=0;i<11;i++){const angle=i/11*Math.PI*2;add(ball,hairMat,Math.cos(angle)*.52,2.05+Math.sin(angle)*.22,-.08,.20,.22,.20)}
  // Fringe, eyes, blush, small smiling mouth. Face points toward positive Z.
  for(const x of [-.23,.23]){
-  add(ball,whiteMat,x,1.78,.462,.125,.16,.055);
-  add(ball,eyeMat,x,1.77,.512,.079,.115,.042);
+  add(ball,whiteMat,x,1.78,.462,.132,.17,.055);
+  add(ball,eyeMat,x,1.77,.512,.082,.116,.042);
   add(ball,pinkMat,x*1.56,1.60,.455,.12,.065,.035);
  }
  add(ball,mat('#9e575e'),0,1.52,.50,.09,.025,.025);
- if(female)add(ball,hairMat,0,2.17,.27,.43,.14,.22);
+ if(female){add(ball,mat('#ffe3ee'),.46,2.12,.20,.11,.09,.07);add(ball,mat('#fff9ff'),.46,2.12,.27,.045,.045,.025);}
  const dress=settings.outfit==='dress', skirt=['skirt','longskirt'].includes(settings.outfit);
  add(ball,topMat,0,.96,0,.38,.47,.29);
  for(const x of [-.47,.47]){
@@ -202,6 +209,12 @@ const previewCanvas=document.createElement('canvas');previewCanvas.width=360;pre
 const previewScene=new THREE.Scene();previewScene.background=new THREE.Color('#e5f3ff');
 const previewCamera=new THREE.PerspectiveCamera(36,360/420,.1,100);previewCamera.position.set(3.3,2.4,7.8);previewCamera.lookAt(0,1.23,0);
 previewScene.add(new THREE.HemisphereLight(0xffffff,0x91b5d6,3));const previewLight=new THREE.DirectionalLight(0xffffff,3);previewLight.position.set(3,6,5);previewScene.add(previewLight);
+const originalPreview=document.getElementById('avatarCanvas');
+const previewHost=originalPreview.parentElement;
+previewCanvas.style.display='block';previewCanvas.style.margin='8px auto';previewCanvas.style.maxWidth='100%';previewCanvas.style.borderRadius='18px';
+previewCanvas.style.height='min(42vh,310px)';
+previewHost.insertBefore(previewCanvas,originalPreview);
+originalPreview.style.display='none';
 const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,1.5));previewRenderer.setSize(360,420,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
 function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
 window.weiyangRefreshAvatar=refreshChibi;
