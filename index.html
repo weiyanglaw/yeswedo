@@ -67,6 +67,33 @@ $('startExplore').addEventListener('click',enterIsland);
 #wyInfo.open{display:flex}#wyInfo article{width:min(880px,100%);max-height:92dvh;overflow-y:auto;background:#f6f0e7;border:2px solid #d5b47b;border-radius:20px;box-shadow:0 25px 90px #09172b99;color:#302e2b;position:relative}
 #wyInfo .wyHero{background:#24394f;color:#fff;text-align:center;padding:35px 25px 28px}#wyInfo .wyHero img{width:98px;height:98px;object-fit:contain;background:#fff;border-radius:13px;padding:6px}#wyInfo .wyHero h1{font-size:clamp(24px,5vw,36px);margin:12px 0 5px}#wyInfo .wyHero p{color:#f3d9a6;margin:6px 0}#wyInfo .wyContent{padding:clamp(18px,4vw,36px)}#wyInfo h2{color:#293d53;font-size:21px;border-bottom:1px solid #d5b47b;padding-bottom:9px;margin:26px 0 13px}#wyInfo p,#wyInfo li{line-height:1.85;font-size:15px}#wyInfo ul{padding-left:24px}#wyInfo .wyGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}#wyInfo .wyTile{background:#fffaf2;border:1px solid #e2cfaf;padding:13px;border-radius:12px;line-height:1.65}#wyInfo .wyClose{position:sticky;top:10px;float:right;margin:10px 12px -55px 0;z-index:3;background:#fff;color:#24394f;border:2px solid #cba66b;border-radius:50%;width:43px;height:43px;font-size:24px;font-weight:bold}#wyInfo a{color:#194b78;font-weight:700}
 @media(max-width:600px){#wyInfo{padding:6px}#wyInfo article{max-height:96dvh}#wyInfo .wyHero{padding:24px 12px}#wyInfo .wyContent{padding:18px}}
+
+/* Two deliberately different editorial systems */
+#wyInfo article.companyPage{background:#fffaf2;border-color:#d3a962}
+#wyInfo article.lawyerPage{background:#f5f7fa;border-color:#7991ad}
+#wyInfo .companyPage .wyHero{background:linear-gradient(125deg,#253e50,#466274);padding:42px 22px}
+#wyInfo .lawyerPage .wyHero{background:linear-gradient(125deg,#15283d,#253b60);text-align:left;padding:35px 34px;border-left:9px solid #c6a15c}
+#wyInfo .lawyerPage .wyHero img{width:58px;height:58px;float:right}
+#wyInfo .lawyerPage .wyHero h1{font-size:clamp(29px,6vw,45px);letter-spacing:3px;margin-top:18px}
+#wyInfo .lawyerPage h2{border-left:5px solid #b08a50;border-bottom:0;padding:7px 0 7px 13px;background:#e8edf3}
+#wyInfo .companyPage h2{border-bottom:2px solid #d3b17d;text-align:center;padding:0 0 13px}
+#wyInfo .companyPage .wyTile{background:#fff;border:1px solid #e9d8bb;text-align:center;min-height:72px;display:flex;align-items:center;justify-content:center}
+#wyInfo .lawyerPage .wyTile{background:#fff;border-left:4px solid #a88651}
+#wyInfo .wyEyebrow{letter-spacing:2px;font-size:12px!important;font-weight:700}
+#wyInfo .companyPage .wyIntro{text-align:center;font-size:17px;max-width:700px;margin:20px auto;line-height:2}
+#wyInfo .lawyerPage .wyCareer{border-left:3px solid #c4a46e;padding-left:18px;list-style:none}
+#wyInfo .lawyerPage .wyCareer li{padding:9px 0;border-bottom:1px solid #dce2e9}
+#wyInfo .wyAction{display:inline-block;background:#243e55;color:#fff!important;padding:12px 17px;border-radius:12px;text-decoration:none;margin:7px}
+#wyInfo .wyLead{font-size:18px!important;font-weight:600;color:#2c4058}
+@media(max-width:600px){#wyInfo .lawyerPage .wyHero{padding:26px 18px}#wyInfo .lawyerPage .wyHero img{width:48px;height:48px}}
+
+/* Shared four-channel contact footer for both information pages */
+#wyInfo .wyContact{background:#23364a;color:#fff;padding:24px 20px 27px;margin:30px -10px -8px;border-radius:17px;text-align:center}
+#wyInfo .wyContact h2{color:#f0d6a8!important;background:transparent!important;border:0!important;text-align:center!important;padding:0!important;margin:0 0 18px!important;font-size:21px!important}
+#wyInfo .wyContactGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+#wyInfo .wyContactGrid a{display:flex;flex-direction:column;justify-content:center;gap:6px;min-height:83px;background:#fffaf1;color:#243b50!important;border-radius:12px;text-decoration:none;padding:10px 5px;overflow-wrap:anywhere}
+#wyInfo .wyContactGrid b{font-size:16px}#wyInfo .wyContactGrid span{font-size:12px;font-weight:500}
+@media(max-width:620px){#wyInfo .wyContactGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#wyInfo .wyContact{margin:25px -5px -4px}}
 </style><div id="wyInfo" role="dialog" aria-modal="true" aria-label="事務所資訊"><article><button class="wyClose" id="wyInfoClose" aria-label="關閉">×</button><div id="wyInfoBody"></div></article></div>
 <div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
 <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
@@ -183,12 +210,14 @@ function makeChibi(settings){
  const add=(geometry,material,x,y,z,sx=1,sy=1,sz=1)=>{const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);g.add(m);return m};
  const ball=new THREE.SphereGeometry(1,20,16);
  // Large head and tiny body: deliberately toy-like proportions.
- add(ball,skinMat,0,1.76,0,.66,.64,.57);
- add(ball,skinMat,-.43,1.54,.26,.24,.20,.28);add(ball,skinMat,.43,1.54,.26,.24,.20,.28);
+ const female=settings.gender==='female';
+ // Gender selection changes actual 3D facial and silhouette geometry, not just hair/clothes.
+ add(ball,skinMat,0,1.76,0,female?.605:.685,female?.675:.625,female?.535:.575);
+ // Small ears, not protruding cheek spheres.
+ for(const x of [-1,1])add(ball,skinMat,x*(female?.595:.67),1.71,-.035,.082,.13,.085);
  add(ball,hairMat,0,2.13,-.13,.68,.38,.59);
  // Sculpted fringe tufts instead of a flat hair cap.
  for(const [x,y,z,r] of [[-.42,2.18,.34,.23],[-.16,2.22,.43,.22],[.12,2.20,.44,.21],[.39,2.17,.35,.22]])add(ball,hairMat,x,y,z,r,.18,.20);
- const female=settings.gender==='female';
  if(settings.hair==='bob'||settings.hair==='long'||settings.hair==='ponytail'||settings.hair==='twintail'){
   for(const x of [-.51,.51])add(ball,hairMat,x,1.69,-.10,.16,settings.hair==='long'?.62:.36,.34);
  }
@@ -204,16 +233,19 @@ function makeChibi(settings){
  if(settings.hair==='curly')for(let i=0;i<11;i++){const angle=i/11*Math.PI*2;add(ball,hairMat,Math.cos(angle)*.52,2.05+Math.sin(angle)*.22,-.08,.20,.22,.20)}
  // Fringe, eyes, blush, small smiling mouth. Face points toward positive Z.
  for(const x of [-.23,.23]){
-  add(ball,mat('#45353d'),x,1.82,.523,.167,.207,.069);
-  add(ball,whiteMat,x,1.83,.579,.142,.174,.044);
-  add(ball,eyeMat,x,1.81,.614,.112,.150,.035);
-  add(ball,whiteMat,x-.040,1.882,.648,.047,.061,.018);
-  add(ball,whiteMat,x+.047,1.756,.648,.021,.028,.014);
-  add(ball,pinkMat,x*1.74,1.57,.477,.135,.062,.029);
+  const eyeZ=female?.501:.544;
+  add(ball,mat('#45353d'),x,1.82,eyeZ,female?.165:.145,female?.205:.170,.058);
+  add(ball,whiteMat,x,1.83,eyeZ+.052,female?.145:.128,female?.178:.149,.037);
+  add(ball,eyeMat,x,1.81,eyeZ+.087,female?.113:.103,female?.155:.125,.031);
+  add(ball,whiteMat,x-.040,1.882,eyeZ+.118,.041,.052,.016);
+  add(ball,whiteMat,x+.047,1.756,eyeZ+.118,.020,.025,.013);
+  // Flat blush close to the skin surface; no spherical cheek protrusions.
+  add(ball,pinkMat,x*1.68,1.57,female?.476:.511,.118,.043,.007);
+  if(female){add(ball,mat('#392d34'),x+(x>0?.15:-.15),1.87,eyeZ+.058,.058,.017,.016);}
  }
  add(ball,mat('#c77b78'),0,1.58,.565,.038,.026,.021);
  const smile=new THREE.Mesh(new THREE.TorusGeometry(.105,.016,6,18,Math.PI),mat('#98545b'));smile.position.set(0,1.49,.567);smile.rotation.z=Math.PI;g.add(smile);
- for(const x of [-.23,.23])add(ball,mat('#674a47'),x,2.045,.532,.11,.022,.019);
+ for(const x of [-.23,.23])add(ball,mat('#674a47'),x,2.045,female?.508:.544,female?.105:.137,female?.016:.033,.013);
  if(female){add(ball,mat('#ffe3ee'),.46,2.12,.20,.11,.09,.07);add(ball,mat('#fff9ff'),.46,2.12,.27,.045,.045,.025);}
 
  // Five independent wardrobe categories; silhouettes change rather than only their color.
@@ -231,9 +263,11 @@ function makeChibi(settings){
  }
  // Top is physically different for each style: sleeve length, collar, hood and knit texture.
  const bodyMat=full?dressMat:topMat;
- add(ball,bodyMat,0,.98,0,.345,.39,.30);
+ add(ball,bodyMat,0,.98,0,female?.305:.375,.39,female?.285:.31);
+ // Slight shoulder and waist contrast persists across outfit choices.
+ if(female)add(ball,bodyMat,0,.78,0,.335,.19,.295);
  add(ball,skinMat,0,1.33,.05,.14,.14,.13);
- for(const x of [-.47,.47]){
+ for(const x of (female?[-.425,.425]:[-.49,.49])){
    const longSleeve=full||['longsleeve','shirt','hoodie','knit'].includes(topStyle);
    add(ball,bodyMat,x,1.04,0,.17,longSleeve?.31:.19,.19);
    add(ball,longSleeve?bodyMat:skinMat,x*1.16,.78,0,.12,longSleeve?.22:.24,.13);
@@ -424,15 +458,40 @@ function roomBox(x,y,z,w,h,d,c,group=roomRoot){const o=new THREE.Mesh(new THREE.
 function roomBall(x,y,z,r,c,group=roomRoot){const o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function roomCylinder(x,y,z,rt,rb,h,c,group=roomRoot){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,18),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function registerOffice(obj,zone){obj.userData.officeZone=zone;roomClickable.push(obj);return obj;}
+// Approved: oversized floating nameplates; staff dark rose/blue/green with light text, boss premium navy/gold, printer dark violet/light.
 function officeSign(label,x,y,z,w=3,fg='#23364b',zone=null){
- const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=230;
- const c=canvas.getContext('2d');c.shadowColor='#192b4277';c.shadowBlur=18;c.shadowOffsetY=8;
- c.fillStyle=zone===5?'#263b51':'#fffaf0';c.strokeStyle='#bd9050';c.lineWidth=12;c.beginPath();c.roundRect(14,14,996,200,32);c.fill();c.stroke();c.shadowColor='transparent';
- const pieces=label.split('｜');c.textAlign='center';c.textBaseline='middle';c.fillStyle=zone===5?'#fff8e9':'#22354b';
- c.font='bold 67px sans-serif';c.fillText(pieces[0],512,zone===5?88:88,935);
- c.font='bold 41px sans-serif';c.fillStyle=zone===5?'#f3cf90':'#8a5529';c.fillText(pieces.length>1?pieces.slice(1).join('｜'):'事務所今天又怎麼了？',512,164,945);
+ const isStaff=[6,7,8].includes(zone),isPrinter=zone===9,isBoss=zone===5;
+ const isSpecial=isStaff||isPrinter||isBoss;
+ const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=isSpecial?410:270;
+ const c=canvas.getContext('2d');
+ const colors={5:['#172a3e','#d3aa67','#ffffff','#f0cf95'],6:['#874d69','#edc3d4','#fff5f8','#ffe1ec'],7:['#315b79','#b4d8eb','#f0faff','#d8efff'],8:['#47664c','#c8dec3','#f2fff0','#e0f3d9'],9:['#393354','#c3b2e5','#fff8e9','#eee1ff']};
+ const p=colors[zone]||['#fffaf0','#bd9050','#24364b','#8a5529'];
+ c.shadowColor='#091729bb';c.shadowBlur=30;c.shadowOffsetY=14;
+ c.fillStyle=p[0];c.strokeStyle=p[1];c.lineWidth=isSpecial?24:14;
+ c.beginPath();c.roundRect(30,28,1220,canvas.height-60,50);c.fill();c.stroke();c.shadowColor='transparent';
+ c.textAlign='center';c.textBaseline='middle';
+ if(isStaff){
+  c.fillStyle=p[3];c.font='bold 51px sans-serif';c.fillText('✦ 點擊這個座位 ✦',640,94);
+  c.fillStyle=p[2];c.font='900 151px sans-serif';c.fillText(label.split('｜')[0],640,214,1150);
+  c.fillStyle=p[3];c.font='900 72px sans-serif';c.fillText('事務所今天又怎麼了？',640,333,1170);
+ }else if(isPrinter){
+  c.fillStyle=p[2];c.font='900 135px sans-serif';c.fillText('印表機叛亂中！',640,155,1150);
+  c.fillStyle=p[3];c.font='900 76px sans-serif';c.fillText('事務所今天又怎麼了？',640,278,1170);
+  c.font='bold 40px sans-serif';c.fillText('點擊看看今天又發生什麼事',640,353,1170);
+ }else if(isBoss){
+  c.fillStyle=p[1];c.font='bold 41px sans-serif';c.fillText('⚖  WEI & YANG INTERNATIONAL LAW FIRM  ⚖',640,87,1180);
+  c.fillStyle=p[2];c.font='900 144px sans-serif';c.fillText('林柏均 律師',640,195,1160);
+  c.fillStyle=p[3];c.font='900 70px sans-serif';c.fillText('創辦人暨主持律師',640,285,1170);
+  c.fillStyle=p[2];c.font='bold 41px sans-serif';c.fillText('點擊查看完整專業履歷',640,356,1170);
+ }else{
+  const pieces=label.split('｜');c.fillStyle=p[2];c.font='bold 82px sans-serif';c.fillText(pieces[0],640,105,1160);
+  c.fillStyle=p[3];c.font='bold 53px sans-serif';c.fillText(pieces.length>1?pieces.slice(1).join('｜'):'點擊探索',640,198,1150);
+ }
  const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
- const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));spr.scale.set(w,w*230/1024,1);spr.position.set(x,y,z);spr.renderOrder=15;roomRoot.add(spr);if(zone!==null)registerOffice(spr,zone);return spr;
+ const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,depthWrite:false}));
+ const width=isStaff?Math.max(w*1.50,6.7):isBoss?Math.max(w*1.58,8.2):isPrinter?Math.max(w*1.43,6.4):w;
+ spr.scale.set(width,width*canvas.height/1280,1);spr.position.set(x,isStaff?y+.5:isBoss?y+.5:isPrinter?y+.38:y,z);
+ spr.renderOrder=isBoss?24:23;roomRoot.add(spr);if(zone!==null)registerOffice(spr,zone);return spr;
 }
 function screen(x,y,z,zone,color='#2e4b66'){
  const bezel=registerOffice(roomBox(x,y,z,1.08,.76,.12,color),zone);
@@ -623,9 +682,9 @@ function animateIndoor(dt,t){
 }
 indoorNpc.root.traverse(o=>{if(o.isMesh){o.userData.officeZone=4;roomClickable.push(o)}});
 
-const wyCompany=`<div class="wyHero"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><h1>德威陽國際法律事務所</h1><p>WEI & YANG INTERNATIONAL LAW FIRM</p><p>跨國視野 × 實戰法務 × 公益責任</p></div><div class="wyContent"><h2>關於德威陽</h2><p>德威陽國際法律事務所結合台灣及美國法律專業、企業法務管理與爭議處理實務，提供企業與個人法律服務，重視法律風險的預防、有效溝通與權益保障。</p><h2>主持律師</h2><p>林柏均律師具台灣及美國紐約州律師資格，取得美國 Emory University 法律碩士（LL.M.）與 University of La Verne 企業管理碩士（MBA），並具有上市公司法務長及企業法務實務經驗。</p><h2>專業法律服務</h2><div class="wyGrid"><div class="wyTile">跨國商務與國際契約</div><div class="wyTile">公司治理與企業法務</div><div class="wyTile">智慧財產與營業秘密</div><div class="wyTile">民事、刑事及行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動法與勞資爭議</div><div class="wyTile">醫療法律與爭議</div><div class="wyTile">企業法律顧問</div></div><h2>法律教育與公益參與</h2><p>本所重視企業法律教育、法治宣導與公益法律服務，將專業法律知識轉化為實務可用的風險管理觀念。</p><h2>聯絡我們</h2><p><a target="_blank" rel="noopener" href="https://weiandyang.com/">官方網站 weiandyang.com</a>　｜　<a target="_blank" rel="noopener" href="https://line.me/R/ti/p/~@wylaw">LINE @wylaw</a></p><p><a target="_blank" rel="noopener" href="https://www.facebook.com/weiandyang">Facebook</a>　｜　<a target="_blank" rel="noopener" href="https://www.instagram.com/weiyang_ceo/">Instagram</a></p></div>`;
-const wyLawyer=`<div class="wyHero"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><h1>林柏均 律師</h1><p>德威陽國際法律事務所｜創辦人暨主持律師</p><p>台灣律師・美國紐約州律師</p></div><div class="wyContent"><h2>專業介紹</h2><p>林柏均律師具有台灣與美國紐約州律師資格，兼具跨國法律視野、企業法務管理與訴訟實務背景。曾任上市公司法務長、企業資深法務，並具有美國法律事務所實務經驗，協助企業與個人評估法律風險及處理爭議。</p><h2>律師資格</h2><div class="wyGrid"><div class="wyTile">中華民國（台灣）律師</div><div class="wyTile">美國紐約州律師</div></div><h2>學歷</h2><ul><li>Emory University｜法律碩士（LL.M.）</li><li>University of La Verne｜企業管理碩士（MBA，會計專業領域）</li><li>中國文化大學｜法律學系、日本語文學系雙學士</li></ul><h2>重要專業經歷</h2><ul><li>德威陽國際法律事務所｜創辦人暨主持律師</li><li>揚智科技股份有限公司｜法務長</li><li>藥華醫藥股份有限公司｜資深法務</li><li>台達電子工業股份有限公司｜法務</li><li>泰金寶電通／Cal-Comp Electronics｜法務</li><li>美國法律事務所｜法律實務經歷</li></ul><h2>主要執業領域</h2><div class="wyGrid"><div class="wyTile">跨國商務契約與國際交易</div><div class="wyTile">企業法務、公司治理及法律風險</div><div class="wyTile">智慧財產、營業秘密</div><div class="wyTile">民事、刑事、行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動與勞資爭議</div><div class="wyTile">醫療法律爭議</div><div class="wyTile">企業法律顧問</div></div><h2>專業授課、演講與法律教育經歷</h2><p>結合台美法律專業及企業法務實務經驗，投入企業法律教育、法治宣導與公益法律講座。</p><h3>企業與專業機構授課</h3><ul><li>經濟部國際貿易署／外貿協會高雄辦事處</li><li>中華工商研究院</li><li>北、中、南地區企業法律教育與內部訓練</li></ul><h3>大學與法治教育</h3><ul><li>元智大學｜講師經歷</li></ul><h3>政府機關、社福及公益法律講座</h3><ul><li>苗栗縣政府苗南區社會福利服務中心</li><li>苗栗縣頭份社會福利服務中心</li><li>雲林婦女保護會</li><li>財團法人臺北市賽親關懷基金會</li></ul><h3>主要演講與授課主題</h3><ul><li>公司經理人法律責任與公司治理</li><li>國際商務契約與跨境交易風險</li><li>OEM／ODM 契約與智慧財產保護</li><li>企業營業秘密與勞動法律風險</li><li>應收帳款催收與呆帳防範</li><li>詐欺防制與民刑事法律責任</li><li>婚姻家事、繼承與婦幼權益保護</li><li>青少年法治教育與法律觀念宣導</li><li>醫療法律爭議與權益保障</li></ul><h2>公益法律服務與社會參與</h2><p>曾獲台北律師公會「最佳公益律師」肯定，並參與法律諮詢、法治教育及公益服務。相關服務機構包括台北市政府、新北市政府、現代婦女基金會、犯罪被害人保護協會、崔媽媽基金會等。</p><h2>法律諮詢</h2><p><a href="https://weiandyang.com/" target="_blank" rel="noopener">德威陽國際法律事務所官網</a>　｜　<a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener">LINE @wylaw</a></p></div>`;
-function openWyInfo(kind){document.getElementById('wyInfoBody').innerHTML=kind==='lawyer'?wyLawyer:wyCompany;document.getElementById('wyInfo').classList.add('open');document.getElementById('dialog').style.display='none'}
+const wyCompany=`<div class="wyHero"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><p class="wyEyebrow">ABOUT OUR FIRM · 認識德威陽</p><h1>德威陽國際法律事務所</h1><p>WEI & YANG INTERNATIONAL LAW FIRM</p><p>跨國視野 × 實戰法務 × 公益責任</p></div><div class="wyContent"><p class="wyIntro">法律不只是爭議發生後的處理方式，更是企業經營與個人生活中，預先管理風險、守護權益的重要力量。</p><h2>我們是誰</h2><p>德威陽國際法律事務所結合台灣與國際法律視野、企業法務管理經驗及訴訟實務，服務企業與個人客戶。從事前契約規劃、風險預防，到爭議發生後的訴訟及協商，重視每一項法律問題背後的實際需求。</p><h2>我們如何協助您</h2><div class="wyGrid"><div class="wyTile">🌏 跨國商務與國際契約</div><div class="wyTile">🏢 企業法務與公司治理</div><div class="wyTile">🛡️ 智慧財產與營業秘密</div><div class="wyTile">⚖️ 民事、刑事及行政訴訟</div><div class="wyTile">🏠 婚姻家事與繼承</div><div class="wyTile">🤝 勞動法與勞資爭議</div><div class="wyTile">🏥 醫療法律與爭議</div><div class="wyTile">📋 企業常年法律顧問</div></div><h2>服務理念</h2><p><strong>事前預防：</strong>重視契約、權利義務與風險評估，協助減少不必要的爭議。</p><p><strong>務實溝通：</strong>依據具體事實與法律規範，協助當事人理解可行方案與可能風險。</p><p><strong>跨域視角：</strong>兼顧法律、商業管理及企業經營實務，尋求適切的處理方向。</p><h2>法律教育與公益參與</h2><p>除了法律案件服務，本所亦重視企業法律教育、法治宣導及公益法律服務，致力於將專業法律知識轉化為容易理解、可在生活與經營中運用的觀念。</p><footer class="wyContact"><h2>聯絡德威陽國際法律事務所</h2><div class="wyContactGrid"><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener noreferrer"><b>LINE</b><span>@wylaw</span></a><a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener noreferrer"><b>Facebook</b><span>weiandyang</span></a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer"><b>Instagram</b><span>weiyang_ceo</span></a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer"><b>官方網站</b><span>weiandyang.com</span></a></div></footer></div>`;
+const wyLawyer=`<div class="wyHero"><p class="wyEyebrow">ATTORNEY PROFILE · 專業履歷</p><img src="official-logo.png" alt="WEIYANG 官方 Logo"><h1>林柏均 律師</h1><p>PROFESSIONAL EXPERIENCE & EDUCATION</p><p>德威陽國際法律事務所｜創辦人暨主持律師</p><p>台灣律師・美國紐約州律師</p></div><div class="wyContent"><h2>個人專業簡介</h2><p>林柏均律師具有台灣與美國紐約州律師資格，兼具跨國法律視野、企業法務管理與訴訟實務背景。曾任上市公司法務長、企業資深法務，並具有美國法律事務所實務經驗，協助企業與個人評估法律風險及處理爭議。</p><h2>律師資格</h2><div class="wyGrid"><div class="wyTile">中華民國（台灣）律師</div><div class="wyTile">美國紐約州律師</div></div><h2>學歷</h2><ul><li>Emory University｜法律碩士（LL.M.）</li><li>University of La Verne｜企業管理碩士（MBA，會計專業領域）</li><li>中國文化大學｜法律學系、日本語文學系雙學士</li></ul><h2>企業與法律專業歷程</h2><ul class="wyCareer"><li>德威陽國際法律事務所｜創辦人暨主持律師</li><li>揚智科技股份有限公司｜法務長</li><li>藥華醫藥股份有限公司｜資深法務</li><li>台達電子工業股份有限公司｜法務</li><li>泰金寶電通／Cal-Comp Electronics｜法務</li><li>美國法律事務所｜法律實務經歷</li></ul><h2>個人主要執業領域</h2><div class="wyGrid"><div class="wyTile">跨國商務契約與國際交易</div><div class="wyTile">企業法務、公司治理及法律風險</div><div class="wyTile">智慧財產、營業秘密</div><div class="wyTile">民事、刑事、行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動與勞資爭議</div><div class="wyTile">醫療法律爭議</div><div class="wyTile">企業法律顧問</div></div><h2>演講、專業授課及法治教育實績</h2><p>結合台美法律專業及企業法務實務經驗，投入企業法律教育、法治宣導與公益法律講座。</p><h3>企業與專業機構授課</h3><ul><li>經濟部國際貿易署／外貿協會高雄辦事處</li><li>中華工商研究院</li><li>北、中、南地區企業法律教育與內部訓練</li></ul><h3>大學與法治教育</h3><ul><li>元智大學｜講師經歷</li></ul><h3>政府機關、社福及公益法律講座</h3><ul><li>苗栗縣政府苗南區社會福利服務中心</li><li>苗栗縣頭份社會福利服務中心</li><li>雲林婦女保護會</li><li>財團法人臺北市賽親關懷基金會</li></ul><h3>主要演講與授課主題</h3><ul><li>公司經理人法律責任與公司治理</li><li>國際商務契約與跨境交易風險</li><li>OEM／ODM 契約與智慧財產保護</li><li>企業營業秘密與勞動法律風險</li><li>應收帳款催收與呆帳防範</li><li>詐欺防制與民刑事法律責任</li><li>婚姻家事、繼承與婦幼權益保護</li><li>青少年法治教育與法律觀念宣導</li><li>醫療法律爭議與權益保障</li></ul><h2>公益法律服務與社會參與</h2><p>曾獲台北律師公會「最佳公益律師」肯定，並參與法律諮詢、法治教育及公益服務。相關服務機構包括台北市政府、新北市政府、現代婦女基金會、犯罪被害人保護協會、崔媽媽基金會等。</p><footer class="wyContact"><h2>聯絡德威陽國際法律事務所</h2><div class="wyContactGrid"><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener noreferrer"><b>LINE</b><span>@wylaw</span></a><a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener noreferrer"><b>Facebook</b><span>weiandyang</span></a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer"><b>Instagram</b><span>weiyang_ceo</span></a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer"><b>官方網站</b><span>weiandyang.com</span></a></div></footer></div>`;
+function openWyInfo(kind){const panel=document.querySelector('#wyInfo article');panel.classList.toggle('lawyerPage',kind==='lawyer');panel.classList.toggle('companyPage',kind!=='lawyer');document.getElementById('wyInfoBody').innerHTML=kind==='lawyer'?wyLawyer:wyCompany;panel.scrollTop=0;document.getElementById('wyInfo').classList.add('open');document.getElementById('dialog').style.display='none'}
 function closeWyInfo(){document.getElementById('wyInfo').classList.remove('open')}
 document.getElementById('wyInfoClose').onclick=closeWyInfo;
 document.getElementById('wyInfo').addEventListener('click',e=>{if(e.target.id==='wyInfo')closeWyInfo()});
