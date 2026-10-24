@@ -7,7 +7,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.m
 const $=id=>document.getElementById(id);let en=false;const T=(a,b)=>en?b:a;const labels=[['德威陽主島','WEIYANG Manor'],['訴訟司法島','Litigation & Justice Island'],['醫療法律島','Medical Law Island'],['法律知識島','Legal Knowledge Island'],['企業商務島','Corporate & Business Island'],['家庭生活島','Family & Life Island']];const details=[['律師介紹、事務所、諮詢聯絡。林柏均律師：台灣律師、紐約州律師；Emory University LL.M.；University of La Verne MBA。','Attorney Lin: Taiwan and New York State attorney; Emory University LL.M.; University of La Verne MBA. Firm introduction and consultations.'],['民事訴訟、刑事辯護、行政訴訟、訴願及行政救濟。','Civil litigation, criminal defense, administrative litigation, appeals and remedies.'],['醫療糾紛、醫療損害賠償、醫療機構法律爭議及相關程序。','Medical disputes, malpractice claims, healthcare regulatory matters and related proceedings.'],['法律知識、林律師演講、企業內訓與課程合作。','Legal education, Attorney Lin lectures, corporate training and course collaboration.'],['跨國商務、公司治理、契約、勞動、智慧財產、營業秘密。','Cross-border business, governance, contracts, employment, intellectual property and trade secrets.'],['婚姻、離婚、親子、扶養、繼承、家事法律。','Marriage, divorce, parenting, support, inheritance and family law.']];
 const links='<div class="links"><a href="https://line.me/R/ti/p/@wylaw" target="_blank">LINE @wylaw</a><a href="https://weiandyang.com" target="_blank">官方網站 / Website</a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank">Instagram</a><a href="https://www.facebook.com/weiandyang" target="_blank">Facebook</a></div>';
 function panel(html){$('content').innerHTML=html;$('panel').classList.add('show')}function dismiss(){$('panel').classList.remove('show')}$('close').onclick=dismiss;$('panel').onclick=e=>{if(e.target===$('panel'))dismiss()};
-const scene=new THREE.Scene();scene.background=new THREE.Color('#b9e7ff');scene.fog=new THREE.Fog('#b9e7ff',85,180);const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,200);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:"high-performance"});renderer.shadowMap.enabled=false;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;$('scene').appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x658fbe,2.6));const light=new THREE.DirectionalLight(0xffe9be,2.7);light.position.set(-25,38,19);scene.add(light);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#b9e7ff');scene.fog=new THREE.Fog('#b9e7ff',120,230);const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,200);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:"high-performance"});renderer.shadowMap.enabled=false;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;$('scene').appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x658fbe,2.6));const light=new THREE.DirectionalLight(0xffe9be,2.7);light.position.set(-25,38,19);scene.add(light);
 const material=(color,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness:.73,metalness});const make=(geometry,color,group,x=0,y=0,z=0)=>{const o=new THREE.Mesh(geometry,material(color));o.position.set(x,y,z);group.add(o);return o};const bx=(g,w,h,d,c,x,y,z)=>make(new THREE.BoxGeometry(w,h,d),c,g,x,y,z);const cy=(g,rt,rb,h,c,x,y,z,n=12)=>make(new THREE.CylinderGeometry(rt,rb,h,n),c,g,x,y,z);const sp=(g,r,c,x,y,z)=>make(new THREE.SphereGeometry(r,12,8),c,g,x,y,z);
 const center=[0,0],R=18;const positions=[[0,0],[-15,-12],[15,-12],[0,19],[17,11],[-17,11]];const radius=5.4,deck=1.05;const landings=[];const clickMeshes=[];const bridges=[];
 function cone(g,r,h,c,x,y,z,n=8){return make(new THREE.ConeGeometry(r,h,n),c,g,x,y,z)}
@@ -111,24 +111,48 @@ positions.forEach((_,i)=>{island(i);premiumDetails(landings[i],i)});
 for(let i=1;i<6;i++){const [x,z]=positions[i],d=Math.hypot(x,z),ux=x/d,uz=z/d;const start=radius-.25,end=d-radius+.25,len=end-start;const g=new THREE.Group();g.position.set(ux*(start+end)/2,deck-.08,uz*(start+end)/2);g.rotation.y=Math.atan2(ux,uz);scene.add(g);bx(g,1.75,.28,len,0xf1b8c9,0,0,0);for(let j=0;j<7;j++){const zz=-len/2+(j+.5)*len/7;bx(g,1.75,.05,len/7-.05,[0xf5c7d8,0xffe4ae,0xcce9d1,0xc8dffb][j%4],0,.18,zz)}for(let side of [-1,1]){bx(g,.1,.12,len,0xfff7de,side*.91,.3,0);for(let j=0;j<5;j++)cy(g,.07,.07,.52,0xfff5e6,side*.92,.5,-len/2+j*len/4)}bridges.push({ux,uz,start,end,i})}
 // Four named characters in the central manor; no other speaking NPCs.
 const people=[['林柏均律師','Attorney Lin',0x39445d,-1.8,2.7],['夢奇奇飼養者','Reception Team',0xeaa2bd,-.6,3],['哈姆太郎','Office Team',0x354a60,.6,3],['薪水掌門人','Office Team',0xe0b37d,1.8,2.7]];const staffHits=[];
-function doll(g,shirt=0xe4a7bd){const d=new THREE.Group();g.add(d);sp(d,.35,0xf4c5a3,0,1.25,0);sp(d,.36,0x4c332d,0,1.53,-.09);cy(d,.34,.34,.67,shirt,0,.78,0);for(const sx of [-.17,.17]){cy(d,.12,.12,.43,0x42526a,sx,.23,0);sp(d,.12,0xf4c5a3,sx*2.4,.83,0)}return d}
+function doll(g,shirt=0xe4a7bd){
+ const d=new THREE.Group();g.add(d);
+ const skin=0xf4c5a3,hair=0x4c332d;
+ sp(d,.38,skin,0,1.29,0); // head
+ const cap=sp(d,.38,hair,0,1.59,-.12);cap.scale.set(1.06,.63,1.05);
+ const torso=cy(d,.32,.39,.69,shirt,0,.79,0,16);
+ for(const sx of [-1,1]){
+   cy(d,.115,.125,.44,0x42526a,sx*.18,.24,0,10);
+   const arm=sp(d,.13,skin,sx*.43,.82,.035);arm.scale.set(.8,1.65,.8);
+ }
+ // Expressive storybook facial features: both eyes, glints, brows, nose, rosy cheeks, smile.
+ const face=new THREE.Group();face.name='face';d.add(face);
+ for(const sx of [-1,1]){
+   const eye=sp(face,.067,0x332c37,sx*.145,1.34,.337);eye.scale.set(.86,1.17,.55);
+   sp(face,.024,0xffffff,sx*.145-.018,1.365,.38);
+   const brow=sp(face,.062,hair,sx*.145,1.455,.334);brow.scale.set(1.1,.28,.4);
+   const blush=sp(face,.085,0xef9fa0,sx*.255,1.225,.284);blush.scale.set(1.1,.52,.34);
+ }
+ sp(face,.037,0xe8a78c,0,1.255,.382);
+ const smile=new THREE.Mesh(new THREE.TorusGeometry(.085,.015,5,16,Math.PI),material(0x9b5361));smile.position.set(0,1.175,.369);smile.rotation.z=Math.PI;face.add(smile);
+ // Side hair locks give the face a softer fairytale silhouette.
+ for(const sx of [-1,1]){let lock=sp(d,.115,hair,sx*.34,1.39,-.01);lock.scale.set(.75,1.8,.9);lock.name='hairLock'}
+ d.userData={head:d.children[0],hair:cap,torso,face};return d;
+}
 people.forEach((p,i)=>{const d=doll(scene,p[2]);d.position.set(p[3],deck,p[4]);const hit=cy(d,.5,.5,1.9,0xffffff,0,.95,0);hit.material.transparent=true;hit.material.opacity=0;hit.userData.person=i;staffHits.push(hit)});
-let avatar={hair:'brown',hairStyle:'short',skin:'#f4c5a3',color:'#e7a7ba',outfit:'casual'};try{avatar={...avatar,...JSON.parse(localStorage.getItem('wyAvatarWalk')||'{}')}}catch(e){}let player=doll(scene);let px=0,pz=3.7;player.position.set(px,deck,pz);let target=null,overview=false;let avatarPreviewRenderer=null,avatarPreviewScene=null,avatarPreviewCamera=null,avatarPreviewDoll=null;
+let avatar={hair:'brown',hairStyle:'short',skin:'#f4c5a3',color:'#e7a7ba',outfit:'casual'};try{avatar={...avatar,...JSON.parse(localStorage.getItem('wyAvatarWalk')||'{}')}}catch(e){}let player=doll(scene);let px=0,pz=3.7;player.position.set(px,deck,pz);let target=null,overview=true;let introUntil=performance.now()+4800;let route=[];let cameraYaw=0;let avatarPreviewRenderer=null,avatarPreviewScene=null,avatarPreviewCamera=null,avatarPreviewDoll=null;
 function dressDoll(d,config){
  const skin=new THREE.Color(config.skin),hairColor=new THREE.Color(config.hair==='black'?'#292d35':config.hair==='blonde'?'#b88a48':config.hair==='auburn'?'#9a4f35':'#4c332d');
- const top=new THREE.Color(config.outfit==='suit'?'#40536e':config.outfit==='dress'?'#e5a1c5':config.color);
- d.children[0].material.color.copy(skin);d.children[1].material.color.copy(hairColor);d.children[2].material.color.copy(top);
- for(let i=3;i<d.children.length;i++){if(i===4||i===6)d.children[i].material.color.copy(skin)}
- const old=d.getObjectByName('extraHair');if(old)d.remove(old);const oldSkirt=d.getObjectByName('skirt');if(oldSkirt)d.remove(oldSkirt);
- if(config.hairStyle==='long'||config.hairStyle==='ponytail'){
-  const ext=new THREE.Group();ext.name='extraHair';d.add(ext);
-  const m=new THREE.MeshStandardMaterial({color:hairColor,roughness:.78});
-  if(config.hairStyle==='long')for(const side of [-1,1]){let h=new THREE.Mesh(new THREE.SphereGeometry(.14,12,10),m);h.scale.set(1,2.1,.8);h.position.set(side*.27,1.29,-.09);ext.add(h)}
-  else{let h=new THREE.Mesh(new THREE.SphereGeometry(.17,12,10),m);h.scale.set(.85,1.65,.85);h.position.set(0,1.35,-.39);ext.add(h)}
- }
- if(config.outfit==='dress'){
-  const skirt=new THREE.Mesh(new THREE.ConeGeometry(.44,.5,16),new THREE.MeshStandardMaterial({color:top}));skirt.position.y=.45;skirt.name='skirt';d.add(skirt)
- }
+ const top=new THREE.Color(config.outfit==='suit'?'#40536e':config.outfit==='dress'?config.color:config.color);
+ d.userData.head.material.color.copy(skin);d.userData.hair.material.color.copy(hairColor);d.userData.torso.material.color.copy(top);
+ d.children.forEach(o=>{if(o.name==='hairLock')o.material.color.copy(hairColor)});
+ d.userData.face.children.forEach((o,i)=>{if(o.geometry?.type==='SphereGeometry'&&i%4===2)o.material.color.copy(hairColor)});
+ // Legs and hands retain the correct skin tone when customizing.
+ d.children.slice(3,7).forEach((o,i)=>{if(i%2===1)o.material.color.copy(skin)});
+ for(const name of ['extraHair','skirt','jacket','bow']){const old=d.getObjectByName(name);if(old)d.remove(old)}
+ const ext=new THREE.Group();ext.name='extraHair';d.add(ext);
+ const m=new THREE.MeshStandardMaterial({color:hairColor,roughness:.76});
+ if(config.hairStyle==='long')for(const side of [-1,1]){let h=new THREE.Mesh(new THREE.SphereGeometry(.16,12,10),m);h.scale.set(1,2.25,.85);h.position.set(side*.31,1.25,-.15);ext.add(h)}
+ else if(config.hairStyle==='ponytail'){let h=new THREE.Mesh(new THREE.SphereGeometry(.19,14,10),m);h.scale.set(.85,1.8,.8);h.position.set(0,1.38,-.43);ext.add(h);let ribbon=sp(ext,.11,0xeab1c7,0,1.56,-.46);ribbon.scale.set(1.4,.6,.7)}
+ else {for(const side of [-1,1]){let h=new THREE.Mesh(new THREE.SphereGeometry(.13,12,10),m);h.position.set(side*.24,1.57,.09);ext.add(h)}}
+ if(config.outfit==='dress'){const skirt=new THREE.Mesh(new THREE.ConeGeometry(.46,.52,20),new THREE.MeshStandardMaterial({color:top}));skirt.position.y=.47;skirt.name='skirt';d.add(skirt)}
+ if(config.outfit==='suit'){const jacket=new THREE.Group();jacket.name='jacket';d.add(jacket);bx(jacket,.1,.45,.05,0xfff8eb,0,.87,.335);bx(jacket,.11,.11,.06,0xd8ae6d,0,.8,.37)}
 }
 function redrawAvatar(){scene.remove(player);player=doll(scene,avatar.color);dressDoll(player,avatar);player.position.set(px,deck,pz);refreshAvatarPreview()}
 function refreshAvatarPreview(){if(!avatarPreviewScene)return;if(avatarPreviewDoll)avatarPreviewScene.remove(avatarPreviewDoll);avatarPreviewDoll=doll(avatarPreviewScene,avatar.color);dressDoll(avatarPreviewDoll,avatar);avatarPreviewDoll.position.y=-.55}
@@ -146,11 +170,17 @@ function avatarDialog(){panel(`<h2>${T('裝扮你的探索角色','Customize you
 $('avatarBtn').onclick=avatarDialog;$('langBtn').onclick=()=>{en=!en;$('langBtn').textContent=en?'中文':'EN';$('avatarBtn').textContent=T('👤 角色','👤 Avatar');$('overview').textContent=T('🗺️ 全景','🗺️ Map');$('talk').textContent=T('💬 人物','💬 People');$('services').textContent=T('⚖️ 法律服務','⚖️ Services');$('contact').textContent=T('📱 聯絡','📱 Contact');$('hint').textContent=T('🎮 左下搖桿走路・點地面前往・走彩虹橋跨島','🎮 Joystick to walk · Tap ground to move · Cross rainbow bridges')};
 function islandDialog(i){panel(`<h2>${labels[i][en?1:0]}</h2><p class="sub">${labels[i][en?0:1]}</p><p>${details[i][en?1:0]}</p>${links}<div class="links"><button id="continue">${T('繼續自由探索','Continue exploring')}</button></div>`);$('continue').onclick=dismiss}
 const lines=[['林柏均律師','Attorney Lin',['契約不只看價格，履約、責任分配及爭議解決也很重要。','Contracts are about more than price: performance, liability and dispute resolution matter.']],['夢奇奇飼養者','Reception Team',['歡迎來到德威陽！六座島嶼都能自由探索，法律諮詢可使用 LINE 聯絡。','Welcome! Explore all six islands freely, or contact us via LINE.']],['哈姆太郎','Office Team',['醫療法律有自己的獨立島嶼；民事、刑事與行政訴訟則在司法島。','Medical law has its own island; civil, criminal and administrative litigation share Justice Island.']],['薪水掌門人','Office Team',['這裡不用解任務！想看服務、找律師、聯絡事務所都可以直接點。','No missions required! Browse services and contact the firm anytime.']]];function personDialog(i){const p=lines[i];panel(`<h2>${p[en?1:0]}</h2><p>${p[2][en?1:0]}</p>${links}`)}$('talk').onclick=()=>panel(`<h2>${T('四位人物互動','Meet the team')}</h2><div class="options">${people.map((p,i)=>`<button data-person="${i}">${p[en?1:0]}</button>`).join('')}</div>`),$('services').onclick=()=>panel(`<h2>${T('六座法律主題島','Six Legal Islands')}</h2><div class="options">${labels.map((v,i)=>`<button data-island="${i}">${v[en?1:0]}</button>`).join('')}</div>`),$('contact').onclick=()=>panel(`<h2>${T('聯絡德威陽','Contact WEIYANG')}</h2>${links}`);
-$('sheet').addEventListener('click',e=>{let b=e.target.closest('[data-person],[data-island]');if(!b)return;if(b.dataset.person!==undefined)personDialog(+b.dataset.person);else islandDialog(+b.dataset.island)});
-$('overview').onclick=()=>{overview=!overview;$('notice').textContent=overview?T('全景模式：再次點擊返回跟隨角色','Map view: tap again to follow your avatar'):T('人物跟隨模式','Follow player mode')};
+$('sheet').addEventListener('click',e=>{let b=e.target.closest('[data-person],[data-island]');if(!b)return;if(b.dataset.person!==undefined)personDialog(+b.dataset.person);else {const i=+b.dataset.island;dismiss();goIsland(i)}});
+$('overview').onclick=()=>{introUntil=0;overview=!overview;$('notice').textContent=overview?T('全景模式：再次點擊返回跟隨角色','Map view: tap again to follow your avatar'):T('人物跟隨模式','Follow player mode')};
 // Joystick supports touch, pointer and mouse. Movement is constrained to island surfaces and bridges.
-const stick=$('stick'),joy=$('joystick');let joyX=0,joyY=0;function setJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.max(1,Math.hypot(dx,dy)),s=Math.min(1,d/42);joyX=dx/d*s;joyY=dy/d*s;stick.style.transform=`translate(${joyX*37}px,${joyY*37}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);setJoy(e);target=null});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))setJoy(e)});function release(){joyX=joyY=0;stick.style.transform='translate(0,0)'}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
-function walkable(x,z){for(const [cx,cz] of positions)if(Math.hypot(x-cx,z-cz)<radius-.45)return true;for(const b of bridges){const along=x*b.ux+z*b.uz,cross=Math.abs(x*b.uz-z*b.ux);if(along>=b.start-.1&&along<=b.end+.1&&cross<.78)return true}return false}
+const stick=$('stick'),joy=$('joystick');let joyX=0,joyY=0;function setJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.max(1,Math.hypot(dx,dy)),s=Math.min(1,d/42);joyX=dx/d*s;joyY=dy/d*s;stick.style.transform=`translate(${joyX*37}px,${joyY*37}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);setJoy(e);target=null;route=[];introUntil=0;overview=false});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))setJoy(e)});function release(){joyX=joyY=0;stick.style.transform='translate(0,0)'}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
+function walkable(x,z){for(const [cx,cz] of positions)if(Math.hypot(x-cx,z-cz)<radius-.28)return true;for(const b of bridges){const along=x*b.ux+z*b.uz,cross=Math.abs(x*b.uz-z*b.ux);if(along>=b.start-.5&&along<=b.end+.5&&cross<1.12)return true}return false}
+function currentIsland(){let best=0,dist=Infinity;positions.forEach(([x,z],i)=>{let d=Math.hypot(px-x,pz-z);if(d<dist){best=i;dist=d}});return best}
+function goIsland(i){introUntil=0;overview=false;const here=currentIsland();const dest=positions[i];route=[];
+ if(here!==0){const b=bridges.find(b=>b.i===here);route.push([b.ux*(b.end+.7),b.uz*(b.end+.7)],[b.ux*(b.start-.6),b.uz*(b.start-.6)],[0,0])}
+ if(i!==0){const b=bridges.find(b=>b.i===i);route.push([b.ux*(b.start-.65),b.uz*(b.start-.65)],[b.ux*(b.end+.7),b.uz*(b.end+.7)])}
+ route.push([dest[0],dest[1]+1.4]);target=null;$('notice').textContent=T('✨ 正沿彩虹橋前往目的島嶼','✨ Following the rainbow bridge');
+}
 const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
 let pointerDown=null;
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshBasicMaterial({visible:false}));
@@ -170,7 +200,25 @@ renderer.domElement.addEventListener('pointerup',e=>{
    else islandDialog(i);
  }
  const g=ray.intersectObject(ground);
- if(g.length && walkable(g[0].point.x,g[0].point.z))target=[g[0].point.x,g[0].point.z];
+ if(g.length && walkable(g[0].point.x,g[0].point.z)){introUntil=0;overview=false;route=[];target=[g[0].point.x,g[0].point.z]}
 });
-let prev=performance.now();function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-prev)/1000,.05);prev=now;let vx=joyX,vz=joyY;if(Math.hypot(vx,vz)<.05&&target){let dx=target[0]-px,dz=target[1]-pz,dist=Math.hypot(dx,dz);if(dist<.22)target=null;else{vx=dx/dist;vz=dz/dist}}else if(Math.hypot(vx,vz)>.05)target=null;const speed=4.3,step=Math.hypot(vx,vz)*speed*dt;if(step>.001){const nx=px+vx*speed*dt,nz=pz+vz*speed*dt;if(walkable(nx,nz)){px=nx;pz=nz;player.rotation.y=Math.atan2(vx,vz);player.position.y=deck+Math.sin(now*.015)*.045}else{target=null}}player.position.x=px;player.position.z=pz;const desired=overview?new THREE.Vector3(0,42,44):new THREE.Vector3(px+12,16,pz+19);camera.position.lerp(desired,.06);camera.lookAt(overview?new THREE.Vector3(0,0,0):new THREE.Vector3(px,1.2,pz));renderer.render(scene,camera);if(avatarPreviewRenderer&&avatarPreviewScene){avatarPreviewDoll.rotation.y+=dt*.6;avatarPreviewRenderer.render(avatarPreviewScene,avatarPreviewCamera)}}camera.position.set(12,17,22);animate(performance.now());addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});$('notice').textContent=T('✨ 童話 3D 世界：使用搖桿走過彩虹橋探索六島','✨ Explore six fairytale 3D islands using the joystick');if(!localStorage.getItem('wyAvatarWalk'))setTimeout(avatarDialog,800);
+let prev=performance.now();function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-prev)/1000,.05);prev=now;
+ if(introUntil&&now>introUntil){introUntil=0;overview=false}
+ let vx=joyX,vz=joyY;
+ if(Math.hypot(vx,vz)<.05){const goal=route.length?route[0]:target;if(goal){let dx=goal[0]-px,dz=goal[1]-pz,dist=Math.hypot(dx,dz);if(dist<.32){if(route.length)route.shift();else target=null}else{vx=dx/dist;vz=dz/dist}}}
+ else{target=null;route=[]}
+ const speed=4.4,step=Math.hypot(vx,vz)*speed*dt;
+ if(step>.001){let nx=px+vx*speed*dt,nz=pz+vz*speed*dt;
+ if(!walkable(nx,nz)){
+   // Forgiving bridge entrances: gently guide the avatar onto the nearest bridge centerline.
+   let best=null,score=2.0;
+   for(const b of bridges){let along=nx*b.ux+nz*b.uz,cross=nx*b.uz-nz*b.ux;if(along>b.start-1.2&&along<b.end+1.2&&Math.abs(cross)<score){score=Math.abs(cross);best=b}}
+   if(best){let along=nx*best.ux+nz*best.uz;nx=best.ux*along;nz=best.uz*along}
+ }
+ if(walkable(nx,nz)){px=nx;pz=nz;player.rotation.y=Math.atan2(vx,vz);player.position.y=deck+Math.sin(now*.017)*.065}else{if(!route.length)target=null}}
+ player.position.x=px;player.position.z=pz;
+ const desired=overview?new THREE.Vector3(0,68,74):new THREE.Vector3(px+9,13,pz+14);
+ camera.position.lerp(desired,overview?.035:.075);camera.lookAt(overview?new THREE.Vector3(0,0,2):new THREE.Vector3(px,1.4,pz));renderer.render(scene,camera);
+ if(avatarPreviewRenderer&&avatarPreviewScene){avatarPreviewDoll.rotation.y=Math.sin(now*.0006)*.28;avatarPreviewRenderer.render(avatarPreviewScene,avatarPreviewCamera)}
+}camera.position.set(0,68,74);animate(performance.now());addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});$('notice').textContent=T('✨ 六島全景開場・點島嶼自動走彩虹橋・搖桿自由探索','✨ Six-island panorama · Tap an island to cross bridges · Joystick to explore');if(!localStorage.getItem('wyAvatarWalk'))setTimeout(avatarDialog,800);
 </script></body></html>
