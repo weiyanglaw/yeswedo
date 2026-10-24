@@ -107,48 +107,55 @@ if(i===0){
 }
 groups[i].add(model);
 if(i===0){
-  // Castle forecourt: completely level; no entrance stairs or ramps.
-  const court=new THREE.Group();groups[0].add(court);
-  const paving=new THREE.MeshStandardMaterial({color:0xfff0d6,roughness:.82});
-  const edge=new THREE.MeshStandardMaterial({color:0xd5aa54,metalness:.35,roughness:.4});
-  const water=new THREE.MeshPhysicalMaterial({color:0x51c8f0,roughness:.12,metalness:.06,transparent:true,opacity:.84});
-  const flat=new THREE.Mesh(new THREE.CylinderGeometry(12.5,12.5,.18,80),paving);
-  flat.position.set(0,.68,9.0);court.add(flat);
-  // A modest official logo placed ON the facade, not a billboard blocking the castle.
-  const logoTex=new THREE.TextureLoader().load('official-logo.png');
-  logoTex.colorSpace=THREE.SRGBColorSpace;
-  const logoFrame=new THREE.Mesh(new THREE.CylinderGeometry(1.72,1.72,.12,64),edge);
-  logoFrame.rotation.x=Math.PI/2;logoFrame.position.set(0,10.3,1.55);court.add(logoFrame);
-  const logoPanel=new THREE.Mesh(new THREE.CircleGeometry(1.60,64),new THREE.MeshBasicMaterial({map:logoTex,side:THREE.DoubleSide,transparent:false}));
-  logoPanel.position.set(0,10.3,1.65);logoPanel.renderOrder=11;court.add(logoPanel);
-  // Globe fountain immediately in front of the entrance on the same level.
-  const fountain=new THREE.Group();fountain.position.set(0,0,11.5);court.add(fountain);
-  const base=new THREE.Mesh(new THREE.CylinderGeometry(5.3,5.5,.33,72),paving);base.position.y=.86;fountain.add(base);
-  const pool=new THREE.Mesh(new THREE.CylinderGeometry(4.65,4.65,.15,72),water);pool.position.y=1.07;fountain.add(pool);
-  const rim=new THREE.Mesh(new THREE.TorusGeometry(4.86,.36,16,96),edge);rim.rotation.x=Math.PI/2;rim.position.y=1.12;fountain.add(rim);
-  const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(.82,1.2,1.22,40),edge);pedestal.position.y=1.82;fountain.add(pedestal);
-  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(1.35,1.35,.22,48),paving);plinth.position.y=2.51;fountain.add(plinth);
-  // A globe (blue oceans, green continents) rather than the previous plain ball.
-  const globeCanvas=document.createElement('canvas');globeCanvas.width=1024;globeCanvas.height=512;
-  const gc=globeCanvas.getContext('2d');gc.fillStyle='#1589d9';gc.fillRect(0,0,1024,512);
-  gc.fillStyle='#5bd16e';
-  const continents=[[[90,80],[145,60],[205,83],[232,125],[207,159],[175,168],[165,218],[131,228],[116,183],[82,146]],[[200,222],[253,234],[270,289],[245,344],[224,402],[199,448],[180,388],[188,326]],[[480,100],[545,76],[617,88],[675,114],[732,103],[812,140],[832,188],[770,200],[738,249],[678,247],[631,217],[590,227],[551,181],[493,167]],[[535,216],[603,221],[633,268],[621,340],[589,403],[552,384],[534,325],[515,263]],[[790,333],[853,318],[895,355],[887,398],[837,412],[801,381]]];
-  for(const poly of continents){gc.beginPath();poly.forEach(([x,y],i)=>i?gc.lineTo(x,y):gc.moveTo(x,y));gc.closePath();gc.fill()}
-  gc.fillStyle='#ecfaff';gc.fillRect(0,0,1024,20);gc.fillRect(0,492,1024,20);
-  const globeTexture=new THREE.CanvasTexture(globeCanvas);globeTexture.colorSpace=THREE.SRGBColorSpace;
-  const globe=new THREE.Mesh(new THREE.SphereGeometry(1.75,48,32),new THREE.MeshStandardMaterial({map:globeTexture,roughness:.48,metalness:.04}));
-  globe.position.y=4.40;globe.rotation.y=.4;fountain.add(globe);
-  const jetMat=new THREE.MeshBasicMaterial({color:0xb7f7ff,transparent:true,opacity:.85});
-  for(let k=0;k<10;k++){
-    const a=k*Math.PI*2/10;
-    const r=3.4;
-    const start=new THREE.Vector3(Math.cos(a)*r,1.20,Math.sin(a)*r);
-    const end=new THREE.Vector3(Math.cos(a)*1.65,3.85,Math.sin(a)*1.65);
-    const control=start.clone().lerp(end,.5).add(new THREE.Vector3(0,1.15,0));
-    const curve=new THREE.QuadraticBezierCurve3(start,control,end);
-    fountain.add(new THREE.Mesh(new THREE.TubeGeometry(curve,24,.075,8,false),jetMat));
-  }
-  const light=new THREE.PointLight(0xffe7b3,1.5,22);light.position.set(0,7,6);court.add(light);
+   // Castle entrance redesign: level paved plaza, small facade seal, globe fountain.
+   // These objects are in the island's Y-up world coordinates, not GLB-local Z-up.
+   const court=new THREE.Group();groups[0].add(court);
+   const stone=new THREE.MeshStandardMaterial({color:0xffefd6,roughness:.87});
+   const gold=new THREE.MeshStandardMaterial({color:0xd9ae55,metalness:.42,roughness:.33});
+   const blue=new THREE.MeshPhysicalMaterial({color:0x40c6f2,transparent:true,opacity:.85,roughness:.12,metalness:.02});
+   const flat=new THREE.Mesh(new THREE.CylinderGeometry(12.8,12.8,.18,96),stone);
+   flat.position.set(0,.59,8.7);court.add(flat);
+   const tileRing=new THREE.Mesh(new THREE.TorusGeometry(11.9,.13,8,96),gold);
+   tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.71,8.7);court.add(tileRing);
+   // Small real official logo integrated above the entrance; never a billboard.
+   const logoTex=new THREE.TextureLoader().load('official-logo.png?v=20261024-entrance-fixed');
+   logoTex.colorSpace=THREE.SRGBColorSpace;
+   const logoFrame=new THREE.Mesh(new THREE.CylinderGeometry(1.48,1.48,.13,64),gold);
+   logoFrame.rotation.x=Math.PI/2;logoFrame.position.set(0,9.25,2.2);court.add(logoFrame);
+   const logoPanel=new THREE.Mesh(new THREE.CircleGeometry(1.38,64),new THREE.MeshBasicMaterial({map:logoTex,side:THREE.DoubleSide}));
+   logoPanel.position.set(0,9.25,2.30);court.add(logoPanel);
+   // Circular water basin with recognizable blue-green globe and arcing water jets.
+   const fountain=new THREE.Group();fountain.position.set(0,0,12.1);court.add(fountain);
+   const base=new THREE.Mesh(new THREE.CylinderGeometry(4.7,4.85,.28,96),stone);
+   base.position.y=.85;fountain.add(base);
+   const basin=new THREE.Mesh(new THREE.CylinderGeometry(4.27,4.27,.11,96),blue);
+   basin.position.y=1.035;fountain.add(basin);
+   const rim=new THREE.Mesh(new THREE.TorusGeometry(4.45,.27,14,96),gold);
+   rim.rotation.x=Math.PI/2;rim.position.y=1.10;fountain.add(rim);
+   const plinth=new THREE.Mesh(new THREE.CylinderGeometry(.95,1.2,1.10,48),stone);
+   plinth.position.y=1.65;fountain.add(plinth);
+   const crown=new THREE.Mesh(new THREE.CylinderGeometry(1.24,1.24,.17,48),gold);
+   crown.position.y=2.27;fountain.add(crown);
+   const globeCanvas=document.createElement('canvas');globeCanvas.width=1024;globeCanvas.height=512;
+   const gc=globeCanvas.getContext('2d');gc.fillStyle='#168cdd';gc.fillRect(0,0,1024,512);
+   gc.fillStyle='#69cb68';
+   const land=[[[90,80],[145,60],[205,83],[232,125],[207,159],[175,168],[165,218],[131,228],[116,183],[82,146]],[[200,222],[253,234],[270,289],[245,344],[224,402],[199,448],[180,388],[188,326]],[[480,100],[545,76],[617,88],[675,114],[732,103],[812,140],[832,188],[770,200],[738,249],[678,247],[631,217],[590,227],[551,181],[493,167]],[[535,216],[603,221],[633,268],[621,340],[589,403],[552,384],[534,325],[515,263]],[[790,333],[853,318],[895,355],[887,398],[837,412],[801,381]]];
+   for(const poly of land){gc.beginPath();poly.forEach(([x,y],i)=>i?gc.lineTo(x,y):gc.moveTo(x,y));gc.closePath();gc.fill()}
+   gc.fillStyle='#effaff';gc.fillRect(0,0,1024,14);gc.fillRect(0,498,1024,14);
+   const globeTex=new THREE.CanvasTexture(globeCanvas);globeTex.colorSpace=THREE.SRGBColorSpace;
+   const globe=new THREE.Mesh(new THREE.SphereGeometry(1.63,48,32),new THREE.MeshStandardMaterial({map:globeTex,roughness:.35}));
+   globe.position.y=4.04;globe.rotation.y=.4;fountain.add(globe);
+   const jetMat=new THREE.MeshBasicMaterial({color:0xb9f5ff,transparent:true,opacity:.83});
+   for(let k=0;k<12;k++){
+     const a=k*Math.PI*2/12;
+     const p0=new THREE.Vector3(Math.cos(a)*3.75,1.15,Math.sin(a)*3.75);
+     const p1=new THREE.Vector3(Math.cos(a)*1.7,3.7,Math.sin(a)*1.7);
+     const mid=p0.clone().lerp(p1,.5);mid.y+=1.25;
+     const curve=new THREE.QuadraticBezierCurve3(p0,mid,p1);
+     fountain.add(new THREE.Mesh(new THREE.TubeGeometry(curve,28,.072,7,false),jetMat));
+   }
+   // Decorative edging, no ramp or stairs between the door and the basin.
+   const light=new THREE.PointLight(0xffe7b3,1.3,20);light.position.set(0,7,5);court.add(light);
   // Make entrance the first clear view once the player finishes creating a character.
   window.__weiyangEntrance={logo:logoPanel,fountain};
 }
@@ -158,7 +165,7 @@ const bridges=[];for(let i=1;i<6;i++){const a=new THREE.Vector3(xy[0][0],.65,xy[
 async function addOriginalBridge(){try{const gltf=await getGLB('bridge');const orig=gltf.scene;let source=null;orig.traverse(o=>{if(o.name.startsWith('Bridge.001'))source=o});if(!source){status.textContent='彩虹橋已完成（原橋造型無法辨識）';return}for(const {group,len} of bridges){const clone=source.clone(true);fit(clone,5.1);clone.position.y=.42;group.add(clone)}status.textContent='六座島與五條彩虹橋已完成載入';}catch(e){console.warn('bridge',e)}}
 // Simple walkable avatar and three staff members, selectable by raycasting.
 // The same modular chibi avatar is used for the live preview and in-world player.
-const actor=new THREE.Group();scene.add(actor);actor.position.set(0,0,10);
+const actor=new THREE.Group();scene.add(actor);actor.position.set(7,0,12);
 function makeChibi(settings){
  const g=new THREE.Group(), mat=(color)=>new THREE.MeshStandardMaterial({color,roughness:.82});
  const skinMat=mat(settings.skin), hairMat=mat(settings.hairColor),topMat=mat(settings.top),bottomMat=mat(settings.bottom),shoeMat=mat('#fff8ef'),eyeMat=mat('#302a31'),whiteMat=mat('#ffffff'),pinkMat=mat('#ef98a4');
