@@ -62,6 +62,15 @@ function enterIsland(){
 $('startExplore').addEventListener('click',enterIsland);
 })();
 </script>
+<div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
+<div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
+<div style="position:absolute;bottom:16px;left:10px;right:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;pointer-events:auto">
+<button data-office="0" style="padding:12px 5px;border:0;border-radius:13px;background:#fff9eeed;font-weight:bold">🏛️ 事務所介紹</button>
+<button data-office="1" style="padding:12px 5px;border:0;border-radius:13px;background:#fff9eeed;font-weight:bold">👨‍💼 律師與員工辦公區</button>
+<button data-office="2" style="padding:12px 5px;border:0;border-radius:13px;background:#fff9eeed;font-weight:bold">💬 櫃檯接待</button>
+<button data-office="3" style="padding:12px 5px;border:0;border-radius:13px;background:#fff9eeed;font-weight:bold">📚 德威陽漫畫展示區</button>
+</div></div>
+<button id="officeEnter" style="display:none;position:fixed;top:76px;right:12px;z-index:24;border:0;border-radius:14px;padding:12px 17px;background:#fff3d2;font-weight:bold;box-shadow:0 2px 12px #0004">🚪 進入 3D 事務所</button>
 <script type="module">
 import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"castle":["assets/castle_00.part","assets/castle_01.part","assets/castle_02.part","assets/castle_03.part","assets/castle_04.part","assets/castle_05.part","assets/castle_06.part"],"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-66],[62,-20],[39,54],[-39,54],[-62,-20]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0x94b5c0,2.8));const sun=new THREE.DirectionalLight(0xfff2d3,3.2);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#ff5e8a','#ffa449','#ffe866','#63dcb1','#5fc9ff','#aa82ec'];const rm=rainbow.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.14,roughness:.55}));
@@ -86,7 +95,7 @@ function createIslandLabel(i){
 }
 for(let i=0;i<6;i++)createIslandLabel(i);
 function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
-const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-geometry-fixed'):await getGLB(keys[i]);const model=g.scene;
+const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-2level'):await getGLB(keys[i]);const model=g.scene;
 if(i===0){
   // This GLB was authored Z-up. Three.js is Y-up: map +Z to +Y.
   model.rotation.set(-Math.PI/2,0,0);
@@ -232,9 +241,9 @@ refreshChibi();
 const clickable=[],staffNPCs=[];
 const staffDefs=[
  {name:'林柏均律師',alias:'林律師',x:-6,z:6,skin:'#f2c6a5',hair:'#352a28',top:'#24364f',bottom:'#26344c',kind:'lawyer',range:3.4,speed:.52},
- {name:'夢奇奇飼養者',x:-9,z:9,skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail',range:3.0,speed:.62},
- {name:'哈姆太郎',x:-5,z:10,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.8,speed:.75},
- {name:'薪水掌門人',x:-2,z:8,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:3.0,speed:.57}
+ {name:'夢奇奇飼養者',island:3,x:0,z:0,skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail',range:3.0,speed:.62},
+ {name:'哈姆太郎',island:5,x:0,z:0,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.8,speed:.75},
+ {name:'薪水掌門人',island:4,x:0,z:0,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:3.0,speed:.57}
 ];
 function makeStaffChibi(def){
  const root=new THREE.Group(),body=new THREE.Group();root.add(body);
@@ -308,7 +317,7 @@ function makeStaffChibi(def){
 }
 staffDefs.forEach((def,i)=>{
  const model=makeStaffChibi(def);
- groups[0].add(model.root);model.root.position.set(def.x,0,def.z);
+ groups[def.island||0].add(model.root);model.root.position.set(def.x,0,def.z);
  model.root.rotation.y=(i%2?-.3:.4);
  staffNPCs.push({...model,def,origin:new THREE.Vector3(def.x,0,def.z),
   goal:new THREE.Vector3(def.x,0,def.z),idle:1+i*.8,phase:i*1.4,blink:0});
@@ -340,10 +349,50 @@ function animateStaff(dt,elapsed){
   for(const eye of eyes)eye.scale.y=blink?.012:.118;
  }
 }
+
+// Second-level 3D law office: distinct scene with walls, desks, reception and comic gallery.
+const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#e9e0d3');
+officeScene.add(new THREE.HemisphereLight(0xffffff,0xa78e73,2.5));
+const roomLight=new THREE.DirectionalLight(0xffffff,2.3);roomLight.position.set(8,17,12);officeScene.add(roomLight);
+const roomRoot=new THREE.Group();officeScene.add(roomRoot);
+const roomMat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.75});
+function roomBox(x,y,z,w,h,d,c){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(c));o.position.set(x,y,z);roomRoot.add(o);return o;}
+roomBox(0,-.18,0,25,.35,19,'#c9a981');roomBox(0,3.4,-9.2,25,6.8,.4,'#f3e6d6');roomBox(-12.4,3.4,0,.4,6.8,19,'#e8d9c7');roomBox(12.4,3.4,0,.4,6.8,19,'#e8d9c7');
+for(let x=-10;x<=10;x+=5)roomBox(x,.02,0,.06,.04,18,'#ac8b6a');
+// Front reception counter and official-brand wall.
+roomBox(0,1.0,6.1,7,1.8,1.5,'#d7ad78');roomBox(0,2.05,6.1,7.4,.2,1.8,'#fff5e7');
+const logoOffice=new THREE.Mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('official-logo.png'),transparent:true,side:THREE.DoubleSide}));logoOffice.position.set(0,4.5,-8.96);roomRoot.add(logoOffice);
+// Lawyer desk and three staff desks: visibly different furniture.
+roomBox(-7.5,1.1,-4.4,5,.25,2.4,'#835c42');roomBox(-9.4,.6,-4.4,.35,1.2,2.1,'#6e4c39');roomBox(-5.6,.6,-4.4,.35,1.2,2.1,'#6e4c39');
+for(let i=0;i<3;i++){const x=3+i*2.7;roomBox(x,.9,-4.3,2.25,.18,1.4,'#d6ad89');roomBox(x,.45,-4.3,.2,.9,1.1,'#ab8d7d');roomBox(x,1.45,-4.7,1.05,.75,.1,'#465d70');}
+// Gallery wall: colorful four-panel comic paintings.
+for(let i=0;i<4;i++){const frame=roomBox(-10+i*2.7,3.2,-8.91,2.1,2.6,.13,'#aa8251');const art=roomBox(-10+i*2.7,3.2,-8.79,1.78,2.25,.08,['#e9b6b8','#a6cbd3','#e9cf92','#d0b7df'][i]);}
+const roomClickable=[];
+const zones=[
+ {name:'事務所介紹',x:-8,z:2,text:['德威陽國際法律事務所｜Wei & Yang International Law Firm','提供跨國商務、公司治理、智慧財產、民刑事訴訟、家事、勞動與醫療糾紛等法律服務。','官網：weiandyang.com']},
+ {name:'律師與員工辦公區',x:-6,z:-4,text:['林柏均律師具台灣與紐約州律師資格，取得 Emory University LL.M. 與 University of La Verne MBA。','這裡也是夢奇奇飼養者、哈姆太郎、薪水掌門人的工作空間。','歡迎認識事務所團隊與《事務所今天又怎麼了？》日常系列。']},
+ {name:'櫃檯接待',x:0,z:6,text:['歡迎來到德威陽國際法律事務所。','法律諮詢與服務洽詢，請透過 LINE：@wylaw 聯絡。','諮詢前可先準備相關文件、事件經過與希望解決的問題。']},
+ {name:'德威陽漫畫展示區',x:7,z:-4,text:['歡迎參觀《德威陽｜有法度》與《事務所今天又怎麼了？》系列。','《有法度》以淺顯方式介紹法律觀念；事務所日常系列則分享有趣的工作故事。','未來可在這裡逐集展示完整漫畫內容。']}
+];
+for(let i=0;i<4;i++){
+ const z=zones[i],color=['#b99b60','#729cb9','#a9b99a','#ba8fac'][i];
+ const plinth=new THREE.Mesh(new THREE.CylinderGeometry(.8,.9,.22,32),roomMat(color));plinth.position.set(z.x,.14,z.z);roomRoot.add(plinth);
+ const beacon=new THREE.Mesh(new THREE.SphereGeometry(.43,24,16),new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.22}));beacon.position.set(z.x,1.2,z.z);roomRoot.add(beacon);beacon.userData.officeZone=i;roomClickable.push(beacon);
+}
+let insideOffice=false;
+const officeCam=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,.1,180);officeCam.position.set(18,18,23);officeCam.lookAt(0,1.2,-1);
+const officeOrbit=new OrbitControls(officeCam,renderer.domElement);officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=9;officeOrbit.maxDistance=38;officeOrbit.target.set(0,1,-1);
+function officeTalk(i){const z=zones[i];talkName=z.name;talkIdx=0;dialogs[z.name]=z.text;renderTalk();}
+function enterOffice(){insideOffice=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeEnter').style.display='none';document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=true;officeOrbit.update();}
+function leaveOffice(){insideOffice=false;document.getElementById('officeUI').style.display='none';document.getElementById('officeEnter').style.display='block';document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;orbit.enabled=true;}
+document.getElementById('officeEnter').onclick=enterOffice;
+document.getElementById('officeExit').onclick=leaveOffice;
+document.querySelectorAll('[data-office]').forEach(b=>b.onclick=()=>officeTalk(Number(b.dataset.office)));
+
 const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'夢奇奇飼養者':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'哈姆太郎':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'薪水掌門人':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('dialog').style.display='block'}document.getElementById('next').onclick=()=>{const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
 let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
-function goto(i){actor.position.set(xy[i][0],0,xy[i][1]+(i===0?9:7));document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(76,102,145);orbit.target.set(0,0,0)};document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
-renderer.domElement.addEventListener('pointerup',e=>{if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){goto(labelHits[0].object.userData.islandIndex)}});
-document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);animateStaff(dt,clock.elapsedTime);if(document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));actor.position.addScaledVector(v,dt*10);const onIsland=xy.some(([x,z],i)=>Math.hypot(actor.position.x-x,actor.position.z-z)<(i===0?20:16));const onBridge=bridges.some(({group,len})=>{const p=actor.position.clone();group.worldToLocal(p);return Math.abs(p.x)<3.2&&Math.abs(p.z)<len/2});if(!onIsland&&!onBridge)actor.position.addScaledVector(v,-dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,2,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}orbit.update();renderer.render(scene,camera);if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='六座島嶼、五條彩虹橋載入完畢';})();
+function goto(i){if(insideOffice)leaveOffice();document.getElementById('officeEnter').style.display=i===0?'block':'none';actor.position.set(xy[i][0],0,xy[i][1]+(i===0?9:7));document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(76,102,145);orbit.target.set(0,0,0)};document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){officeTalk(2);return;}if(Math.hypot(actor.position.x,actor.position.z)<19){enterOffice();return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
+renderer.domElement.addEventListener('pointerup',e=>{if(insideOffice){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){goto(labelHits[0].object.userData.islandIndex)}});
+document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);animateStaff(dt,clock.elapsedTime);if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));actor.position.addScaledVector(v,dt*10);const onIsland=xy.some(([x,z],i)=>Math.hypot(actor.position.x-x,actor.position.z-z)<(i===0?20:16));const onBridge=bridges.some(({group,len})=>{const p=actor.position.clone();group.worldToLocal(p);return Math.abs(p.x)<3.2&&Math.abs(p.z)<len/2});if(!onIsland&&!onBridge)actor.position.addScaledVector(v,-dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,2,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){officeOrbit.update();renderer.render(officeScene,officeCam)}else{orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='六座島嶼、五條彩虹橋、3D 事務所已載入';document.getElementById('officeEnter').style.display='block';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>
