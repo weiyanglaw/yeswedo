@@ -1,13 +1,14 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>德威陽｜有法度・精緻童話 3D 法律探索島</title><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>德威陽｜有法度・童話莊園 3D 法律探索島・景觀升級版</title><style>
 *{box-sizing:border-box}body{margin:0;overflow:hidden;font-family:system-ui,'Noto Sans TC',sans-serif;color:#4b3327;background:#b9e7ff}button{font:inherit;cursor:pointer}#scene{position:fixed;inset:0;touch-action:none}canvas{display:block}header{position:fixed;top:0;left:0;right:0;z-index:3;background:#fffaf0f2;display:flex;align-items:center;gap:10px;padding:9px 12px;box-shadow:0 2px 16px #6542}header img{width:51px;height:51px;object-fit:contain;background:white;border-radius:8px}header .brand{flex:1;min-width:0;font-size:15px;font-weight:800}header small{display:block;font-size:9px;letter-spacing:1px;font-weight:500}.pill{border:1px solid #d8bb8a;background:#fffaf2;color:#553b29;border-radius:22px;padding:9px 11px;white-space:nowrap;font-weight:700}.pill:active{background:#e9d4b4}#hint{position:fixed;top:83px;left:50%;transform:translateX(-50%);background:#fffaf2ec;border-radius:24px;padding:9px 15px;z-index:2;font-size:12px;text-align:center;max-width:94vw;box-shadow:0 3px 12px #3332}#hud{position:fixed;bottom:calc(15px + env(safe-area-inset-bottom));left:12px;right:12px;z-index:2;display:flex;justify-content:space-between;align-items:end;pointer-events:none}#joystick{width:120px;height:120px;border-radius:50%;background:#fff9e2aa;border:2px solid #fff;position:relative;pointer-events:auto;touch-action:none;box-shadow:0 5px 20px #3454}#stick{position:absolute;left:35px;top:35px;width:48px;height:48px;border-radius:50%;background:#b68a4b;border:3px solid white;box-shadow:0 2px 7px #3455;pointer-events:none}#actions{display:flex;flex-direction:column;gap:8px;pointer-events:auto}#actions button{background:#fff9efee;border:1px solid #cfac79;border-radius:18px;padding:10px;font-size:12px;font-weight:700;box-shadow:0 2px 10px #3453}#panel{position:fixed;inset:0;z-index:5;background:#1d293a80;display:none;align-items:center;justify-content:center;padding:18px}#panel.show{display:flex}#sheet{width:min(440px,100%);max-height:78vh;overflow:auto;background:#fffaf3;border:2px solid #dfbf8c;border-radius:24px;padding:20px;box-shadow:0 16px 50px #18273870}#sheet h2{margin:0 0 8px;font-size:21px}#sheet p{line-height:1.65;font-size:14px}#sheet .sub{color:#8d6e4d;font-size:13px;margin-top:0}.close{float:right;border:0;background:#eedbc0;border-radius:50%;height:32px;width:32px;font-size:19px}.links{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.links a,.links button{border:1px solid #c99d61;background:#fff;color:#65451f;padding:9px;border-radius:13px;text-decoration:none;font-weight:700;font-size:13px}.options{display:flex;flex-wrap:wrap;gap:8px}.options button{border:1px solid #c9a06a;border-radius:12px;background:#fff;padding:9px 12px}.options button.selected{background:#b8884e;color:white}#notice{position:fixed;bottom:160px;left:50%;transform:translateX(-50%);z-index:3;background:#fff9eaf2;border-radius:18px;padding:9px 13px;font-size:12px;white-space:nowrap;max-width:95vw;overflow:hidden;text-overflow:ellipsis}@media(min-width:900px){header .brand{font-size:19px}header img{width:65px;height:65px}#hint{top:98px}}
 .avatar-layout{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:10px}.avatar-controls p{margin:10px 0 4px;font-weight:700}.avatar-preview{position:sticky;top:0;align-self:start;background:#f4e9d9;border:1px solid #d6b987;border-radius:16px;text-align:center;overflow:hidden}.preview-label{padding:8px;font-size:12px;font-weight:700}#avatarPreview{height:215px}.avatar-controls .options button{padding:7px 9px;font-size:12px}@media(max-width:390px){.avatar-layout{grid-template-columns:minmax(0,1fr) 140px}#avatarPreview canvas{max-width:140px!important;width:140px!important}}
+@media(max-width:600px){header{gap:6px;padding:8px}header .brand{font-size:13px}header small{font-size:7px;letter-spacing:.5px}header img{width:43px;height:43px}.pill{padding:8px 9px}#hint{top:73px;font-size:11px}#notice{bottom:calc(145px + env(safe-area-inset-bottom));font-size:11px;max-width:75vw;white-space:normal;text-align:center}#joystick{width:105px;height:105px}#stick{left:28px;top:28px}#actions button{padding:9px 10px}}
 </style></head><body><div id="scene"></div><header><img src="assets/official-logo.png" alt="WEIYANG 官方 Logo"><div class="brand">德威陽｜有法度<small>WEIYANG INTERNATIONAL LAW FIRM</small></div><button class="pill" id="avatarBtn">👤 角色</button><button class="pill" id="langBtn">EN</button></header><div id="hint">🎮 左下搖桿走路・點地面前往・走彩虹橋跨島</div><div id="notice">正在建立可行走的 3D 六島世界…</div><div id="hud"><div id="joystick"><div id="stick"></div></div><div id="actions"><button id="overview">🗺️ 全景</button><button id="talk">💬 人物</button><button id="services">⚖️ 法律服務</button><button id="contact">📱 聯絡</button></div></div><div id="panel"><div id="sheet"><button class="close" id="close">×</button><div id="content"></div></div></div>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js';
 const $=id=>document.getElementById(id);let en=false;const T=(a,b)=>en?b:a;const labels=[['德威陽主島','WEIYANG Manor'],['訴訟司法島','Litigation & Justice Island'],['醫療法律島','Medical Law Island'],['法律知識島','Legal Knowledge Island'],['企業商務島','Corporate & Business Island'],['家庭生活島','Family & Life Island']];const details=[['律師介紹、事務所、諮詢聯絡。林柏均律師：台灣律師、紐約州律師；Emory University LL.M.；University of La Verne MBA。','Attorney Lin: Taiwan and New York State attorney; Emory University LL.M.; University of La Verne MBA. Firm introduction and consultations.'],['民事訴訟、刑事辯護、行政訴訟、訴願及行政救濟。','Civil litigation, criminal defense, administrative litigation, appeals and remedies.'],['醫療糾紛、醫療損害賠償、醫療機構法律爭議及相關程序。','Medical disputes, malpractice claims, healthcare regulatory matters and related proceedings.'],['法律知識、林律師演講、企業內訓與課程合作。','Legal education, Attorney Lin lectures, corporate training and course collaboration.'],['跨國商務、公司治理、契約、勞動、智慧財產、營業秘密。','Cross-border business, governance, contracts, employment, intellectual property and trade secrets.'],['婚姻、離婚、親子、扶養、繼承、家事法律。','Marriage, divorce, parenting, support, inheritance and family law.']];
 const links='<div class="links"><a href="https://line.me/R/ti/p/@wylaw" target="_blank">LINE @wylaw</a><a href="https://weiandyang.com" target="_blank">官方網站 / Website</a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank">Instagram</a><a href="https://www.facebook.com/weiandyang" target="_blank">Facebook</a></div>';
 function panel(html){$('content').innerHTML=html;$('panel').classList.add('show')}function dismiss(){$('panel').classList.remove('show')}$('close').onclick=dismiss;$('panel').onclick=e=>{if(e.target===$('panel'))dismiss()};
-const scene=new THREE.Scene();scene.background=new THREE.Color('#b9e7ff');scene.fog=new THREE.Fog('#b9e7ff',120,230);const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,200);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:"high-performance"});renderer.shadowMap.enabled=false;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;$('scene').appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x658fbe,2.6));const light=new THREE.DirectionalLight(0xffe9be,2.7);light.position.set(-25,38,19);scene.add(light);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#89c9ed');scene.fog=new THREE.Fog('#89c9ed',135,290);const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,200);const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:"high-performance"});renderer.shadowMap.enabled=false;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;$('scene').appendChild(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x6685a4,1.85));const light=new THREE.DirectionalLight(0xffe4b6,2.35);light.position.set(-25,38,19);scene.add(light);
 const material=(color,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness:.73,metalness});const make=(geometry,color,group,x=0,y=0,z=0)=>{const o=new THREE.Mesh(geometry,material(color));o.position.set(x,y,z);group.add(o);return o};const bx=(g,w,h,d,c,x,y,z)=>make(new THREE.BoxGeometry(w,h,d),c,g,x,y,z);const cy=(g,rt,rb,h,c,x,y,z,n=12)=>make(new THREE.CylinderGeometry(rt,rb,h,n),c,g,x,y,z);const sp=(g,r,c,x,y,z)=>make(new THREE.SphereGeometry(r,12,8),c,g,x,y,z);
 const center=[0,0],R=18;const positions=[[0,0],[-15,-12],[15,-12],[0,19],[17,11],[-17,11]];const radius=5.4,deck=1.05;const landings=[];const clickMeshes=[];const bridges=[];
 function cone(g,r,h,c,x,y,z,n=8){return make(new THREE.ConeGeometry(r,h,n),c,g,x,y,z)}
@@ -108,6 +109,90 @@ function premiumDetails(g,i){
 }
 
 positions.forEach((_,i)=>{island(i);premiumDetails(landings[i],i)});
+
+// Storybook visual pass: layered architecture, animated waterfalls, lanterns and miniature gardens.
+const fallingWater=[];
+function storybook(g,i){
+ const colors=[0xd5a568,0xa6b7d8,0x76c5c2,0xb4a3d7,0x84b9cf,0xd59ca9];
+ const gold=0xe2bc78,cream=0xfff5e0,roofColor=colors[i];
+ // Ornamental terraces and alternating masonry blocks around the floating island.
+ for(let k=0;k<32;k++){
+  const a=k*Math.PI/16,x=Math.cos(a)*4.96,z=Math.sin(a)*4.96;
+  const brick=bx(g,.72,.25,.2,k%2?0xe3cdb4:0xf6e5ce,x,.49,z);
+  brick.rotation.y=-a;
+ }
+ // Layered roof tiles, roof ridges, dormers and gold roof finials.
+ const towers=i===0?[[-3.65,-2.15],[3.65,-2.15]]:i===1?[[0,-1]]:i===2?[[2,-1.2]]:i===3?[[.55,-1.7]]:i===5?[[-1.65,-1.2],[1.5,-1.3]]:[];
+ for(const [x,z] of towers){
+  const y=deck+(i===3?6.1:i===0?5.35:4.7);
+  cy(g,.11,.11,.38,gold,x,y,z,10);sp(g,.16,0xffe9a3,x,y+.28,z);
+  for(let k=0;k<8;k++){
+   const a=k*Math.PI/4;
+   const fin=sp(g,.09,0xffe8b1,x+Math.cos(a)*.75,y-.62,z+Math.sin(a)*.75);
+   fin.scale.y=1.5;
+  }
+ }
+ // Bay windows, window shutters, balconies and door arches.
+ for(let s of [-1,1]){
+  const x=s*1.55,z=i===4?.26:i===5?-.05:.65;
+  if(i!==5){
+   bx(g,.38,.63,.09,0x88b9c5,x,deck+1.88,z+.04);
+   bx(g,.09,.67,.14,roofColor,x-.26,deck+1.88,z+.07);
+   bx(g,.09,.67,.14,roofColor,x+.26,deck+1.88,z+.07);
+   bx(g,.62,.09,.18,cream,x,deck+1.47,z+.09);
+   bx(g,.68,.08,.23,gold,x,deck+2.25,z+.10);
+  }
+ }
+ // Decorative garden paths: individual stones, planters, lamp globes, rose arches.
+ for(let k=0;k<14;k++){
+  const z=1.55+k*.23,x=Math.sin(k*.38)*.34;
+  const p=bx(g,.37,.035,.15,k%3===0?0xfbf1de:0xdac6aa,x,deck+.065,z);
+  p.rotation.y=.12*Math.sin(k);
+ }
+ for(let s of [-1,1])for(let j=0;j<4;j++){
+  const x=s*(1.25+j*.67),z=2.35+Math.sin(j*.8)*.38;
+  cy(g,.23,.28,.24,0xe8d6b7,x,deck+.13,z,12);
+  sp(g,.27,j%2?0xf4a4ba:0x7dbd88,x,deck+.42,z);
+  for(let t=0;t<3;t++)sp(g,.075,0xffd7a2,x+Math.cos(t*2.1)*.22,deck+.57,z+Math.sin(t*2.1)*.22)
+ }
+ for(let s of [-1,1]){
+  const x=s*2.75,z=2.2;
+  cy(g,.06,.075,1.25,0xb89564,x,deck+.64,z);
+  cy(g,.21,.16,.12,gold,x,deck+1.34,z);
+  sp(g,.21,0xfff0b7,x,deck+1.52,z);
+  cone(g,.27,.24,roofColor,x,deck+1.81,z,8)
+ }
+ // Cliff-side waterfalls, with moving translucent water ribbons and splashes.
+ for(let j=0;j<2;j++){
+  const a=(i*1.7+j*2.3)+.4,x=Math.cos(a)*4.84,z=Math.sin(a)*4.84;
+  const waterfall=new THREE.Mesh(new THREE.CylinderGeometry(.23,.37,2.8,10,1,true),new THREE.MeshStandardMaterial({color:0x70d9f3,transparent:true,opacity:.70,roughness:.16,metalness:.08,side:THREE.DoubleSide}));
+  waterfall.position.set(x,-.95,z);g.add(waterfall);
+  fallingWater.push({mesh:waterfall,phase:i*2+j});
+  for(let t=0;t<5;t++)sp(g,.13,0xc6f5fa,x+Math.sin(t*2.4)*.32,-2.35,z+Math.cos(t*2.4)*.3)
+ }
+ // Gilded crown and decorative fountain sculpture.
+ if(i===0){
+  for(let s of [-1,1]){
+   bx(g,.17,.2,2.4,gold,s*2.28,deck+3.7,-1.1);
+   for(let j=0;j<4;j++)sp(g,.10,0xfff0c4,s*2.28,deck+3.85,-2.2+j*.7)
+  }
+  sp(g,.27,0xf6d28b,0,deck+5.12,-1.1);
+  for(let j=0;j<8;j++){const a=j*Math.PI/4;sp(g,.11,0xffe5b2,Math.cos(a)*.75,deck+4.65,-1.1+Math.sin(a)*.75)}
+ }
+ if(i===1){for(let j=0;j<5;j++){const x=-1.7+j*.85;cy(g,.07,.07,.4,gold,x,deck+3.25,.65);sp(g,.1,0xffe3a0,x,deck+3.48,.65)}}
+ if(i===2){for(let j=0;j<6;j++){const a=j*Math.PI/3;sp(g,.18,0x92e0db,2+Math.cos(a)*1.3,deck+.33,1.15+Math.sin(a)*.9)}}
+ if(i===3){for(let j=0;j<4;j++){const x=-2+j*1.1;bx(g,.63,.18,.52,0xe5bc7c,x,deck+.18,2.65)}}
+ if(i===4){for(let j=0;j<7;j++){const x=-2.7+j*.9;cy(g,.08,.08,.85,gold,x,deck+.45,2.95);sp(g,.15,0x99d7ef,x,deck+.95,2.95)}}
+ if(i===5){for(let j=0;j<14;j++){const a=j*2.4,x=Math.cos(a)*3.1,z=Math.sin(a)*3.1;sp(g,.23,j%2?0xf6b5c6:0xffe1af,x,deck+.25,z)}}
+}
+positions.forEach((_,i)=>storybook(landings[i],i));
+// Floating clouds are 3D scenery, not a flat backdrop.
+for(let i=0;i<14;i++){
+ const g=new THREE.Group(),a=i*2.4,r=29+(i%4)*7;
+ g.position.set(Math.cos(a)*r,-7+(i%3)*2,Math.sin(a)*r);scene.add(g);
+ for(let j=0;j<4;j++){const puff=sp(g,2.2+(j%2)*.6,0xf8fdff,(j-1.5)*1.8,Math.sin(j)*.25,Math.cos(j)*.6);puff.scale.y=.5}
+}
+
 for(let i=1;i<6;i++){const [x,z]=positions[i],d=Math.hypot(x,z),ux=x/d,uz=z/d;const start=radius-.25,end=d-radius+.25,len=end-start;const g=new THREE.Group();g.position.set(ux*(start+end)/2,deck-.08,uz*(start+end)/2);g.rotation.y=Math.atan2(ux,uz);scene.add(g);bx(g,1.75,.28,len,0xf1b8c9,0,0,0);for(let j=0;j<7;j++){const zz=-len/2+(j+.5)*len/7;bx(g,1.75,.05,len/7-.05,[0xf5c7d8,0xffe4ae,0xcce9d1,0xc8dffb][j%4],0,.18,zz)}for(let side of [-1,1]){bx(g,.1,.12,len,0xfff7de,side*.91,.3,0);for(let j=0;j<5;j++)cy(g,.07,.07,.52,0xfff5e6,side*.92,.5,-len/2+j*len/4)}bridges.push({ux,uz,start,end,i})}
 // Four named characters in the central manor; no other speaking NPCs.
 const people=[['林柏均律師','Attorney Lin',0x39445d,-1.8,2.7],['夢奇奇飼養者','Reception Team',0xeaa2bd,-.6,3],['哈姆太郎','Office Team',0x354a60,.6,3],['薪水掌門人','Office Team',0xe0b37d,1.8,2.7]];const staffHits=[];
@@ -202,7 +287,7 @@ renderer.domElement.addEventListener('pointerup',e=>{
  const g=ray.intersectObject(ground);
  if(g.length && walkable(g[0].point.x,g[0].point.z)){introUntil=0;overview=false;route=[];target=[g[0].point.x,g[0].point.z]}
 });
-let prev=performance.now();function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-prev)/1000,.05);prev=now;
+let prev=performance.now();function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-prev)/1000,.05);prev=now;for(const w of fallingWater){w.mesh.material.opacity=.61+.12*Math.sin(now*.002+w.phase)}
  if(introUntil&&now>introUntil){introUntil=0;overview=false}
  let vx=joyX,vz=joyY;
  if(Math.hypot(vx,vz)<.05){const goal=route.length?route[0]:target;if(goal){let dx=goal[0]-px,dz=goal[1]-pz,dist=Math.hypot(dx,dz);if(dist<.32){if(route.length)route.shift();else target=null}else{vx=dx/dist;vz=dz/dist}}}
