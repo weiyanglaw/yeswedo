@@ -93,11 +93,11 @@ if(i===0){
   model.updateMatrixWorld(true);
 }
 if(i===0){
-  // Remove original entrance ball and six raised steps from the GLB scene, not merely cover them.
-  // Original GLB geometry part_83 through part_88 are the sloped stair/ramp pieces.
-  const oldSteps=[];
-  model.traverse(obj=>{if(/^part_(78|83|84|85|86|87|88)$/.test(obj.name))oldSteps.push(obj)});
-  oldSteps.forEach(obj=>obj.parent?.remove(obj));
+  // Remove the six actual entrance steps, not the castle facade.
+  const unwanted=new Set(['part_83','part_84','part_85','part_86','part_87','part_88']);
+  let removed=0;
+  model.traverse(obj=>{if(obj.isMesh && unwanted.has(obj.name)){obj.visible=false;removed++;}});
+  console.info('WEIYANG staircase meshes hidden:',removed);
 }
 fit(model,widths[i]);
 if(i===0){
@@ -226,11 +226,124 @@ const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:tr
 function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
 window.weiyangRefreshAvatar=refreshChibi;
 refreshChibi();
-const clickable=[];function person(parent,x,z,color,label){const g=new THREE.Group();parent.add(g);g.position.set(x,0,z);mesh(new THREE.CylinderGeometry(.45,.5,1.25,9),new THREE.MeshStandardMaterial({color}),g,0,1.2,0);mesh(new THREE.SphereGeometry(.35,12,8),new THREE.MeshStandardMaterial({color:"#f5cdb7"}),g,0,2.05,0);mesh(new THREE.SphereGeometry(.37,12,8),new THREE.MeshStandardMaterial({color:"#47322b"}),g,0,2.32,-.08);g.userData.label=label;g.traverse(o=>{if(o.isMesh){o.userData.label=label;clickable.push(o)}});return g}person(groups[0],-6,6,'#2d415a','林律師');person(groups[0],-9,9,'#f6a9c2','馬尾小編');person(groups[0],-5,10,'#33363d','短髮小編');person(groups[0],-2,8,'#f6e6d5','櫃檯小編');
-const dialogs={'林律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'馬尾小編':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'短髮小編':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'櫃檯小編':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('dialog').style.display='block'}document.getElementById('next').onclick=()=>{const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
+
+// Four fully three-dimensional, animated chibi NPCs, generated inside Three.js.
+// No external image files are needed; their meshes are part of the live game.
+const clickable=[],staffNPCs=[];
+const staffDefs=[
+ {name:'林柏均律師',alias:'林律師',x:-6,z:6,skin:'#f2c6a5',hair:'#352a28',top:'#24364f',bottom:'#26344c',kind:'lawyer',range:3.4,speed:.52},
+ {name:'夢奇奇飼養者',x:-9,z:9,skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail',range:3.0,speed:.62},
+ {name:'哈姆太郎',x:-5,z:10,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.8,speed:.75},
+ {name:'薪水掌門人',x:-2,z:8,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:3.0,speed:.57}
+];
+function makeStaffChibi(def){
+ const root=new THREE.Group(),body=new THREE.Group();root.add(body);
+ const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.73});
+ const skin=mat(def.skin),hair=mat(def.hair),top=mat(def.top),bottom=mat(def.bottom);
+ const white=mat('#fffaf5'),dark=mat('#302b37'),pink=mat('#f1a1aa'),gold=mat('#c99d52');
+ const ball=new THREE.SphereGeometry(1,20,16);
+ const part=(geo,m,x,y,z,sx=1,sy=1,sz=1,group=body)=>{
+  const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);group.add(o);return o;
+ };
+ const orb=(m,x,y,z,sx,sy,sz,group)=>part(ball,m,x,y,z,sx,sy,sz,group);
+ // Big rounded head, small soft body and short legs.
+ orb(top,0,.93,0,.39,.49,.30);
+ for(const side of [-1,1]){
+  orb(top,side*.43,1.04,0,.16,.24,.17);
+  orb(skin,side*.53,.75,.01,.12,.21,.12);
+  orb(skin,side*.54,.55,.06,.12,.12,.12);
+  orb(bottom,side*.19,.48,0,.18,.30,.21);
+  orb(white,side*.19,.15,.11,.21,.13,.27);
+ }
+ if(def.kind==='lawyer'){
+  // Navy tailored suit, white shirt, blue tie, gold jacket buttons.
+  orb(white,0,1.05,.288,.18,.27,.025);
+  part(new THREE.ConeGeometry(.09,.35,4),mat('#416ba0'),0,1.03,.323);
+  for(const y of [.88,.73])orb(gold,.09,y,.31,.035,.035,.025);
+  orb(mat('#1a2b43'),-.22,1.10,.285,.13,.31,.02);
+  orb(mat('#1a2b43'),.22,1.10,.285,.13,.31,.02);
+ } else if(def.kind==='ponytail'){
+  orb(mat('#f2b8c8'),.07,1.04,.298,.08,.09,.025);
+ } else if(def.kind==='short'){
+  orb(mat('#fff4df'),.12,1.01,.298,.10,.10,.02);
+ } else {
+  orb(white,0,1.04,.298,.13,.18,.02);
+ }
+ const head=new THREE.Group();head.position.set(0,1.76,0);body.add(head);
+ orb(skin,0,0,0,.58,.57,.51,head);
+ // Hair caps, side locks and characteristic ponytail / bun / short hairstyle.
+ orb(hair,0,.35,-.12,.60,.31,.51,head);
+ orb(hair,-.39,.29,.12,.25,.20,.34,head);
+ if(def.kind==='ponytail'){
+  orb(hair,.45,.33,-.30,.23,.25,.24,head);
+  orb(hair,.58,.15,-.44,.25,.46,.25,head);
+  orb(mat('#f4a7bf'),.47,.32,-.35,.13,.12,.13,head);
+  orb(hair,-.52,-.10,-.06,.12,.29,.24,head);
+ }else if(def.kind==='bun'){
+  orb(hair,0,.69,-.20,.32,.30,.32,head);
+  orb(hair,-.49,.05,-.09,.14,.28,.23,head);
+  orb(hair,.49,.05,-.09,.14,.28,.23,head);
+ }else if(def.kind==='short'){
+  for(let i=0;i<5;i++)orb(hair,-.37+i*.19,.44,-.06,.19,.19,.28,head);
+ }else{
+  orb(hair,.31,.42,-.03,.29,.21,.30,head);
+ }
+ const eyes=[];
+ for(const x of [-.23,.23]){
+  orb(white,x,.035,.461,.137,.17,.054,head);
+  const pupil=orb(dark,x,.025,.514,.084,.118,.042,head);
+  eyes.push(pupil);
+  orb(white,x-.025,.08,.553,.025,.032,.014,head);
+  orb(pink,x*1.60,-.15,.454,.105,.055,.022,head);
+ }
+ // Smile and nose.
+ orb(mat('#b87374'),0,-.26,.467,.095,.026,.024,head);
+ orb(skin,0,-.12,.505,.035,.026,.022,head);
+ if(def.kind!=='lawyer'){
+  orb(mat('#f6d8e1'),.48,.34,.21,.085,.075,.06,head);
+ }
+ root.userData.label=def.name;
+ root.traverse(o=>{if(o.isMesh){o.userData.label=def.name;clickable.push(o)}});
+ return {root,body,head,eyes};
+}
+staffDefs.forEach((def,i)=>{
+ const model=makeStaffChibi(def);
+ groups[0].add(model.root);model.root.position.set(def.x,0,def.z);
+ model.root.rotation.y=(i%2?-.3:.4);
+ staffNPCs.push({...model,def,origin:new THREE.Vector3(def.x,0,def.z),
+  goal:new THREE.Vector3(def.x,0,def.z),idle:1+i*.8,phase:i*1.4,blink:0});
+});
+function animateStaff(dt,elapsed){
+ for(const npc of staffNPCs){
+  const {def,root,origin,goal,body,head,eyes}=npc;
+  if(npc.idle>0){npc.idle-=dt;}
+  else {
+   const dx=goal.x-root.position.x,dz=goal.z-root.position.z;
+   const distance=Math.hypot(dx,dz);
+   if(distance<.25){
+    npc.idle=1.0+Math.random()*2.2;
+    const a=Math.random()*Math.PI*2,r=.8+Math.random()*def.range;
+    goal.set(origin.x+Math.cos(a)*r,0,origin.z+Math.sin(a)*r);
+   }else{
+    const step=Math.min(distance,def.speed*dt);
+    root.position.x+=dx/distance*step;
+    root.position.z+=dz/distance*step;
+    root.rotation.y=Math.atan2(dx,dz);
+    npc.phase+=dt*10;
+   }
+  }
+  const walking=npc.idle<=0;
+  body.position.y=walking?Math.abs(Math.sin(npc.phase))*.065:Math.sin(elapsed*1.8+npc.phase)*.022;
+  head.rotation.z=Math.sin(elapsed*1.5+npc.phase)*.035;
+  // Short, natural blink once in a while.
+  const blink=Math.sin(elapsed*.8+npc.phase*2.7)> .995;
+  for(const eye of eyes)eye.scale.y=blink?.012:.118;
+ }
+}
+const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'夢奇奇飼養者':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'哈姆太郎':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'薪水掌門人':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('dialog').style.display='block'}document.getElementById('next').onclick=()=>{const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
 let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
 function goto(i){actor.position.set(xy[i][0],0,xy[i][1]+(i===0?9:7));document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(76,102,145);orbit.target.set(0,0,0)};document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){goto(labelHits[0].object.userData.islandIndex)}});
-document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));actor.position.addScaledVector(v,dt*10);const onIsland=xy.some(([x,z],i)=>Math.hypot(actor.position.x-x,actor.position.z-z)<(i===0?20:16));const onBridge=bridges.some(({group,len})=>{const p=actor.position.clone();group.worldToLocal(p);return Math.abs(p.x)<3.2&&Math.abs(p.z)<len/2});if(!onIsland&&!onBridge)actor.position.addScaledVector(v,-dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,2,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}orbit.update();renderer.render(scene,camera);if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);animateStaff(dt,clock.elapsedTime);if(document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));actor.position.addScaledVector(v,dt*10);const onIsland=xy.some(([x,z],i)=>Math.hypot(actor.position.x-x,actor.position.z-z)<(i===0?20:16));const onBridge=bridges.some(({group,len})=>{const p=actor.position.clone();group.worldToLocal(p);return Math.abs(p.x)<3.2&&Math.abs(p.z)<len/2});if(!onIsland&&!onBridge)actor.position.addScaledVector(v,-dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,2,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}orbit.update();renderer.render(scene,camera);if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='六座島嶼、五條彩虹橋載入完畢';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>
