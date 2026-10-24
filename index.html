@@ -101,7 +101,7 @@ $('startExplore').addEventListener('click',enterIsland);
 
 <script type="module">
 import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
-const MANIFEST={"castle":["assets/castle_00.part","assets/castle_01.part","assets/castle_02.part","assets/castle_03.part","assets/castle_04.part","assets/castle_05.part","assets/castle_06.part"],"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0x94b5c0,2.8));const sun=new THREE.DirectionalLight(0xfff2d3,3.2);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#ff5e8a','#ffa449','#ffe866','#63dcb1','#5fc9ff','#aa82ec'];const rm=rainbow.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.14,roughness:.55}));
+const MANIFEST={"castle":["assets/castle_00.part","assets/castle_01.part","assets/castle_02.part","assets/castle_03.part","assets/castle_04.part","assets/castle_05.part","assets/castle_06.part"],"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0x94b5c0,2.8));const sun=new THREE.DirectionalLight(0xfff2d3,3.2);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#ff5e8a','#ffa449','#ffe866','#63dcb1','#5fc9ff','#aa82ec'];const rm=rainbow.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.14,roughness:.55}));
 async function getGLB(key){const chunks=MANIFEST[key];let arrays=[],total=0;for(let i=0;i<chunks.length;i++){const r=await fetch(chunks[i]);if(!r.ok)throw Error(chunks[i]+': '+r.status);const a=await r.arrayBuffer();arrays.push(new Uint8Array(a));total+=a.byteLength;status.textContent='正在讀取 '+key+' '+(i+1)+'/'+chunks.length;}const all=new Uint8Array(total);let at=0;for(const a of arrays){all.set(a,at);at+=a.byteLength}arrays=[];return await new Promise((res,rej)=>loader.parse(all.buffer,'',res,rej))}
 function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);parent.add(m);return m}
 const groups=[];for(let i=0;i<6;i++){const g=new THREE.Group();g.position.set(xy[i][0],0,xy[i][1]);scene.add(g);groups.push(g);const r=i===0?21:17;mesh(new THREE.CylinderGeometry(r,r*.82,6,12),mats.grass,g,0,-3,0);const cone=mesh(new THREE.ConeGeometry(r*.78,19,12),mats.rock,g,0,-15,0);cone.rotation.z=Math.PI;const ring=mesh(new THREE.TorusGeometry(r-.2,.32,8,90),mats.gold,g,0,.1,0);ring.rotation.x=Math.PI/2;for(let k=0;k<10;k++){const a=k*Math.PI*2/10;const flower=mesh(new THREE.SphereGeometry(.45,8,8),rm[(k+i)%6],g,Math.cos(a)*(r-1.2),.55,Math.sin(a)*(r-1.2));}}
@@ -340,7 +340,7 @@ previewCanvas.style.display='block';previewCanvas.style.margin='8px auto';previe
 previewCanvas.style.height='min(42vh,310px)';
 previewHost.insertBefore(previewCanvas,originalPreview);
 originalPreview.style.display='none';
-const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,1.5));previewRenderer.setSize(360,420,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
+const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,2));previewRenderer.setSize(360,420,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
 function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
 window.weiyangRefreshAvatar=refreshChibi;
 refreshChibi();
@@ -473,38 +473,39 @@ function roomCylinder(x,y,z,rt,rb,h,c,group=roomRoot){const o=new THREE.Mesh(new
 function registerOffice(obj,zone){obj.userData.officeZone=zone;roomClickable.push(obj);return obj;}
 // Balanced floating nameplates; staff dark rose/blue/green with light text, boss premium navy/gold, printer dark violet/light.
 function officeSign(label,x,y,z,w=3,fg='#23364b',zone=null){
+ // All non-executive office labels use the same typography and same physical proportions.
+ // Render at 2x logical resolution for sharper Chinese glyphs on high-DPI phones.
  const isStaff=[6,7,8].includes(zone),isPrinter=zone===9,isBoss=zone===5;
- const isDarkInfo=[0,3,4].includes(zone)||label.includes('漫畫')||label.includes('Instagram');
- const isSpecial=isStaff||isPrinter||isBoss;
- const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=isSpecial?410:270;
- const c=canvas.getContext('2d');
- const colors={5:['#172a3e','#d3aa67','#ffffff','#f0cf95'],6:['#874d69','#edc3d4','#fff5f8','#ffe1ec'],7:['#315b79','#b4d8eb','#f0faff','#d8efff'],8:['#47664c','#c8dec3','#f2fff0','#e0f3d9'],9:['#393354','#c3b2e5','#fff8e9','#eee1ff'],2:['#4b3540','#d7ad89','#fff8ee','#f7d9c0']};
+ const logicalW=1280,logicalH=isBoss?410:370,quality=2;
+ const canvas=document.createElement('canvas');canvas.width=logicalW*quality;canvas.height=logicalH*quality;
+ const c=canvas.getContext('2d');c.scale(quality,quality);
+ const colors={5:['#172a3e','#d3aa67','#ffffff','#f0cf95'],6:['#874d69','#edc3d4','#fff5f8','#ffe1ec'],7:['#315b79','#b4d8eb','#f0faff','#d8efff'],8:['#47664c','#c8dec3','#f2fff0','#e0f3d9'],9:['#393354','#c3b2e5','#fff8e9','#eee1ff'],2:['#293e53','#d4b78b','#fff8ed','#f1e4d0'],3:['#513c46','#d9adb5','#fff4ee','#f5dfd9'],0:['#293e53','#d4b78b','#fff8ed','#f1e4d0']};
  const p=colors[zone]||['#24364c','#b8a4d5','#fffaf2','#e5d9ff'];
- c.shadowColor='#091729bb';c.shadowBlur=30;c.shadowOffsetY=14;
- c.fillStyle=p[0];c.strokeStyle=p[1];c.lineWidth=isSpecial?24:14;
- c.beginPath();c.roundRect(30,28,1220,canvas.height-60,50);c.fill();c.stroke();c.shadowColor='transparent';
+ c.shadowColor='#09172999';c.shadowBlur=24;c.shadowOffsetY=10;
+ c.fillStyle=p[0];c.strokeStyle=p[1];c.lineWidth=isBoss?20:15;
+ c.beginPath();c.roundRect(28,25,1224,logicalH-50,44);c.fill();c.stroke();c.shadowColor='transparent';
  c.textAlign='center';c.textBaseline='middle';
- if(isStaff){
-  c.fillStyle=p[3];c.font='bold 51px sans-serif';c.fillText('✦ 點擊這個座位 ✦',640,94);
-  c.fillStyle=p[2];c.font='900 151px sans-serif';c.fillText(label.split('｜')[0],640,214,1150);
-  c.fillStyle=p[3];c.font='900 72px sans-serif';c.fillText('事務所今天又怎麼了？',640,333,1170);
- }else if(isPrinter){
-  c.fillStyle=p[2];c.font='900 135px sans-serif';c.fillText('印表機叛亂中！',640,155,1150);
-  c.fillStyle=p[3];c.font='900 76px sans-serif';c.fillText('事務所今天又怎麼了？',640,278,1170);
-  c.font='bold 40px sans-serif';c.fillText('點擊看看今天又發生什麼事',640,353,1170);
- }else if(isBoss){
-  c.fillStyle=p[1];c.font='bold 41px sans-serif';c.fillText('⚖  WEI & YANG INTERNATIONAL LAW FIRM  ⚖',640,87,1180);
-  c.fillStyle=p[2];c.font='900 144px sans-serif';c.fillText('林柏均 律師',640,195,1160);
-  c.fillStyle=p[3];c.font='900 70px sans-serif';c.fillText('創辦人暨主持律師',640,285,1170);
-  c.fillStyle=p[2];c.font='bold 41px sans-serif';c.fillText('點擊查看完整專業履歷',640,356,1170);
+ const family='"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif';
+ if(isBoss){
+   c.fillStyle=p[1];c.font=`700 38px ${family}`;c.fillText('WEI & YANG INTERNATIONAL LAW FIRM',640,75,1170);
+   c.fillStyle=p[2];c.font=`900 144px ${family}`;c.fillText('林柏均 律師',640,191,1140);
+   c.fillStyle=p[3];c.font=`800 68px ${family}`;c.fillText('創辦人暨主持律師',640,286,1150);
+   c.fillStyle=p[2];c.font=`700 40px ${family}`;c.fillText('點擊查看完整專業履歷',640,354,1150);
  }else{
-  const pieces=label.split('｜');c.fillStyle=p[2];c.font='bold 82px sans-serif';c.fillText(pieces[0],640,105,1160);
-  c.fillStyle=p[3];c.font='bold 53px sans-serif';c.fillText(pieces.length>1?pieces.slice(1).join('｜'):'點擊探索',640,198,1150);
+   // Uniform headline/subtitle font size across staff, reception, comics, info and printer.
+   let headline=label.split('｜')[0],subtitle=label.split('｜').slice(1).join('｜')||'點擊探索';
+   if(isPrinter){headline='印表機叛亂中！';subtitle='事務所今天又怎麼了？';}
+   if(isStaff)subtitle='事務所今天又怎麼了？';
+   c.fillStyle=p[2];c.font=`900 138px ${family}`;c.fillText(headline,640,143,1150);
+   c.fillStyle=p[3];c.font=`800 70px ${family}`;c.fillText(subtitle,640,263,1150);
+   c.font=`600 34px ${family}`;c.fillText(isPrinter?'點擊看看今天又發生什麼事':'點擊互動',640,327,1130);
  }
- const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
- const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,depthWrite:false}));
- const width=isStaff?Math.min(w*.88,4.05):isBoss?Math.min(w*1.02,5.25):isPrinter?Math.min(w*.80,3.75):Math.min(w*.90,3.8);
- spr.scale.set(width,width*canvas.height/1280,1);spr.position.set(x,isStaff?y+.18:isBoss?y+.22:isPrinter?y+.15:y,z);
+ const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
+ texture.minFilter=THREE.LinearMipmapLinearFilter;texture.magFilter=THREE.LinearFilter;
+ texture.generateMipmaps=true;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+ const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthTest:false,depthWrite:false}));
+ const width=isBoss?Math.min(w*1.02,5.25):Math.min(w*.82,3.65);
+ spr.scale.set(width,width*logicalH/logicalW,1);spr.position.set(x,isBoss?y+.22:y+.12,z);
  spr.renderOrder=isBoss?24:23;roomRoot.add(spr);if(zone!==null)registerOffice(spr,zone);return spr;
 }
 function screen(x,y,z,zone,color='#2e4b66'){
@@ -588,15 +589,15 @@ for(const x of [-8,0,8]){
 // Navy presentation backing, fine champagne-gold trim and warm wall-wash lighting increase contrast.
 const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#172a3e');
 const logoTrim=roomBox(0,4.32,-10.115,4.83,4.83,.075,'#d3aa67');
-const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#fffdf8');
+const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#172a3e');
 for(const px of [-2.35,2.35])for(const py of [2.03,6.60]){
  const rivet=roomBall(px,py,-9.99,.085,'#e3c18a');
 }
 const logoLight=new THREE.PointLight(0xffe6b8,1.1,9);logoLight.position.set(0,6.8,-7.7);roomRoot.add(logoLight);
-// Official user-supplied logo, used as an unchanged image on the back brand wall.
-const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('official-logo.png'),side:THREE.DoubleSide})),0);
+// Office-only transparent-background version of the official logo: same original gold emblem, no white square.
+const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261025-hd2'),transparent:true,side:THREE.DoubleSide})),0);
 logoOffice.position.set(0,4.32,-9.995);roomRoot.add(logoOffice);
-officeSign('認識德威陽｜點擊查看事務所介紹',4.2,2.10,-9.85,3.2,'#3b3546',0);
+officeSign('認識德威陽｜點擊查看事務所介紹',4.5,2.15,-9.80,4.4,'#fff8ed',0);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
 roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#51443d');
@@ -649,7 +650,7 @@ const reception=registerOffice(roomCylinder(0,1.05,4.7,2.45,2.45,1.75,'#d9c5ad')
 reception.scale.set(1.42,1,.48);
 roomCylinder(0,1.99,4.7,3.45,3.45,.18,'#c9a267').scale.set(1,.99,.38);
 screen(0,2.58,4.43,2);
-officeSign('接待櫃檯｜諮詢與聯絡',0,3.30,4.6,3.9,'#3b3546',2);
+officeSign('接待櫃檯｜諮詢與聯絡',0,3.30,4.6,4.6,'#fff8ed',2);
 plant(-4.3,5.3);plant(4.3,5.3);
 // Printer station: visible office equipment and comic easter egg.
 roomBox(3.2,.78,-.8,1.8,1.55,1.3,'#9bb9bb');
@@ -663,8 +664,7 @@ desk(-8.0,2.3,4.7,'#b98d68',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
 const comicScreen=screen(-8.0,1.78,1.88,3,'#443b53');
 roomBox(-9.7,1.19,2.55,1.12,.06,.85,'#f6d7df');
 roomBox(-6.8,1.17,2.45,.65,.06,.8,'#f6e7ba');
-officeSign('德威陽漫畫｜點擊觀看',-8.1,3.00,2.5,3.6,'#fffaf2',3);
-officeSign('點電腦｜前往 Instagram',-8.1,2.43,2.5,3.3,'#fffaf2',3);
+officeSign('德威陽漫畫｜點電腦觀看',-8.1,3.00,2.5,4.6,'#fffaf2',3);
 for(let i=0;i<3;i++){
  const x=-11+i*1.65;
  registerOffice(roomBox(x,4.45,-10.48,1.35,1.8,.10,['#e8b6c3','#f0d79a','#b2d4d9'][i]),3);
