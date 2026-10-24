@@ -62,6 +62,12 @@ function enterIsland(){
 $('startExplore').addEventListener('click',enterIsland);
 })();
 </script>
+<style>
+#wyInfo{display:none;position:fixed;inset:0;z-index:90;background:#15263bbd;align-items:center;justify-content:center;padding:15px;font-family:system-ui,'Noto Sans TC',sans-serif}
+#wyInfo.open{display:flex}#wyInfo article{width:min(880px,100%);max-height:92dvh;overflow-y:auto;background:#f6f0e7;border:2px solid #d5b47b;border-radius:20px;box-shadow:0 25px 90px #09172b99;color:#302e2b;position:relative}
+#wyInfo .wyHero{background:#24394f;color:#fff;text-align:center;padding:35px 25px 28px}#wyInfo .wyHero img{width:98px;height:98px;object-fit:contain;background:#fff;border-radius:13px;padding:6px}#wyInfo .wyHero h1{font-size:clamp(24px,5vw,36px);margin:12px 0 5px}#wyInfo .wyHero p{color:#f3d9a6;margin:6px 0}#wyInfo .wyContent{padding:clamp(18px,4vw,36px)}#wyInfo h2{color:#293d53;font-size:21px;border-bottom:1px solid #d5b47b;padding-bottom:9px;margin:26px 0 13px}#wyInfo p,#wyInfo li{line-height:1.85;font-size:15px}#wyInfo ul{padding-left:24px}#wyInfo .wyGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}#wyInfo .wyTile{background:#fffaf2;border:1px solid #e2cfaf;padding:13px;border-radius:12px;line-height:1.65}#wyInfo .wyClose{position:sticky;top:10px;float:right;margin:10px 12px -55px 0;z-index:3;background:#fff;color:#24394f;border:2px solid #cba66b;border-radius:50%;width:43px;height:43px;font-size:24px;font-weight:bold}#wyInfo a{color:#194b78;font-weight:700}
+@media(max-width:600px){#wyInfo{padding:6px}#wyInfo article{max-height:96dvh}#wyInfo .wyHero{padding:24px 12px}#wyInfo .wyContent{padding:18px}}
+</style><div id="wyInfo" role="dialog" aria-modal="true" aria-label="事務所資訊"><article><button class="wyClose" id="wyInfoClose" aria-label="關閉">×</button><div id="wyInfoBody"></div></article></div>
 <div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
 <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
 <div style="position:absolute;bottom:14px;left:12px;right:12px;pointer-events:none;text-align:center"><span style="display:inline-block;background:#fff9efec;border:1px solid #d4b681;border-radius:20px;padding:9px 13px;font-size:12px">點擊 Logo、辦公桌、櫃檯或漫畫電腦探索 · 拖曳旋轉視角</span></div></div>
@@ -418,12 +424,15 @@ function roomBox(x,y,z,w,h,d,c,group=roomRoot){const o=new THREE.Mesh(new THREE.
 function roomBall(x,y,z,r,c,group=roomRoot){const o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function roomCylinder(x,y,z,rt,rb,h,c,group=roomRoot){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,18),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function registerOffice(obj,zone){obj.userData.officeZone=zone;roomClickable.push(obj);return obj;}
-function officeSign(label,x,y,z,w=3,fg='#3b3546',zone=null){
- const canvas=document.createElement('canvas');canvas.width=768;canvas.height=160;
- const c=canvas.getContext('2d');c.fillStyle='#f5e9d7';c.strokeStyle='#c99f62';c.lineWidth=10;c.beginPath();c.roundRect(8,8,752,144,32);c.fill();c.stroke();
- c.fillStyle=fg;c.font='bold 58px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(label,384,83,710);
+function officeSign(label,x,y,z,w=3,fg='#23364b',zone=null){
+ const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=230;
+ const c=canvas.getContext('2d');c.shadowColor='#192b4277';c.shadowBlur=18;c.shadowOffsetY=8;
+ c.fillStyle=zone===5?'#263b51':'#fffaf0';c.strokeStyle='#bd9050';c.lineWidth=12;c.beginPath();c.roundRect(14,14,996,200,32);c.fill();c.stroke();c.shadowColor='transparent';
+ const pieces=label.split('｜');c.textAlign='center';c.textBaseline='middle';c.fillStyle=zone===5?'#fff8e9':'#22354b';
+ c.font='bold 67px sans-serif';c.fillText(pieces[0],512,zone===5?88:88,935);
+ c.font='bold 41px sans-serif';c.fillStyle=zone===5?'#f3cf90':'#8a5529';c.fillText(pieces.length>1?pieces.slice(1).join('｜'):'事務所今天又怎麼了？',512,164,945);
  const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
- const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));spr.scale.set(w,w*160/768,1);spr.position.set(x,y,z);spr.renderOrder=15;roomRoot.add(spr);if(zone!==null)registerOffice(spr,zone);return spr;
+ const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));spr.scale.set(w,w*230/1024,1);spr.position.set(x,y,z);spr.renderOrder=15;roomRoot.add(spr);if(zone!==null)registerOffice(spr,zone);return spr;
 }
 function screen(x,y,z,zone,color='#2e4b66'){
  const bezel=registerOffice(roomBox(x,y,z,1.08,.76,.12,color),zone);
@@ -541,17 +550,17 @@ roomBox(-8.4,.82,-4.14,4.75,.08,.10,'#b99259');
 shelf(-11.6,-8.6,2.4);
 roomBox(-7.8,4.1,-10.49,1.3,1.65,.13,'#a47a4c');
 roomBox(-7.8,4.1,-10.39,1.05,1.40,.04,'#f9f5e9');
-officeSign('👑 林柏均律師｜所長辦公室　點擊介紹',-8.2,3.7,-3.8,5.4,5);
+officeSign('林柏均律師｜所長辦公室',-8.2,3.7,-3.8,5.4,'#fff8e9',5);
 plant(-5.2,-7.7);
 // Three individual, decorated staff desks along the right, with clear labels.
 desk(5.0,-6.2,3.05,'#c6a98d',6);elegantDeskDetails(5,-6.2,3.05,'#f2d8c4');
-officeSign('👆 夢奇奇飼養者｜點擊介紹',5.0,3.1,-5.9,4.6,'#3b3546',6);
+officeSign('夢奇奇飼養者｜事務所今天又怎麼了？',5.0,3.1,-5.9,4.6,'#3b3546',6);
 roomBall(6.15,1.28,-5.7,.20,'#f4b4c6');
 desk(10.0,-5.4,3.05,'#a68b78',7);elegantDeskDetails(10,-5.4,3.05,'#aa8c78');screen(10.8,1.61,-5.75,7);
-officeSign('👆 哈姆太郎｜點擊介紹',10.0,3.1,-5.0,4.1,'#3b3546',7);
+officeSign('哈姆太郎｜事務所今天又怎麼了？',10.0,3.1,-5.0,4.1,'#3b3546',7);
 roomBall(11.1,1.28,-5.0,.21,'#e6b46a');
 desk(9.1,1.1,3.25,'#b89d8c',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
-officeSign('👆 薪水掌門人｜點擊介紹',9.1,3.1,1.5,4.5,'#3b3546',8);
+officeSign('薪水掌門人｜事務所今天又怎麼了？',9.1,3.1,1.5,4.5,'#3b3546',8);
 roomBox(10.15,1.2,1.3,.5,.13,.40,'#efb7c8');
 // Curved reception desk with marble counter and gold trim.
 const reception=registerOffice(roomCylinder(0,1.05,4.7,2.45,2.45,1.75,'#d9c5ad'),2);
@@ -560,6 +569,13 @@ roomCylinder(0,1.99,4.7,3.45,3.45,.18,'#c9a267').scale.set(1,.99,.38);
 screen(0,2.58,4.43,2);
 officeSign('👆 接待櫃檯｜諮詢與聯絡',0,3.55,4.6,4.4,'#3b3546',2);
 plant(-4.3,5.3);plant(4.3,5.3);
+// Printer station: visible office equipment and comic easter egg.
+roomBox(3.2,.78,-.8,1.8,1.55,1.3,'#9bb9bb');
+registerOffice(roomBox(3.2,1.64,-.8,1.62,.56,1.16,'#e6e9e8'),9);
+registerOffice(roomBox(3.2,1.99,-.8,1.65,.17,1.25,'#394a55'),9);
+registerOffice(roomBox(3.2,1.38,-.13,1.18,.13,.12,'#37444e'),9);
+roomBox(3.2,1.27,-.09,1.0,.06,.32,'#ffffff');
+officeSign('印表機｜事務所今天又怎麼了？',3.2,2.7,-.8,4.4,'#263b51',9);
 // Comic production workstation: monitor is the IG link trigger.
 desk(-8.0,2.3,4.7,'#b98d68',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
 const comicScreen=screen(-8.0,1.78,1.88,3,'#443b53');
@@ -606,6 +622,19 @@ function animateIndoor(dt,t){
  indoorNpc.head.rotation.z=Math.sin(t*1.8)*.035;
 }
 indoorNpc.root.traverse(o=>{if(o.isMesh){o.userData.officeZone=4;roomClickable.push(o)}});
+
+const wyCompany=`<div class="wyHero"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><h1>德威陽國際法律事務所</h1><p>WEI & YANG INTERNATIONAL LAW FIRM</p><p>跨國視野 × 實戰法務 × 公益責任</p></div><div class="wyContent"><h2>關於德威陽</h2><p>德威陽國際法律事務所結合台灣及美國法律專業、企業法務管理與爭議處理實務，提供企業與個人法律服務，重視法律風險的預防、有效溝通與權益保障。</p><h2>主持律師</h2><p>林柏均律師具台灣及美國紐約州律師資格，取得美國 Emory University 法律碩士（LL.M.）與 University of La Verne 企業管理碩士（MBA），並具有上市公司法務長及企業法務實務經驗。</p><h2>專業法律服務</h2><div class="wyGrid"><div class="wyTile">跨國商務與國際契約</div><div class="wyTile">公司治理與企業法務</div><div class="wyTile">智慧財產與營業秘密</div><div class="wyTile">民事、刑事及行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動法與勞資爭議</div><div class="wyTile">醫療法律與爭議</div><div class="wyTile">企業法律顧問</div></div><h2>法律教育與公益參與</h2><p>本所重視企業法律教育、法治宣導與公益法律服務，將專業法律知識轉化為實務可用的風險管理觀念。</p><h2>聯絡我們</h2><p><a target="_blank" rel="noopener" href="https://weiandyang.com/">官方網站 weiandyang.com</a>　｜　<a target="_blank" rel="noopener" href="https://line.me/R/ti/p/~@wylaw">LINE @wylaw</a></p><p><a target="_blank" rel="noopener" href="https://www.facebook.com/weiandyang">Facebook</a>　｜　<a target="_blank" rel="noopener" href="https://www.instagram.com/weiyang_ceo/">Instagram</a></p></div>`;
+const wyLawyer=`<div class="wyHero"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><h1>林柏均 律師</h1><p>德威陽國際法律事務所｜創辦人暨主持律師</p><p>台灣律師・美國紐約州律師</p></div><div class="wyContent"><h2>專業介紹</h2><p>林柏均律師具有台灣與美國紐約州律師資格，兼具跨國法律視野、企業法務管理與訴訟實務背景。曾任上市公司法務長、企業資深法務，並具有美國法律事務所實務經驗，協助企業與個人評估法律風險及處理爭議。</p><h2>律師資格</h2><div class="wyGrid"><div class="wyTile">中華民國（台灣）律師</div><div class="wyTile">美國紐約州律師</div></div><h2>學歷</h2><ul><li>Emory University｜法律碩士（LL.M.）</li><li>University of La Verne｜企業管理碩士（MBA，會計專業領域）</li><li>中國文化大學｜法律學系、日本語文學系雙學士</li></ul><h2>重要專業經歷</h2><ul><li>德威陽國際法律事務所｜創辦人暨主持律師</li><li>揚智科技股份有限公司｜法務長</li><li>藥華醫藥股份有限公司｜資深法務</li><li>台達電子工業股份有限公司｜法務</li><li>泰金寶電通／Cal-Comp Electronics｜法務</li><li>美國法律事務所｜法律實務經歷</li></ul><h2>主要執業領域</h2><div class="wyGrid"><div class="wyTile">跨國商務契約與國際交易</div><div class="wyTile">企業法務、公司治理及法律風險</div><div class="wyTile">智慧財產、營業秘密</div><div class="wyTile">民事、刑事、行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動與勞資爭議</div><div class="wyTile">醫療法律爭議</div><div class="wyTile">企業法律顧問</div></div><h2>專業授課、演講與法律教育經歷</h2><p>結合台美法律專業及企業法務實務經驗，投入企業法律教育、法治宣導與公益法律講座。</p><h3>企業與專業機構授課</h3><ul><li>經濟部國際貿易署／外貿協會高雄辦事處</li><li>中華工商研究院</li><li>北、中、南地區企業法律教育與內部訓練</li></ul><h3>大學與法治教育</h3><ul><li>元智大學｜講師經歷</li></ul><h3>政府機關、社福及公益法律講座</h3><ul><li>苗栗縣政府苗南區社會福利服務中心</li><li>苗栗縣頭份社會福利服務中心</li><li>雲林婦女保護會</li><li>財團法人臺北市賽親關懷基金會</li></ul><h3>主要演講與授課主題</h3><ul><li>公司經理人法律責任與公司治理</li><li>國際商務契約與跨境交易風險</li><li>OEM／ODM 契約與智慧財產保護</li><li>企業營業秘密與勞動法律風險</li><li>應收帳款催收與呆帳防範</li><li>詐欺防制與民刑事法律責任</li><li>婚姻家事、繼承與婦幼權益保護</li><li>青少年法治教育與法律觀念宣導</li><li>醫療法律爭議與權益保障</li></ul><h2>公益法律服務與社會參與</h2><p>曾獲台北律師公會「最佳公益律師」肯定，並參與法律諮詢、法治教育及公益服務。相關服務機構包括台北市政府、新北市政府、現代婦女基金會、犯罪被害人保護協會、崔媽媽基金會等。</p><h2>法律諮詢</h2><p><a href="https://weiandyang.com/" target="_blank" rel="noopener">德威陽國際法律事務所官網</a>　｜　<a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener">LINE @wylaw</a></p></div>`;
+function openWyInfo(kind){document.getElementById('wyInfoBody').innerHTML=kind==='lawyer'?wyLawyer:wyCompany;document.getElementById('wyInfo').classList.add('open');document.getElementById('dialog').style.display='none'}
+function closeWyInfo(){document.getElementById('wyInfo').classList.remove('open')}
+document.getElementById('wyInfoClose').onclick=closeWyInfo;
+document.getElementById('wyInfo').addEventListener('click',e=>{if(e.target.id==='wyInfo')closeWyInfo()});
+const wyJokes={
+6:['律師說他今天行程不多。嗯……只有三個庭、兩場會議。','我問老闆今天會不會進辦公室，他說：看法院放不放人。','老闆說他五分鐘後到。請問是地球時間嗎？','我今天的工作目標：在印表機罷工前把書狀印完。','老闆說這份文件不急。下一句是：今天下班前給我。','這裡是事務所，不是健身房，但每天追著文件跑也很有運動量。','我們的老闆很愛工作。至於為什麼……這題目前無解。','律師今天終於坐在辦公室了！等等，他又要出門了。','我剛泡好茶，老闆說要去開庭，茶都比他待得久。','辦公室最神秘的東西？老闆的空閒時間。','剛整理完桌子，新的卷宗就來報到了。','我不是在發呆，我是在等印表機吐出最後一頁。','今天誰先下班？這個問題很有法律爭議。','我跟行事曆說拜託留一格空白，它完全不理我。','老闆說今天要準時吃飯，現在是下午三點。','今天最熱門的辦公室話題是：午餐到底要吃什麼？','每次說快結束了，通常代表下一件事要開始了。','我有一個夢想，就是書狀自己排版。','同事問我有沒有休息，我說我剛剛眨眼了。','如果找不到老闆，請先看看法院的開庭表。'],
+7:['印表機今天沒有卡紙。我懷疑它是不是有什麼陰謀。','電腦轉圈圈的時候，我也會跟著思考人生。','有人問我事務所最忙的是誰。我看了一眼印表機。','老闆說：這很簡單。我就知道事情不簡單了。','這不是桌面凌亂，這叫案件資料的立體展示。','今天的辦公室很安靜，安靜到我開始懷疑是不是停電。','我跟印表機的關係，目前處於需要第三方調解的階段。','你以為我們每天都在討論法律？其實有時候在討論午餐。','我剛把紙補滿，印表機又說它缺碳粉。','如果檔案會自己命名，我的人生會少很多問號。','今天電腦跑得很快，快到我不敢更新系統。','別問我為什麼盯著螢幕，我在等它願意合作。','我沒有對印表機生氣，我只是語氣比較有證據力。','每個資料夾都說自己很重要，我該相信誰？','辦公室的科技進步，主要表現在錯誤訊息越來越精美。','當老闆說「幫我看一下」時，我的滑鼠就開始緊張。','我今天最大的成就：成功找到昨天存的檔案。','列印前先祈禱，這不是迷信，是經驗。','電腦說正在處理中，我說我也是。','如果印表機有律師，我們可能已經開庭了。'],
+8:['大家都說錢不是萬能的。但月底對帳的時候，我覺得它很重要。','老闆說辦公室可以添購設備。我已經打開預算表了。','誰說數字不會說話？它每天都在提醒我還有帳沒對完。','我不是在盯著你，我是在確認這筆支出有沒有憑證。','我們這裡最有紀律的是誰？可能是我的 Excel。','今天有人說只花一點點。請問「一點點」有發票嗎？','我的超能力是什麼？在一堆數字裡找到少掉的那一塊錢。','別人看到購物車會開心，我看到購物車會先問預算。','我喜歡驚喜，但不喜歡月底突然出現的支出。','有人說這個不貴，我說請先定義不貴。','表格不會騙人，除非有人忘記存檔。','買咖啡可以，記得拿發票。','預算不是用來阻止快樂，是用來延長快樂。','我最常說的四個字：憑證在哪？','今天的算式都對了，我要先慶祝三秒。','誰動了我的計算機？它可是辦公室重要資產。','我的電腦桌面很乾淨，因為混亂都在試算表裡。','月底最浪漫的事，就是每筆帳都對得起來。','同事說想換椅子，我先問椅子能不能報帳。','如果預算會自己增加，我願意每天加班五分鐘。']};
+const wyDecks={};function nextWyJoke(i){let deck=wyDecks[i];if(!deck||!deck.length){deck=wyJokes[i].map((_,n)=>n);for(let n=deck.length-1;n>0;n--){const j=Math.floor(Math.random()*(n+1));[deck[n],deck[j]]=[deck[j],deck[n]]}wyDecks[i]=deck}return wyJokes[i][wyDecks[i].pop()]}
+
 const zones=[
  {name:'事務所介紹',text:['德威陽國際法律事務所（WEI & YANG INTERNATIONAL LAW FIRM）','本所提供跨國商務與契約、公司治理、智慧財產、民刑事訴訟、家事、勞動與醫療糾紛等法律服務。','官方網站：weiandyang.com']},
  {name:'律師與員工辦公區',text:['林柏均律師｜台灣律師、紐約州律師；Emory University LL.M.、University of La Verne MBA。','夢奇奇飼養者、哈姆太郎與薪水掌門人都有自己的辦公桌；室內由夢奇奇帶領參觀。']},
@@ -615,13 +644,16 @@ const zones=[
  {name:'林柏均律師｜所長辦公室',text:['這裡是林柏均律師的專屬所長辦公室，採用深色胡桃木、金屬飾邊及獨立會客空間。','林柏均律師具台灣律師、紐約州律師資格；Emory University LL.M.、University of La Verne MBA。','專業領域包括跨國商務契約、公司治理、智慧財產及民刑事訴訟。']},
  {name:'夢奇奇飼養者｜辦公位置',text:['這裡是夢奇奇飼養者的辦公桌！','想認識德威陽？可以點擊後方的官方 Logo 形象牆。']},
  {name:'哈姆太郎｜辦公位置',text:['這裡是哈姆太郎的辦公桌！','想了解企業合約、勞動爭議或營業秘密相關服務，可以透過本所 LINE @wylaw 洽詢。']},
- {name:'薪水掌門人｜辦公位置',text:['這裡是薪水掌門人的辦公桌！','如需法律諮詢，歡迎至前方接待櫃檯了解聯絡方式。']}
+ {name:'薪水掌門人｜辦公位置',text:['事務所今天又怎麼了？']},
+ {name:'印表機｜事務所今天又怎麼了？',text:['印表機今天沒有卡紙，整間事務所反而開始緊張。','本機今日拒絕配合加班，請洽勞資爭議專區。','文件剩最後一頁的時候，碳粉通常會開始思考人生。']}
 ];
 let insideOffice=false;
 const officeCam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,180);officeCam.position.set(19,19,25);officeCam.lookAt(0,1.3,-.5);
 const officeOrbit=new OrbitControls(officeCam,renderer.domElement);
 officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=9;officeOrbit.maxDistance=42;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(0,1.3,-.5);
 function officeTalk(i){
+ if(i===0||i===5){openWyInfo(i===5?'lawyer':'company');return;}
+ if(wyJokes[i]){const z=zones[i];talkName=z.name;talkIdx=0;dialogs[z.name]=[nextWyJoke(i)];renderTalk();return;}
  const z=zones[i];talkName=z.name;talkIdx=0;dialogs[z.name]=z.text;renderTalk();
  const old=document.getElementById('officeExtraLink');if(old)old.remove();
  if(i===3){
@@ -637,7 +669,7 @@ function enterOffice(){
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
- insideOffice=false;document.getElementById('officeUI').style.display='none';
+ closeWyInfo();insideOffice=false;document.getElementById('officeUI').style.display='none';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
