@@ -45,10 +45,7 @@ export function createMedicalExterior(group, THREE){
  cross(-5.6,7.15,4.25,.9);cross(5.6,7.15,4.25,.9);
  // Flat, unobstructed pedestrian forecourt, no fence across the approach.
  add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
- for(const x of [-5.1,5.1])for(const z of [8.5,12]){
-  cylinder(.1,.7,x,.7,z,champagne);
-  add(new THREE.SphereGeometry(.27,14,12),glass,x,1.17,z);
- }
+ // The medical forecourt has no posts or railings crossing its approach.
  // Two low curved marble planters, well away from the central bridge-to-door path.
  const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
  const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
@@ -104,6 +101,18 @@ export function createMedicalInterior(room,THREE,staffFactory){
   }
   box(3.35,5.8,.12,velvet,x<0?-8.0:8.0,4.65,-8.65);
  }
+ // Warm boutique sconces, ceiling coves, and decorative architectural wall ribs.
+ for(const x of [-6.2,6.2]){
+  box(.24,1.55,.28,gold,x,5.65,-8.35);
+  box(.65,.75,.28,lightGold,x,5.65,-8.08);
+  const glow=new THREE.PointLight(0xffd9a1,1.25,9);glow.position.set(x,5.7,-7.5);root.add(glow);
+ }
+ for(const x of [-10.9,10.9]){
+  box(.075,7.6,.10,gold,x,4.2,-8.98);
+  box(.075,7.6,.10,gold,x,4.2,8.75);
+ }
+ for(const z of [-8.6,8.6])box(22.9,.12,.14,gold,0,8.35,z);
+ for(const x of [-11.1,11.1])box(.14,.12,17.3,gold,x,8.35,0);
  // Curved marble reception desk; height deliberately below the logo and set forward.
  const desk=new THREE.Group();root.add(desk);desk.position.set(0,0,3.9);
  const front=add(new THREE.CylinderGeometry(3.55,3.45,1.28,64,1,false,0,Math.PI),cream,0,.76,0,desk);
@@ -241,7 +250,7 @@ export function createMedicalInterior(room,THREE,staffFactory){
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
   const c=canvas.getContext('2d');c.fillStyle='rgba(255,250,239,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
-  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#21384f';c.textAlign='center';c.textBaseline='middle';c.font='bold 44px sans-serif';c.fillText(text,240,56);
+  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#21384f';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
