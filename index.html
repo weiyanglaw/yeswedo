@@ -143,6 +143,43 @@ if(i===0){
   model.updateMatrixWorld(true);
 }
 if(i===0){
+  // 2026-10-25: Keep the original castle geometry, recolor only its architectural
+  // vertex-color meshes. The original GLB uses per-vertex colors (not named materials).
+  // Warm pearl ivory #F1E3CC, jewel blue #286DA8, champagne gold #D9B56F,
+  // and almond architectural details #E6D0AE. Trees, fountain, and island untouched.
+  const castleColors={
+    walls:'#F1E3CC',roof:'#286DA8',gold:'#D9B56F',detail:'#E6D0AE'
+  };
+  const wallIds=new Set([40,41,48,54,60,66,72,79,80,81,82]);
+  const roofIds=new Set([50,56,62,68,74,90,93,96,99,102]);
+  const detailIds=new Set([41,79,80,81,82]);
+  const obstacleIds=new Set(Array.from({length:10},(_,k)=>'part_'+(158+k)));
+  let removedObstacle=0,recolored=0;
+  model.traverse(obj=>{
+    if(!obj.isMesh)return;
+    if(obstacleIds.has(obj.name)){
+      // Delete the entire green ball, circular base, small circular posts and rails.
+      // No replacement decoration or invisible collider is added.
+      obj.visible=false;obj.userData.noWalkCollision=true;removedObstacle++;return;
+    }
+    const id=Number(obj.name.replace(/^part_/,''));
+    let target=null;
+    if(wallIds.has(id))target=detailIds.has(id)?castleColors.detail:castleColors.walls;
+    else if(roofIds.has(id))target=castleColors.roof;
+    else if(id>=40 && id<=103 && ![42].includes(id))target=castleColors.gold;
+    if(!target)return;
+    const attr=obj.geometry.getAttribute('color');
+    if(!attr)return;
+    // Match the GLB's existing normalized RGB vertex-color encoding.
+    const rgb=parseInt(target.slice(1),16);
+    const r=((rgb>>16)&255)/255,g=((rgb>>8)&255)/255,b=(rgb&255)/255;
+    for(let k=0;k<attr.count;k++)attr.setXYZ(k,r,g,b);
+    attr.needsUpdate=true;recolored++;
+    if(obj.material){obj.material=obj.material.clone();obj.material.needsUpdate=true;}
+  });
+  console.info('WEIYANG castle recolored meshes:',recolored,'removed circular obstruction:',removedObstacle);
+}
+if(i===0){
   // Remove the six actual entrance steps, not the castle facade.
   const unwanted=new Set(['part_83','part_84','part_85','part_86','part_87','part_88']);
   let removed=0;
