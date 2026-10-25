@@ -49,6 +49,23 @@ export function createMedicalExterior(group, THREE){
   cylinder(.1,.7,x,.7,z,champagne);
   add(new THREE.SphereGeometry(.27,14,12),glass,x,1.17,z);
  }
+ // Two low curved marble planters, well away from the central bridge-to-door path.
+ const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
+ const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
+ for(const side of [-1,1]){
+   const x=side*9.7,z=9.6;
+   const bed=add(new THREE.CylinderGeometry(2.2,2.3,.55,48,1,false,0,Math.PI),ivory,x,.55,z);
+   bed.rotation.y=side>0?0:Math.PI;
+   const edging=add(new THREE.TorusGeometry(2.15,.075,8,48,Math.PI),gold,x,.88,z);
+   edging.rotation.x=Math.PI/2;edging.rotation.z=side>0?0:Math.PI;
+   for(let k=0;k<13;k++){
+     const a=(k+.5)*Math.PI/13+(side>0?0:Math.PI);
+     const radius=1.25+(k%3)*.18;
+     const px=x+Math.cos(a)*radius,pz=z+Math.sin(a)*radius;
+     const stem=add(new THREE.CylinderGeometry(.035,.05,.42,7),foliage,px,1.06,pz);
+     add(new THREE.SphereGeometry(.16,10,8),blossom[k%3],px,1.32,pz);
+   }
+ }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
  const crest=add(new THREE.CircleGeometry(1.78,64),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),0,7.3,4.63);
@@ -59,13 +76,16 @@ export function createMedicalExterior(group, THREE){
 export function createMedicalInterior(room,THREE,staffFactory){
  const root=room.scene;
  const material=(hex,metalness=0,roughness=.46)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness});
- const cream=material(0xf7f1e7),stone=material(0xe5e1da),gold=material(0xc8a66b,.78,.24),navy=material(0x142638,.24,.4),walnut=material(0x5b4138),velvet=material(0x325467),lightGold=material(0xf3dfb3,.4,.3);
+ const cream=material(0xf7f1e7),stone=material(0xf0e8dc,.10,.27),gold=material(0xc8a66b,.78,.24),navy=material(0x142638,.24,.4),walnut=material(0x5b4138),velvet=material(0x233f60,.12,.65),lightGold=material(0xf3dfb3,.4,.3);
  const glass=new THREE.MeshPhysicalMaterial({color:0xa8dce4,transparent:true,opacity:.37,metalness:.08,roughness:.12,depthWrite:false});
  const add=(geo,mat,x,y,z,parent=root)=>{const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y,z);parent.add(mesh);return mesh};
  const box=(w,h,d,mat,x,y,z)=>add(new THREE.BoxGeometry(w,h,d),mat,x,y,z);
  const cyl=(rt,rb,h,mat,x,y,z)=>add(new THREE.CylinderGeometry(rt,rb,h,40),mat,x,y,z);
  // Purpose-built boutique reception: marble floor, gold inlays and uninterrupted central aisle.
  box(23.6,.1,18.6,stone,0,.02,0);
+ // Large inset marble perimeter and champagne-brass border.
+ for(const x of [-11.25,11.25])box(.055,.018,17.3,gold,x,.09,0);
+ for(const z of [-8.25,8.25])box(22.5,.018,.055,gold,0,.09,z);
  for(const x of [-10.5,-6.5,-2.5,2.5,6.5,10.5])box(.022,.012,18.3,gold,x,.083,0);
  for(const z of [-7,-2,3,8])box(23,.012,.022,gold,0,.086,z);
  box(23.5,.20,.35,navy,0,8.45,-9.05);
@@ -91,8 +111,7 @@ export function createMedicalInterior(room,THREE,staffFactory){
  const top=add(new THREE.CylinderGeometry(3.78,3.78,.13,64,1,false,0,Math.PI),stone,0,1.48,0,desk);top.scale.z=.53;
  const rim=add(new THREE.TorusGeometry(3.61,.045,8,64,Math.PI),gold,0,1.23,0,desk);rim.rotation.x=Math.PI/2;rim.scale.y=.48;
  for(const x of [-2.8,2.8]){
-  cyl(.11,.11,1.5,gold,x,.75,3.4);
-  add(new THREE.SphereGeometry(.19,18,12),lightGold,x,1.62,3.4);
+  box(.075,1.0,.075,gold,x,.62,3.4);
  }
  // Boutique details: marble veining, coves, ceiling lines, sconces and wall art.
  const marbleLine=material(0xd5c9bb,.15,.6), warm=new THREE.MeshBasicMaterial({color:0xffedc7});
@@ -152,6 +171,20 @@ export function createMedicalInterior(room,THREE,staffFactory){
   box(.16,2.17,2.05,navy,x,4.3,1.2);
   const line=box(.18,.08,1.25,lightGold,x+(x>0?-.10:.10),4.2,1.2);line.rotation.x=.32;
  }
+ // Boutique office embellishments: warm recessed shelving, brass accents, sculptural wall lights.
+ for(const side of [-1,1]){
+   const xx=side*11.45;
+   for(const zz of [-5.3,-1.7,4.1]){
+     box(.10,3.0,1.55,gold,xx,4.4,zz);
+     box(.13,2.82,1.37,cream,xx-side*.04,4.4,zz);
+     box(.14,.09,1.06,lightGold,xx-side*.12,5.42,zz);
+   }
+ }
+ // Restrained brass wall lights frame the official emblem without covering it.
+ for(const x of [-5.5,5.5]){
+   box(.16,1.35,.20,gold,x,5.3,-8.40);
+   box(.22,.78,.24,lightGold,x,5.3,-8.22);
+ }
  // Exactly one person: reuse the main island's actual STAFF generator, not the avatar creator.
  let guide=null;
  if(staffFactory){
@@ -191,12 +224,13 @@ export function createMedicalInterior(room,THREE,staffFactory){
   const panel=add(new THREE.PlaneGeometry(w-.14,2.0),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}),x,3.15,z+.24);
   register(panel,title==='醫療爭議'?'computer':'computer');
  };
- display(-7.7,-8.08,3.3,'醫療爭議');display(7.7,-8.08,3.3,'醫療行政救濟');
+ display(-7.7,-8.08,3.3,'醫療爭議'); // The right wall is reserved for one ECG monitor only.
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
- box(4.65,2.4,.19,gold,8.0,4.3,-8.34);
- const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-8.20);
+ box(4.78,2.56,.14,gold,8.0,4.3,-8.36);
+ box(4.62,2.40,.15,navy,8.0,4.3,-8.24);
+ const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-8.14);
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
  const deskHit=box(5.9,.25,1.2,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),0,1.65,3.9);register(deskHit,'computer');
@@ -206,16 +240,16 @@ export function createMedicalInterior(room,THREE,staffFactory){
  const labels=[];
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
-  const c=canvas.getContext('2d');c.fillStyle='rgba(21,42,62,.94)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
-  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#fff3d8';c.textAlign='center';c.textBaseline='middle';c.font='bold 44px sans-serif';c.fillText(text,240,56);
+  const c=canvas.getContext('2d');c.fillStyle='rgba(255,250,239,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
+  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#21384f';c.textAlign='center';c.textBaseline='middle';c.font='bold 44px sans-serif';c.fillText(text,240,56);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- hint('💬 跟我聊聊',4.8,3.9,4.3,'staff');
+ hint('💬 跟我聊聊',5.1,4.0,4.85,'staff');
  hint('📚 點我翻翻',-8.05,7.55,-7.15,'books');
- hint('❤️ 點我看看',8,6.0,-8.0,'ecg');
+ hint('❤️ 點我看看',8,6.25,-7.88,'ecg');
  hint('✨ 點我探索',0,2.7,5.3,'computer');
- hint('⚖️ 認識德威陽',0,8.0,-8.0,'logo');
+ hint('⚖️ 認識德威陽',0,8.75,-8.05,'logo');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{

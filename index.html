@@ -101,7 +101,7 @@ $('startExplore').addEventListener('click',enterIsland);
 
 <div id="wyDoorPrompt" style="display:none;position:fixed;z-index:34;bottom:clamp(160px,23vh,225px);left:50%;transform:translateX(-50%);width:min(355px,88vw);background:#fffaf2f2;border:2px double #cfa976;outline:1px solid #fff7e5;outline-offset:-7px;border-radius:19px;padding:14px 16px;box-shadow:0 12px 35px #1a2a3b55;text-align:center;font-family:system-ui,'Noto Sans TC',sans-serif;color:#23364a;pointer-events:auto"><div id="wyDoorTitle" style="font-size:14px;font-weight:800;margin-bottom:9px">已抵達入口</div><button id="wyDoorEnter" style="background:#1c3552;color:#fff5df;border:1px solid #d9b781;border-radius:13px;padding:10px 24px;font-size:15px;font-weight:800;cursor:pointer">🚪 進入參觀</button><div style="font-size:11px;color:#8a6d55;margin-top:7px">只有按下按鈕才會進入，路過不會自動切換</div></div>
 <div id="wyEntryGuide" aria-label="建築入口操作提示" style="position:fixed;right:12px;top:clamp(78px,13vh,125px);z-index:33;max-width:170px;font-family:system-ui,'Noto Sans TC',sans-serif;pointer-events:auto">
-  <div id="wyEntryGuideText" style="background:#172d4b;color:#fff8ed;border:1px solid #d7b77c;border-radius:7px;padding:4px 6px;box-shadow:0 2px 7px #14273c22;font-size:10px;font-weight:500;line-height:1.3;letter-spacing:0">🚪 點擊大門即可進入室內</div>
+  <div id="wyEntryGuideText" style="background:#172d4b;color:#fff8ed;border:1px solid #d7b77c;border-radius:7px;padding:6px 9px;box-shadow:0 2px 7px #14273c22;font-size:12px;font-weight:600;line-height:1.35;letter-spacing:0">🚪 點擊大門即可進入室內</div>
   <button type="button" id="wyEntryGuideToggle" aria-expanded="true" aria-controls="wyEntryGuideText" aria-label="收合入口提示" style="display:block;margin:2px 0 0 auto;background:#172d4b;color:#fff8ed;border:1px solid #d7b77c;border-radius:9px;padding:2px 5px;font-size:9px;font-weight:500;cursor:pointer">收合 ×</button>
 </div>
 <style>body:has(#creator[style*="flex"]) #wyEntryGuide{display:none!important}</style>
@@ -109,7 +109,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261025-luxury-dollhouse-v10';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-logo-outer-mini-cloud-v2';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v7';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261025-medical-premium-v11';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-logo-outer-mini-cloud-v2';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v7';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -124,7 +124,7 @@ function syncIslandCameraMode(){
 scene.add(new THREE.HemisphereLight(0xffffff,0xcbdce7,2.5));const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#D8B5AD',roughness:.83}),rock:new THREE.MeshStandardMaterial({color:'#AE8588',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#F7CEDC','#F8E7C6','#F8EEDC','#D8EEDC','#D4EAF5','#E8DBF3'];const rm=rainbow.map(c=>new THREE.MeshBasicMaterial({color:c}));
 async function getGLB(key){const chunks=MANIFEST[key];let arrays=[],total=0;for(let i=0;i<chunks.length;i++){const r=await fetch(chunks[i]);if(!r.ok)throw Error(chunks[i]+': '+r.status);const a=await r.arrayBuffer();arrays.push(new Uint8Array(a));total+=a.byteLength;status.textContent='正在讀取 '+key+' '+(i+1)+'/'+chunks.length;}const all=new Uint8Array(total);let at=0;for(const a of arrays){all.set(a,at);at+=a.byteLength}arrays=[];return await new Promise((res,rej)=>loader.parse(all.buffer,'',res,rej))}
 function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);parent.add(m);return m}
-const groups=[];for(let i=0;i<6;i++){const g=new THREE.Group();g.position.set(xy[i][0],0,xy[i][1]);scene.add(g);groups.push(g);const r=i===0?21:17;mesh(new THREE.CylinderGeometry(r,r*.82,6,48),mats.grass,g,0,-3,0);const cone=mesh(new THREE.ConeGeometry(r*.78,19,48),mats.rock,g,0,-15,0);cone.rotation.z=Math.PI;const ring=mesh(new THREE.TorusGeometry(r-.2,.32,8,90),mats.gold,g,0,.1,0);ring.rotation.x=Math.PI/2;for(let k=0;k<10;k++){const a=k*Math.PI*2/10;const flower=mesh(new THREE.SphereGeometry(.45,20,16),rm[(k+i)%6],g,Math.cos(a)*(r-1.2),.55,Math.sin(a)*(r-1.2));}}
+const groups=[];for(let i=0;i<6;i++){const g=new THREE.Group();g.position.set(xy[i][0],0,xy[i][1]);scene.add(g);groups.push(g);const r=i===0?21:17;const islandSideMat=i===2?new THREE.MeshStandardMaterial({color:0xe9a9c6,roughness:.8}):mats.grass;mesh(new THREE.CylinderGeometry(r,r*.82,6,48),islandSideMat,g,0,-3,0);if(i===2){mesh(new THREE.CylinderGeometry(r+.02,r+.02,.34,64),mats.white,g,0,-.06,0);mesh(new THREE.TorusGeometry(r-.30,.18,8,90),new THREE.MeshStandardMaterial({color:0xf2c4d8}),g,0,.14,0).rotation.x=Math.PI/2;}const cone=mesh(new THREE.ConeGeometry(r*.78,19,48),mats.rock,g,0,-15,0);cone.rotation.z=Math.PI;const ring=mesh(new THREE.TorusGeometry(r-.2,.32,8,90),mats.gold,g,0,.1,0);ring.rotation.x=Math.PI/2;for(let k=0;k<10;k++){const a=k*Math.PI*2/10;const flower=mesh(new THREE.SphereGeometry(.45,20,16),rm[(k+i)%6],g,Math.cos(a)*(r-1.2),.55,Math.sin(a)*(r-1.2));}}
 // Floating cloud-shaped island nameplates: all dark backgrounds / light text.
 // Nameplates are above the islands, never at bridge entrances or on the ground.
 const islandLabels=[];
@@ -270,7 +270,7 @@ for(let i=1;i<6;i++){
   mesh(new THREE.BoxGeometry(9.65,.08,len/segments+.01),rm[k%6],group,0,.37,z);
  }
  // No railing within 12 world units of the center: a completely open approach.
- const railStart=-len/2+12.5,railEnd=len/2-(i===2?10:0);
+ const railStart=-len/2+12.5,railEnd=len/2-(i===2?16:0);
  const railLen=Math.max(0,railEnd-railStart);
  if(railLen>1){
   for(const side of [-1,1]){
@@ -976,8 +976,8 @@ for(let i=1;i<6;i++){
   // Wider, higher dollhouse framing: entire 24 x 19 office fits on narrow phones.
   cam.fov=innerWidth<700?64:56;cam.updateProjectionMatrix();
   control.target.set(0,3.0,-.6);
-  cam.position.set(31,34,48);control.minDistance=12;control.maxDistance=95;
-  control.maxPolarAngle=Math.PI*.47;control.update();
+  cam.position.set(31,34,48);control.minDistance=12;control.maxDistance=105;
+  control.maxPolarAngle=Math.PI*.47;control.enablePan=true;control.screenSpacePanning=true;control.panSpeed=1.6;control.touches.ONE=THREE.TOUCH.PAN;control.touches.TWO=THREE.TOUCH.DOLLY_PAN;control.mouseButtons.LEFT=THREE.MOUSE.PAN;control.mouseButtons.RIGHT=THREE.MOUSE.ROTATE;control.update();
  }
  themeRooms[i]={scene:sc,camera:cam,orbit:control,icon,medicalRoom};
 }
