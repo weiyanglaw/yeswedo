@@ -25,8 +25,7 @@ export function createMedicalExterior(group, THREE){
   cylinder(3.05,10.2,side*9.15,5.3,-2.1);
   cylinder(3.22,.22,side*9.15,10.55,-2.1,champagne);
   for(let k=0;k<10;k++){const a=k*Math.PI/5;cylinder(.06,9.6,side*9.15+3.05*Math.sin(a),5.3,-2.1+3.05*Math.cos(a),champagne);}
-  add(new THREE.BoxGeometry(6,.25,4.6),silver,side*8.25,3.1,5.05);
-  add(new THREE.BoxGeometry(6,.12,4.6),champagne,side*8.25,3.31,5.05);
+  // v31: Removed both projecting side entrance slabs (left and right).
  }
  for(const x of [-6.4,-4.1,4.1,6.4]){
   add(new THREE.BoxGeometry(1.75,4.5,.12),glass,x,4.45,4.13);
