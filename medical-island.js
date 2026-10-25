@@ -50,19 +50,22 @@ export function createMedicalExterior(group, THREE){
  // Old beds near the island perimeter are intentionally removed.
  const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
  const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
- // Two shallow crescent beds frame a single garden composition on the FRONT forecourt.
- // They stay outside the central x=-2.25..2.25 pedestrian route to the glass doors.
- for(const side of [-1,1]){
-   const cx=side*3.25,cz=11.5;
-   // Low curved ivory marble flower bed; outer edge stays inside the forecourt width.
-   for(let k=0;k<17;k++){
-     const angle=(-1.05+(2.1*k/16))+(side===-1?Math.PI:0);
-     const x=cx+Math.cos(angle)*.82,z=cz+Math.sin(angle)*1.35;
-     add(new THREE.CylinderGeometry(.24,.26,.22,14),ivory,x,.53,z);
-     add(new THREE.SphereGeometry(.24,12,8),foliage,x,.76,z);
-     add(new THREE.SphereGeometry(.21,12,9),blossom[k%3],x,.94,z);
-     if(k%2===0)add(new THREE.SphereGeometry(.12,10,8),blossom[(k+1)%3],x+side*.14,1.04,z+.13);
-   }
+ // One unmistakable, densely planted circular flower bed on the right side
+ // of the entrance forecourt. Keep the middle and left pedestrian access clear.
+ const gardenX=5.55,gardenZ=11.0,gardenRadius=1.55;
+ add(new THREE.CylinderGeometry(gardenRadius,gardenRadius+.12,.28,48),ivory,gardenX,.52,gardenZ);
+ add(new THREE.TorusGeometry(gardenRadius,.095,10,56),gold,gardenX,.68,gardenZ).rotation.x=Math.PI/2;
+ add(new THREE.CylinderGeometry(gardenRadius-.14,gardenRadius-.14,.055,48),foliage,gardenX,.68,gardenZ);
+ // Fill the entire round planter with close-packed blossoms and leafy clusters.
+ for(let row=-5;row<=5;row++){
+  for(let col=-5;col<=5;col++){
+   const dx=col*.255+(row%2)*.125,dz=row*.255;
+   if(dx*dx+dz*dz>1.37*1.37)continue;
+   const n=(row+5)*11+col+5;
+   const x=gardenX+dx,z=gardenZ+dz;
+   add(new THREE.SphereGeometry(.19,10,8),foliage,x,.80,z);
+   add(new THREE.SphereGeometry(.165,12,9),blossom[((n%3)+3)%3],x,.99+(n%3)*.035,z);
+  }
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
@@ -206,20 +209,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),lightGold);pin.position.set(-.18,.15,.04);guide.add(pin);
 
  }
- // Optional detailed A-style 3D GLB. The existing chibi stays as a safe fallback if loading fails.
- if(GLTFLoader && guide){
-  const oldGuide=guide;
-  new GLTFLoader().load('./salary-keeper-a.glb?v=20261025-a-v23',gltf=>{
-   if(!gltf.scene)return;
-   const model=gltf.scene;
-   model.position.copy(oldGuide.position);model.rotation.copy(oldGuide.rotation);
-   model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;register(o,'staff');}});
-   root.add(model);root.remove(oldGuide);
-   const removed=new Set();oldGuide.traverse(o=>{if(o.isMesh){removed.add(o);interactionMap.delete(o.uuid);}});
-   for(let i=interactionTargets.length-1;i>=0;i--)if(removed.has(interactionTargets[i]))interactionTargets.splice(i,1);
-   guide=model;
-  },undefined,err=>{console.warn('薪水掌門人 3D 模型未載入，保留原人物',err)});
- }
+ // Keep the original interactive chibi staff. No GLB replacement.
  // Boutique seating and calm architectural details. No giant sculptures, no visitors.
  for(const x of [-8.3,8.3]){
   box(3.7,.52,1.75,velvet,x,.59,4.7);
