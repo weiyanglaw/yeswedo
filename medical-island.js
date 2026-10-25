@@ -3,13 +3,13 @@
 export function createMedicalExterior(group, THREE){
  const ivory=new THREE.MeshStandardMaterial({color:0xfff9ee,roughness:.62});
  const blue=new THREE.MeshStandardMaterial({color:0x5c9ccf,metalness:.18,roughness:.33});
- const gold=new THREE.MeshPhysicalMaterial({color:0xf5dfaa,metalness:.32,roughness:.24,clearcoat:.65,clearcoatRoughness:.17,emissive:0x3a260c,emissiveIntensity:.08});
- const glass=new THREE.MeshPhysicalMaterial({color:0xbce9f6,transparent:true,opacity:.72,roughness:.13,metalness:.08});
+ const gold=new THREE.MeshPhysicalMaterial({color:0xfff0cb,metalness:.24,roughness:.15,clearcoat:1,clearcoatRoughness:.07,emissive:0x8c6b37,emissiveIntensity:.12});
+ const glass=new THREE.MeshPhysicalMaterial({color:0xc9f1fb,transparent:true,opacity:.64,roughness:.09,metalness:.04,clearcoat:.75,clearcoatRoughness:.1});
  const pink=new THREE.MeshStandardMaterial({color:0xf6d4e3,roughness:.7});
  const add=(geo,mat,x,y,z,parent=group)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
  // Modern high-end healthcare pavilion: rounded glass towers, luminous dome, no pagoda roof.
  const silver=new THREE.MeshStandardMaterial({color:0xf8fcff,roughness:.32,metalness:.12});
- const champagne=new THREE.MeshPhysicalMaterial({color:0xffe8b8,roughness:.22,metalness:.32,clearcoat:.85,clearcoatRoughness:.13,emissive:0x422a0e,emissiveIntensity:.10});
+ const champagne=new THREE.MeshPhysicalMaterial({color:0xffefc9,roughness:.13,metalness:.27,clearcoat:1,clearcoatRoughness:.055,emissive:0x9a7846,emissiveIntensity:.14});
  const teal=new THREE.MeshStandardMaterial({color:0x52b4c4,emissive:0x174a63,emissiveIntensity:.14,roughness:.25});
  const cylinder=(r,h,x,y,z,mat=glass)=>add(new THREE.CylinderGeometry(r,r,h,48),mat,x,y,z);
  cylinder(15.2,.32,0,.19,0,ivory);
@@ -74,8 +74,8 @@ export function createMedicalExterior(group, THREE){
  // v33: Refined WEIYANG signature facade — intentionally simple low-poly geometry
  // rather than simulated cinematic reflections. These are decorative, not collision objects.
  const warmIvory=new THREE.MeshStandardMaterial({color:0xfff5e6,metalness:.06,roughness:.54});
- const bronze=new THREE.MeshPhysicalMaterial({color:0xf3d6a0,metalness:.30,roughness:.24,clearcoat:.85,clearcoatRoughness:.12,emissive:0x4a2d0d,emissiveIntensity:.09});
- const coolGlass=new THREE.MeshPhysicalMaterial({color:0x9bd8ea,transparent:true,opacity:.55,roughness:.16,metalness:.07,depthWrite:false});
+ const bronze=new THREE.MeshPhysicalMaterial({color:0xffe8bb,metalness:.28,roughness:.16,clearcoat:1,clearcoatRoughness:.07,emissive:0x927044,emissiveIntensity:.12});
+ const coolGlass=new THREE.MeshPhysicalMaterial({color:0xb9ecf6,transparent:true,opacity:.48,roughness:.1,metalness:.04,clearcoat:.7,clearcoatRoughness:.09,depthWrite:false});
  const softLight=new THREE.MeshBasicMaterial({color:0xffe5b2});
  // True dome meridians: arched ribs hugging the existing hemisphere, not straight posts.
  for(let k=0;k<12;k++){
@@ -97,6 +97,39 @@ export function createMedicalExterior(group, THREE){
    pts.push(new THREE.Vector3(5.99*Math.sin(t)*Math.sin(a),11.75+5.99*Math.cos(t),-1.8+5.99*Math.sin(t)*Math.cos(a)));
   }
   group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),24,.018,5,false),goldGlint));
+ }
+ // v35: stronger, controlled highlight strips that are visible in the existing
+ // pastel Three.js renderer even without an HDR environment map. These are
+ // thin decorative meshes, not additional obstacles or structural geometry.
+ const brightHighlight=new THREE.MeshBasicMaterial({color:0xfff8df,transparent:true,opacity:.88,depthWrite:false,side:THREE.DoubleSide});
+ const softHighlight=new THREE.MeshBasicMaterial({color:0xffe6ae,transparent:true,opacity:.52,depthWrite:false,side:THREE.DoubleSide});
+ // More prominent glints along the sun-facing half of the dome ribs.
+ for(const k of [0,2,4,6,8,10]){
+  const a=k*Math.PI/6,pts=[];
+  for(let j=0;j<=22;j++){
+   const t=j/22*Math.PI/2;
+   pts.push(new THREE.Vector3(6.065*Math.sin(t)*Math.sin(a),11.75+6.065*Math.cos(t),-1.8+6.065*Math.sin(t)*Math.cos(a)));
+  }
+  group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),30,.031,5,false),brightHighlight));
+ }
+ // Slim reflective vertical edges on the glass towers; no extra platforms.
+ for(const side of [-1,1]){
+  const cx=side*9.15;
+  for(const a of [.42,1.46,2.62]){
+   const x=cx+3.085*Math.sin(a),z=-2.1+3.085*Math.cos(a);
+   add(new THREE.CylinderGeometry(.025,.025,8.8,7),brightHighlight,x,5.3,z);
+  }
+  for(const y of [10.59,10.76]){
+   const ring=add(new THREE.TorusGeometry(3.23,.036,6,64),brightHighlight,cx,y,-2.1);
+   ring.rotation.x=Math.PI/2;
+  }
+ }
+ // A subtle front-facing reflection line on the entrance canopy.
+ add(new THREE.BoxGeometry(7.3,.037,.045),brightHighlight,0,6.72,5.56);
+ // A pair of broad, translucent vertical reflection panels on the glass drum.
+ for(const x of [-2.0,2.0]){
+  const pane=add(new THREE.BoxGeometry(.22,2.5,.035),softHighlight,x,9.9,4.02);
+  pane.renderOrder=2;
  }
  // Delicate crown rings, horizontal detail at glass dome base.
  for(const [r,y] of [[6.02,11.75],[5.73,12.85]]){
