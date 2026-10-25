@@ -46,22 +46,22 @@ export function createMedicalExterior(group, THREE){
  // Flat, unobstructed pedestrian forecourt, no fence across the approach.
  add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
  // The medical forecourt has no posts or railings crossing its approach.
- // Entrance flower beds: two compact circular flower rings to the OUTSIDE of the front facade,
- // at x=+/-10.4,z=2.7, away from the bridge landing and central door aisle.
+ // Entrance forecourt: low flower crescent around the approach, leaving a clear center aisle.
+ // Old beds near the island perimeter are intentionally removed.
  const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
  const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
+ // Two shallow crescent beds frame a single garden composition on the FRONT forecourt.
+ // They stay outside the central x=-2.25..2.25 pedestrian route to the glass doors.
  for(const side of [-1,1]){
-   const x=side*10.4,z=2.7;
-   // Round low marble planter (diameter 2.5); no protruding semicircle into bridge.
-   add(new THREE.CylinderGeometry(1.24,1.30,.32,48),ivory,x,.53,z);
-   const edging=add(new THREE.TorusGeometry(1.23,.055,8,48),gold,x,.72,z);
-   edging.rotation.x=Math.PI/2;
-   for(let k=0;k<25;k++){
-     const a=k*Math.PI*2/25;
-     const radius=.24+(k%4)*.22;
-     const px=x+Math.cos(a)*radius,pz=z+Math.sin(a)*radius;
-     add(new THREE.SphereGeometry(.15,9,7),foliage,px,.84,pz);
-     add(new THREE.SphereGeometry(.145,10,8),blossom[k%3],px,1.01+(k%3)*.025,pz);
+   const cx=side*3.25,cz=11.5;
+   // Low curved ivory marble flower bed; outer edge stays inside the forecourt width.
+   for(let k=0;k<17;k++){
+     const angle=(-1.05+(2.1*k/16))+(side===-1?Math.PI:0);
+     const x=cx+Math.cos(angle)*.82,z=cz+Math.sin(angle)*1.35;
+     add(new THREE.CylinderGeometry(.24,.26,.22,14),ivory,x,.53,z);
+     add(new THREE.SphereGeometry(.24,12,8),foliage,x,.76,z);
+     add(new THREE.SphereGeometry(.21,12,9),blossom[k%3],x,.94,z);
+     if(k%2===0)add(new THREE.SphereGeometry(.12,10,8),blossom[(k+1)%3],x+side*.14,1.04,z+.13);
    }
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
@@ -71,7 +71,7 @@ export function createMedicalExterior(group, THREE){
  const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,4.56);rim.renderOrder=59;
  return {door,crest};
 }
-export function createMedicalInterior(room,THREE,staffFactory){
+export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const root=room.scene;
  const material=(hex,metalness=0,roughness=.46)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness});
  const cream=material(0xf7f1e7),stone=material(0xf0e8dc,.10,.27),gold=material(0xc8a66b,.78,.24),navy=material(0x142638,.24,.4),walnut=material(0x5b4138),velvet=material(0x233f60,.12,.65),lightGold=material(0xf3dfb3,.4,.3);
@@ -205,6 +205,20 @@ export function createMedicalInterior(room,THREE,staffFactory){
    const badgeFace=new THREE.Mesh(new THREE.BoxGeometry(.19,.115,.032),cream);badgeFace.position.z=.017;badge.add(badgeFace);
    const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),lightGold);pin.position.set(-.18,.15,.04);guide.add(pin);
 
+ }
+ // Optional detailed A-style 3D GLB. The existing chibi stays as a safe fallback if loading fails.
+ if(GLTFLoader && guide){
+  const oldGuide=guide;
+  new GLTFLoader().load('./salary-keeper-a.glb?v=20261025-a-v23',gltf=>{
+   if(!gltf.scene)return;
+   const model=gltf.scene;
+   model.position.copy(oldGuide.position);model.rotation.copy(oldGuide.rotation);
+   model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;register(o,'staff');}});
+   root.add(model);root.remove(oldGuide);
+   const removed=new Set();oldGuide.traverse(o=>{if(o.isMesh){removed.add(o);interactionMap.delete(o.uuid);}});
+   for(let i=interactionTargets.length-1;i>=0;i--)if(removed.has(interactionTargets[i]))interactionTargets.splice(i,1);
+   guide=model;
+  },undefined,err=>{console.warn('薪水掌門人 3D 模型未載入，保留原人物',err)});
  }
  // Boutique seating and calm architectural details. No giant sculptures, no visitors.
  for(const x of [-8.3,8.3]){
