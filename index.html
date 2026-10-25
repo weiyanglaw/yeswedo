@@ -1027,23 +1027,76 @@ function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[
 let medicalFocusAnim=null;
 
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
-// Walkable paths: collision envelopes follow the visible castle facade and the
-// central buildings of the five satellite islands. Keep the surrounding paths open.
-const walkObstacles=[
- // Castle footprint: no character may walk through walls or corner towers.
- {x:0,z:-1.0,hx:10.65,hz:5.45},
- ...xy.slice(1).map(([x,z])=>({x,z,hx:5.6,hz:5.6}))
-];
+// Walkable paths and a shared solid-object registry for buildings and props.
+// Never walk through a solid obstacle; use the actual medical door to enter.
+// Shared solid-object collision registry. Every new physical prop should be
+// registered here (circle or box); only door triggers may change rooms.
+// World X/Z coordinates are used so collision works for joystick and tap-to-walk.
+const walkObstacles=[];
+const COLLISION_RADIUS=.42;
+function addSolidCircle(x,z,r,kind='prop'){
+ const entry={shape:'circle',x,z,r,kind};walkObstacles.push(entry);return entry;
+}
+function addSolidBox(x,z,hx,hz,kind='prop'){
+ const entry={shape:'box',x,z,hx,hz,kind};walkObstacles.push(entry);return entry;
+}
+function registerSolidObject(object,kind='prop',padding=0){
+ // Optional extension point for future vehicles, fishponds, statues and furniture.
+ // Objects can be registered once after being attached to the 3D scene.
+ object.updateWorldMatrix(true,true);
+ const b=new THREE.Box3().setFromObject(object);
+ if(b.isEmpty())return null;
+ const c=b.getCenter(new THREE.Vector3()),sz=b.getSize(new THREE.Vector3());
+ return addSolidBox(c.x,c.z,sz.x/2+padding,sz.z/2+padding,kind);
+}
+window.WEIYANG_registerSolidObject=registerSolidObject;
+window.WEIYANG_addSolidCircle=addSolidCircle;
+window.WEIYANG_addSolidBox=addSolidBox;
+// Existing buildings: retain walkable outer plazas. The medical building has
+// a dedicated front-door trigger; its other sides remain solid.
+addSolidBox(0,-1.0,10.65,5.45,'castle');
+xy.slice(1).forEach(([x,z],j)=>{
+ if(j===1)addSolidBox(x,z-1.5,12.65,9.15,'medical-building');
+ else addSolidBox(x,z,5.6,5.6,'island-building');
+});
+// Main-island globe fountain: basin is solid, even though the water animates.
+addSolidCircle(.7,17.35,3.30,'fountain');
+// Actual flower beds created by castle-garden.js (local island coordinates).
+for(const [x,z] of [[-14.5,10.2],[-15.5,14.5],[14.5,10.2],[15.5,14.5],[-16.4,2],[16.4,2],[-13.7,-10.7],[13.7,-10.7]]){
+ addSolidCircle(x,z,2.2,'flower-bed');
+}
+// Actual centered round planter from medical-island.js v28, not the walkway.
+addSolidCircle(xy[2][0],xy[2][1]+12.4,2.25,'medical-flower-bed');
+// A solid-object registry is reusable for later ponds, parked vehicles, trees,
+// sculptures and other props. Only register the physical footprint, not floors.
+function hitsSolid(x,z){
+ return walkObstacles.some(o=>{
+  if(o.shape==='circle')return Math.hypot(x-o.x,z-o.z)<o.r+COLLISION_RADIUS;
+  return Math.abs(x-o.x)<o.hx+COLLISION_RADIUS && Math.abs(z-o.z)<o.hz+COLLISION_RADIUS;
+ });
+}
 function walkAllowed(x,z){
  const island=xy.some(([ix,iz],i)=>Math.hypot(x-ix,z-iz)<(i===0?20:16));
  const bridge=onBridgeDeck(x,z);
  const passage=onPassage(x,z);
  if(!island&&!bridge&&!passage)return false;
- const margin=.45;
- return !walkObstacles.some(o=>Math.abs(x-o.x)<o.hx+margin&&Math.abs(z-o.z)<o.hz+margin);
+ return !hitsSolid(x,z);
+}
+// The medical pavilion faces +Z. Walking through its real front-door zone
+// transitions into the existing office; every other wall remains solid.
+function crossMedicalDoor(ax,az,bx,bz){
+ if(insideOffice || document.getElementById('creator').style.display!=='none')return false;
+ const [mx,mz]=xy[2], gateZ=mz+8.55;
+ // Require a genuine approach from the exterior front, not from a side or back wall.
+ if(az<gateZ || bz>gateZ || bz>=az)return false;
+ const t=(gateZ-az)/(bz-az), gateX=ax+(bx-ax)*t;
+ if(Math.abs(gateX-mx)>2.65)return false;
+ enterIslandRoom(2);
+ return true;
 }
 function tryWalk(dx,dz){
  const x=actor.position.x,z=actor.position.z;
+ if(crossMedicalDoor(x,z,x+dx,z+dz))return true;
  const safe=(ax,az,bx,bz)=>{const steps=Math.max(1,Math.ceil(Math.hypot(bx-ax,bz-az)/.35));for(let j=1;j<=steps;j++)if(!walkAllowed(ax+(bx-ax)*j/steps,az+(bz-az)*j/steps))return false;return true;};
  if(safe(x,z,x+dx,z+dz)){actor.position.x=x+dx;actor.position.z=z+dz;return true;}
  if(safe(x,z,x+dx,z)){actor.position.x=x+dx;return true;}
@@ -1080,7 +1133,14 @@ function scheduleWalk(target){
 }
 const doorPrompt=document.getElementById('wyDoorPrompt');
 function hideDoorPrompt(){doorPrompt.style.display='none';}
-function updateDoorPrompt(){hideDoorPrompt();}
+function updateDoorPrompt(){
+ hideDoorPrompt();
+ const [mx,mz]=xy[2];
+ if(!insideOffice && Math.abs(actor.position.x-mx)<3.4 && actor.position.z>mz+8.55 && actor.position.z<mz+11.5){
+  doorPrompt.textContent='🚪 往前走進入醫療法律辦公室';
+  doorPrompt.style.display='block';
+ }
+}
 // All six large 3D entrance-cloud sprites removed; keep elevated island-name clouds intact.
 const entranceSigns=[];
 let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){
