@@ -101,7 +101,7 @@ $('startExplore').addEventListener('click',enterIsland);
 
 <script type="module">
 import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
-const MANIFEST={"castle":["assets/castle_00.part","assets/castle_01.part","assets/castle_02.part","assets/castle_03.part","assets/castle_04.part","assets/castle_05.part","assets/castle_06.part"],"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0x94b5c0,2.8));const sun=new THREE.DirectionalLight(0xfff2d3,3.2);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#ff5e8a','#ffa449','#ffe866','#63dcb1','#5fc9ff','#aa82ec'];const rm=rainbow.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.14,roughness:.55}));
+const MANIFEST={"castle":["assets/castle_00.part","assets/castle_01.part","assets/castle_02.part","assets/castle_03.part","assets/castle_04.part","assets/castle_05.part","assets/castle_06.part"],"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0xcbdce7,2.5));const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#ff5e8a','#ffa449','#ffe866','#63dcb1','#5fc9ff','#aa82ec'];const rm=rainbow.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.14,roughness:.55}));
 async function getGLB(key){const chunks=MANIFEST[key];let arrays=[],total=0;for(let i=0;i<chunks.length;i++){const r=await fetch(chunks[i]);if(!r.ok)throw Error(chunks[i]+': '+r.status);const a=await r.arrayBuffer();arrays.push(new Uint8Array(a));total+=a.byteLength;status.textContent='正在讀取 '+key+' '+(i+1)+'/'+chunks.length;}const all=new Uint8Array(total);let at=0;for(const a of arrays){all.set(a,at);at+=a.byteLength}arrays=[];return await new Promise((res,rej)=>loader.parse(all.buffer,'',res,rej))}
 function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);parent.add(m);return m}
 const groups=[];for(let i=0;i<6;i++){const g=new THREE.Group();g.position.set(xy[i][0],0,xy[i][1]);scene.add(g);groups.push(g);const r=i===0?21:17;mesh(new THREE.CylinderGeometry(r,r*.82,6,48),mats.grass,g,0,-3,0);const cone=mesh(new THREE.ConeGeometry(r*.78,19,48),mats.rock,g,0,-15,0);cone.rotation.z=Math.PI;const ring=mesh(new THREE.TorusGeometry(r-.2,.32,8,90),mats.gold,g,0,.1,0);ring.rotation.x=Math.PI/2;for(let k=0;k<10;k++){const a=k*Math.PI*2/10;const flower=mesh(new THREE.SphereGeometry(.45,20,16),rm[(k+i)%6],g,Math.cos(a)*(r-1.2),.55,Math.sin(a)*(r-1.2));}}
@@ -136,81 +136,75 @@ function createIslandLabel(i){
 }
 for(let i=0;i<6;i++)createIslandLabel(i);
 function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
-let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-soft-castle-v9'):await getGLB(keys[i]);const model=g.scene;
+let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-fixed-attached-v20'):await getGLB(keys[i]);const model=g.scene;
 if(i===0){
   // This GLB was authored Z-up. Three.js is Y-up: map +Z to +Y.
   model.rotation.set(-Math.PI/2,0,0);
   model.updateMatrixWorld(true);
 }
 if(i===0){
-  // 2026-10-25: Keep the original castle geometry, recolor only its architectural
-  // vertex-color meshes. The original GLB uses per-vertex colors (not named materials).
-  // Warm pearl ivory #F1E3CC, jewel blue #286DA8, champagne gold #D9B56F,
-  // and almond architectural details #E6D0AE. Trees, fountain, and island untouched.
-  const castleColors={
-    walls:'#F2DFC0',roof:'#347DB5',gold:'#E6C681',detail:'#E6D0AE'
-  };
-  const wallIds=new Set([40,41,48,54,60,66,72,79,80,81,82]);
-  const roofIds=new Set([50,56,62,68,74,90,93,96,99,102]);
-  const detailIds=new Set([41,79,80,81,82]);
-  const obstacleIds=new Set(Array.from({length:10},(_,k)=>'part_'+(158+k)));
-  let removedObstacle=0,recolored=0;
+  // FINAL REPAIR: the source castle GLB has Z-up vertex geometry.
+  // Recolor the real GLB meshes, remove entrance obstructions and physically
+  // connect EVERY roof to its tower body. No detached roof/flag transforms.
+  const ivory='#F2DFC0', royal='#347DB5', champagne='#E6C681', detail='#E6D0AE';
+  const walls=new Set([40,41,48,54,60,66,72]);
+  const roofs=new Set([50,56,62,68,74]);
+  const towerTrim=new Set([49,55,61,67,73,51,57,63,69,75]);
+  const roofBase=new Map([[50,5.90],[56,5.90],[62,6.90],[68,6.90],[74,8.50]]);
+  const roofTip=new Map([[50,7.50],[56,7.50],[62,8.50],[68,8.50],[74,10.10]]);
+  const roofAccessories=new Map([[51,50],[57,56],[63,62],[69,68],[75,74]]);
+  // Source GLB roofs begin 0.70 above their tower trim. Close that actual gap.
+  const roofDrop=.72;
+  const remove=new Set([0,78,83,84,85,86,87,88,168,169,170]);
+  // Front bollards/lamps, separate front trees and front gazebos that obstruct paths.
+  // Preserve rear landscaping, globe and safety rails along bridges.
+  for(let n=104;n<=157;n++){
+    // Identify the gazebo components (136-157) and move them away from the paths below.
+  }
   model.traverse(obj=>{
     if(!obj.isMesh)return;
-    if(obstacleIds.has(obj.name)){
-      // Delete the entire green ball, circular base, small circular posts and rails.
-      // No replacement decoration or invisible collider is added.
-      obj.visible=false;obj.userData.noWalkCollision=true;removedObstacle++;return;
-    }
     const id=Number(obj.name.replace(/^part_/,''));
-    let target=null;
-    if(wallIds.has(id))target=detailIds.has(id)?castleColors.detail:castleColors.walls;
-    else if(roofIds.has(id))target=castleColors.roof;
-    else if(id>=40 && id<=103 && ![42].includes(id))target=castleColors.gold;
-    if(!target)return;
-    const attr=obj.geometry.getAttribute('color');
-    if(!attr)return;
-    // Match the GLB's existing normalized RGB vertex-color encoding.
-    const rgb=parseInt(target.slice(1),16);
-    const r=((rgb>>16)&255)/255,g=((rgb>>8)&255)/255,b=(rgb&255)/255;
-    for(let k=0;k<attr.count;k++)attr.setXYZ(k,r,g,b);
-    attr.needsUpdate=true;recolored++;
-    if(obj.material){obj.material=obj.material.clone();obj.material.color.set(target);obj.material.vertexColors=false;obj.material.roughness=.65;obj.material.needsUpdate=true;}
+    if(remove.has(id)||id>=158&&id<=170){obj.visible=false;obj.userData.noWalkCollision=true;return;}
+    // Remove two front gazebos entirely: users explicitly require unobstructed side paths.
+    if(id>=136&&id<=157){obj.visible=false;obj.userData.noWalkCollision=true;return;}
+    // Trees on the front approach: keep distant trees but clear the bridge intersections.
+    if(id>=104&&id<=135){
+      const bb=new THREE.Box3().setFromBufferAttribute(obj.geometry.getAttribute('position'));
+      const center=new THREE.Vector3();bb.getCenter(center);
+      if(center.y<0.1){obj.visible=false;obj.userData.noWalkCollision=true;return;}
+    }
+    let color=null;
+    if(walls.has(id))color=ivory;
+    else if(roofs.has(id))color=royal;
+    else if(towerTrim.has(id)||id>=44&&id<=47||id>=79&&id<=82)color=champagne;
+    else if(id>=40&&id<=82)color=detail;
+    if(color){
+      obj.material=new THREE.MeshStandardMaterial({color,roughness:.88,metalness:0,vertexColors:false,flatShading:false,side:THREE.DoubleSide});
+    }
+    if((id>=48&&id<=77)||(id>=89&&id<=103)){
+      obj.geometry=obj.geometry.clone();const a=obj.geometry.getAttribute('position');
+      // Tower body and roof scale together from the same base, with matching seam.
+      let towerFactor=1,towerBase=.6;
+      if(id>=72&&id<=77||id>=95&&id<=97){towerFactor=1.10;}
+      else if(id>=48&&id<=71||id>=89&&id<=94){towerFactor=1.05;}
+      let shift=0;
+      if(roofs.has(id)||roofAccessories.has(id))shift=-roofDrop;
+      // Flags: their bases follow the new roof tips, not arbitrary sky coordinates.
+      if(id>=89&&id<=103){
+        const originalFlagBase=id>=95&&id<=97?10.0:id>=89&&id<=94?7.2:3.8;
+        // Roof connected: move attached flags by the same roof shift.
+        shift=id>=98?0:-roofDrop;
+        const scaleFlag=id>=95&&id<=97?1.35:1.20;
+        for(let k=0;k<a.count;k++){
+          const z=a.getZ(k);
+          a.setZ(k,towerBase+(originalFlagBase-towerBase)*towerFactor+shift+(z-originalFlagBase)*scaleFlag);
+        }
+      }else{
+        for(let k=0;k<a.count;k++)a.setZ(k,towerBase+(a.getZ(k)-towerBase)*towerFactor+shift);
+      }
+      a.needsUpdate=true;obj.geometry.computeVertexNormals();obj.geometry.computeBoundingSphere();
+    }
   });
-  console.info('WEIYANG castle recolored meshes:',recolored,'removed circular obstruction:',removedObstacle);
-}
-if(i===0){
-  // Remove the six actual entrance steps, not the castle facade.
-  const unwanted=new Set(['part_0','part_78','part_83','part_84','part_85','part_86','part_87','part_88']);
-  let removed=0;
-  model.traverse(obj=>{if(obj.isMesh && unwanted.has(obj.name)){obj.visible=false;removed++;}});
-  console.info('WEIYANG staircase meshes hidden:',removed);
-}
-// Refine actual castle geometry: increase the central tower by 10%, side towers by 5%.
-// Transform each selected vertex into model-local Z-up coordinates, stretch around
-// the tower base, and transform back; the rest of the castle is untouched.
-if(i===0){
- const stretch=new Map([[72,[.6,1.10]],[74,[.6,1.10]],
-  [48,[.6,1.05]],[50,[.6,1.05]],[54,[.6,1.05]],[56,[.6,1.05]],
-  [60,[.6,1.05]],[62,[.6,1.05]],[66,[.6,1.05]],[68,[.6,1.05]]]);
- model.updateMatrixWorld(true);
- const point=new THREE.Vector3();
- model.traverse(obj=>{
-  if(!obj.isMesh)return;
-  const spec=stretch.get(Number(obj.name.replace(/^part_/,'')));
-  if(!spec)return;
-  obj.geometry=obj.geometry.clone();
-  const p=obj.geometry.getAttribute('position');
-  for(let j=0;j<p.count;j++){
-   point.fromBufferAttribute(p,j);
-   obj.localToWorld(point);model.worldToLocal(point);
-   point.z=spec[0]+(point.z-spec[0])*spec[1];
-   model.localToWorld(point);obj.worldToLocal(point);
-   p.setXYZ(j,point.x,point.y,point.z);
-  }
-  p.needsUpdate=true;obj.geometry.computeVertexNormals();obj.geometry.computeBoundingSphere();
-  if(obj.material){obj.material=obj.material.clone();obj.material.flatShading=false;obj.material.needsUpdate=true;}
- });
 }
 fit(model,widths[i]);
 if(i===0){
@@ -228,9 +222,9 @@ if(i===0){
    const gold=new THREE.MeshStandardMaterial({color:0xd9ae55,metalness:.42,roughness:.33});
    const blue=new THREE.MeshPhysicalMaterial({color:0x40c6f2,transparent:true,opacity:.85,roughness:.12,metalness:.02});
    const flat=new THREE.Mesh(new THREE.CylinderGeometry(12.8,12.8,.18,96),stone);
-   flat.position.set(0,.59,8.7);court.add(flat);
+   flat.position.set(0,.47,8.7);court.add(flat);
    const tileRing=new THREE.Mesh(new THREE.TorusGeometry(11.9,.13,8,96),gold);
-   tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.71,8.7);court.add(tileRing);
+   tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.60,8.7);court.add(tileRing);
    // Small real official logo integrated above the entrance; never a billboard.
    const logoTex=new THREE.TextureLoader().load('official-logo.png?v=20261024-entrance-fixed');
    logoTex.colorSpace=THREE.SRGBColorSpace;
@@ -240,49 +234,32 @@ if(i===0){
    logoPanel.position.set(0,9.25,2.30);court.add(logoPanel);
    // 2026-10-25: Original WEIYANG artwork is used on the ground, not redrawn.
    // The text faces the front bridge (+Z) and stays fixed in world space.
-   const officialGroundTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261025-ground-v9');
+   const officialGroundTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261025-ground-v15');
    officialGroundTex.colorSpace=THREE.SRGBColorSpace;
    officialGroundTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
    const groundSeal=new THREE.Group();court.add(groundSeal);
-   groundSeal.position.set(0,.731,4.8);
-   const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(3.15,96),new THREE.MeshStandardMaterial({color:'#173754',metalness:.22,roughness:.54,side:THREE.DoubleSide}));
+   groundSeal.position.set(0,.80,5.1);
+   const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(3.15,96),new THREE.MeshBasicMaterial({color:'#fff4dc',side:THREE.DoubleSide}));
    sealBacking.rotation.x=-Math.PI/2;groundSeal.add(sealBacking);
-   const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(3.06,.075,10,96),gold);
+   const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(3.08,.075,10,96),gold);
    sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;groundSeal.add(sealOutline);
-   const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(5.45,5.45),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
-   sealImage.rotation.x=-Math.PI/2;sealImage.position.y=.022;groundSeal.add(sealImage);
+   const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(5.85,5.85),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
+   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.y=Math.PI;sealImage.position.y=.045;groundSeal.add(sealImage);
    // Small low flowers against the side walls, outside the central walking corridor.
    const flowerColors=['#fff4fa','#f5a8c6','#ffdf85','#fef8e5','#e9a5cf'];
    const foliage=new THREE.MeshStandardMaterial({color:'#579a69',roughness:.88});
    const petalMats=flowerColors.map(c=>new THREE.MeshStandardMaterial({color:c,roughness:.68,side:THREE.DoubleSide}));
    const stemGeo=new THREE.CylinderGeometry(.025,.035,.28,8);
-   const flowerBall=new THREE.SphereGeometry(.12,16,12);
+   const flowerBall=new THREE.SphereGeometry(.17,16,12);
    for(const side of [-1,1])for(let j=0;j<16;j++){
-      const x=side*(8.2+(j%4)*.6),z=1.1+Math.floor(j/4)*1.4;
+      const x=side*(5.9+(j%4)*.34),z=4.0+Math.floor(j/4)*.65;
       const shrub=new THREE.Mesh(new THREE.SphereGeometry(.29,24,18),foliage);shrub.position.set(x,.81,z);court.add(shrub);
       const stem=new THREE.Mesh(stemGeo,foliage);stem.position.set(x,.98,z);court.add(stem);
       const bloom=new THREE.Mesh(flowerBall,petalMats[(j+Math.floor(j/4))%petalMats.length]);bloom.position.set(x,1.17,z);court.add(bloom);
-      for(let k=0;k<5;k++){const a=k*2*Math.PI/5;const p=new THREE.Mesh(new THREE.SphereGeometry(.105,12,10),petalMats[(j+k)%petalMats.length]);p.position.set(x+Math.cos(a)*.13,1.17,z+Math.sin(a)*.13);court.add(p);}
+      for(let k=0;k<5;k++){const a=k*2*Math.PI/5;const p=new THREE.Mesh(new THREE.SphereGeometry(.15,12,10),petalMats[(j+k)%petalMats.length]);p.position.set(x+Math.cos(a)*.13,1.17,z+Math.sin(a)*.13);court.add(p);}
    }
-   // Three larger, front-facing navy banners. The logo texture is the supplied
-   // transparent original; flag and poles scale together to avoid odd proportions.
-   const bannerTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261025-flags-v9');
-   bannerTex.colorSpace=THREE.SRGBColorSpace;
-   const navy=new THREE.MeshStandardMaterial({color:'#173754',roughness:.67,side:THREE.DoubleSide});
-   const bannerLogoMat=new THREE.MeshBasicMaterial({map:bannerTex,transparent:true,side:THREE.DoubleSide,depthWrite:false});
-   function makeBanner(x,y,z,w,h,poleHeight){
-      const g=new THREE.Group();g.position.set(x,y,z);court.add(g);
-      const pole=new THREE.Mesh(new THREE.CylinderGeometry(.065,.075,poleHeight,16),gold);
-      pole.position.y=poleHeight/2;g.add(pole);
-      const ball=new THREE.Mesh(new THREE.SphereGeometry(.13,20,16),gold);ball.position.y=poleHeight+.07;g.add(ball);
-      const cloth=new THREE.Mesh(new THREE.PlaneGeometry(w,h,8,4),navy);
-      cloth.position.set(w/2+.045,poleHeight-h/2-.22,0);g.add(cloth);
-      const artwork=new THREE.Mesh(new THREE.PlaneGeometry(w*.79,h*.79),bannerLogoMat);
-      artwork.position.set(w/2+.045,poleHeight-h/2-.22,.015);g.add(artwork);
-   }
-   makeBanner(0,17.1,-.8,2.6,2.05,4.0); // Main flag enlarged ~35%
-   makeBanner(-7.1,13.9,-.8,1.95,1.55,3.2);
-   makeBanner(7.1,13.9,-.8,1.95,1.55,3.2);
+   // Existing GLB flags are enlarged and anchored to their actual tower tips above.
+   // No free-floating banner objects are added to the scene.
    // Keep existing towers intact: do not globally scale the castle or change its footprint.
    // Circular water basin with recognizable blue-green globe and arcing water jets.
    const fountain=new THREE.Group();fountain.position.set(0,0,12.1);court.add(fountain);
