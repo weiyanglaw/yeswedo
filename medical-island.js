@@ -46,25 +46,26 @@ export function createMedicalExterior(group, THREE){
  // Flat, unobstructed pedestrian forecourt, no fence across the approach.
  add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
  // The medical forecourt has no posts or railings crossing its approach.
- // Entrance forecourt: low flower crescent around the approach, leaving a clear center aisle.
- // Old beds near the island perimeter are intentionally removed.
- const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
- const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
- // One unmistakable, densely planted circular flower bed on the right side
- // of the entrance forecourt. Keep the middle and left pedestrian access clear.
- const gardenX=5.55,gardenZ=11.0,gardenRadius=1.55;
- add(new THREE.CylinderGeometry(gardenRadius,gardenRadius+.12,.28,48),ivory,gardenX,.52,gardenZ);
- add(new THREE.TorusGeometry(gardenRadius,.095,10,56),gold,gardenX,.68,gardenZ).rotation.x=Math.PI/2;
- add(new THREE.CylinderGeometry(gardenRadius-.14,gardenRadius-.14,.055,48),foliage,gardenX,.68,gardenZ);
- // Fill the entire round planter with close-packed blossoms and leafy clusters.
- for(let row=-5;row<=5;row++){
-  for(let col=-5;col<=5;col++){
-   const dx=col*.255+(row%2)*.125,dz=row*.255;
-   if(dx*dx+dz*dz>1.37*1.37)continue;
-   const n=(row+5)*11+col+5;
+ // v26: A single unmistakable round flower garden on the FRONT-LEFT ivory forecourt.
+ // The center of the door (x=0, z=4.24) and its walking aisle stay open.
+ // All former crescent/parenthesis-shaped planters are removed.
+ const foliage=new THREE.MeshStandardMaterial({color:0x47865d,roughness:.85});
+ const soil=new THREE.MeshStandardMaterial({color:0x604a3a,roughness:1});
+ const blossom=[0xf6a9c8,0xfff9ee,0xe6a7ca,0xf9dce8,0xf7b7b4].map(color=>new THREE.MeshStandardMaterial({color,roughness:.75}));
+ const gardenX=-6.65,gardenZ=10.5,gardenRadius=2.5;
+ // Raised round ivory rim, gold lip and green flower-filled planting surface.
+ add(new THREE.CylinderGeometry(gardenRadius,gardenRadius+.15,.52,64),ivory,gardenX,.67,gardenZ);
+ add(new THREE.CylinderGeometry(gardenRadius-.19,gardenRadius-.19,.06,64),soil,gardenX,.975,gardenZ);
+ add(new THREE.TorusGeometry(gardenRadius,.115,12,72),gold,gardenX,.955,gardenZ).rotation.x=Math.PI/2;
+ // A dense carpet of roses, not two thin decorative arcs.
+ for(let row=-8;row<=8;row++){
+  for(let col=-8;col<=8;col++){
+   const dx=col*.285+((row&1)? .142:0),dz=row*.285;
+   if(dx*dx+dz*dz>2.24*2.24)continue;
+   const n=(row+8)*17+col+8;
    const x=gardenX+dx,z=gardenZ+dz;
-   add(new THREE.SphereGeometry(.19,10,8),foliage,x,.80,z);
-   add(new THREE.SphereGeometry(.165,12,9),blossom[((n%3)+3)%3],x,.99+(n%3)*.035,z);
+   add(new THREE.SphereGeometry(.23,9,7),foliage,x,1.13,z);
+   add(new THREE.SphereGeometry(.22,12,9),blossom[((n*7)%5+5)%5],x,1.36+(n%3)*.025,z);
   }
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
