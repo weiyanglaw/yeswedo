@@ -1,13 +1,13 @@
 // WEIYANG standalone castle module. Does not load the legacy castle GLB.
 export function createNewFairytaleCastle(parent,THREE){
  const C=new THREE.Group();parent.add(C);
- const wall=new THREE.MeshBasicMaterial({color:'#FFF0D7',side:THREE.DoubleSide});
- const wallLight=new THREE.MeshBasicMaterial({color:'#FFF1D8',side:THREE.DoubleSide});
- const trim=new THREE.MeshStandardMaterial({color:'#E6C681',roughness:.55,metalness:.12});
- const blueRoof=new THREE.MeshBasicMaterial({color:'#3C86C6'});
+ const wall=new THREE.MeshStandardMaterial({color:'#FFF3E4',roughness:.67,metalness:.02,side:THREE.DoubleSide});
+ const wallLight=new THREE.MeshStandardMaterial({color:'#FFFAF0',roughness:.61,metalness:.02,side:THREE.DoubleSide});
+ const trim=new THREE.MeshPhysicalMaterial({color:'#F0D394',roughness:.25,metalness:.57,clearcoat:.72,clearcoatRoughness:.18});
+ const blueRoof=new THREE.MeshStandardMaterial({color:'#254C7C',roughness:.48,metalness:.13});
  const darkBlue=new THREE.MeshStandardMaterial({color:'#12355D',roughness:.75,side:THREE.DoubleSide});
- const doorMat=new THREE.MeshStandardMaterial({color:'#9A6339',roughness:.78});
- const glass=new THREE.MeshStandardMaterial({color:'#FFDB8C',emissive:'#E7A750',emissiveIntensity:.20,roughness:.5});
+ const doorMat=new THREE.MeshStandardMaterial({color:'#775438',roughness:.42,metalness:.13});
+ const glass=new THREE.MeshStandardMaterial({color:'#FFE4A6',emissive:'#E8B95E',emissiveIntensity:.28,roughness:.22,metalness:.10});
  const green=new THREE.MeshStandardMaterial({color:'#70B879',roughness:.9});
  const cyl=(rt,rb,h,x,y,z,mat,seg=40)=>{const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),mat);o.position.set(x,y,z);C.add(o);return o};
  const block=(w,h,d,x,y,z,mat)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);o.position.set(x,y,z);C.add(o);return o};
@@ -71,11 +71,11 @@ export function createNewFairytaleCastle(parent,THREE){
  crest.position.set(0,9.2,4.32);crest.renderOrder=21;crest.material.depthTest=false;crest.material.depthWrite=false;C.add(crest);
 
  // Architectural detailing: warm ivory stone, blue enamel and restrained champagne-gold ornament.
- const marble=new THREE.MeshStandardMaterial({color:'#FFF0D7',roughness:.78});
- const pearl=new THREE.MeshStandardMaterial({color:'#FFF9EA',roughness:.57});
- const brightGold=new THREE.MeshStandardMaterial({color:'#D7A74D',metalness:.56,roughness:.28});
+ const marble=new THREE.MeshStandardMaterial({color:'#FFF6E8',roughness:.62});
+ const pearl=new THREE.MeshStandardMaterial({color:'#FFFCF3',roughness:.48});
+ const brightGold=new THREE.MeshPhysicalMaterial({color:'#F1D28C',metalness:.65,roughness:.20,clearcoat:.85,clearcoatRoughness:.13});
  const recess=new THREE.MeshStandardMaterial({color:'#F1D8AC',roughness:.83});
- const winBlue=new THREE.MeshStandardMaterial({color:'#6BB7DB',emissive:'#C3D7EA',emissiveIntensity:.12,roughness:.25});
+ const winBlue=new THREE.MeshStandardMaterial({color:'#91C9E2',emissive:'#E6D1A0',emissiveIntensity:.20,roughness:.19});
  const frontZ=2.50;
  // Continuous cornices and framed wall panels; no disconnected black wall pieces.
  for(const [y,w,d] of [[1.0,13.9,7.2],[7.5,13.9,7.2],[8.55,14.4,7.6],[10.75,11.1,5.2]]){
@@ -112,9 +112,7 @@ export function createNewFairytaleCastle(parent,THREE){
    const arch=new THREE.Mesh(new THREE.TorusGeometry(r,.12,12,48,Math.PI),r>2?pearl:brightGold);
    arch.position.set(0,y,z);C.add(arch);
  }
- for(let k=0;k<3;k++){
-   const step=block(5.45+k*.48,.13,1.0,0,.79+k*.10,3.55+k*.38,k===1?brightGold:pearl);
- }
+ // Step-free entrance: the existing level island paving reaches the doors.
  // Door leaf bevels and fine inset gold borders.
  for(const x of [-.93,.93]){
    block(1.59,3.53,.055,x,2.86,3.015,doorMat);
@@ -176,8 +174,8 @@ export function createNewFairytaleCastle(parent,THREE){
  for(const x of [-2.1,2.1])for(const y of [3.6,4.4,5.2])ball(.13,x,y,3.32,brightGold);
  // Palace-level detailing: arched window bays, sculpted pediments, gilded roof ribs,
  // layered stone balconies and golden finials. These are real 3D meshes, not an image backdrop.
- const stoneEdge=new THREE.MeshStandardMaterial({color:'#FFFAEE',roughness:.68});
- const royalGlass=new THREE.MeshStandardMaterial({color:'#78BDE1',emissive:'#E5C781',emissiveIntensity:.16,roughness:.32});
+ const stoneEdge=new THREE.MeshStandardMaterial({color:'#FFFCF5',roughness:.51});
+ const royalGlass=new THREE.MeshStandardMaterial({color:'#9CC9DE',emissive:'#F3D69C',emissiveIntensity:.21,roughness:.19});
  const front=3.25;
  const ornament=(x,y,z,r=.14)=>{const o=new THREE.Mesh(new THREE.OctahedronGeometry(r,0),brightGold);o.position.set(x,y,z);C.add(o);};
  // Three-dimensional stone facade bays with arched windows and decorated sills.
@@ -249,6 +247,39 @@ export function createNewFairytaleCastle(parent,THREE){
    cyl(.30,.37,1.12,x,1.88,4.20,stoneEdge,20);
    ball(.38,x,2.58,4.20,stoneEdge);
    ball(.17,x,3.06,4.20,brightGold);
+ }
+ // v40: understated, low-poly luxury detailing; all decorations are attached to
+ // the existing castle and never block the flat entrance or alter island layout.
+ const accentGold=new THREE.MeshPhysicalMaterial({color:'#FFE5A6',metalness:.58,roughness:.20,clearcoat:.8,clearcoatRoughness:.15});
+ const navyEnamel=new THREE.MeshStandardMaterial({color:'#16385D',roughness:.34,metalness:.16});
+ const ivoryGlow=new THREE.MeshBasicMaterial({color:'#FFF0C7'});
+ // Fine facade bands and the pair of ceremonial entrance sconces.
+ for(const y of [1.42,7.98,9.55]){
+   block(13.95,.055,.12,0,y,2.78,accentGold);
+ }
+ for(const x of [-2.90,2.90]){
+   block(.16,.66,.20,x,4.30,3.52,accentGold);
+   ball(.24,x,4.66,3.61,ivoryGlow);
+   ball(.11,x,4.98,3.61,accentGold);
+ }
+ // Subtle vertical gold seams give the blue roofs richer dimension at normal
+ // mobile viewing distance, without high polygon counts or a photorealistic look.
+ for(const [x,z,r,h,rh] of roofs){
+   for(let j=0;j<12;j++){
+     const a=j*Math.PI/6;
+     const p1=new THREE.Vector3(x+Math.cos(a)*(r+.42),h+.91,z+Math.sin(a)*(r+.42));
+     const p2=new THREE.Vector3(x+Math.cos(a)*.15,h+.86+rh*.91,z+Math.sin(a)*.15);
+     const delta=p2.clone().sub(p1);
+     const seam=new THREE.Mesh(new THREE.CylinderGeometry(.017,.025,delta.length(),5),j%3===0?accentGold:navyEnamel);
+     seam.position.copy(p1.add(p2).multiplyScalar(.5));
+     seam.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());C.add(seam);
+   }
+ }
+ // Small symmetric planter accents: no foreground staircase or new bridge rails.
+ for(const x of [-7.65,7.65]){
+   cyl(.42,.50,.38,x,.99,3.80,accentGold,16);
+   ball(.43,x,1.42,3.80,leafMat);
+   ball(.22,x,1.80,3.80,leafMat);
  }
  // Garden beds are built separately beside bridge approaches, not in the walkway.
  return C;
