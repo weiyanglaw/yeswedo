@@ -94,6 +94,64 @@ export function createMedicalInterior(room,THREE,staffFactory){
   cyl(.11,.11,1.5,gold,x,.75,3.4);
   add(new THREE.SphereGeometry(.19,18,12),lightGold,x,1.62,3.4);
  }
+ // Boutique details: marble veining, coves, ceiling lines, sconces and wall art.
+ const marbleLine=material(0xd5c9bb,.15,.6), warm=new THREE.MeshBasicMaterial({color:0xffedc7});
+ for(let k=0;k<13;k++){
+  const x=-10.8+k*1.8;
+  const vein=box(.018,.009,2.6+(k%3),marbleLine,x,.091,-1.7+(k%4)*1.5);
+  vein.rotation.y=.38+(k%3)*.2;
+ }
+ for(const x of [-10.9,10.9]){
+  for(const z of [-7.7,-2.6,2.5,7.6]){
+   box(.075,7.5,.09,gold,x,4.45,z);
+  }
+  box(.17,.16,17.4,gold,x,8.2,0);
+  box(.09,.08,16.9,warm,x,8.08,0);
+ }
+ for(const z of [-8.1,7.9]){
+  box(21.9,.13,.11,gold,0,8.15,z);
+  box(21.5,.065,.10,warm,0,8.04,z);
+ }
+ for(const x of [-6.4,6.4]){
+  const lamp=box(.12,.85,.2,gold,x,5.35,-8.38);
+  box(.20,.50,.22,warm,x,5.35,-8.21);
+ }
+ // Desk accessories; intentionally small enough not to obscure the WEIYANG wall.
+ const laptop=box(.82,.55,.055,navy,-1.2,1.87,3.68);laptop.rotation.x=-.19;
+ box(.90,.045,.58,gold,-1.2,1.59,4.03);
+ cyl(.16,.13,.27,cream,.25,1.69,3.72);
+ box(.75,.10,.46,walnut,1.05,1.60,3.73);
+ box(.70,.04,.43,cream,1.05,1.68,3.73);
+ cyl(.16,.19,.30,gold,2.0,1.7,3.72);
+ for(const x of [-8.2,8.2]){
+  const rug=box(4.6,.025,3.5,material(0xece2d4),x,.095,5.5);
+  rug.position.y=.10;
+  cyl(.13,.13,.37,cream,x+.5,.99,7.0);
+  add(new THREE.SphereGeometry(.21,12,10),material(0xc58b9b),x+.5,1.22,7.0);
+  box(.45,.055,.32,cream,x-.4,.75,7.0);
+  cyl(.10,.10,1.75,gold,x>0?10.7:-10.7,1.15,6.7);
+  add(new THREE.SphereGeometry(.35,16,12),warm,x>0?10.7:-10.7,2.05,6.7);
+ }
+ // Back-wall built-in illuminated bookcase, clear of the central logo.
+ const bookGroup=new THREE.Group();root.add(bookGroup);
+ const bookX=-8.05;
+ for(const y of [1.35,2.65,3.95,5.25,6.55]){
+  box(3.55,.11,.62,gold,bookX,y,-7.9);
+  for(let k=0;k<11;k++){
+   const heights=[.68,.85,.62,.74];
+   const m=[navy,velvet,walnut,cream][k%4];
+   const book=box(.19,heights[k%4],.39,m,bookX-1.43+k*.28,y+heights[k%4]/2+.07,-7.72);
+   if(k===5&&y===3.95){book.userData.medicalAction='books';book.userData.book=true;}
+  }
+ }
+ box(3.85,6.6,.14,walnut,bookX,4.1,-8.15);
+ for(const y of [1.35,2.65,3.95,5.25,6.55])box(3.55,.11,.7,gold,bookX,y,-7.77);
+ // Two framed artwork panels on side walls, adding depth without extra thematic zones.
+ for(const x of [-11.65,11.65]){
+  box(.13,2.4,2.3,gold,x,4.3,1.2);
+  box(.16,2.17,2.05,navy,x,4.3,1.2);
+  const line=box(.18,.08,1.25,lightGold,x+(x>0?-.10:.10),4.2,1.2);line.rotation.x=.32;
+ }
  // Exactly one person: reuse the main island's actual STAFF generator, not the avatar creator.
  let guide=null;
  if(staffFactory){
@@ -120,6 +178,8 @@ export function createMedicalInterior(room,THREE,staffFactory){
  }
  // Display zones: gold-edged touch panels at accessible height, not covering the emblem.
  const interactionTargets=[];
+ const interactionMap=new Map();
+ const register=(object,action)=>{object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
@@ -129,19 +189,38 @@ export function createMedicalInterior(room,THREE,staffFactory){
   c.fillStyle='#f8f0e1';c.font='29px sans-serif';c.fillText('輕觸開啟法律探索',384,235);
   const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;
   const panel=add(new THREE.PlaneGeometry(w-.14,2.0),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}),x,3.15,z+.24);
-  interactionTargets.push(panel);
+  register(panel,title==='醫療爭議'?'computer':'computer');
  };
  display(-7.7,-8.08,3.3,'醫療爭議');display(7.7,-8.08,3.3,'醫療行政救濟');
- // ECG screen: 72 BPM dynamic signal, framed as an actual exhibit on side wall.
+ // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
- box(4.65,2.4,.19,gold,8.0,4.3,-3.2);
- const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-3.07);
- interactionTargets.push(wavePanel);
+ box(4.65,2.4,.19,gold,8.0,4.3,-8.34);
+ const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-8.20);
+ register(wavePanel,'ecg');
+ // Clickable props and restrained, legible floating hints.
+ const deskHit=box(5.9,.25,1.2,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),0,1.65,3.9);register(deskHit,'computer');
+ const bookHit=box(3.6,5.7,.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.15,-7.55);register(bookHit,'books');
+ const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
+ if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
+ const labels=[];
+ function hint(text,x,y,z,action){
+  const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
+  const c=canvas.getContext('2d');c.fillStyle='rgba(21,42,62,.94)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
+  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#fff3d8';c.textAlign='center';c.textBaseline='middle';c.font='bold 44px sans-serif';c.fillText(text,240,56);
+  const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
+ }
+ hint('💬 跟我聊聊',4.8,3.9,4.3,'staff');
+ hint('📚 點我翻翻',-8.05,7.55,-7.15,'books');
+ hint('❤️ 點我看看',8,6.0,-8.0,'ecg');
+ hint('✨ 點我探索',0,2.7,5.3,'computer');
+ hint('⚖️ 認識德威陽',0,8.0,-8.0,'logo');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
   if(guide){guide.position.x=4.8+Math.sin(time*.00045)*.14;guide.rotation.y=-.35+Math.sin(time*.0008)*.08;}
+  for(let k=0;k<labels.length;k++)labels[k].position.y=labels[k].userData.baseY+Math.sin(time*.0015+k)*.075;
   if(time-last<55)return;last=time;
   ctx.fillStyle='#071c29';ctx.fillRect(0,0,640,256);
   ctx.strokeStyle='rgba(80,178,151,.16)';ctx.lineWidth=1;
@@ -154,19 +233,38 @@ export function createMedicalInterior(room,THREE,staffFactory){
  };
  const spot=new THREE.SpotLight(0xffdfab,3.5,18,Math.PI/4,.6);spot.position.set(0,8,0);spot.target.position.set(0,4.7,-8.5);root.add(spot,spot.target);
  for(const x of [-8,8]){const l=new THREE.PointLight(0xffe5c3,1.4,11);l.position.set(x,6.8,-4);root.add(l)}
- return {guide,interactionTargets,animation};
+ return {guide,interactionTargets,interactionMap,animation};
 }
 export function createMedicalExperience(){
+ const scenes={
+  staff:{name:'薪水掌門人',icon:'💬',intro:'歡迎來到德威陽！我是薪水掌門人～今天想聊法律，還是偷偷看看辦公室？',options:[
+   ['醫療糾紛怎麼辦？','先保存病歷、收據和相關紀錄，別急著下結論。','也可以依日期整理經過，讓律師更容易了解問題。'],
+   ['你們律師擅長什麼？','林柏均律師具臺灣及紐約州律師資格，處理商務、訴訟及醫療法律等案件。','想進一步了解？歡迎透過 LINE｜@wylaw 聯繫德威陽。'],
+   ['為什麼叫薪水掌門人？','法律問題找律師，薪水問題嘛……先確認老闆有沒有在旁邊！','我最希望大家來這裡，都能帶走一點有用的法律知識。']]},
+  books:{name:'法律書櫃',icon:'📚',intro:'書要整理，證據更要整理！發生醫療爭議，你會先做什麼？',options:[
+   ['整理病歷和收據','好主意！病歷、同意書及收據，都是釐清事情的重要資料。','檢查報告、對話紀錄，也可以依日期分類保存。'],
+   ['先發到網路上','先別急！公開指控可能衍生名譽或個資爭議。','先確認事實、保存資料，再評估適當處理方式。'],
+   ['我不知道怎麼開始','就像整理書架，先分類，再按日期排列就好！','可以先寫下事件時間線，必要時請律師協助分析。']]},
+  ecg:{name:'心電圖螢幕',icon:'❤️',intro:'嗶、嗶、嗶～心跳要監測，醫療爭議也要看紀錄！',options:[
+   ['結果不好就是醫療疏失？','不一定！治療結果不如預期，不代表必然有醫療過失。','仍須評估診療過程、注意義務、損害與因果關係。'],
+   ['病歷可以申請嗎？','可以依法申請相關病歷資料，及早保存更安心。','記得確認資料是否完整，再整理檢查與治療經過。']]},
+  computer:{name:'接待桌電腦',icon:'💻',intro:'叮！德威陽法律小幫手上線。你想了解哪一件事？',options:[
+   ['醫療糾紛一定要提告？','不一定！可先整理資料，評估溝通、調解或法律程序。','律師可以協助檢視證據、法律爭點及處理策略。'],
+   ['健保爭議怎麼處理？','先確認通知或行政處分內容，尤其要留意救濟期限。','不同程序期限可能不同，建議儘早確認文件及法定期間。'],
+   ['我想找德威陽諮詢','歡迎先說明案件類型，由本所協助安排諮詢。','LINE｜@wylaw　官網｜weiandyang.com']]},
+  logo:{name:'WEIYANG 形象牆',icon:'⚖️',intro:'歡迎來到德威陽國際法律事務所！想認識我們的哪一面？',options:[
+   ['認識林柏均律師','林律師具臺灣及紐約州律師資格，擁有 Emory LL.M. 與 ULV MBA 學位。','服務領域包含跨國商務、契約、訴訟及醫療法律等。'],
+   ['了解法律服務','德威陽提供商務契約、公司治理、智慧財產及民刑事爭議等法律服務。','想進一步了解？LINE｜@wylaw　weiandyang.com']]}
+ };
  const el=document.createElement('section');el.id='wyMedicalExperience';
- el.style.cssText='display:none;position:fixed;inset:auto 12px 74px 12px;z-index:80;max-width:520px;margin:auto;background:#fff9ee;color:#243e5b;border:2px solid #d3ae70;border-radius:16px;padding:14px;box-shadow:0 12px 35px #172b4760;font:14px/1.55 system-ui,sans-serif;max-height:68vh;overflow:auto';
- el.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:16px">🏥 德威陽｜醫療法律探索館</b><button id="medClose" type="button">×</button></div><p id="medIntro">薪水掌門人：歡迎來到醫療法律探索館！請先看看室內正在跳動的綠色心電圖。這是互動展示，不是真實醫療數據；一場醫療事件發生後，病患與醫師都需要重視安全、紀錄與法律權益。</p><div style="display:flex;gap:8px"><button id="medPatient" type="button">我是病患／家屬</button><button id="medDoctor" type="button">我是醫師／院方</button></div><p style="margin:8px 0;font-size:12px;color:#496d80">💚 室內 3D 心電監測螢幕會持續顯示跳動波形；選擇身分即可展開醫療事件劇場。</p><div id="medScene" style="margin-top:10px"></div><div id="medAdmin" style="margin-top:12px"><button id="medAdminBtn" type="button">🏛️ 探索醫療行政爭議</button><div id="medAdminText" hidden>健保給付、醫事人員及醫療機構行政處分，與一般醫療損害賠償案件不同；應確認處分內容、救濟期間及相關紀錄。</div></div><hr style="border:0;border-top:1px solid #d9b77d"><p style="margin:7px 0">德威陽國際法律事務所｜林柏均律師（台灣及紐約州律師）<br>Emory University LL.M.｜University of La Verne MBA</p><a href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener" style="display:inline-block;background:#1d3858;color:white;padding:8px 14px;border-radius:9px;text-decoration:none">LINE 聯繫德威陽｜@wylaw</a>';
+ el.style.cssText='display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:80;width:min(92vw,440px);background:#fffaf0;color:#20354c;border:2px solid #cfa96c;border-radius:18px;padding:14px;box-shadow:0 14px 36px #14283b66;font:14px/1.6 system-ui,sans-serif;max-height:65dvh;overflow-y:auto';
+ el.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
  document.body.append(el);
- const $=id=>el.querySelector('#'+id);
- const data=[{q:'手術後發生非預期併發症，你會先做什麼？',a:['先確認病患安全與必要醫療處置','先認定一定有人犯錯'],note:'優先處理醫療安全。非預期結果不當然等於醫療過失。'},{q:'病情穩定後，要如何釐清事實？',a:['依法取得或完整保存病歷、同意書及檢查資料','只憑口頭記憶即可'],note:'完整病歷、時間軸與相關紀錄，是雙方釐清爭議的基礎。'},{q:'雙方仍有不同看法，接下來呢？',a:['透過適當溝通、調解與專業評估釐清','不看證據直接認定責任'],note:'應依事實、證據、醫療專業及適用法律評估處理途徑。'}];
- let role='',step=0;
- function render(){const d=data[step];$('medScene').innerHTML=`<div style="background:#e8f1f6;border-radius:9px;padding:10px"><b>${role==='doctor'?'醫師／院方':'病患／家屬'}｜第 ${step+1} 幕</b><p>${d.q}</p>${d.a.map((a,i)=>`<button data-choice="${i}" style="display:block;width:100%;text-align:left;margin:6px 0;padding:9px;background:#fff;border:1px solid #b9cbd5;border-radius:8px">${i+1}. ${a}</button>`).join('')}<div id="medFeedback"></div></div>`;
- $('medScene').querySelectorAll('[data-choice]').forEach(btn=>btn.onclick=()=>{$('medFeedback').innerHTML=`<p><b>${btn.dataset.choice==='0'?'這是較適當的處理方向':'請再想想處理的優先順序'}</b><br>${d.note}</p><button id="medNext">${step===2?'重新體驗':'下一幕 →'}</button>`;$('medNext').onclick=()=>{step=(step+1)%3;render()}})}
- $('medPatient').onclick=()=>{role='patient';step=0;render()};$('medDoctor').onclick=()=>{role='doctor';step=0;render()};
- $('medAdminBtn').onclick=()=>{$('medAdminText').hidden=!$('medAdminText').hidden};$('medClose').onclick=()=>el.style.display='none';
- return {show(){el.style.display='none'},open(){el.style.display='block'},hide(){el.style.display='none'}};
+ const title=el.querySelector('#wyMedTitle'),body=el.querySelector('#wyMedText'),choices=el.querySelector('#wyMedChoices');
+ el.querySelector('#wyMedClose').onclick=()=>el.style.display='none';
+ let current='staff';
+ function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#f5ebda;border:1px solid #d7bb8b;border-radius:10px;padding:10px 12px;color:#243b52;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
+ function home(){const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
+ return {show(){el.style.display='none'},open(action='staff'){current=scenes[action]?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
