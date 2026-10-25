@@ -100,6 +100,14 @@ $('startExplore').addEventListener('click',enterIsland);
 <div style="position:absolute;bottom:14px;left:12px;right:12px;pointer-events:none;text-align:center"><span style="display:inline-block;background:#fff9efec;border:1px solid #d4b681;border-radius:20px;padding:9px 13px;font-size:12px">點擊 Logo、辦公桌、櫃檯或漫畫電腦探索 · 拖曳旋轉視角</span></div></div>
 
 <div id="wyDoorPrompt" style="display:none;position:fixed;z-index:34;bottom:clamp(160px,23vh,225px);left:50%;transform:translateX(-50%);width:min(355px,88vw);background:#fffaf2f2;border:2px double #cfa976;outline:1px solid #fff7e5;outline-offset:-7px;border-radius:19px;padding:14px 16px;box-shadow:0 12px 35px #1a2a3b55;text-align:center;font-family:system-ui,'Noto Sans TC',sans-serif;color:#23364a;pointer-events:auto"><div id="wyDoorTitle" style="font-size:14px;font-weight:800;margin-bottom:9px">已抵達入口</div><button id="wyDoorEnter" style="background:#1c3552;color:#fff5df;border:1px solid #d9b781;border-radius:13px;padding:10px 24px;font-size:15px;font-weight:800;cursor:pointer">🚪 進入參觀</button><div style="font-size:11px;color:#8a6d55;margin-top:7px">只有按下按鈕才會進入，路過不會自動切換</div></div>
+<div id="wyEntryGuide" aria-label="建築入口操作提示" style="position:fixed;right:12px;top:clamp(78px,13vh,125px);z-index:33;max-width:min(270px,65vw);font-family:system-ui,'Noto Sans TC',sans-serif;pointer-events:auto">
+  <div id="wyEntryGuideText" style="background:#172d4b;color:#fff8ed;border:1.5px solid #d7b77c;border-radius:13px;padding:12px 14px;box-shadow:0 5px 20px #14273c55;font-size:clamp(14px,3.6vw,16px);font-weight:750;line-height:1.6;letter-spacing:.2px">🚪 點擊建築大門<br>即可進入室內參觀</div>
+  <button type="button" id="wyEntryGuideToggle" aria-expanded="true" aria-controls="wyEntryGuideText" aria-label="收合入口提示" style="display:block;margin:5px 0 0 auto;background:#172d4b;color:#fff8ed;border:1px solid #d7b77c;border-radius:20px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer">收合 ×</button>
+</div>
+<style>body:has(#creator[style*="flex"]) #wyEntryGuide{display:none!important}</style>
+<script>
+(function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
+</script>
 <script type="module">
 import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-logo-outer-mini-cloud-v2';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v7';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0xcbdce7,2.5));const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#D8B5AD',roughness:.83}),rock:new THREE.MeshStandardMaterial({color:'#AE8588',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#F7CEDC','#F8E7C6','#F8EEDC','#D8EEDC','#D4EAF5','#E8DBF3'];const rm=rainbow.map(c=>new THREE.MeshBasicMaterial({color:c}));
@@ -881,12 +889,12 @@ function officeTalk(i){
 }
 function enterOffice(){
  if(insideOffice||document.getElementById('creator').style.display!=='none')return;
- activeIslandRoom=0;hideDoorPrompt();insideOffice=true;document.getElementById('officeUI').style.display='block';
+ activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;document.getElementById('officeUI').style.display='block';
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=true;officeOrbit.update();
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
- closeWyInfo();insideOffice=false;if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='🏛️ 德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';
+ closeWyInfo();insideOffice=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='🏛️ 德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
@@ -914,7 +922,7 @@ for(let i=1;i<6;i++){
 }
 function enterIslandRoom(i){
  if(i===0){enterOffice();return;}
- activeIslandRoom=i;insideOffice=true;autoWalkPoints=[];release();hideDoorPrompt();
+ activeIslandRoom=i;insideOffice=true;window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
  document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent='🏛️ '+names[i]+'｜3D 主題館';
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
  for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
@@ -981,23 +989,9 @@ function scheduleWalk(target){
 const doorPrompt=document.getElementById('wyDoorPrompt');
 function hideDoorPrompt(){doorPrompt.style.display='none';}
 function updateDoorPrompt(){hideDoorPrompt();}
+// All six large 3D entrance-cloud sprites removed; keep elevated island-name clouds intact.
 const entranceSigns=[];
-function makeEntranceCloud(i){
- const canvas=document.createElement('canvas');canvas.width=768;canvas.height=300;
- const c=canvas.getContext('2d');
- c.fillStyle='#fffaf2';c.strokeStyle='#d9ae72';c.lineWidth=11;
- c.beginPath();c.roundRect(15,18,738,260,80);c.fill();c.stroke();
- c.fillStyle='#233750';c.textAlign='center';c.font='bold 47px sans-serif';
- c.fillText(i===0?'🚪 點門進入':'🏛️ '+names[i],384,i===0?164:125);
- if(i!==0){c.font='38px sans-serif';c.fillText('點擊入口・進入參觀',384,204);}
- const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;
- const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false});
- const sign=new THREE.Sprite(mat);
- const [ix,iz]=xy[i];sign.position.set(ix+(i===0?5.1:6.2),i===0?2.65:3.6,iz+(i===0?7.2:6.7));
- sign.scale.set(i===0?3.15:6.8,i===0?1.24:2.65,1);sign.userData.islandEntrance=i;scene.add(sign);entranceSigns.push(sign);
-}
-for(let i=0;i<6;i++)makeEntranceCloud(i);
-let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const signHits=ray.intersectObjects(entranceSigns);if(signHits.length){enterIslandRoom(signHits[0].object.userData.islandEntrance);return;}const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;enterIslandRoom(idx);return;}
+let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;enterIslandRoom(idx);return;}
 if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}
  // Ground tap: raycast against the six floating island top surfaces and bridge decks.
  const ground=new THREE.Plane(new THREE.Vector3(0,1,0),0),hitPoint=new THREE.Vector3();
