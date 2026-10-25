@@ -4,7 +4,7 @@ export function createMedicalExterior(group, THREE){
  const ivory=new THREE.MeshStandardMaterial({color:0xfff9ee,roughness:.62});
  const blue=new THREE.MeshStandardMaterial({color:0x5c9ccf,metalness:.18,roughness:.33});
  const gold=new THREE.MeshPhysicalMaterial({color:0xfff0cb,metalness:.24,roughness:.15,clearcoat:1,clearcoatRoughness:.07,emissive:0x8c6b37,emissiveIntensity:.12});
- const glass=new THREE.MeshPhysicalMaterial({color:0xc9f1fb,transparent:true,opacity:.64,roughness:.09,metalness:.04,clearcoat:.75,clearcoatRoughness:.1});
+ const glass=new THREE.MeshPhysicalMaterial({color:0xc9f1fb,transparent:true,opacity:.91,roughness:.25,metalness:.04,clearcoat:.75,clearcoatRoughness:.1});
  const pink=new THREE.MeshStandardMaterial({color:0xf6d4e3,roughness:.7});
  const add=(geo,mat,x,y,z,parent=group)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
  // Modern high-end healthcare pavilion: rounded glass towers, luminous dome, no pagoda roof.
@@ -75,7 +75,7 @@ export function createMedicalExterior(group, THREE){
  // rather than simulated cinematic reflections. These are decorative, not collision objects.
  const warmIvory=new THREE.MeshStandardMaterial({color:0xfff5e6,metalness:.06,roughness:.54});
  const bronze=new THREE.MeshPhysicalMaterial({color:0xffe8bb,metalness:.28,roughness:.16,clearcoat:1,clearcoatRoughness:.07,emissive:0x927044,emissiveIntensity:.12});
- const coolGlass=new THREE.MeshPhysicalMaterial({color:0xb9ecf6,transparent:true,opacity:.48,roughness:.1,metalness:.04,clearcoat:.7,clearcoatRoughness:.09,depthWrite:false});
+ const coolGlass=new THREE.MeshPhysicalMaterial({color:0xb9ecf6,transparent:true,opacity:.86,roughness:.23,metalness:.04,clearcoat:.7,clearcoatRoughness:.09,depthWrite:false});
  const softLight=new THREE.MeshBasicMaterial({color:0xffe5b2});
  // True dome meridians: arched ribs hugging the existing hemisphere, not straight posts.
  for(let k=0;k<12;k++){
@@ -261,10 +261,9 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const front=add(new THREE.CylinderGeometry(3.55,3.45,1.28,64,1,false,0,Math.PI),cream,0,.76,0,desk);
  front.scale.z=.47;
  const top=add(new THREE.CylinderGeometry(3.78,3.78,.13,64,1,false,0,Math.PI),stone,0,1.48,0,desk);top.scale.z=.53;
- const rim=add(new THREE.TorusGeometry(3.61,.045,8,64,Math.PI),gold,0,1.23,0,desk);rim.rotation.x=Math.PI/2;rim.scale.y=.48;
- for(const x of [-2.8,2.8]){
-  box(.075,1.0,.075,gold,x,.62,3.4);
- }
+ // v42: omit detached torus: viewed obliquely it appeared as a floating railing.
+
+ // v42: no isolated gold posts in front of reception desk. 
  // Boutique details: marble veining, coves, ceiling lines, sconces and wall art.
  const marbleLine=material(0xd5c9bb,.15,.6), warm=new THREE.MeshBasicMaterial({color:0xffedc7});
  for(let k=0;k<13;k++){
@@ -411,7 +410,15 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
-  if(guide){guide.position.x=4.8+Math.sin(time*.00045)*.14;guide.rotation.y=-.35+Math.sin(time*.0008)*.08;}
+  if(guide){
+   // Short realistic reception-side patrol; stays clear of central desk, walls and visitor corridor.
+   const phase=(time*.000065)%1;
+   const stops=[[4.8,4.0],[7.4,4.0],[7.4,1.3],[5.6,1.3],[4.8,4.0]];
+   const u=phase*stops.length;const k=Math.min(stops.length-1,Math.floor(u));const a=stops[k],b=stops[(k+1)%stops.length];
+   const f=Math.max(0,Math.min(1,(u-k-.18)/.64));const ease=f*f*(3-2*f);
+   guide.position.set(a[0]+(b[0]-a[0])*ease,Math.abs(Math.sin(time*.008))*.018,a[1]+(b[1]-a[1])*ease);
+   if(f>.03&&f<.97)guide.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+  }
   for(let k=0;k<labels.length;k++)labels[k].position.y=labels[k].userData.baseY+Math.sin(time*.0015+k)*.075;
   if(time-last<55)return;last=time;
   ctx.fillStyle='#071c29';ctx.fillRect(0,0,640,256);
