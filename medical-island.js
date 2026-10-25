@@ -46,12 +46,12 @@ export function createMedicalExterior(group, THREE){
  // Flat, unobstructed pedestrian forecourt, no fence across the approach.
  add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
  // The medical forecourt has no posts or railings crossing its approach.
- // Entrance flower beds: two compact circular flower rings INSIDE the island forecourt,
- // away from the rainbow bridge edges and outside the clear central doorway aisle.
+ // Entrance flower beds: two compact circular flower rings to the OUTSIDE of the front facade,
+ // at x=+/-10.4,z=2.7, away from the bridge landing and central door aisle.
  const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
  const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
  for(const side of [-1,1]){
-   const x=side*7.4,z=5.9;
+   const x=side*10.4,z=2.7;
    // Round low marble planter (diameter 2.5); no protruding semicircle into bridge.
    add(new THREE.CylinderGeometry(1.24,1.30,.32,48),ivory,x,.53,z);
    const edging=add(new THREE.TorusGeometry(1.23,.055,8,48),gold,x,.72,z);
