@@ -130,7 +130,7 @@ function createIslandLabel(i){
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthWrite:false,depthTest:false}));
  sprite.scale.set(i===0?18:16.5,i===0?6.33:5.8,1);
- sprite.position.set(0,i===0?22:19,0);sprite.userData.islandIndex=i;
+ sprite.position.set(0,i===0?29:25,0);sprite.userData.islandIndex=i;
  sprite.userData.baseY=sprite.position.y;sprite.userData.floatPhase=i*.87;
  sprite.renderOrder=30;groups[i].add(sprite);islandLabels.push(sprite);
 }
@@ -173,7 +173,7 @@ if(i===0){
    // No free-floating banner objects are added to the scene.
    // Keep existing towers intact: do not globally scale the castle or change its footprint.
    // Circular water basin with recognizable blue-green globe and arcing water jets.
-   const fountain=new THREE.Group();fountain.position.set(-5.0,0,13.0);court.add(fountain);
+   const fountain=new THREE.Group();fountain.position.set(0,0,15.8);court.add(fountain);
    const base=new THREE.Mesh(new THREE.CylinderGeometry(4.7,4.85,.28,96),stone);
    base.position.y=.85;fountain.add(base);
    const basin=new THREE.Mesh(new THREE.CylinderGeometry(4.27,4.27,.11,96),blue);
