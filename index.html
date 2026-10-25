@@ -952,7 +952,18 @@ for(const x of [-3.35,3.35])pBox(x,.087,8.45,.06,.018,3.05,champagne);
 
 const officeCam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,180);officeCam.position.set(19,19,25);officeCam.lookAt(0,1.3,-.5);
 const officeOrbit=new OrbitControls(officeCam,renderer.domElement);
-officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=9;officeOrbit.maxDistance=42;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(0,1.3,-.5);
+officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=7;officeOrbit.maxDistance=65;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(0,1.3,-.5);
+// v36: match the medical office's iPhone touch gestures inside the main castle office.
+// One finger moves the view; two fingers pinch to zoom or pan together.
+officeOrbit.enablePan=true;
+officeOrbit.enableZoom=true;
+officeOrbit.screenSpacePanning=true;
+officeOrbit.panSpeed=1.6;
+officeOrbit.zoomSpeed=1.0;
+officeOrbit.touches.ONE=THREE.TOUCH.PAN;
+officeOrbit.touches.TWO=THREE.TOUCH.DOLLY_PAN;
+officeOrbit.mouseButtons.LEFT=THREE.MOUSE.PAN;
+officeOrbit.mouseButtons.RIGHT=THREE.MOUSE.ROTATE;
 function officeTalk(i){
  if(i===0||i===5){openWyInfo(i===5?'lawyer':'company');return;}
  if(wyJokes[i]){const z=zones[i];talkName=z.name;talkIdx=0;dialogs[z.name]=[nextWyJoke(i)];renderTalk();return;}
