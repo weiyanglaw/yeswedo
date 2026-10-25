@@ -1,18 +1,45 @@
 // WEIYANG medical island — standalone exterior and interior module.
 // All medical geometry and interaction live here; castle.js is untouched.
 export function createMedicalExterior(group, THREE){
- const ivory=new THREE.MeshStandardMaterial({color:0xfff7e9,roughness:.65}),blue=new THREE.MeshStandardMaterial({color:0x72a9d3,metalness:.16,roughness:.35}),gold=new THREE.MeshStandardMaterial({color:0xd9b67c,metalness:.65,roughness:.3});
- const add=(geo,mat,x,y,z)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);group.add(o);return o};
- // Freestanding branded medical pavilion facade, forward of the legacy GLB.
- add(new THREE.BoxGeometry(13,7,1.1),ivory,0,4,-5.5);
- add(new THREE.BoxGeometry(14,.35,1.5),gold,0,7.65,-5.5);
- for(const x of [-5.8,5.8]){add(new THREE.CylinderGeometry(.35,.42,6.3,16),ivory,x,3.4,-4.7);add(new THREE.SphereGeometry(.44,16,12),gold,x,6.8,-4.7)}
- const door=add(new THREE.BoxGeometry(3.6,4.7,.28),blue,0,2.55,-4.72);
- for(const x of [-1.6,1.6])add(new THREE.BoxGeometry(.1,4.7,.33),gold,x,2.55,-4.53);
+ const ivory=new THREE.MeshStandardMaterial({color:0xfff9ee,roughness:.62});
+ const blue=new THREE.MeshStandardMaterial({color:0x5c9ccf,metalness:.18,roughness:.33});
+ const gold=new THREE.MeshStandardMaterial({color:0xd8b16b,metalness:.55,roughness:.3});
+ const glass=new THREE.MeshPhysicalMaterial({color:0xbce9f6,transparent:true,opacity:.72,roughness:.13,metalness:.08});
+ const pink=new THREE.MeshStandardMaterial({color:0xf6d4e3,roughness:.7});
+ const add=(geo,mat,x,y,z,parent=group)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
+ // A full, unmistakable standalone medical palace, occupying the medical island.
+ // The previous medical GLB is intentionally NOT loaded by index.html.
+ add(new THREE.CylinderGeometry(15.5,15.5,.35,64),ivory,0,.2,0);
+ add(new THREE.BoxGeometry(19,8,13),ivory,0,4.25,-1.5);
+ add(new THREE.BoxGeometry(20,.38,14),gold,0,8.5,-1.5);
+ add(new THREE.BoxGeometry(12,2.8,12),glass,0,9.8,-1.5);
+ const roof=add(new THREE.ConeGeometry(9.5,5.5,8),blue,0,14.0,-1.5);roof.rotation.y=Math.PI/8;
+ add(new THREE.SphereGeometry(.55,16,12),gold,0,17.05,-1.5);
+ for(const x of [-9.6,9.6]){
+   add(new THREE.CylinderGeometry(2.35,2.55,9,24),ivory,x,4.8,-2);
+   add(new THREE.ConeGeometry(3.05,5.0,16),blue,x,11.7,-2);
+   add(new THREE.SphereGeometry(.35,12,10),gold,x,14.4,-2);
+ }
+ for(const x of [-7,-4.5,4.5,7]){
+   add(new THREE.BoxGeometry(1.65,3.3,.18),glass,x,4.8,5.12);
+   add(new THREE.BoxGeometry(1.85,.13,.23),gold,x,6.5,5.22);
+ }
+ const door=add(new THREE.BoxGeometry(4.4,5.2,.34),blue,0,2.8,5.26);
+ for(const x of [-2.25,2.25])add(new THREE.BoxGeometry(.17,5.45,.4),gold,x,2.8,5.44);
+ add(new THREE.BoxGeometry(5.2,.25,.6),gold,0,5.57,5.46);
+ add(new THREE.SphereGeometry(.16,12,10),gold,-.3,2.65,5.47);
+ add(new THREE.SphereGeometry(.16,12,10),gold,.3,2.65,5.47);
+ // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
- const crest=add(new THREE.CircleGeometry(1.55,64),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),0,9.4,-4.02);
+ const crest=add(new THREE.CircleGeometry(1.78,64),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),0,10.0,5.76);
  crest.renderOrder=60;
- const rim=add(new THREE.TorusGeometry(1.65,.085,12,64),gold,0,9.4,-4.09);rim.renderOrder=59;
+ const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,10.0,5.69);rim.renderOrder=59;
+ for(const x of [-12.2,12.2])for(const z of [2.5,7]){
+   add(new THREE.CylinderGeometry(.07,.07,.7,8),gold,x,.65,z);
+   add(new THREE.SphereGeometry(.38,12,10),pink,x,1.1,z);
+ }
+ // Forecourt to the door, distinct from the surrounding pink island body.
+ add(new THREE.BoxGeometry(6.2,.14,10),ivory,0,.38,10.0);
  return {door,crest};
 }
 export function createMedicalInterior(room,THREE){
