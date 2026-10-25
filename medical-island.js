@@ -31,6 +31,101 @@ export function createMedicalExterior(group, THREE){
   add(new THREE.BoxGeometry(1.75,4.5,.12),glass,x,4.45,4.13);
   add(new THREE.BoxGeometry(.09,4.7,.2),champagne,x-.9,4.45,4.23);
  }
+ // v32: Luxury contemporary medical architecture — facade-only details.
+ // These accents stay above ground level, outside the entrance and do not add side platforms.
+ const darkBlue=new THREE.MeshStandardMaterial({color:0x183c55,metalness:.38,roughness:.32});
+ const pearl=new THREE.MeshStandardMaterial({color:0xfdf8f0,metalness:.18,roughness:.3});
+ const led=new THREE.MeshBasicMaterial({color:0xffe6ad});
+ // Layered champagne-gold parapet and warm light line make the silhouette more architectural.
+ for(const y of [7.77,8.16]){
+  add(new THREE.BoxGeometry(18.6,.075,.12),y===7.77?gold:led,0,y,4.09);
+  add(new THREE.BoxGeometry(.12,.075,12.3),y===7.77?gold:led,-9.12,y,-1.8);
+  add(new THREE.BoxGeometry(.12,.075,12.3),y===7.77?gold:led,9.12,y,-1.8);
+ }
+ // Vertical bronze fins, flush with the upper front facade and away from the central door/logo.
+ for(const side of [-1,1]){
+  for(let j=0;j<4;j++){
+   const x=side*(6.65+j*.57);
+   add(new THREE.BoxGeometry(.075,2.15,.20),champagne,x,6.85,4.22);
+  }
+  // Elegant navy feature panels above the left/right window bays.
+  add(new THREE.BoxGeometry(2.45,.45,.09),darkBlue,side*5.25,7.44,4.20);
+  add(new THREE.BoxGeometry(2.22,.045,.12),led,side*5.25,7.13,4.27);
+ }
+ // A thin floating entry canopy, high above the pedestrian path (no support columns).
+ add(new THREE.BoxGeometry(6.95,.17,1.25),pearl,0,6.35,4.83);
+ add(new THREE.BoxGeometry(7.15,.075,1.34),champagne,0,6.48,4.83);
+ add(new THREE.BoxGeometry(6.35,.045,.09),led,0,6.23,5.47);
+ // Additional concentric crown bands and tiny lights on both glazed rotundas.
+ for(const side of [-1,1]){
+  const cx=side*9.15;
+  for(const y of [9.68,10.35]){
+   const ring=add(new THREE.TorusGeometry(3.13,.052,8,56),champagne,cx,y,-2.1);
+   ring.rotation.x=Math.PI/2;
+  }
+  for(let k=0;k<8;k++){
+   const a=k*Math.PI/4;
+   add(new THREE.SphereGeometry(.095,8,6),led,cx+3.12*Math.sin(a),10.15,-2.1+3.12*Math.cos(a));
+  }
+ }
+ // Luminous glass dome ribs and a restrained crown, preserving the original dome geometry.
+ add(new THREE.CylinderGeometry(.64,.79,.25,32),champagne,0,17.62,-1.8);
+ add(new THREE.SphereGeometry(.23,12,8),led,0,17.88,-1.8);
+ // v33: Refined WEIYANG signature facade — intentionally simple low-poly geometry
+ // rather than simulated cinematic reflections. These are decorative, not collision objects.
+ const warmIvory=new THREE.MeshStandardMaterial({color:0xfff5e6,metalness:.06,roughness:.54});
+ const bronze=new THREE.MeshStandardMaterial({color:0xb9945c,metalness:.63,roughness:.28});
+ const coolGlass=new THREE.MeshPhysicalMaterial({color:0x9bd8ea,transparent:true,opacity:.55,roughness:.16,metalness:.07,depthWrite:false});
+ const softLight=new THREE.MeshBasicMaterial({color:0xffe5b2});
+ // True dome meridians: arched ribs hugging the existing hemisphere, not straight posts.
+ for(let k=0;k<12;k++){
+  const a=k*Math.PI/6,pts=[];
+  for(let j=0;j<=18;j++){
+   const t=(j/18)*Math.PI/2;
+   pts.push(new THREE.Vector3(5.96*Math.sin(t)*Math.sin(a),11.75+5.96*Math.cos(t),-1.8+5.96*Math.sin(t)*Math.cos(a)));
+  }
+  const rib=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),24,.075,6,false),bronze);
+  group.add(rib);
+ }
+ // Delicate crown rings, horizontal detail at glass dome base.
+ for(const [r,y] of [[6.02,11.75],[5.73,12.85]]){
+  const ring=add(new THREE.TorusGeometry(r,.075,8,64),champagne,0,y,-1.8);
+  ring.rotation.x=Math.PI/2;
+ }
+ // Layered, well-defined facade with dark inset reveals and ivory/gold trims.
+ for(const side of [-1,1]){
+  const x=side*7.45;
+  add(new THREE.BoxGeometry(2.8,5.2,.15),warmIvory,x,4.85,4.18);
+  add(new THREE.BoxGeometry(2.32,4.55,.17),coolGlass,x,4.9,4.30);
+  for(const sx of [-1,1])add(new THREE.BoxGeometry(.085,4.65,.18),bronze,x+sx*1.19,4.88,4.43);
+  add(new THREE.BoxGeometry(2.6,.12,.18),bronze,x,7.3,4.42);
+  add(new THREE.BoxGeometry(2.4,.065,.19),softLight,x,2.65,4.43);
+ }
+ // Extra fine horizontal rings give the twin towers a finished architectural crown.
+ for(const side of [-1,1]){
+  const cx=side*9.15;
+  const r=add(new THREE.TorusGeometry(3.20,.09,8,64),bronze,cx,10.72,-2.1);
+  r.rotation.x=Math.PI/2;
+  add(new THREE.CylinderGeometry(2.96,2.96,.11,48),warmIvory,cx,10.78,-2.1);
+  add(new THREE.CylinderGeometry(2.55,2.55,.065,48),bronze,cx,10.86,-2.1);
+ }
+ // A clear floating entry canopy with a subtle inset, no ground-level supports.
+ add(new THREE.BoxGeometry(7.65,.11,1.45),warmIvory,0,6.57,4.83);
+ add(new THREE.BoxGeometry(7.75,.07,1.53),bronze,0,6.66,4.83);
+ add(new THREE.BoxGeometry(6.85,.045,.12),softLight,0,6.43,5.53);
+ // Slim fluted pilasters flank the main doorway; keep the 5.7-wide door unobstructed.
+ for(const side of [-1,1]){
+  for(let j=0;j<3;j++){
+   const x=side*(3.25+j*.23);
+   add(new THREE.BoxGeometry(.10,4.8,.18),j===0?bronze:champagne,x,3.1,4.52);
+  }
+  add(new THREE.BoxGeometry(.65,.16,.4),bronze,side*3.5,5.59,4.52);
+ }
+ // Soft golden detail bands across facade, never across the circular logo.
+ for(const x of [-5.2,5.2]){
+  add(new THREE.BoxGeometry(2.05,.08,.14),bronze,x,6.25,4.35);
+  add(new THREE.BoxGeometry(1.95,.045,.16),softLight,x,6.10,4.37);
+ }
  // Broad glazed doorway, unmistakably accessible from the rainbow bridge.
  const door=add(new THREE.BoxGeometry(5.7,5.45,.2),glass,0,2.85,4.24);
  door.userData.medicalDoor=true;
