@@ -222,7 +222,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const box=(w,h,d,mat,x,y,z)=>add(new THREE.BoxGeometry(w,h,d),mat,x,y,z);
  const cyl=(rt,rb,h,mat,x,y,z)=>add(new THREE.CylinderGeometry(rt,rb,h,40),mat,x,y,z);
  // Purpose-built boutique reception: marble floor, gold inlays and uninterrupted central aisle.
- box(23.6,.1,18.6,material(0xE8E5DC),0,.02,0);
+ box(23.6,.1,18.6,material(0xD6D2C8,0,1),0,.02,0);
  // Large inset marble perimeter and champagne-brass border.
  for(const x of [-11.25,11.25])box(.055,.018,17.3,gold,x,.09,0);
  for(const z of [-8.25,8.25])box(22.5,.018,.055,gold,0,.09,z);
@@ -248,7 +248,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  for(const x of [-6.2,6.2]){
   box(.24,1.55,.28,gold,x,5.65,-8.35);
   box(.65,.75,.28,lightGold,x,5.65,-8.08);
-  const glow=new THREE.PointLight(0xffd9a1,1.25,9);glow.position.set(x,5.7,-7.5);root.add(glow);
+  const glow=new THREE.PointLight(0xffd9a1,.55,9);glow.position.set(x,5.7,-7.5);root.add(glow);
  }
  for(const x of [-10.9,10.9]){
   box(.075,7.6,.10,gold,x,4.2,-8.98);
@@ -266,11 +266,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // v42: no isolated gold posts in front of reception desk. 
  // Boutique details: marble veining, coves, ceiling lines, sconces and wall art.
  const marbleLine=material(0xd5c9bb,.15,.6), warm=new THREE.MeshBasicMaterial({color:0xffedc7});
- for(let k=0;k<13;k++){
-  const x=-10.8+k*1.8;
-  const vein=box(.018,.009,2.6+(k%3),marbleLine,x,.091,-1.7+(k%4)*1.5);
-  vein.rotation.y=.38+(k%3)*.2;
- }
+ // v44: no tiny marble veins: they read as dirty streaks at mobile size.
  for(const x of [-10.9,10.9]){
   for(const z of [-7.7,-2.6,2.5,7.6]){
    box(.075,7.5,.09,gold,x,4.45,z);
@@ -430,8 +426,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   for(let x=0;x<640;x+=2){const y=165-spike(x/185-time*.0002)*74;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
   ctx.fillStyle='#a9d9d1';ctx.font='16px sans-serif';ctx.fillText('WEIYANG | 醫療法律探索展示',20,235);waveTex.needsUpdate=true;
  };
- const spot=new THREE.SpotLight(0xffdfab,3.5,18,Math.PI/4,.6);spot.position.set(0,8,0);spot.target.position.set(0,4.7,-8.5);root.add(spot,spot.target);
- for(const x of [-8,8]){const l=new THREE.PointLight(0xffe5c3,1.4,11);l.position.set(x,6.8,-4);root.add(l)}
+ const spot=new THREE.SpotLight(0xffdfab,1.6,18,Math.PI/4,.6);spot.position.set(0,8,0);spot.target.position.set(0,4.7,-8.5);root.add(spot,spot.target);
+ for(const x of [-8,8]){const l=new THREE.PointLight(0xffe5c3,.65,11);l.position.set(x,6.8,-4);root.add(l)}
  // v41: refined real-time 3D medical-law interior; keep all exhibits and guide interactive.
  const v41Ivory=material(0xfffaf1,.08,.34),v41Brass=material(0xf4d49b,.56,.22),v41Deep=material(0x152a43,.18,.4);
  const v41Glow=new THREE.MeshBasicMaterial({color:0xffedca});
@@ -453,14 +449,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.13,.13,17.2,v41Brass,x,8.17,0);
   box(.06,.05,16.8,v41Glow,x,8.02,0);
  }
- // Front face of the existing reception desk, following its original low-poly curvature.
- for(let i=0;i<11;i++){
-  const a=Math.PI*(i+.5)/11;
-  const x=Math.cos(a)*3.22;
-  const z=3.9+Math.sin(a)*1.28;
-  const stripe=box(.055,.75,.045,v41Brass,x,.85,z);
-  stripe.rotation.y=-a+Math.PI/2;
- }
+ // v44: remove detached gold vertical strips in front of reception. Keep solid curved reception geometry.
  // Refined seating gold legs and two understated marble tables, without occupying center walkway.
  for(const x of [-8.3,8.3]){
   for(const dx of [-1.5,1.5])for(const dz of [-.55,.55]){
