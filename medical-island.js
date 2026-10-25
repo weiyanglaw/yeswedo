@@ -5,18 +5,17 @@ export function createMedicalExterior(group, THREE){
  const blue=new THREE.MeshStandardMaterial({color:0x5c9ccf,metalness:.18,roughness:.33});
  const gold=new THREE.MeshStandardMaterial({color:0xd8b16b,metalness:.55,roughness:.3});
  const glass=new THREE.MeshPhysicalMaterial({color:0xbce9f6,transparent:true,opacity:.72,roughness:.13,metalness:.08});
- const rose=new THREE.MeshStandardMaterial({color:0xd8b5ad,roughness:.83});
+ const pink=new THREE.MeshStandardMaterial({color:0xf6d4e3,roughness:.7});
  const add=(geo,mat,x,y,z,parent=group)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
  // Modern high-end healthcare pavilion: rounded glass towers, luminous dome, no pagoda roof.
  const silver=new THREE.MeshStandardMaterial({color:0xf8fcff,roughness:.32,metalness:.12});
  const champagne=new THREE.MeshStandardMaterial({color:0xd9bf91,roughness:.24,metalness:.67});
  const teal=new THREE.MeshStandardMaterial({color:0x52b4c4,emissive:0x174a63,emissiveIntensity:.14,roughness:.25});
  const cylinder=(r,h,x,y,z,mat=glass)=>add(new THREE.CylinderGeometry(r,r,h,48),mat,x,y,z);
- // Medical island shares the same muted rose platform color as the other islands.
- // The entrance/walking apron is rose rather than a large white disk.
- cylinder(15.55,2.0,0,-1.05,0,rose);
+ // Visible sakura-pink floating island sidewall, with a white walking top.
+ cylinder(15.55,2.0,0,-1.05,0,pink);
  cylinder(15.35,.23,0,-.04,0,gold);
- cylinder(15.2,.32,0,.19,0,rose);
+ cylinder(15.2,.32,0,.19,0,ivory);
  add(new THREE.BoxGeometry(17.5,7.8,11.7),silver,0,4,-1.8);
  add(new THREE.BoxGeometry(18.4,.23,12.3),champagne,0,8,-1.8);
  // Glass drum and elegant transparent hemispherical dome.
@@ -106,7 +105,7 @@ export function createMedicalInterior(room,THREE,staffFactory){
   for(const y of [2.15,4.6,7.05]){
    box(3.7,.09,.18,gold,x<0?-8.0:8.0,y,-8.76);
   }
-  if(x<0)box(3.35,5.8,.12,velvet,-8.0,4.65,-8.65); // reserve right bay exclusively for ECG
+  box(3.35,5.8,.12,velvet,x<0?-8.0:8.0,4.65,-8.65);
  }
  // Warm boutique sconces, ceiling coves, and decorative architectural wall ribs.
  for(const x of [-6.2,6.2]){
@@ -122,11 +121,19 @@ export function createMedicalInterior(room,THREE,staffFactory){
  for(const x of [-11.1,11.1])box(.14,.12,17.3,gold,x,8.35,0);
  // Premium architectural ceiling: floating coffers, champagne-brass lines and warm recessed glow.
  const ceiling=material(0xf8f2e8,.08,.52),softLight=new THREE.MeshBasicMaterial({color:0xffe7b4});
- // NO solid ceiling: keep a clear open-top dollhouse view from the mobile camera.
- // Only slim peripheral ceiling beams remain.
- // OPEN-TOP dollhouse: only thin perimeter cornice, never beams crossing the camera view.
- for(const z of [-8.75,8.75])box(22.0,.09,.12,gold,0,8.45,z);
- for(const x of [-11.15,11.15])box(.12,.09,17.5,gold,x,8.45,0);
+ box(23.2,.24,18.1,ceiling,0,8.77,0);
+ for(const z of [-6.7,-2.4,2.0,6.35]){
+   box(21.5,.16,.13,gold,0,8.53,z);
+   box(20.9,.035,.09,softLight,0,8.42,z+.18);
+ }
+ for(const x of [-9.3,-4.8,4.8,9.3]){
+   box(.13,.17,16.4,gold,x,8.52,0);
+   box(.08,.035,15.9,softLight,x+.15,8.42,0);
+ }
+ for(const x of [-7.0,0,7.0])for(const z of [-4.4,2.4]){
+   const lamp=add(new THREE.CylinderGeometry(.37,.37,.045,32),softLight,x,8.38,z);
+   const glow=new THREE.PointLight(0xffe5bf,.6,8);glow.position.set(x,7.9,z);root.add(glow);
+ }
  // Reception wall has layered inset navy panels with gold relief, not a flat poster.
  for(const x of [-4.48,4.48])box(.045,6.65,.14,lightGold,x,4.55,-8.41);
  for(const y of [1.3,7.78])box(8.95,.045,.14,lightGold,0,y,-8.41);
@@ -282,10 +289,9 @@ export function createMedicalInterior(room,THREE,staffFactory){
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
- // Exactly one ECG display: one gold frame, one navy screen, one animated waveform.
  box(4.78,2.56,.14,gold,8.0,4.3,-8.36);
  box(4.62,2.40,.15,navy,8.0,4.3,-8.24);
- const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),8,4.3,-7.68);wavePanel.renderOrder=70;
+ const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-8.14);
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
  const deskHit=box(5.9,.25,1.2,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),0,1.65,3.9);register(deskHit,'computer');
@@ -302,13 +308,9 @@ export function createMedicalInterior(room,THREE,staffFactory){
  }
  hint('💬 跟我聊聊',5.1,4.0,4.85,'staff');
  hint('📚 點我翻翻',-8.05,7.55,-7.15,'books');
- hint('❤️ 點我看看',8,7.28,-7.20,'ecg');
+ hint('❤️ 點我看看',8,6.25,-7.88,'ecg');
  hint('✨ 點我探索',0,2.7,5.3,'computer');
- // Raised ivory plaque and gold perimeter make the navy-and-ivory label stand out
- // against the similarly dark WEIYANG feature wall; plaque does not cover the emblem.
- box(4.35,1.12,.14,gold,0,7.85,-7.23);
- box(4.13,.91,.13,cream,0,7.85,-7.07);
- hint('⚖️ 認識德威陽',0,7.85,-6.83,'logo');
+ hint('⚖️ 認識德威陽',0,7.82,-7.85,'logo');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
