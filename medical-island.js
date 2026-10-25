@@ -46,21 +46,22 @@ export function createMedicalExterior(group, THREE){
  // Flat, unobstructed pedestrian forecourt, no fence across the approach.
  add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
  // The medical forecourt has no posts or railings crossing its approach.
- // Two low curved marble planters, well away from the central bridge-to-door path.
+ // Entrance flower beds: two compact circular flower rings INSIDE the island forecourt,
+ // away from the rainbow bridge edges and outside the clear central doorway aisle.
  const foliage=new THREE.MeshStandardMaterial({color:0x639778,roughness:.8});
  const blossom=[0xf5b6ce,0xfff9f5,0xf0cfdf].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
  for(const side of [-1,1]){
-   const x=side*9.7,z=9.6;
-   const bed=add(new THREE.CylinderGeometry(2.2,2.3,.55,48,1,false,0,Math.PI),ivory,x,.55,z);
-   bed.rotation.y=side>0?0:Math.PI;
-   const edging=add(new THREE.TorusGeometry(2.15,.075,8,48,Math.PI),gold,x,.88,z);
-   edging.rotation.x=Math.PI/2;edging.rotation.z=side>0?0:Math.PI;
-   for(let k=0;k<13;k++){
-     const a=(k+.5)*Math.PI/13+(side>0?0:Math.PI);
-     const radius=1.25+(k%3)*.18;
+   const x=side*7.4,z=5.9;
+   // Round low marble planter (diameter 2.5); no protruding semicircle into bridge.
+   add(new THREE.CylinderGeometry(1.24,1.30,.32,48),ivory,x,.53,z);
+   const edging=add(new THREE.TorusGeometry(1.23,.055,8,48),gold,x,.72,z);
+   edging.rotation.x=Math.PI/2;
+   for(let k=0;k<25;k++){
+     const a=k*Math.PI*2/25;
+     const radius=.24+(k%4)*.22;
      const px=x+Math.cos(a)*radius,pz=z+Math.sin(a)*radius;
-     const stem=add(new THREE.CylinderGeometry(.035,.05,.42,7),foliage,px,1.06,pz);
-     add(new THREE.SphereGeometry(.16,10,8),blossom[k%3],px,1.32,pz);
+     add(new THREE.SphereGeometry(.15,9,7),foliage,px,.84,pz);
+     add(new THREE.SphereGeometry(.145,10,8),blossom[k%3],px,1.01+(k%3)*.025,pz);
    }
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
@@ -111,7 +112,7 @@ export function createMedicalInterior(room,THREE,staffFactory){
   box(.075,7.6,.10,gold,x,4.2,-8.98);
   box(.075,7.6,.10,gold,x,4.2,8.75);
  }
- for(const z of [-8.6,8.6])box(22.9,.12,.14,gold,0,8.35,z);
+ box(22.9,.12,.14,gold,0,8.35,-8.6); // Back wall cornice only; no front crossbar
  for(const x of [-11.1,11.1])box(.14,.12,17.3,gold,x,8.35,0);
  // Curved marble reception desk; height deliberately below the logo and set forward.
  const desk=new THREE.Group();root.add(desk);desk.position.set(0,0,3.9);
@@ -136,10 +137,8 @@ export function createMedicalInterior(room,THREE,staffFactory){
   box(.17,.16,17.4,gold,x,8.2,0);
   box(.09,.08,16.9,warm,x,8.08,0);
  }
- for(const z of [-8.1,7.9]){
-  box(21.9,.13,.11,gold,0,8.15,z);
-  box(21.5,.065,.10,warm,0,8.04,z);
- }
+ // Removed overhead transverse bars: they crossed the logo and ECG in mobile view.
+
  for(const x of [-6.4,6.4]){
   const lamp=box(.12,.85,.2,gold,x,5.35,-8.38);
   box(.20,.50,.22,warm,x,5.35,-8.21);
@@ -256,8 +255,8 @@ export function createMedicalInterior(room,THREE,staffFactory){
  const labels=[];
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
-  const c=canvas.getContext('2d');c.fillStyle='rgba(255,250,239,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
-  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#21384f';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
+  const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(23,42,62,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
+  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }

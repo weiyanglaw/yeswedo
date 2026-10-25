@@ -297,7 +297,7 @@ for(let i=1;i<6;i++){
   mesh(new THREE.BoxGeometry(9.65,.08,len/segments+.01),rm[k%6],group,0,.37,z);
  }
  // No railing within 12 world units of the center: a completely open approach.
- const railStart=-len/2+12.5,railEnd=len/2-(i===2?11:0);
+ const railStart=-len/2+12.5,railEnd=len/2-(i===2?18:0);
  const railLen=Math.max(0,railEnd-railStart);
  if(railLen>1){
   for(const side of [-1,1]){
