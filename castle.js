@@ -44,7 +44,7 @@ export function createNewFairytaleCastle(parent,THREE){
  block(10.4,2.0,4.7,0,9.55,-1.9,wallLight);
  block(10.9,.3,5.0,0,10.55,-1.9,trim);
  // Side turret roofs are physically connected to their bodies.
- tower(-6.5,-.4,1.85,8.2,3.0,false);
+ tower(-6.5,-.4,1.85,8.2,3.0,true);
  tower( 6.5,-.4,1.85,8.2,3.0,false);
  tower(-4.15,-3.4,1.95,10.4,3.7,true);
  tower( 4.15,-3.4,1.95,10.4,3.7,true);
@@ -69,6 +69,87 @@ export function createNewFairytaleCastle(parent,THREE){
  crestRim.rotation.x=Math.PI/2;crestRim.position.set(0,9.2,2.50);C.add(crestRim);
  const crest=new THREE.Mesh(new THREE.CircleGeometry(1.49,64),new THREE.MeshBasicMaterial({map:crestTex,side:THREE.DoubleSide}));
  crest.position.set(0,9.2,2.62);C.add(crest);
+
+ // Architectural detailing: warm ivory stone, blue enamel and restrained champagne-gold ornament.
+ const marble=new THREE.MeshStandardMaterial({color:'#FFF0D7',roughness:.78});
+ const pearl=new THREE.MeshStandardMaterial({color:'#FFF9EA',roughness:.57});
+ const brightGold=new THREE.MeshStandardMaterial({color:'#D7A74D',metalness:.56,roughness:.28});
+ const recess=new THREE.MeshStandardMaterial({color:'#F1D8AC',roughness:.83});
+ const winBlue=new THREE.MeshStandardMaterial({color:'#6BB7DB',emissive:'#C3D7EA',emissiveIntensity:.12,roughness:.25});
+ const frontZ=2.50;
+ // Continuous cornices and framed wall panels; no disconnected black wall pieces.
+ for(const [y,w,d] of [[1.0,13.9,7.2],[7.5,13.9,7.2],[8.55,14.4,7.6],[10.75,11.1,5.2]]){
+   block(w,.15,d,0,y,-1.1,pearl);
+   block(w+.13,.075,d+.13,0,y+.11,-1.1,brightGold);
+ }
+ // Pilasters on the front facade with capitals, plinths and recessed relief panels.
+ for(const x of [-5.9,-2.65,2.65,5.9]){
+   block(.55,6.8,.50,x,4.7,frontZ,pearl);
+   block(.91,.27,.68,x,1.23,frontZ,brightGold);
+   block(.94,.32,.68,x,8.08,frontZ,brightGold);
+   block(.18,5.75,.10,x,4.65,frontZ+.32,recess);
+ }
+ // Detailed arched window assemblies and decorative keystones.
+ for(const x of [-4.65,-3.38,3.38,4.65]){
+   const z=2.72;
+   block(.93,1.73,.14,x,5.75,z,brightGold);
+   block(.70,1.49,.17,x,5.74,z+.10,winBlue);
+   const a=new THREE.Mesh(new THREE.TorusGeometry(.40,.085,10,28,Math.PI),brightGold);
+   a.position.set(x,6.60,z+.19);C.add(a);
+   block(.09,1.50,.20,x,5.74,z+.23,brightGold);
+   block(.77,.08,.20,x,5.80,z+.24,brightGold);
+   block(1.07,.12,.32,x,4.80,z+.13,pearl);
+   ball(.115,x,6.99,z+.17,brightGold);
+ }
+ // Grand door portal: paired columns, double moulded arch and royal entrance steps.
+ for(const x of [-2.25,2.25]){
+   cyl(.27,.33,4.35,x,3.08,3.08,pearl,20);
+   cyl(.43,.43,.26,x,1.04,3.08,brightGold,24);
+   cyl(.43,.43,.30,x,5.29,3.08,brightGold,24);
+   for(const dx of [-.16,.16])block(.055,3.9,.065,x+dx,3.07,3.34,brightGold);
+ }
+ for(const [r,y,z] of [[2.08,5.13,3.15],[1.83,5.10,3.24]]){
+   const arch=new THREE.Mesh(new THREE.TorusGeometry(r,.12,12,48,Math.PI),r>2?pearl:brightGold);
+   arch.position.set(0,y,z);C.add(arch);
+ }
+ for(let k=0;k<3;k++){
+   const step=block(5.45+k*.48,.13,1.0,0,.79+k*.10,3.55+k*.38,k===1?brightGold:pearl);
+ }
+ // Door leaf bevels and fine inset gold borders.
+ for(const x of [-.93,.93]){
+   block(1.59,3.53,.055,x,2.86,3.015,doorMat);
+   for(const y of [2.08,3.62]){
+     block(1.20,1.12,.072,x,y,3.07,brightGold);
+     block(1.04,.96,.078,x,y,3.11,doorMat);
+   }
+ }
+ // Symmetrical balustraded upper terrace, in front of the central upper mass.
+ for(const x of [-5.25,5.25]){
+   block(.42,1.12,.42,x,10.98,.64,pearl);
+   ball(.22,x,11.68,.64,brightGold);
+ }
+ for(let x=-5.05;x<=5.06;x+=.57){
+   if(Math.abs(x)<2.0)continue;
+   cyl(.095,.125,.83,x,10.99,.65,pearl,12);
+   ball(.14,x,11.44,.65,brightGold);
+ }
+ for(const [x,w] of [[-3.65,3.2],[3.65,3.2]])block(w,.13,.26,x,11.50,.65,brightGold);
+ // Corner crest diamonds and facade gold rosettes.
+ for(const x of [-5.85,-2.72,2.72,5.85]){
+   for(const y of [7.90,9.27]){
+     const diamond=block(.23,.23,.11,x,y,2.89,brightGold);diamond.rotation.z=Math.PI/4;
+   }
+ }
+ // Flag #4 on the left lower tower. Three other royal-blue logo banners remain on upper towers.
+ // Rounded golden flower boxes at the foot of the facade (never in the path).
+ const leafMat=new THREE.MeshStandardMaterial({color:'#5E9C64',roughness:.87});
+ const blossomMats=['#F9D0DF','#FFF9F0','#F8E9B6'].map(color=>new THREE.MeshBasicMaterial({color}));
+ for(const side of [-1,1])for(let k=0;k<12;k++){
+   const x=side*(5.6+(k%4)*.53),z=3.8+Math.floor(k/4)*.47;
+   ball(.22,x,.80,z,leafMat);
+   ball(.13,x,.98,z,blossomMats[k%3]);
+ }
+
  // Garden beds are built separately beside bridge approaches, not in the walkway.
  return C;
 }
