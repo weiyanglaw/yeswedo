@@ -109,7 +109,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261025-v33-weiyang-signature-medical';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-logo-outer-mini-cloud-v12';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v41-luxury';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v41-luxury';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -950,6 +950,45 @@ pBox(0,.073,8.45,6.85,.018,3.15,navy);
 for(const z of [6.95,9.95])pBox(0,.087,z,6.65,.018,.06,champagne);
 for(const x of [-3.35,3.35])pBox(x,.087,8.45,.06,.018,3.05,champagne);
 
+// v41: additional boutique-law-office architecture. Visual-only meshes; no new collisions or click targets.
+const v41Gold=new THREE.MeshStandardMaterial({color:'#f4d69d',metalness:.52,roughness:.23,emissive:'#503716',emissiveIntensity:.065});
+const v41Cream=new THREE.MeshStandardMaterial({color:'#fff9ef',roughness:.36});
+const v41Navy=new THREE.MeshStandardMaterial({color:'#172b47',roughness:.46});
+const v41Warm=new THREE.MeshBasicMaterial({color:'#ffebbc'});
+// Keep the entire front open and the central aisle clear.
+for(const z of [-7.5,-3.5,.5,4.5,8.5]){
+ for(const x of [-12.85,12.85]){
+  pBox(x,4.0,z,.09,5.75,2.8,v41Gold);
+  pBox(x+(x<0?.08:-.08),4.0,z,.07,5.43,2.48,v41Cream);
+  pBox(x+(x<0?.13:-.13),4.0,z,.045,5.20,2.24,ivory);
+ }
+}
+// Thin continuous crown molding and indirect light on rear and side walls.
+pBox(0,7.03,-10.35,26.5,.16,.26,v41Gold);
+pBox(0,6.89,-10.24,26.0,.06,.12,v41Warm);
+for(const x of [-13.06,13.06]){
+ pBox(x,7.05,0,.20,.15,21.1,v41Gold);
+ pBox(x,6.89,0,.11,.05,20.8,v41Warm);
+}
+// Slim illuminated insets on back wall, outside the original WEIYANG logo and labels.
+for(const x of [-11.65,-4.25,4.25,11.65]){
+ pBox(x,4.2,-10.15,.055,4.5,.055,v41Gold);
+ pBox(x,6.47,-10.12,1.05,.06,.065,v41Warm);
+}
+// Reception fascia receives a premium navy inset and ivory marble accent, without moving the desk.
+pBox(0,1.06,5.59,5.55,.86,.025,v41Cream);
+pBox(0,1.08,5.63,4.90,.55,.025,marble);
+for(const x of [-2.86,2.86])pBox(x,1.07,5.65,.045,.99,.035,v41Gold);
+// Lounge trim: thin gold edging and subtle marble side tables.
+for(const x of [-4.1,4.1]){
+ pCyl(x,.36,8.15,.43,.43,.07,v41Gold,24);
+ pCyl(x,.24,8.15,.12,.12,.35,v41Navy,18);
+}
+// Soft warm highlights, limited to four small decorative sconces for mobile performance.
+for(const x of [-11.2,-4.6,4.6,11.2]){
+ pBox(x,5.2,-10.0,.19,.78,.19,v41Gold);
+ pBox(x,5.2,-9.87,.36,.52,.13,v41Warm);
+}
 const officeCam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,180);officeCam.position.set(19,19,25);officeCam.lookAt(0,1.3,-.5);
 const officeOrbit=new OrbitControls(officeCam,renderer.domElement);
 officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=7;officeOrbit.maxDistance=65;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(0,1.3,-.5);

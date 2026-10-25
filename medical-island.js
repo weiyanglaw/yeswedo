@@ -425,6 +425,48 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  };
  const spot=new THREE.SpotLight(0xffdfab,3.5,18,Math.PI/4,.6);spot.position.set(0,8,0);spot.target.position.set(0,4.7,-8.5);root.add(spot,spot.target);
  for(const x of [-8,8]){const l=new THREE.PointLight(0xffe5c3,1.4,11);l.position.set(x,6.8,-4);root.add(l)}
+ // v41: refined real-time 3D medical-law interior; keep all exhibits and guide interactive.
+ const v41Ivory=material(0xfffaf1,.08,.34),v41Brass=material(0xf4d49b,.56,.22),v41Deep=material(0x152a43,.18,.4);
+ const v41Glow=new THREE.MeshBasicMaterial({color:0xffedca});
+ // Architectural wall framing, kept away from original medical logo and ECG screen.
+ for(const x of [-10.65,-6.15,6.15,10.65]){
+  box(.07,6.5,.11,v41Brass,x,4.3,-8.92);
+  box(1.8,.06,.13,v41Brass,x,7.56,-8.86);
+ }
+ for(const x of [-10.95,10.95]){
+  for(const z of [-6.6,-1.5,3.6,7.3]){
+   box(.12,5.3,2.0,v41Brass,x,4.1,z);
+   box(.13,5.0,1.78,v41Ivory,x+(x<0?.08:-.08),4.1,z);
+  }
+ }
+ // Layered brass and illuminated cornice: no crossbeam across the open-front view.
+ box(22.8,.12,.13,v41Brass,0,8.18,-8.63);
+ box(22.3,.04,.09,v41Glow,0,8.02,-8.55);
+ for(const x of [-11.08,11.08]){
+  box(.13,.13,17.2,v41Brass,x,8.17,0);
+  box(.06,.05,16.8,v41Glow,x,8.02,0);
+ }
+ // Front face of the existing reception desk, following its original low-poly curvature.
+ for(let i=0;i<11;i++){
+  const a=Math.PI*(i+.5)/11;
+  const x=Math.cos(a)*3.22;
+  const z=3.9+Math.sin(a)*1.28;
+  const stripe=box(.055,.75,.045,v41Brass,x,.85,z);
+  stripe.rotation.y=-a+Math.PI/2;
+ }
+ // Refined seating gold legs and two understated marble tables, without occupying center walkway.
+ for(const x of [-8.3,8.3]){
+  for(const dx of [-1.5,1.5])for(const dz of [-.55,.55]){
+   box(.08,.27,.08,v41Brass,x+dx,.20,4.7+dz);
+  }
+  cyl(.68,.68,.075,v41Ivory,x,.75,7.0);
+  cyl(.12,.12,.43,v41Brass,x,.47,7.0);
+ }
+ // Gold corner uplights are emissive meshes, not expensive additional realtime lights.
+ for(const x of [-10.15,10.15]){
+  box(.20,.9,.20,v41Brass,x,1.4,-7.6);
+  box(.31,.38,.25,v41Glow,x,1.95,-7.6);
+ }
  return {guide,interactionTargets,interactionMap,animation};
 }
 export function createMedicalExperience(){
