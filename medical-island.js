@@ -46,13 +46,13 @@ export function createMedicalExterior(group, THREE){
  // Flat, unobstructed pedestrian forecourt, no fence across the approach.
  add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
  // The medical forecourt has no posts or railings crossing its approach.
- // v26: A single unmistakable round flower garden on the FRONT-LEFT ivory forecourt.
+ // v26: A single unmistakable round flower garden on the CENTER of the ivory forecourt.
  // The center of the door (x=0, z=4.24) and its walking aisle stay open.
  // All former crescent/parenthesis-shaped planters are removed.
  const foliage=new THREE.MeshStandardMaterial({color:0x47865d,roughness:.85});
  const soil=new THREE.MeshStandardMaterial({color:0x604a3a,roughness:1});
  const blossom=[0xf6a9c8,0xfff9ee,0xe6a7ca,0xf9dce8,0xf7b7b4].map(color=>new THREE.MeshStandardMaterial({color,roughness:.75}));
- const gardenX=-6.65,gardenZ=10.5,gardenRadius=2.5;
+ const gardenX=0,gardenZ=12.4,gardenRadius=2.25;
  // Raised round ivory rim, gold lip and green flower-filled planting surface.
  add(new THREE.CylinderGeometry(gardenRadius,gardenRadius+.15,.52,64),ivory,gardenX,.67,gardenZ);
  add(new THREE.CylinderGeometry(gardenRadius-.19,gardenRadius-.19,.06,64),soil,gardenX,.975,gardenZ);
@@ -61,7 +61,7 @@ export function createMedicalExterior(group, THREE){
  for(let row=-8;row<=8;row++){
   for(let col=-8;col<=8;col++){
    const dx=col*.285+((row&1)? .142:0),dz=row*.285;
-   if(dx*dx+dz*dz>2.24*2.24)continue;
+   if(dx*dx+dz*dz>2.04*2.04)continue;
    const n=(row+8)*17+col+8;
    const x=gardenX+dx,z=gardenZ+dz;
    add(new THREE.SphereGeometry(.23,9,7),foliage,x,1.13,z);
