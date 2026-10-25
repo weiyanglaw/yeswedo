@@ -217,7 +217,7 @@ for(let i=1;i<6;i++){
  const a=new THREE.Vector3(xy[0][0],.65,xy[0][1]),b=new THREE.Vector3(xy[i][0],.65,xy[i][1]);
  const d=b.clone().sub(a),len=d.length();
  const group=new THREE.Group();group.position.copy(a.clone().add(b).multiplyScalar(.5));
- group.rotation.y=Math.atan2(d.x,d.z);scene.add(group);bridges.push({group,len});
+ group.rotation.y=Math.atan2(d.x,d.z);scene.add(group);bridges.push({group,len,a:a.clone(),b:b.clone()});
  mesh(new THREE.BoxGeometry(9.85,.65,len+1),mats.white,group);
  const segments=Math.ceil(len/2.5);
  for(let k=0;k<segments;k++){
@@ -239,6 +239,18 @@ for(let i=1;i<6;i++){
   }
  }
 }
+// Accessible paved passage between the west-side bridge landing and castle plaza.
+// This stays outside the west turret and joins the existing circular white courtyard.
+const passageMat=new THREE.MeshStandardMaterial({color:0xfff5e7,roughness:.83});
+const passageGold=new THREE.MeshStandardMaterial({color:0xd6ad72,metalness:.35,roughness:.45});
+function makePassage(ax,az,bx,bz,width=5.0){
+ const dx=bx-ax,dz=bz-az,len=Math.hypot(dx,dz),g=new THREE.Group();
+ g.position.set((ax+bx)/2,1.34,(az+bz)/2);g.rotation.y=Math.atan2(dx,dz);scene.add(g);
+ const slab=new THREE.Mesh(new THREE.BoxGeometry(width,.18,len+.5),passageMat);g.add(slab);
+ for(const side of [-1,1]){const trim=new THREE.Mesh(new THREE.BoxGeometry(.09,.07,len+.5),passageGold);trim.position.set(side*width/2,.13,0);g.add(trim)}
+ return {a:[ax,az],b:[bx,bz],width};
+}
+const castlePassages=[makePassage(-15.4,-1.5,-14.2,7.4,5.0),makePassage(-14.2,7.4,-9.1,12.5,5.5),makePassage(15.4,-1.5,14.2,7.4,5.0),makePassage(14.2,7.4,9.1,12.5,5.5)];
 // Bridge source mesh is isolated: bamboo, trees, rocks, ground and water are excluded.
 async function addOriginalBridge(){status.textContent='五條彩虹橋已完成載入（城堡入口無欄杆）';}
 // Simple walkable avatar and three staff members, selectable by raycasting.
@@ -246,16 +258,23 @@ async function addOriginalBridge(){status.textContent='五條彩虹橋已完成�
 // Walkable-surface elevation: keep the avatar's feet above raised plaza and bridges.
 // Original island tops are Y=0; bridge pastel deck top is Y=1.06;
 // castle circular courtyard top is Y=1.47.
+function pointOnSegmentXZ(x,z,ax,az,bx,bz){
+ const dx=bx-ax,dz=bz-az,l2=dx*dx+dz*dz;
+ const t=Math.max(0,Math.min(1,((x-ax)*dx+(z-az)*dz)/l2));
+ return {distance:Math.hypot(x-(ax+t*dx),z-(az+t*dz)),t};
+}
+function onBridgeDeck(x,z,extra=0){
+ return bridges.some(({a,b})=>pointOnSegmentXZ(x,z,a.x,a.z,b.x,b.z).distance<4.62+extra);
+}
+function onPassage(x,z,extra=0){
+ return castlePassages.some(p=>pointOnSegmentXZ(x,z,...p.a,...p.b).distance<p.width/2+extra);
+}
 function walkingSurfaceY(x,z){
  let y=0;
- // Castle plaza is a circle centered at (0, 8.7), radius 11.4.
- if(Math.hypot(x,z-8.7)<11.15)y=Math.max(y,1.47);
- // Bridge groups are rotated in world space. Their pastel deck tops are Y=1.06.
- for(const {group,len} of bridges){
-  const p=group.worldToLocal(new THREE.Vector3(x,0,z));
-  if(Math.abs(p.x)<5.15&&Math.abs(p.z)<len/2+1.0)y=Math.max(y,1.12);
- }
- return y+0.18; // raised clearance: entire feet/legs visible above bridge deck
+ if(Math.hypot(x,z-8.7)<11.4)y=Math.max(y,1.47);
+ if(onBridgeDeck(x,z,.2))y=Math.max(y,1.065);
+ if(onPassage(x,z,.1))y=Math.max(y,1.44);
+ return y+0.12;
 }
 function alignActorToGround(){actor.position.y=walkingSurfaceY(actor.position.x,actor.position.z)}
 const actor=new THREE.Group();scene.add(actor);actor.position.set(7,0,12);alignActorToGround();
@@ -911,14 +930,16 @@ function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[
 // Walkable paths: collision envelopes follow the visible castle facade and the
 // central buildings of the five satellite islands. Keep the surrounding paths open.
 const walkObstacles=[
- {x:0,z:-1.0,hx:10.6,hz:5.35}, // castle walls, towers and closed main door
+ // Castle footprint: no character may walk through walls or corner towers.
+ {x:0,z:-1.0,hx:10.65,hz:5.45},
  ...xy.slice(1).map(([x,z])=>({x,z,hx:5.6,hz:5.6}))
 ];
 function walkAllowed(x,z){
  const island=xy.some(([ix,iz],i)=>Math.hypot(x-ix,z-iz)<(i===0?20:16));
- const bridge=bridges.some(({group,len})=>{const q=group.worldToLocal(new THREE.Vector3(x,0,z));return Math.abs(q.x)<4.72&&Math.abs(q.z)<len/2;});
- if(!island&&!bridge)return false;
- const margin=.65; // character body clearance from walls
+ const bridge=onBridgeDeck(x,z);
+ const passage=onPassage(x,z);
+ if(!island&&!bridge&&!passage)return false;
+ const margin=.45;
  return !walkObstacles.some(o=>Math.abs(x-o.x)<o.hx+margin&&Math.abs(z-o.z)<o.hz+margin);
 }
 function tryWalk(dx,dz){
@@ -957,24 +978,26 @@ function scheduleWalk(target){
  const dest=target.clone();dest.y=0;
  autoWalkPoints=walkRoute(actor.position,dest);follow=true;overview=false;
 }
-const doorPrompt=document.getElementById('wyDoorPrompt'),doorTitle=document.getElementById('wyDoorTitle');
-let doorNearby=-1;
-function hideDoorPrompt(){doorNearby=-1;doorPrompt.style.display='none';}
-function updateDoorPrompt(){
- if(insideOffice||document.getElementById('creator').style.display!=='none'){hideDoorPrompt();return;}
- let near=-1;
- for(let i=0;i<6;i++){
-  const [ix,iz]=xy[i],dx=actor.position.x-ix,dz=actor.position.z-iz;
-  // Main castle's facade is at Z=3. Its approach is in front of the door.
-  // Satellite halls use their south/front-facing perimeter (Z positive).
-  if(Math.abs(dx)<(i===0?3.1:4.5)&&dz>(i===0?5.2:7.1)&&dz<(i===0?10.5:12.8)){near=i;break;}
- }
- if(near===doorNearby)return;doorNearby=near;
- doorPrompt.style.display=near<0?'none':'block';
- if(near>=0)doorTitle.textContent='🚪 '+names[near]+'｜已抵達正門';
+const doorPrompt=document.getElementById('wyDoorPrompt');
+function hideDoorPrompt(){doorPrompt.style.display='none';}
+function updateDoorPrompt(){hideDoorPrompt();}
+const entranceSigns=[];
+function makeEntranceCloud(i){
+ const canvas=document.createElement('canvas');canvas.width=768;canvas.height=300;
+ const c=canvas.getContext('2d');
+ c.fillStyle='#fffaf2';c.strokeStyle='#d9ae72';c.lineWidth=11;
+ c.beginPath();c.roundRect(15,18,738,260,80);c.fill();c.stroke();
+ c.fillStyle='#233750';c.textAlign='center';c.font='bold 47px sans-serif';
+ c.fillText(i===0?'🏰 德威陽 3D 事務所':'🏛️ '+names[i],384,125);
+ c.font='38px sans-serif';c.fillText('點擊正門，進入參觀',384,204);
+ const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;
+ const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false});
+ const sign=new THREE.Sprite(mat);
+ const [ix,iz]=xy[i];sign.position.set(ix+(i===0?6.6:7),i===0?5.4:4.4,iz+(i===0?7.0:6.7));
+ sign.scale.set(10.4,4.05,1);sign.userData.islandEntrance=i;scene.add(sign);entranceSigns.push(sign);
 }
-document.getElementById('wyDoorEnter').addEventListener('click',()=>{const i=doorNearby;if(i<0)return;hideDoorPrompt();enterIslandRoom(i);});
-let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;enterIslandRoom(idx);return;}
+for(let i=0;i<6;i++)makeEntranceCloud(i);
+let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const signHits=ray.intersectObjects(entranceSigns);if(signHits.length){enterIslandRoom(signHits[0].object.userData.islandEntrance);return;}const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;enterIslandRoom(idx);return;}
 if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}
  // Ground tap: raycast against the six floating island top surfaces and bridge decks.
  const ground=new THREE.Plane(new THREE.Vector3(0,1,0),0),hitPoint=new THREE.Vector3();
