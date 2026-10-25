@@ -136,7 +136,7 @@ function createIslandLabel(i){
 }
 for(let i=0;i<6;i++)createIslandLabel(i);
 function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
-let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-2level'):await getGLB(keys[i]);const model=g.scene;
+let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-no-ramp-v3'):await getGLB(keys[i]);const model=g.scene;
 if(i===0){
   // This GLB was authored Z-up. Three.js is Y-up: map +Z to +Y.
   model.rotation.set(-Math.PI/2,0,0);
@@ -181,7 +181,7 @@ if(i===0){
 }
 if(i===0){
   // Remove the six actual entrance steps, not the castle facade.
-  const unwanted=new Set(['part_83','part_84','part_85','part_86','part_87','part_88']);
+  const unwanted=new Set(['part_0','part_78','part_83','part_84','part_85','part_86','part_87','part_88']);
   let removed=0;
   model.traverse(obj=>{if(obj.isMesh && unwanted.has(obj.name)){obj.visible=false;removed++;}});
   console.info('WEIYANG staircase meshes hidden:',removed);
