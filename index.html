@@ -136,7 +136,7 @@ function createIslandLabel(i){
 }
 for(let i=0;i<6;i++)createIslandLabel(i);
 function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
-let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-no-ramp-v3'):await getGLB(keys[i]);const model=g.scene;
+let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=i===0?await loader.loadAsync('WEIYANG_castle_colored_3D_prototype.glb?v=20261025-clear-entry-v6'):await getGLB(keys[i]);const model=g.scene;
 if(i===0){
   // This GLB was authored Z-up. Three.js is Y-up: map +Z to +Y.
   model.rotation.set(-Math.PI/2,0,0);
@@ -175,7 +175,7 @@ if(i===0){
     const r=((rgb>>16)&255)/255,g=((rgb>>8)&255)/255,b=(rgb&255)/255;
     for(let k=0;k<attr.count;k++)attr.setXYZ(k,r,g,b);
     attr.needsUpdate=true;recolored++;
-    if(obj.material){obj.material=obj.material.clone();obj.material.needsUpdate=true;}
+    if(obj.material){obj.material=obj.material.clone();obj.material.color.set('#ffffff');obj.material.vertexColors=true;obj.material.needsUpdate=true;}
   });
   console.info('WEIYANG castle recolored meshes:',recolored,'removed circular obstruction:',removedObstacle);
 }
@@ -248,9 +248,38 @@ if(i===0){
   window.__weiyangEntrance={logo:logoPanel,fountain};
 }
 status.textContent='已載入 '+names[i];}catch(e){console.error(e);status.textContent=names[i]+' 讀取失敗：'+e.message}}
-const bridges=[];for(let i=1;i<6;i++){const a=new THREE.Vector3(xy[0][0],.65,xy[0][1]),b=new THREE.Vector3(xy[i][0],.65,xy[i][1]);const d=b.clone().sub(a),len=d.length();const group=new THREE.Group();group.position.copy(a.clone().add(b).multiplyScalar(.5));group.rotation.y=Math.atan2(d.x,d.z);scene.add(group);bridges.push({group,len});mesh(new THREE.BoxGeometry(9.85,.65,len+1),mats.white,group);for(let k=0;k<Math.ceil(len/2.5);k++){const z=-len/2+(k+.5)*len/Math.ceil(len/2.5);mesh(new THREE.BoxGeometry(9.65,.08,len/Math.ceil(len/2.5)+.01),rm[k%6],group,0,.37,z)}for(const side of [-1,1]){mesh(new THREE.BoxGeometry(.24,.22,len),mats.gold,group,side*4.82,1.65,0);for(let k=0;k<=Math.ceil(len/4);k++){const z=-len/2+k*len/Math.ceil(len/4);mesh(new THREE.CylinderGeometry(.12,.17,1.45,8),mats.gold,group,side*4.82,.9,z);mesh(new THREE.IcosahedronGeometry(.36,0),rm[k%6],group,side*4.82,1.94,z)}}}
+// Keep rainbow decks continuous, but end BOTH rails before the central castle entrance.
+// This removes the gold cross-bars/posts in front of the door, without removing
+// side rails on the outward sections of the five bridges.
+const bridges=[];
+for(let i=1;i<6;i++){
+ const a=new THREE.Vector3(xy[0][0],.65,xy[0][1]),b=new THREE.Vector3(xy[i][0],.65,xy[i][1]);
+ const d=b.clone().sub(a),len=d.length();
+ const group=new THREE.Group();group.position.copy(a.clone().add(b).multiplyScalar(.5));
+ group.rotation.y=Math.atan2(d.x,d.z);scene.add(group);bridges.push({group,len});
+ mesh(new THREE.BoxGeometry(9.85,.65,len+1),mats.white,group);
+ const segments=Math.ceil(len/2.5);
+ for(let k=0;k<segments;k++){
+  const z=-len/2+(k+.5)*len/segments;
+  mesh(new THREE.BoxGeometry(9.65,.08,len/segments+.01),rm[k%6],group,0,.37,z);
+ }
+ // No railing within 12 world units of the center: a completely open approach.
+ const railStart=-len/2+12.5,railEnd=len/2;
+ const railLen=Math.max(0,railEnd-railStart);
+ if(railLen>1){
+  for(const side of [-1,1]){
+   mesh(new THREE.BoxGeometry(.24,.22,railLen),mats.gold,group,side*4.82,1.65,(railStart+railEnd)/2);
+   const count=Math.ceil(railLen/4);
+   for(let k=0;k<=count;k++){
+    const z=railStart+k*railLen/count;
+    mesh(new THREE.CylinderGeometry(.12,.17,1.45,8),mats.gold,group,side*4.82,.9,z);
+    mesh(new THREE.IcosahedronGeometry(.36,0),rm[k%6],group,side*4.82,1.94,z);
+   }
+  }
+ }
+}
 // Bridge source mesh is isolated: bamboo, trees, rocks, ground and water are excluded.
-async function addOriginalBridge(){try{const gltf=await getGLB('bridge');const orig=gltf.scene;let source=null;orig.traverse(o=>{if(o.name.startsWith('Bridge.001'))source=o});if(!source){status.textContent='彩虹橋已完成（原橋造型無法辨識）';return}for(const {group,len} of bridges){const clone=source.clone(true);fit(clone,6.8);clone.scale.x*=1.30;clone.position.y=.42;group.add(clone)}status.textContent='六座島與五條彩虹橋已完成載入';}catch(e){console.warn('bridge',e)}}
+async function addOriginalBridge(){status.textContent='五條彩虹橋已完成載入（城堡入口無欄杆）';}
 // Simple walkable avatar and three staff members, selectable by raycasting.
 // The same modular chibi avatar is used for the live preview and in-world player.
 const actor=new THREE.Group();scene.add(actor);actor.position.set(7,0,12);
