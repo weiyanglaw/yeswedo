@@ -29,12 +29,12 @@ export function createNewFairytaleCastle(parent,THREE){
       const tip=bodyH+.86+roofH+.32;
       const poleH=main?2.6:2.0;
       cyl(.055,.055,poleH,x,tip+poleH/2,z,trim,12);
-      const bannerW=main?1.85:1.45,bannerH=main?1.35:1.08;
+      const bannerW=main?2.55:2.05,bannerH=main?1.85:1.50;
       const banner=new THREE.Mesh(new THREE.PlaneGeometry(bannerW,bannerH),new THREE.MeshBasicMaterial({color:'#102F58',side:THREE.DoubleSide}));
-      banner.position.set(x+bannerW/2,tip+poleH-.62,z+.04);C.add(banner);
+      banner.position.set(x+bannerW/2,tip+poleH-.82,z+.04);C.add(banner);
       const tex=flagTexture;
       const emblem=new THREE.Mesh(new THREE.PlaneGeometry(bannerH*.87,bannerH*.87),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
-      emblem.position.set(x+bannerW/2,tip+poleH-.62,z+.06);C.add(emblem);
+      emblem.position.set(x+bannerW/2,tip+poleH-.82,z+.065);C.add(emblem);
    }
  };
  // Continuous castle mass: no dark black/coffee facade or floating pieces.
@@ -150,6 +150,106 @@ export function createNewFairytaleCastle(parent,THREE){
    ball(.13,x,.98,z,blossomMats[k%3]);
  }
 
+ // Additional grand-palace ornamentation: layered pediments, columns, gilded window crowns.
+ for(const x of [-5.2,-3.6,3.6,5.2]){
+   const z=2.95;
+   for(const y of [3.45,6.85]){
+     const crown=block(1.28,.15,.24,x,y,z,brightGold);
+     const jewel=ball(.18,x,y+.20,z+.13,brightGold);
+     const panel=block(.87,.64,.13,x,y-.47,z,pearl);
+     const inset=block(.66,.44,.15,x,y-.47,z+.08,recess);
+   }
+ }
+ for(const x of [-6.9,6.9]){
+   for(let j=0;j<4;j++){
+     const y=2.0+j*1.32;
+     const frame=block(.86,1.04,.24,x,y,2.36,brightGold);
+     block(.60,.78,.28,x,y,2.52,glass);
+   }
+ }
+ // Grand central pediment above the crest, gold ribs on the facade.
+ const crownBeam=block(6.6,.26,.42,0,10.77,2.28,brightGold);
+ for(const x of [-2.8,-1.4,0,1.4,2.8]){
+   ball(.18,x,11.00,2.43,brightGold);
+ }
+ // Gold ornaments under the entrance crest and along the door frame.
+ for(const x of [-2.1,2.1])for(const y of [3.6,4.4,5.2])ball(.13,x,y,3.32,brightGold);
+ // Palace-level detailing: arched window bays, sculpted pediments, gilded roof ribs,
+ // layered stone balconies and golden finials. These are real 3D meshes, not an image backdrop.
+ const stoneEdge=new THREE.MeshStandardMaterial({color:'#FFFAEE',roughness:.68});
+ const royalGlass=new THREE.MeshStandardMaterial({color:'#78BDE1',emissive:'#E5C781',emissiveIntensity:.16,roughness:.32});
+ const front=3.25;
+ const ornament=(x,y,z,r=.14)=>{const o=new THREE.Mesh(new THREE.OctahedronGeometry(r,0),brightGold);o.position.set(x,y,z);C.add(o);};
+ // Three-dimensional stone facade bays with arched windows and decorated sills.
+ for(const x of [-5.2,-3.75,3.75,5.2])for(const y of [3.35,6.05]){
+   block(1.16,1.74,.18,x,y,2.80,stoneEdge);
+   block(.83,1.43,.20,x,y,2.93,brightGold);
+   block(.62,1.24,.21,x,y,3.06,royalGlass);
+   const arch=new THREE.Mesh(new THREE.TorusGeometry(.43,.115,12,32,Math.PI),brightGold);
+   arch.position.set(x,y+.75,3.10);C.add(arch);
+   block(1.42,.16,.40,x,y-.93,3.04,stoneEdge);
+   block(.085,1.28,.25,x,y,3.20,brightGold);
+   ornament(x,y+.97,3.11,.19);
+ }
+ // Sculptural entrance surround and elevated classical triangular pediment.
+ for(const x of [-2.72,2.72]){
+   cyl(.30,.38,5.3,x,3.66,3.46,stoneEdge,24);
+   cyl(.50,.50,.31,x,1.02,3.46,brightGold,24);
+   cyl(.49,.49,.33,x,6.34,3.46,brightGold,24);
+ }
+ block(6.65,.34,.72,0,6.62,3.15,stoneEdge);
+ block(7.00,.12,.80,0,6.84,3.15,brightGold);
+ for(const side of [-1,1]){
+   const slope=block(4.1,.26,.63,side*1.74,7.62,3.06,stoneEdge);
+   slope.rotation.z=side*-.40;
+   const gilded=block(4.15,.085,.70,side*1.74,7.78,3.06,brightGold);
+   gilded.rotation.z=side*-.40;
+ }
+ ornament(0,8.58,3.16,.40);
+ // Deep relief rosettes and raised masonry bands around the main entrance.
+ for(const x of [-6.1,-4.0,-2.5,2.5,4.0,6.1]){
+   for(const y of [1.55,8.23])ornament(x,y,2.99,.17);
+ }
+ // Upper balcony parapets and repeated balusters, separated from the entrance arch.
+ for(const side of [-1,1]){
+   const bx=side*4.18;
+   block(3.55,.22,1.15,bx,10.78,1.43,stoneEdge);
+   for(let k=0;k<7;k++){
+     const x=bx-1.52+k*.50;
+     cyl(.11,.14,.87,x,11.28,2.08,stoneEdge,12);
+     ball(.14,x,11.76,2.08,brightGold);
+   }
+   block(3.65,.18,.27,bx,11.79,2.08,brightGold);
+ }
+ // Gold ribbing on every blue roof, with capstones and dimensional roof shingles.
+ const roofs=[[-6.5,-.4,1.85,8.2,3], [6.5,-.4,1.85,8.2,3],[-4.15,-3.4,1.95,10.4,3.7],[4.15,-3.4,1.95,10.4,3.7],[0,-4.1,2.35,13,4.5],[-8.4,1.25,1.35,6.2,2.35],[8.4,1.25,1.35,6.2,2.35]];
+ for(const [x,z,r,h,rh] of roofs){
+   const baseY=h+.86;
+   const ring=new THREE.Mesh(new THREE.TorusGeometry(r+.45,.105,8,48),brightGold);
+   ring.rotation.x=Math.PI/2;ring.position.set(x,baseY+.06,z);C.add(ring);
+   for(let j=0;j<8;j++){
+     const a=j*Math.PI/4;
+     const from=new THREE.Vector3(x+Math.cos(a)*(r+.38),baseY,z+Math.sin(a)*(r+.38));
+     const to=new THREE.Vector3(x,baseY+rh,z);
+     const delta=to.clone().sub(from);
+     const rib=new THREE.Mesh(new THREE.CylinderGeometry(.035,.058,delta.length(),8),brightGold);
+     rib.position.copy(from.add(to).multiplyScalar(.5));rib.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());C.add(rib);
+   }
+   // Golden architectural bands and arched tower windows face the entrance.
+   const wy=h*.63+.7;
+   block(.95,1.45,.13,x,wy,z+r+.16,brightGold);
+   block(.68,1.22,.16,x,wy,z+r+.25,royalGlass);
+   const top=new THREE.Mesh(new THREE.TorusGeometry(.40,.09,10,28,Math.PI),brightGold);
+   top.position.set(x,wy+.68,z+r+.28);C.add(top);
+   ornament(x,wy+1.0,z+r+.29,.17);
+ }
+ // Stone sculptures on the two sides of the grand entry.
+ for(const x of [-3.0,3.0]){
+   block(.90,.65,.90,x,1.00,4.20,stoneEdge);
+   cyl(.30,.37,1.12,x,1.88,4.20,stoneEdge,20);
+   ball(.38,x,2.58,4.20,stoneEdge);
+   ball(.17,x,3.06,4.20,brightGold);
+ }
  // Garden beds are built separately beside bridge approaches, not in the walkway.
  return C;
 }

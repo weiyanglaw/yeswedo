@@ -100,7 +100,7 @@ $('startExplore').addEventListener('click',enterIsland);
 <div style="position:absolute;bottom:14px;left:12px;right:12px;pointer-events:none;text-align:center"><span style="display:inline-block;background:#fff9efec;border:1px solid #d4b681;border-radius:20px;padding:9px 13px;font-size:12px">點擊 Logo、辦公桌、櫃檯或漫畫電腦探索 · 拖曳旋轉視角</span></div></div>
 
 <script type="module">
-import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-luxury-v3';import {createCastleGardens} from './castle-garden.js?v=20261025-luxury-v3';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-palace-v5';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0xcbdce7,2.5));const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#8bdc9a',roughness:.9}),rock:new THREE.MeshStandardMaterial({color:'#b8a7be',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#F7CEDC','#F8E7C6','#F8EEDC','#D8EEDC','#D4EAF5','#E8DBF3'];const rm=rainbow.map(c=>new THREE.MeshBasicMaterial({color:c}));
 async function getGLB(key){const chunks=MANIFEST[key];let arrays=[],total=0;for(let i=0;i<chunks.length;i++){const r=await fetch(chunks[i]);if(!r.ok)throw Error(chunks[i]+': '+r.status);const a=await r.arrayBuffer();arrays.push(new Uint8Array(a));total+=a.byteLength;status.textContent='正在讀取 '+key+' '+(i+1)+'/'+chunks.length;}const all=new Uint8Array(total);let at=0;for(const a of arrays){all.set(a,at);at+=a.byteLength}arrays=[];return await new Promise((res,rej)=>loader.parse(all.buffer,'',res,rej))}
 function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);parent.add(m);return m}
@@ -153,27 +153,27 @@ if(i===0){
    const gold=new THREE.MeshStandardMaterial({color:0xd9ae55,metalness:.42,roughness:.33});
    const blue=new THREE.MeshPhysicalMaterial({color:0x40c6f2,transparent:true,opacity:.85,roughness:.12,metalness:.02});
    const flat=new THREE.Mesh(new THREE.CylinderGeometry(11.4,11.4,.18,96),stone);
-   flat.position.set(0,.47,8.7);court.add(flat);
+   flat.position.set(0,1.38,8.7);court.add(flat);
    const tileRing=new THREE.Mesh(new THREE.TorusGeometry(11.9,.13,8,96),gold);
    tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.60,8.7);/* no raised perimeter rail */
    // 2026-10-25: Original WEIYANG artwork is used on the ground, not redrawn.
    // The text faces the front bridge (+Z) and stays fixed in world space.
-   const officialGroundTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261025-ground-v15');
+   const officialGroundTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261025-ground-v17');
    officialGroundTex.colorSpace=THREE.SRGBColorSpace;
    officialGroundTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
    const groundSeal=new THREE.Group();court.add(groundSeal);
-   groundSeal.position.set(0,.79,6.1);
+   groundSeal.position.set(0,1.56,7.2);
    const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(3.15,96),new THREE.MeshBasicMaterial({color:'#fff4dc',side:THREE.DoubleSide}));
-   sealBacking.rotation.x=-Math.PI/2;groundSeal.add(sealBacking);
+   sealBacking.rotation.x=-Math.PI/2;sealBacking.renderOrder=23;groundSeal.add(sealBacking);
    const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(3.08,.075,10,96),gold);
-   sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;groundSeal.add(sealOutline);
+   sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;sealOutline.renderOrder=24;groundSeal.add(sealOutline);
    const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(5.85,5.85),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
-   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;groundSeal.add(sealImage);
+   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;sealImage.renderOrder=25;sealImage.material.depthTest=false;groundSeal.add(sealImage);
    // Existing GLB flags are enlarged and anchored to their actual tower tips above.
    // No free-floating banner objects are added to the scene.
    // Keep existing towers intact: do not globally scale the castle or change its footprint.
    // Circular water basin with recognizable blue-green globe and arcing water jets.
-   const fountain=new THREE.Group();fountain.position.set(-5.0,0,14.5);court.add(fountain);
+   const fountain=new THREE.Group();fountain.position.set(-5.0,0,13.0);court.add(fountain);
    const base=new THREE.Mesh(new THREE.CylinderGeometry(4.7,4.85,.28,96),stone);
    base.position.y=.85;fountain.add(base);
    const basin=new THREE.Mesh(new THREE.CylinderGeometry(4.27,4.27,.11,96),blue);
