@@ -7,68 +7,53 @@ export function createMedicalExterior(group, THREE){
  const glass=new THREE.MeshPhysicalMaterial({color:0xbce9f6,transparent:true,opacity:.72,roughness:.13,metalness:.08});
  const pink=new THREE.MeshStandardMaterial({color:0xf6d4e3,roughness:.7});
  const add=(geo,mat,x,y,z,parent=group)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
- // A full, unmistakable standalone medical palace, occupying the medical island.
- // The previous medical GLB is intentionally NOT loaded by index.html.
- add(new THREE.CylinderGeometry(15.5,15.5,.35,64),ivory,0,.2,0);
- add(new THREE.BoxGeometry(19,8,13),ivory,0,4.25,-1.5);
- add(new THREE.BoxGeometry(20,.38,14),gold,0,8.5,-1.5);
- add(new THREE.BoxGeometry(12,2.8,12),glass,0,9.8,-1.5);
- const roof=add(new THREE.ConeGeometry(9.5,5.5,8),blue,0,14.0,-1.5);roof.rotation.y=Math.PI/8;
- add(new THREE.SphereGeometry(.55,16,12),gold,0,17.05,-1.5);
- for(const x of [-9.6,9.6]){
-   add(new THREE.CylinderGeometry(2.35,2.55,9,24),ivory,x,4.8,-2);
-   add(new THREE.ConeGeometry(3.05,5.0,16),blue,x,11.7,-2);
-   add(new THREE.SphereGeometry(.35,12,10),gold,x,14.4,-2);
+ // Modern high-end healthcare pavilion: rounded glass towers, luminous dome, no pagoda roof.
+ const silver=new THREE.MeshStandardMaterial({color:0xf8fcff,roughness:.32,metalness:.12});
+ const champagne=new THREE.MeshStandardMaterial({color:0xd9bf91,roughness:.24,metalness:.67});
+ const teal=new THREE.MeshStandardMaterial({color:0x52b4c4,emissive:0x174a63,emissiveIntensity:.14,roughness:.25});
+ const cylinder=(r,h,x,y,z,mat=glass)=>add(new THREE.CylinderGeometry(r,r,h,48),mat,x,y,z);
+ cylinder(15.2,.32,0,.19,0,ivory);
+ add(new THREE.BoxGeometry(17.5,7.8,11.7),silver,0,4,-1.8);
+ add(new THREE.BoxGeometry(18.4,.23,12.3),champagne,0,8,-1.8);
+ // Glass drum and elegant transparent hemispherical dome.
+ cylinder(5.9,3.7,0,9.95,-1.8);
+ add(new THREE.SphereGeometry(5.9,40,24,0,Math.PI*2,0,Math.PI/2),glass,0,11.75,-1.8);
+ cylinder(6.08,.24,0,8.1,-1.8,champagne);
+ for(let k=0;k<12;k++){const a=k*Math.PI/6;cylinder(.065,3.8,5.88*Math.sin(a),9.95,-1.8+5.88*Math.cos(a),champagne);}
+ // Twin contemporary glazed rotundas, intentionally not historic towers.
+ for(const side of [-1,1]){
+  cylinder(3.05,10.2,side*9.15,5.3,-2.1);
+  cylinder(3.22,.22,side*9.15,10.55,-2.1,champagne);
+  for(let k=0;k<10;k++){const a=k*Math.PI/5;cylinder(.06,9.6,side*9.15+3.05*Math.sin(a),5.3,-2.1+3.05*Math.cos(a),champagne);}
+  add(new THREE.BoxGeometry(6,.25,4.6),silver,side*8.25,3.1,5.05);
+  add(new THREE.BoxGeometry(6,.12,4.6),champagne,side*8.25,3.31,5.05);
  }
- for(const x of [-7,-4.5,4.5,7]){
-   add(new THREE.BoxGeometry(1.65,3.3,.18),glass,x,4.8,5.12);
-   add(new THREE.BoxGeometry(1.85,.13,.23),gold,x,6.5,5.22);
+ for(const x of [-6.4,-4.1,4.1,6.4]){
+  add(new THREE.BoxGeometry(1.75,4.5,.12),glass,x,4.45,4.13);
+  add(new THREE.BoxGeometry(.09,4.7,.2),champagne,x-.9,4.45,4.23);
  }
- const door=add(new THREE.BoxGeometry(4.4,5.2,.34),blue,0,2.8,5.26);
- for(const x of [-2.25,2.25])add(new THREE.BoxGeometry(.17,5.45,.4),gold,x,2.8,5.44);
- add(new THREE.BoxGeometry(5.2,.25,.6),gold,0,5.57,5.46);
- add(new THREE.SphereGeometry(.16,12,10),gold,-.3,2.65,5.47);
- add(new THREE.SphereGeometry(.16,12,10),gold,.3,2.65,5.47);
- // Medical identity is part of the architecture, not a floating sign.
- // Blue enamel medical crosses are on both facade wings; the firm's logo remains the central focal point.
- const enamel=new THREE.MeshStandardMaterial({color:0x267eae,metalness:.28,roughness:.26});
- const bright=new THREE.MeshStandardMaterial({color:0xe9fcff,emissive:0x4ba4c5,emissiveIntensity:.2,roughness:.32});
- const cross=(x,y,z,scale=1)=>{
-   const medallion=add(new THREE.CylinderGeometry(1.27*scale,1.27*scale,.15*scale,48),gold,x,y,z);
-   medallion.rotation.x=Math.PI/2;
-   const disk=add(new THREE.CylinderGeometry(1.12*scale,1.12*scale,.17*scale,48),ivory,x,y,z+.12*scale);
-   disk.rotation.x=Math.PI/2;
-   add(new THREE.BoxGeometry(.40*scale,1.46*scale,.15*scale),enamel,x,y,z+.25*scale);
-   add(new THREE.BoxGeometry(1.46*scale,.40*scale,.15*scale),enamel,x,y,z+.25*scale);
+ // Broad glazed doorway, unmistakably accessible from the rainbow bridge.
+ const door=add(new THREE.BoxGeometry(5.7,5.45,.2),glass,0,2.85,4.24);
+ door.userData.medicalDoor=true;
+ for(const x of [-2.9,0,2.9])add(new THREE.BoxGeometry(.12,5.6,.26),champagne,x,2.85,4.4);
+ add(new THREE.BoxGeometry(6.1,.17,.33),champagne,0,5.69,4.4);
+ const cross=(x,y,z,scale)=>{
+  add(new THREE.CircleGeometry(.9*scale,32),glass,x,y,z);
+  add(new THREE.BoxGeometry(.29*scale,1.1*scale,.12),teal,x,y,z+.12);
+  add(new THREE.BoxGeometry(1.1*scale,.29*scale,.12),teal,x,y,z+.12);
  };
- cross(-6.2,7.1,5.35,.9);cross(6.2,7.1,5.35,.9);
- // Illuminated medical emblem on the glass-roof frontage, above the original WEIYANG crest.
- cross(0,12.1,4.68,.82);
- // A refined heartbeat motif across the entrance lintel, like a premium medical center.
- const ecgPoints=[[-7.7,6.82],[-6.6,6.82],[-6.15,7.1],[-5.72,6.3],[-5.24,7.5],[-4.72,6.82],[-3.1,6.82]];
- for(const sign of [-1,1])for(let j=1;j<ecgPoints.length;j++){
-   const a=ecgPoints[j-1],b=ecgPoints[j];
-   const p1=new THREE.Vector3(sign*Math.abs(a[0]),a[1],5.41),p2=new THREE.Vector3(sign*Math.abs(b[0]),b[1],5.41);
-   const delta=p2.clone().sub(p1);const segment=add(new THREE.CylinderGeometry(.055,.055,delta.length(),8),bright,0,0,0);
-   segment.position.copy(p1.add(p2).multiplyScalar(.5));segment.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());
- }
- // Medical blue-and-white lanterns mark the two sides of the entrance path.
- for(const x of [-3.5,3.5]){
-   add(new THREE.CylinderGeometry(.13,.18,1.25,12),gold,x,1.05,8.6);
-   add(new THREE.SphereGeometry(.35,16,12),glass,x,1.78,8.6);
-   add(new THREE.SphereGeometry(.12,12,8),enamel,x,2.11,8.6);
+ cross(-5.6,7.15,4.25,.9);cross(5.6,7.15,4.25,.9);
+ // Flat, unobstructed pedestrian forecourt, no fence across the approach.
+ add(new THREE.BoxGeometry(8.5,.14,12),ivory,0,.35,10.2);
+ for(const x of [-5.1,5.1])for(const z of [8.5,12]){
+  cylinder(.1,.7,x,.7,z,champagne);
+  add(new THREE.SphereGeometry(.27,14,12),glass,x,1.17,z);
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
- const crest=add(new THREE.CircleGeometry(1.78,64),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),0,10.0,5.76);
+ const crest=add(new THREE.CircleGeometry(1.78,64),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),0,7.3,4.63);
  crest.renderOrder=60;
- const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,10.0,5.69);rim.renderOrder=59;
- for(const x of [-12.2,12.2])for(const z of [2.5,7]){
-   add(new THREE.CylinderGeometry(.07,.07,.7,8),gold,x,.65,z);
-   add(new THREE.SphereGeometry(.38,12,10),pink,x,1.1,z);
- }
- // Forecourt to the door, distinct from the surrounding pink island body.
- add(new THREE.BoxGeometry(6.2,.14,10),ivory,0,.38,10.0);
+ const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,4.56);rim.renderOrder=59;
  return {door,crest};
 }
 export function createMedicalInterior(room,THREE){
@@ -118,14 +103,41 @@ export function createMedicalInterior(room,THREE){
  requestAnimationFrame(animateEcg);
  add(new THREE.BoxGeometry(4.7,1.25,1.6),ivory,0,.65,6.2);
  add(new THREE.BoxGeometry(4.9,.13,1.7),gold,0,1.32,6.2);
- // Bun-haired guide: deliberately a firm assistant, not a clinician.
- const guide=new THREE.Group();guide.position.set(3,0,5.2);root.add(guide);
- const gadd=(g,m,x,y,z)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);guide.add(o);return o};
- gadd(new THREE.CylinderGeometry(.53,.65,1.6,18),mat(0xe8a6c1),0,1.35,0);
- gadd(new THREE.SphereGeometry(.54,20,14),mat(0xf2c7aa),0,2.55,0);
- gadd(new THREE.SphereGeometry(.56,20,14),mat(0x674331),0,2.96,-.12);
- gadd(new THREE.SphereGeometry(.38,16,12),mat(0x674331),0,3.29,-.28);
- for(const x of [-.26,.26])gadd(new THREE.SphereGeometry(.055,8,8),navy,x,2.57,.49);
+ // Real animated chibi characters (short limbs, oversized heads), not static mannequins.
+ const skin=mat(0xf4cdb4),hair=mat(0x634435),dress=mat(0xe7a8bf),white=mat(0xf8f8f6);
+ const people=[];
+ function chibi(x,z,color,bun=false){
+  const g=new THREE.Group();g.position.set(x,0,z);root.add(g);
+  const mesh=(geo,m,px,py,pz,parent=g)=>{const o=new THREE.Mesh(geo,m);o.position.set(px,py,pz);parent.add(o);return o};
+  mesh(new THREE.CylinderGeometry(.42,.53,.9,18),mat(color),0,.94,0);
+  mesh(new THREE.SphereGeometry(.75,24,16),skin,0,1.98,0);
+  mesh(new THREE.SphereGeometry(.76,24,16,0,Math.PI*2,0,Math.PI*.48),hair,0,2.13,0);
+  if(bun)mesh(new THREE.SphereGeometry(.35,16,12),hair,0,2.67,-.3);
+  for(const sx of [-1,1]){
+   const arm=mesh(new THREE.CapsuleGeometry(.14,.37,5,8),skin,sx*.53,1.0,0);arm.rotation.z=sx*.22;
+   const leg=mesh(new THREE.CapsuleGeometry(.16,.34,5,8),mat(0x314963),sx*.22,.32,0);
+   if(sx===-1)g.userData.leftLeg=leg;else g.userData.rightLeg=leg;
+   mesh(new THREE.SphereGeometry(.075,10,8),navy,sx*.28,2.02,.68);
+  }
+  people.push({g,homeX:x,homeZ:z,phase:people.length*1.7,roam:!bun});return g;
+ }
+ const guide=chibi(4.7,5.2,0xe7a8bf,true);
+ chibi(-6.5,1.7,0xd7e8f0);chibi(6.8,-1.2,0xadcbdc);chibi(-4.5,-5.5,0xf2d4c1);
+ const animation=(time)=>{for(const p of people){if(!p.roam)continue;
+  const t=time*.00033+p.phase;p.g.position.x=p.homeX+Math.sin(t)*1.2;
+  p.g.position.z=p.homeZ+Math.cos(t*.83)*1.05;
+  p.g.rotation.y=Math.atan2(Math.cos(t),-Math.sin(t*.83));
+  p.g.userData.leftLeg.rotation.x=Math.sin(time*.006+p.phase)*.28;
+  p.g.userData.rightLeg.rotation.x=-Math.sin(time*.006+p.phase)*.28;
+ }};
+ const interactionTargets=[];
+ const makePanel=(x,y,z,w,h,zone)=>{const panel=add(new THREE.BoxGeometry(w,h,.18),glass,x,y,z);
+  panel.userData.medicalZone=zone;interactionTargets.push(panel);
+  add(new THREE.BoxGeometry(w+.2,.1,.3),gold,x,y+h/2,z);return panel;};
+ makePanel(-5.2,4.1,-8.15,4.3,3.2,'scenario');
+ makePanel(0,4.1,-8.15,4.3,3.2,'admin');
+ makePanel(5.2,4.1,-8.15,4.3,3.2,'lawyer');
+ // Hover-free, deliberate interactive objects; no modal on entering.
  // Administrative records display; preserve clear center aisle.
  for(const x of [-8.5,-5.7]){
   add(new THREE.BoxGeometry(2.2,3.4,.3),gold,x,3.4,-8.72);
@@ -133,7 +145,7 @@ export function createMedicalInterior(room,THREE){
  }
  const sealTex=new THREE.TextureLoader().load('official-logo.png');sealTex.colorSpace=THREE.SRGBColorSpace;
  add(new THREE.PlaneGeometry(1.9,1.9),new THREE.MeshBasicMaterial({map:sealTex,transparent:true,side:THREE.DoubleSide}),0,5.65,-8.5);
- return {guide,screen};
+ return {guide,screen,interactionTargets,animation};
 }
 export function createMedicalExperience(){
  const el=document.createElement('section');el.id='wyMedicalExperience';
@@ -147,5 +159,5 @@ export function createMedicalExperience(){
  $('medScene').querySelectorAll('[data-choice]').forEach(btn=>btn.onclick=()=>{$('medFeedback').innerHTML=`<p><b>${btn.dataset.choice==='0'?'這是較適當的處理方向':'請再想想處理的優先順序'}</b><br>${d.note}</p><button id="medNext">${step===2?'重新體驗':'下一幕 →'}</button>`;$('medNext').onclick=()=>{step=(step+1)%3;render()}})}
  $('medPatient').onclick=()=>{role='patient';step=0;render()};$('medDoctor').onclick=()=>{role='doctor';step=0;render()};
  $('medAdminBtn').onclick=()=>{$('medAdminText').hidden=!$('medAdminText').hidden};$('medClose').onclick=()=>el.style.display='none';
- return {show(){el.style.display='block'},hide(){el.style.display='none'}};
+ return {show(){el.style.display='none'},open(){el.style.display='block'},hide(){el.style.display='none'}};
 }
