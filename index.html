@@ -960,10 +960,68 @@ officeOrbit.enableZoom=true;
 officeOrbit.screenSpacePanning=true;
 officeOrbit.panSpeed=1.6;
 officeOrbit.zoomSpeed=1.0;
-officeOrbit.touches.ONE=THREE.TOUCH.PAN;
-officeOrbit.touches.TWO=THREE.TOUCH.DOLLY_PAN;
-officeOrbit.mouseButtons.LEFT=THREE.MOUSE.PAN;
-officeOrbit.mouseButtons.RIGHT=THREE.MOUSE.ROTATE;
+officeOrbit.touches.ONE=THREE.TOUCH.ROTATE; officeOrbit.touches.TWO=THREE.TOUCH.DOLLY_PAN; officeOrbit.mouseButtons.LEFT=THREE.MOUSE.ROTATE; officeOrbit.mouseButtons.RIGHT=THREE.MOUSE.PAN;
+// v38: one shared, Google-Maps-style touch system for all six islands,
+// the outdoor world and every indoor 3D room. OrbitControls performs orbit,
+// pinch zoom and two-finger pan; this small supplement handles two-finger twist.
+const wyTouchPoints=new Map();
+let wyTwistAngle=null;
+const wyTouchCanvas=renderer.domElement;
+const wyYAxis=new THREE.Vector3(0,1,0);
+function wyActiveViewControl(){
+ if(insideOffice){
+  if(activeIslandRoom===0)return officeOrbit.enabled?officeOrbit:null;
+  const room=themeRooms[activeIslandRoom];
+  return room?.orbit?.enabled?room.orbit:null;
+ }
+ return orbit.enabled?orbit:null;
+}
+function wyTouchAngle(){
+ if(wyTouchPoints.size!==2)return null;
+ const points=[...wyTouchPoints.values()];
+ return Math.atan2(points[1].y-points[0].y,points[1].x-points[0].x);
+}
+wyTouchCanvas.addEventListener('pointerdown',e=>{
+ if(e.pointerType!=='touch')return;
+ wyTouchPoints.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ wyTwistAngle=wyTouchAngle();
+},{passive:true});
+wyTouchCanvas.addEventListener('pointermove',e=>{
+ if(!wyTouchPoints.has(e.pointerId))return;
+ wyTouchPoints.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ const angle=wyTouchAngle(),control=wyActiveViewControl();
+ if(angle!==null&&wyTwistAngle!==null&&control){
+  let delta=angle-wyTwistAngle;
+  while(delta>Math.PI)delta-=2*Math.PI;
+  while(delta< -Math.PI)delta+=2*Math.PI;
+  if(Math.abs(delta)>.002&&Math.abs(delta)<.4){
+   // Keep the camera's radius and elevation while rotating about the target.
+   const offset=control.object.position.clone().sub(control.target);
+   offset.applyAxisAngle(wyYAxis,-delta);
+   control.object.position.copy(control.target).add(offset);
+   control.object.lookAt(control.target);
+   control.update();
+  }
+ }
+ wyTwistAngle=angle;
+},{passive:true});
+for(const eventName of ['pointerup','pointercancel','lostpointercapture']){
+ wyTouchCanvas.addEventListener(eventName,e=>{
+  wyTouchPoints.delete(e.pointerId);wyTwistAngle=wyTouchAngle();
+ },{passive:true});
+}
+function wyConfigure3DGestures(control,{minDistance=7,maxDistance=65}={}){
+ control.enableRotate=true;control.enableZoom=true;control.enablePan=true;
+ control.screenSpacePanning=true;control.enableDamping=true;
+ control.minDistance=minDistance;control.maxDistance=maxDistance;
+ control.touches.ONE=THREE.TOUCH.ROTATE;
+ control.touches.TWO=THREE.TOUCH.DOLLY_PAN;
+ control.mouseButtons.LEFT=THREE.MOUSE.ROTATE;
+ control.mouseButtons.RIGHT=THREE.MOUSE.PAN;
+ control.panSpeed=1.25;control.zoomSpeed=1.0;
+}
+wyConfigure3DGestures(orbit,{minDistance:12,maxDistance:240});
+wyConfigure3DGestures(officeOrbit,{minDistance:7,maxDistance:65});
 function officeTalk(i){
  if(i===0||i===5){openWyInfo(i===5?'lawyer':'company');return;}
  if(wyJokes[i]){const z=zones[i];talkName=z.name;talkIdx=0;dialogs[z.name]=[nextWyJoke(i)];renderTalk();return;}
@@ -1015,8 +1073,9 @@ for(let i=1;i<6;i++){
   cam.fov=innerWidth<700?64:56;cam.updateProjectionMatrix();
   control.target.set(0,3.0,-.6);
   cam.position.set(5,29,48);control.minDistance=9;control.maxDistance=115;
-  control.maxPolarAngle=Math.PI*.47;control.enablePan=true;control.screenSpacePanning=true;control.panSpeed=1.6;control.touches.ONE=THREE.TOUCH.PAN;control.touches.TWO=THREE.TOUCH.DOLLY_PAN;control.mouseButtons.LEFT=THREE.MOUSE.PAN;control.mouseButtons.RIGHT=THREE.MOUSE.ROTATE;control.update();
+  control.maxPolarAngle=Math.PI*.47;control.enablePan=true;control.screenSpacePanning=true;control.panSpeed=1.6;control.update();
  }
+ wyConfigure3DGestures(control,{minDistance:i===2?9:7,maxDistance:i===2?115:65});
  themeRooms[i]={scene:sc,camera:cam,orbit:control,icon,medicalRoom};
 }
 const medicalExperience=createMedicalExperience();
