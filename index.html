@@ -99,6 +99,7 @@ $('startExplore').addEventListener('click',enterIsland);
 <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
 <div style="position:absolute;bottom:14px;left:12px;right:12px;pointer-events:none;text-align:center"><span style="display:inline-block;background:#fff9efec;border:1px solid #d4b681;border-radius:20px;padding:9px 13px;font-size:12px">點擊 Logo、辦公桌、櫃檯或漫畫電腦探索 · 拖曳旋轉視角</span></div></div>
 
+<div id="wyDoorPrompt" style="display:none;position:fixed;z-index:34;bottom:clamp(160px,23vh,225px);left:50%;transform:translateX(-50%);width:min(355px,88vw);background:#fffaf2f2;border:2px double #cfa976;outline:1px solid #fff7e5;outline-offset:-7px;border-radius:19px;padding:14px 16px;box-shadow:0 12px 35px #1a2a3b55;text-align:center;font-family:system-ui,'Noto Sans TC',sans-serif;color:#23364a;pointer-events:auto"><div id="wyDoorTitle" style="font-size:14px;font-weight:800;margin-bottom:9px">已抵達入口</div><button id="wyDoorEnter" style="background:#1c3552;color:#fff5df;border:1px solid #d9b781;border-radius:13px;padding:10px 24px;font-size:15px;font-weight:800;cursor:pointer">🚪 進入參觀</button><div style="font-size:11px;color:#8a6d55;margin-top:7px">只有按下按鈕才會進入，路過不會自動切換</div></div>
 <script type="module">
 import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261025-palace-v5-rose-v7';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v7';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',175,370);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,650);camera.position.set(76,102,145);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=240;orbit.maxPolarAngle=Math.PI*.49;scene.add(new THREE.HemisphereLight(0xffffff,0xcbdce7,2.5));const sun=new THREE.DirectionalLight(0xffffff,2.1);sun.position.set(50,90,20);scene.add(sun);const loader=new GLTFLoader();const status=document.getElementById('status');const mats={grass:new THREE.MeshStandardMaterial({color:'#D8B5AD',roughness:.83}),rock:new THREE.MeshStandardMaterial({color:'#AE8588',roughness:.95}),gold:new THREE.MeshStandardMaterial({color:'#ffd878',metalness:.55,roughness:.3}),white:new THREE.MeshStandardMaterial({color:'#fff7e8',roughness:.7})};const rainbow=['#F7CEDC','#F8E7C6','#F8EEDC','#D8EEDC','#D4EAF5','#E8DBF3'];const rm=rainbow.map(c=>new THREE.MeshBasicMaterial({color:c}));
@@ -252,9 +253,9 @@ function walkingSurfaceY(x,z){
  // Bridge groups are rotated in world space. Their pastel deck tops are Y=1.06.
  for(const {group,len} of bridges){
   const p=group.worldToLocal(new THREE.Vector3(x,0,z));
-  if(Math.abs(p.x)<4.78&&Math.abs(p.z)<len/2+.35)y=Math.max(y,1.06);
+  if(Math.abs(p.x)<5.15&&Math.abs(p.z)<len/2+1.0)y=Math.max(y,1.12);
  }
- return y+0.035; // small clearance to prevent shoes clipping into floor
+ return y+0.18; // raised clearance: entire feet/legs visible above bridge deck
 }
 function alignActorToGround(){actor.position.y=walkingSurfaceY(actor.position.x,actor.position.z)}
 const actor=new THREE.Group();scene.add(actor);actor.position.set(7,0,12);alignActorToGround();
@@ -382,7 +383,7 @@ previewCanvas.style.height='min(42vh,310px)';
 previewHost.insertBefore(previewCanvas,originalPreview);
 originalPreview.style.display='none';
 const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,2));previewRenderer.setSize(360,420,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
-function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
+function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);avatarBody.updateMatrixWorld(true);const footBox=new THREE.Box3().setFromObject(avatarBody);avatarBody.position.y+=Math.max(0,-footBox.min.y);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
 window.weiyangRefreshAvatar=refreshChibi;
 refreshChibi();
 
@@ -491,6 +492,10 @@ function animateStaff(dt,elapsed){
     npc.phase+=dt*10;
    }
   }
+  // NPCs also stand on the real bridge/plaza surface (not the old island Y=0).
+  const islandIndex=def.island||0;
+  const worldX=root.position.x+xy[islandIndex][0],worldZ=root.position.z+xy[islandIndex][1];
+  root.position.y=walkingSurfaceY(worldX,worldZ);
   const walking=npc.idle<=0;
   body.position.y=walking?Math.abs(Math.sin(npc.phase))*.065:Math.sin(elapsed*1.8+npc.phase)*.022;
   head.rotation.z=Math.sin(elapsed*1.5+npc.phase)*.035;
@@ -857,23 +862,56 @@ function officeTalk(i){
 }
 function enterOffice(){
  if(insideOffice||document.getElementById('creator').style.display!=='none')return;
- insideOffice=true;document.getElementById('officeUI').style.display='block';
+ activeIslandRoom=0;hideDoorPrompt();insideOffice=true;document.getElementById('officeUI').style.display='block';
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=true;officeOrbit.update();
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
- closeWyInfo();insideOffice=false;document.getElementById('officeUI').style.display='none';
+ closeWyInfo();insideOffice=false;if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='🏛️ 德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
 document.getElementById('officeExit').onclick=leaveOffice;
+// Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
+let activeIslandRoom=0;const themeRooms=[];
+const roomPalettes=[null,['#f3e6d6','#6d4b3b','#c8a66d'],['#e7f4f5','#426f82','#b7d4d7'],['#fff0ec','#9c6678','#e8b7be'],['#e9edf5','#253b60','#b8a16f'],['#f0eee3','#546b55','#b3c3a2']];
+for(let i=1;i<6;i++){
+ const sc=new THREE.Scene();sc.background=new THREE.Color(roomPalettes[i][0]);sc.add(new THREE.HemisphereLight(0xffffff,0xaab3c2,2.5));
+ const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(7,12,9);sc.add(light);
+ const root=new THREE.Group();sc.add(root);
+ const floor=new THREE.Mesh(new THREE.BoxGeometry(24,.35,19),new THREE.MeshStandardMaterial({color:roomPalettes[i][0]}));floor.position.y=-.2;root.add(floor);
+ const wallMat=new THREE.MeshStandardMaterial({color:0xfff9ee,roughness:.82});
+ const back=new THREE.Mesh(new THREE.BoxGeometry(24,9,.35),wallMat);back.position.set(0,4.35,-9.2);root.add(back);
+ for(const x of [-11.9,11.9]){const side=new THREE.Mesh(new THREE.BoxGeometry(.3,9,19),wallMat);side.position.set(x,4.35,0);root.add(side);}
+ const carpet=new THREE.Mesh(new THREE.BoxGeometry(9,.06,13),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],roughness:.95}));carpet.position.set(0,.02,0);root.add(carpet);
+ const columns=[-8.8,8.8];for(const x of columns){const col=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,8,20),new THREE.MeshStandardMaterial({color:0xf6e4c9}));col.position.set(x,4,-8.65);root.add(col);}
+ const gold=new THREE.MeshStandardMaterial({color:roomPalettes[i][2],metalness:.5,roughness:.35});
+ const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(2.0,2.4,1.3,48),gold);pedestal.position.set(0,.65,-2.8);root.add(pedestal);
+ const icon=new THREE.Mesh(new THREE.IcosahedronGeometry(1.7,2),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],metalness:.18,roughness:.36}));icon.position.set(0,3,-2.8);root.add(icon);
+ for(const x of [-6,6]){const plinth=new THREE.Mesh(new THREE.BoxGeometry(3.6,1.1,3),gold);plinth.position.set(x,.55,-2.6);root.add(plinth);const sphere=new THREE.Mesh(new THREE.SphereGeometry(1.15,28,18),new THREE.MeshStandardMaterial({color:roomPalettes[i][1]}));sphere.position.set(x,2.25,-2.6);root.add(sphere);}
+ const cam=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,120);cam.position.set(13,11,19);cam.lookAt(0,2,-2);
+ const control=new OrbitControls(cam,renderer.domElement);control.enabled=false;control.enableDamping=true;control.target.set(0,2,-2);control.minDistance=7;control.maxDistance=36;
+ themeRooms[i]={scene:sc,camera:cam,orbit:control,icon};
+}
+function enterIslandRoom(i){
+ if(i===0){enterOffice();return;}
+ activeIslandRoom=i;insideOffice=true;autoWalkPoints=[];release();hideDoorPrompt();
+ document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent='🏛️ '+names[i]+'｜3D 主題館';
+ document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
+ for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
+ document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';
+ talk(names[i]);
+}
+const originalEnterOffice=enterOffice;
+// Existing direct castle clicking still enters the original office.
+
 const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'夢奇奇飼養者':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'哈姆太郎':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'薪水掌門人':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){document.getElementById('officeExtraLink')?.remove();talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];const dialogEl=document.getElementById('dialog');const themeName=String(talkName);dialogEl.dataset.theme=/醫療/.test(themeName)?'medical':/訴訟|法院/.test(themeName)?'litigation':/家事/.test(themeName)?'family':/企業|商務/.test(themeName)?'business':/知識/.test(themeName)?'knowledge':'castle';dialogEl.querySelector('.wy-eyebrow').textContent=dialogEl.dataset.theme==='castle'?'WEIYANG · ROYAL LEGAL OFFICE':'WEIYANG · LEGAL EXPLORATION';document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('dialog').style.display='block'}document.getElementById('next').onclick=()=>{const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
 let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
-function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[i][1]+(i===0?12:9));alignActorToGround();document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(76,102,145);orbit.target.set(0,0,0)};document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
+function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[i][1]+(i===0?12:12));alignActorToGround();document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(76,102,145);orbit.target.set(0,0,0)};document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
 // Walkable paths: collision envelopes follow the visible castle facade and the
 // central buildings of the five satellite islands. Keep the surrounding paths open.
 const walkObstacles=[
- {x:0,z:-1.0,hx:10.35,hz:6.35}, // castle walls, towers and closed main door
+ {x:0,z:-1.0,hx:10.6,hz:5.35}, // castle walls, towers and closed main door
  ...xy.slice(1).map(([x,z])=>({x,z,hx:5.6,hz:5.6}))
 ];
 function walkAllowed(x,z){
@@ -885,54 +923,58 @@ function walkAllowed(x,z){
 }
 function tryWalk(dx,dz){
  const x=actor.position.x,z=actor.position.z;
- if(walkAllowed(x+dx,z+dz)){actor.position.x=x+dx;actor.position.z=z+dz;return true;}
- // Slide along the wall instead of walking through it.
- if(walkAllowed(x+dx,z)){actor.position.x=x+dx;return true;}
- if(walkAllowed(x,z+dz)){actor.position.z=z+dz;return true;}
+ const safe=(ax,az,bx,bz)=>{const steps=Math.max(1,Math.ceil(Math.hypot(bx-ax,bz-az)/.35));for(let j=1;j<=steps;j++)if(!walkAllowed(ax+(bx-ax)*j/steps,az+(bz-az)*j/steps))return false;return true;};
+ if(safe(x,z,x+dx,z+dz)){actor.position.x=x+dx;actor.position.z=z+dz;return true;}
+ if(safe(x,z,x+dx,z)){actor.position.x=x+dx;return true;}
+ if(safe(x,z,x,z+dz)){actor.position.z=z+dz;return true;}
  return false;
 }
+// Collision-aware A* for click-to-walk. Never skip across solid buildings.
 function walkRoute(start,end){
- // The castle front remains accessible; when crossing a building, route around
- // its left or right side, instead of straight through the facade.
- const path=[];let from=start.clone();
- for(const o of walkObstacles){
-  const crosses=(a,b)=>{
-   const minX=o.x-o.hx-.9,maxX=o.x+o.hx+.9,minZ=o.z-o.hz-.9,maxZ=o.z+o.hz+.9;
-   let t0=0,t1=1;const dx=b.x-a.x,dz=b.z-a.z;
-   for(const [v,d,lo,hi] of [[a.x,dx,minX,maxX],[a.z,dz,minZ,maxZ]]){
-    if(Math.abs(d)<1e-7){if(v>lo&&v<hi)return true;continue;}
-    const p=(lo-v)/d,q=(hi-v)/d;const low=Math.min(p,q),high=Math.max(p,q);
-    t0=Math.max(t0,low);t1=Math.min(t1,high);
-   }
-   return t0<=t1&&t1>=0&&t0<=1;
-  };
-  if(!crosses(from,end))continue;
-  const clearance=1.7;
-  const candidates=[
-   [new THREE.Vector3(o.x-o.hx-clearance,0,from.z),new THREE.Vector3(o.x-o.hx-clearance,0,end.z)],
-   [new THREE.Vector3(o.x+o.hx+clearance,0,from.z),new THREE.Vector3(o.x+o.hx+clearance,0,end.z)],
-   [new THREE.Vector3(from.x,0,o.z-o.hz-clearance),new THREE.Vector3(end.x,0,o.z-o.hz-clearance)],
-   [new THREE.Vector3(from.x,0,o.z+o.hz+clearance),new THREE.Vector3(end.x,0,o.z+o.hz+clearance)]
-  ];
-  const valid=candidates.filter(pair=>pair.every(p=>walkAllowed(p.x,p.z)));
-  if(valid.length){valid.sort((a,b)=>a[0].distanceTo(from)+a[0].distanceTo(a[1])+a[1].distanceTo(end)-b[0].distanceTo(from)-b[0].distanceTo(b[1])-b[1].distanceTo(end));path.push(...valid[0]);}
+ const step=2.2, key=(x,z)=>x+','+z;
+ const cell=p=>[Math.round(p.x/step),Math.round(p.z/step)];
+ const [sx,sz]=cell(start),[ex,ez]=cell(end), startKey=key(sx,sz);
+ const nodes=new Map([[startKey,{x:sx,z:sz,g:0,f:Math.hypot(ex-sx,ez-sz),parent:null}]]);
+ const open=new Set([startKey]),closed=new Set();let found=null,tries=0;
+ while(open.size&&tries++<5200){
+  let best=null;for(const k of open){if(!best||nodes.get(k).f<nodes.get(best).f)best=k;}
+  open.delete(best);closed.add(best);const n=nodes.get(best);
+  if(Math.hypot(n.x-ex,n.z-ez)<=1){found=best;break;}
+  for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]){
+   const nx=n.x+dx,nz=n.z+dz,k=key(nx,nz);if(closed.has(k)||!walkAllowed(nx*step,nz*step))continue;
+   if(dx&&dz&&(!walkAllowed((n.x+dx)*step,n.z*step)||!walkAllowed(n.x*step,(n.z+dz)*step)))continue;
+   const g=n.g+Math.hypot(dx,dz),old=nodes.get(k);
+   if(!old||g<old.g){nodes.set(k,{x:nx,z:nz,g,f:g+Math.hypot(ex-nx,ez-nz),parent:best});open.add(k);}
+  }
  }
- path.push(end);return path;
+ if(!found)return [];
+ const out=[];for(let k=found;k&&k!==startKey;k=nodes.get(k).parent){const n=nodes.get(k);out.push(new THREE.Vector3(n.x*step,0,n.z*step));}
+ out.reverse();if(walkAllowed(end.x,end.z))out.push(end.clone());return out;
 }
 let autoWalkPoints=[];
 function scheduleWalk(target){
  if(insideOffice)return;
- const origin=actor.position.clone();const dest=target.clone();dest.y=0;
- const nearest=(v)=>xy.reduce((best,[x,z],i)=>Math.hypot(v.x-x,v.z-z)<best.dist?{i,dist:Math.hypot(v.x-x,v.z-z)}:best,{i:0,dist:Infinity}).i;
- const from=nearest(origin),to=nearest(dest);
- const points=[];
- if(from!==to){
-  if(from!==0)points.push(new THREE.Vector3(xy[0][0],0,xy[0][1]));
-  if(to!==0)points.push(new THREE.Vector3(xy[to][0],0,xy[to][1]));
- }
- points.push(...walkRoute(points.length?points[points.length-1]:origin,dest));autoWalkPoints=points;follow=true;overview=false;
+ const dest=target.clone();dest.y=0;
+ autoWalkPoints=walkRoute(actor.position,dest);follow=true;overview=false;
 }
-let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;if(idx===0)enterOffice();else goto(idx);return;}
+const doorPrompt=document.getElementById('wyDoorPrompt'),doorTitle=document.getElementById('wyDoorTitle');
+let doorNearby=-1;
+function hideDoorPrompt(){doorNearby=-1;doorPrompt.style.display='none';}
+function updateDoorPrompt(){
+ if(insideOffice||document.getElementById('creator').style.display!=='none'){hideDoorPrompt();return;}
+ let near=-1;
+ for(let i=0;i<6;i++){
+  const [ix,iz]=xy[i],dx=actor.position.x-ix,dz=actor.position.z-iz;
+  // Main castle's facade is at Z=3. Its approach is in front of the door.
+  // Satellite halls use their south/front-facing perimeter (Z positive).
+  if(Math.abs(dx)<(i===0?3.1:4.5)&&dz>(i===0?5.2:7.1)&&dz<(i===0?10.5:12.8)){near=i;break;}
+ }
+ if(near===doorNearby)return;doorNearby=near;
+ doorPrompt.style.display=near<0?'none':'block';
+ if(near>=0)doorTitle.textContent='🚪 '+names[near]+'｜已抵達正門';
+}
+document.getElementById('wyDoorEnter').addEventListener('click',()=>{const i=doorNearby;if(i<0)return;hideDoorPrompt();enterIslandRoom(i);});
+let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;enterIslandRoom(idx);return;}
 if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}
  // Ground tap: raycast against the six floating island top surfaces and bridge decks.
  const ground=new THREE.Plane(new THREE.Vector3(0,1,0),0),hitPoint=new THREE.Vector3();
@@ -942,6 +984,6 @@ if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterO
   if((onIsland||onBridge)&&walkAllowed(hitPoint.x,hitPoint.z))scheduleWalk(hitPoint);
  }
 });
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){officeOrbit.update();renderer.render(officeScene,officeCam)}else{alignActorToGround();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();r.icon.rotation.y+=dt*.25;renderer.render(r.scene,r.camera)}else{officeOrbit.update();renderer.render(officeScene,officeCam)}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>
