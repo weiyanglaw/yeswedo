@@ -222,18 +222,18 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const box=(w,h,d,mat,x,y,z)=>add(new THREE.BoxGeometry(w,h,d),mat,x,y,z);
  const cyl=(rt,rb,h,mat,x,y,z)=>add(new THREE.CylinderGeometry(rt,rb,h,40),mat,x,y,z);
  // Purpose-built boutique reception: marble floor, gold inlays and uninterrupted central aisle.
- box(23.6,.1,18.6,stone,0,.02,0);
+ box(23.6,.1,18.6,material(0xE8E5DC),0,.02,0);
  // Large inset marble perimeter and champagne-brass border.
  for(const x of [-11.25,11.25])box(.055,.018,17.3,gold,x,.09,0);
  for(const z of [-8.25,8.25])box(22.5,.018,.055,gold,0,.09,z);
- for(const x of [-10.5,-6.5,-2.5,2.5,6.5,10.5])box(.022,.012,18.3,gold,x,.083,0);
- for(const z of [-7,-2,3,8])box(23,.012,.022,gold,0,.086,z);
- box(23.5,.20,.35,navy,0,8.45,-9.05);
+ // Removed thin floor grid lines: they appeared as dirt at mobile zoom.
+ // Retain only the broad outer stone perimeter.
+ box(23.5,.20,.35,material(0xD8E8E6),0,8.45,-9.05);
  box(23.2,.13,.3,gold,0,8.24,-9.01);
  // Full-height navy identity wall with original logo, well ahead of back wall at z=-9.2.
- box(9.2,7.35,.24,navy,0,4.58,-8.90);
+ box(9.2,7.35,.24,material(0x214A4B),0,4.58,-8.90);
  box(8.82,6.97,.10,gold,0,4.58,-8.70);
- box(8.64,6.79,.11,navy,0,4.58,-8.60);
+ box(8.64,6.79,.11,material(0x214A4B),0,4.58,-8.60);
  const tex=new THREE.TextureLoader().load('office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
  const seal=add(new THREE.PlaneGeometry(5.3,5.3),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,depthTest:true}),0,4.85,-8.45);
  seal.renderOrder=15;
@@ -350,9 +350,9 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Keep the original interactive chibi staff. No GLB replacement.
  // Boutique seating and calm architectural details. No giant sculptures, no visitors.
  for(const x of [-8.3,8.3]){
-  box(3.7,.52,1.75,velvet,x,.59,4.7);
-  box(3.7,1.05,.35,velvet,x,1.21,3.94);
-  for(const dx of [-1.64,1.64])box(.35,.68,1.75,velvet,x+dx,.92,4.7);
+  box(3.7,.52,1.75,material(0xA9C9C7),x,.59,4.7);
+  box(3.7,1.05,.35,material(0xA9C9C7),x,1.21,3.94);
+  for(const dx of [-1.64,1.64])box(.35,.68,1.75,material(0xA9C9C7),x+dx,.92,4.7);
   box(3.9,.09,1.8,gold,x,.25,4.7);
   cyl(.75,.78,.47,walnut,x,.40,7.0);
   cyl(.82,.82,.07,gold,x,.68,7.0);
@@ -497,6 +497,16 @@ export function createMedicalExperience(){
    ['認識林柏均律師','林律師具臺灣及紐約州律師資格，擁有 Emory LL.M. 與 ULV MBA 學位。','服務領域包含跨國商務、契約、訴訟及醫療法律等。'],
    ['了解法律服務','德威陽提供商務契約、公司治理、智慧財產及民刑事爭議等法律服務。','想進一步了解？LINE｜@wylaw　weiandyang.com']]}
  };
+ const ecgTree={
+ patient:{title:'病患／家屬',intro:'先確認診療經過、病歷與實際損害，再選擇合適的處理方式。您最想先了解哪一項？',options:[
+  {q:'如何申請與整理病歷？',a:'先向醫療機構申請病歷複製本、檢查報告、影像及相關同意書，並保存申請紀錄。',next:[['資料不齊怎麼辦？','逐項列出缺漏資料及日期，向醫療機構確認申請範圍；必要時諮詢專業人員協助。'],['病歷拿到後做什麼？','按日期整理診斷、處置、用藥、檢查與症狀變化，建立客觀時間軸，避免自行改寫原始紀錄。']]},
+  {q:'懷疑醫療疏失怎麼判斷？',a:'治療結果不如預期，不等於必然有過失。應評估診療時的醫療常規、注意義務、損害與因果關係。',next:[['需要哪些證據？','保留病歷、檢驗與影像資料、收據、工作損失資料及醫病溝通紀錄；爭點可請專業人士協助分析。'],['可以先與醫院溝通嗎？','可以。建議列出具體疑問、保留書面往來，必要時了解醫療爭議調解程序及其適用條件。']]},
+  {q:'賠償、調解與訴訟怎麼選？',a:'可先盤點醫療費、照護支出、工作損失等實際損害，再比較協商、調解及法律程序的時間、證據與成本。',next:[['調解前要準備什麼？','整理事件時間軸、醫療文件、支出證明及希望釐清的爭點，並確認法定程序及時效問題。'],['何時需要律師？','若涉及重大損害、證據爭議或程序期限，可帶齊資料向德威陽預約諮詢，評估個案處理策略。']]}]},
+ provider:{title:'醫師／院方',intro:'醫療團隊應優先確保照護與完整紀錄，再評估溝通及爭議處理。您目前關注哪一方面？',options:[
+  {q:'如何保存病歷與診療紀錄？',a:'依法完整保存原始病歷、醫囑、同意書、檢驗影像及交班紀錄；如需補充應依規範註明時間與原因，不可倒填或變造。',next:[['內部資料怎麼整理？','依時間順序彙整相關照護流程、交班及溝通紀錄，並注意病人個資與資料存取權限。'],['發現紀錄缺漏呢？','依醫療機構規範處理補記，保留可追溯性；若已發生爭議，應及早尋求法遵或法律協助。']]},
+  {q:'如何評估醫療常規與風險？',a:'應根據當時可得資訊、臨床判斷與相關醫療指引，分析診療決策、告知同意及後續照護，而非只以結果倒推。',next:[['要不要做內部檢討？','可以依院內程序進行客觀檢討，保留事實紀錄並釐清改善措施，避免未經查證就下結論。'],['如何準備專業說明？','整理當時的醫療資訊、決策依據、告知內容及時間軸，讓專業與法律團隊分別檢視。']]},
+  {q:'病患申訴與調解如何應對？',a:'先保持溝通窗口一致、妥善回應疑問，保護病人隱私並依法配合適用的醫療爭議處理程序。',next:[['回覆時要注意什麼？','以可核實的事實與程序資訊說明，避免情緒性指責或未經授權公開病人資料。'],['什麼時候尋求法律協助？','收到正式申訴、調解通知或訴訟文件時，應確認期限，讓德威陽等專業法律團隊協助盤點風險與答辯資料。']]}]}
+ };
  const el=document.createElement('section');el.id='wyMedicalExperience';
  el.style.cssText='display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:80;width:min(92vw,440px);background:#fffaf0;color:#20354c;border:2px solid #cfa96c;border-radius:18px;padding:14px;box-shadow:0 14px 36px #14283b66;font:14px/1.6 system-ui,sans-serif;max-height:65dvh;overflow-y:auto';
  el.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
@@ -505,7 +515,10 @@ export function createMedicalExperience(){
  el.querySelector('#wyMedClose').onclick=()=>el.style.display='none';
  let current='staff';
  function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#f5ebda;border:1px solid #d7bb8b;border-radius:10px;padding:10px 12px;color:#243b52;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
- function home(){const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
+ function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
+ function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
+ function home(){if(current==='ecg'){ecgHome();return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
  return {show(){el.style.display='none'},open(action='staff'){current=scenes[action]?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
