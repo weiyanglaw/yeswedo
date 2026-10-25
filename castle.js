@@ -66,9 +66,9 @@ export function createNewFairytaleCastle(parent,THREE){
  // Facade crest uses the genuine supplied logo image, not generated lettering.
  const crestTex=new THREE.TextureLoader().load('official-logo.png');crestTex.colorSpace=THREE.SRGBColorSpace;
  const crestRim=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.6,.17,64),trim);
- crestRim.rotation.x=Math.PI/2;crestRim.position.set(0,9.2,2.50);C.add(crestRim);
+ crestRim.rotation.x=Math.PI/2;crestRim.position.set(0,9.2,4.18);crestRim.renderOrder=20;crestRim.material=trim.clone();crestRim.material.depthTest=false;crestRim.material.depthWrite=false;C.add(crestRim);
  const crest=new THREE.Mesh(new THREE.CircleGeometry(1.49,64),new THREE.MeshBasicMaterial({map:crestTex,side:THREE.DoubleSide}));
- crest.position.set(0,9.2,2.62);C.add(crest);
+ crest.position.set(0,9.2,4.32);crest.renderOrder=21;crest.material.depthTest=false;crest.material.depthWrite=false;C.add(crest);
 
  // Architectural detailing: warm ivory stone, blue enamel and restrained champagne-gold ornament.
  const marble=new THREE.MeshStandardMaterial({color:'#FFF0D7',roughness:.78});
