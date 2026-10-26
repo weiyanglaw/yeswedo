@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v56';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v61-light-roof';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v56';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=63';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v62-pale-roof';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -997,7 +997,7 @@ function enterOffice(){
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
- closeWyInfo();medicalExperience.hide();medGuide.style.display='none';medGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='🏛️ 德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
+ closeWyInfo();medicalExperience.hide();familyExperience.hide();medGuide.style.display='none';medGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='🏛️ 德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
@@ -1009,22 +1009,23 @@ for(let i=1;i<6;i++){
  const sc=new THREE.Scene();sc.background=new THREE.Color(roomPalettes[i][0]);sc.add(new THREE.HemisphereLight(0xffffff,0xaab3c2,2.5));
  const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(7,12,9);sc.add(light);
  const root=new THREE.Group();sc.add(root);
- const floor=new THREE.Mesh(new THREE.BoxGeometry(24,.35,19),new THREE.MeshStandardMaterial({color:roomPalettes[i][0]}));floor.position.y=-.2;if(i!==2)root.add(floor);
+ const floor=new THREE.Mesh(new THREE.BoxGeometry(24,.35,19),new THREE.MeshStandardMaterial({color:roomPalettes[i][0]}));floor.position.y=-.2;if(i!==2&&i!==3)root.add(floor);
  const wallMat=new THREE.MeshStandardMaterial({color:i===2?0xDCE5DC:0xfff9ee,roughness:.82});
  const back=new THREE.Mesh(new THREE.BoxGeometry(24,9,.35),wallMat);back.position.set(0,4.35,-9.2);root.add(back);
  for(const x of [-11.9,11.9]){const side=new THREE.Mesh(new THREE.BoxGeometry(.3,9,19),wallMat);side.position.set(x,4.35,0);root.add(side);}
- if(i!==2){const carpet=new THREE.Mesh(new THREE.BoxGeometry(9,.06,13),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],roughness:.95}));carpet.position.set(0,.02,0);root.add(carpet);}
- const columns=i===2?[]:[-8.8,8.8];for(const x of columns){const col=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,8,20),new THREE.MeshStandardMaterial({color:0xf6e4c9}));col.position.set(x,4,-8.65);root.add(col);}
+ if(i!==2&&i!==3){const carpet=new THREE.Mesh(new THREE.BoxGeometry(9,.06,13),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],roughness:.95}));carpet.position.set(0,.02,0);root.add(carpet);}
+ const columns=(i===2||i===3)?[]:[-8.8,8.8];for(const x of columns){const col=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,8,20),new THREE.MeshStandardMaterial({color:0xf6e4c9}));col.position.set(x,4,-8.65);root.add(col);}
  const gold=new THREE.MeshStandardMaterial({color:roomPalettes[i][2],metalness:.5,roughness:.35});
  let icon=null;
- if(i!==2){
+ if(i!==2&&i!==3){
  const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(2.0,2.4,1.3,48),gold);pedestal.position.set(0,.65,-2.8);root.add(pedestal);
  const icon=new THREE.Mesh(new THREE.IcosahedronGeometry(1.7,2),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],metalness:.18,roughness:.36}));icon.position.set(0,3,-2.8);root.add(icon);
  for(const x of [-6,6]){const plinth=new THREE.Mesh(new THREE.BoxGeometry(3.6,1.1,3),gold);plinth.position.set(x,.55,-2.6);root.add(plinth);const sphere=new THREE.Mesh(new THREE.SphereGeometry(1.15,28,18),new THREE.MeshStandardMaterial({color:roomPalettes[i][1]}));sphere.position.set(x,2.25,-2.6);root.add(sphere);}
  }
  const cam=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,120);cam.position.set(13,11,19);cam.lookAt(0,2,-2);
  const control=new OrbitControls(cam,renderer.domElement);control.enabled=false;control.enableDamping=true;control.target.set(0,2,-2);control.minDistance=7;control.maxDistance=36;
- const medicalRoom=i===2?createMedicalInterior({scene:sc},THREE,makeStaffChibi,GLTFLoader):null;
+ const medicalRoom=i===2?createMedicalInterior({scene:sc},THREE,makeStaffChibi,GLTFLoader):null;const familyRoom=i===3?createFamilyInterior(sc,THREE):null;
+ if(i===3){cam.fov=innerWidth<700?65:55;cam.updateProjectionMatrix();control.target.set(0,2,0);cam.position.set(5,27,38);control.minDistance=10;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.screenSpacePanning=true;control.update();}
  if(i===2){
   // Wider, higher dollhouse framing: entire 24 x 19 office fits on narrow phones.
   cam.fov=innerWidth<700?64:56;cam.updateProjectionMatrix();
@@ -1033,21 +1034,21 @@ for(let i=1;i<6;i++){
   control.maxPolarAngle=Math.PI*.47;control.enablePan=true;control.screenSpacePanning=true;control.panSpeed=1.6;control.update();
  }
  wyConfigure3DGestures(control,{minDistance:i===2?9:7,maxDistance:i===2?115:65});
- themeRooms[i]={scene:sc,camera:cam,orbit:control,icon,medicalRoom};
+ themeRooms[i]={scene:sc,camera:cam,orbit:control,icon,medicalRoom,familyRoom};
 }
-const medicalExperience=createMedicalExperience();
+const medicalExperience=createMedicalExperience();const familyExperience=createFamilyExperience();
 const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fffaf0;border:2px solid #cfa96c;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#20354c;font:14px/1.65 system-ui';medGuide.innerHTML='<h3 style="margin:0 0 7px">歡迎來到德威陽醫療法律島！</h3><p>點點看，這間辦公室藏了什麼秘密？</p><p><b>雙人沙發：</b>醫療糾紛，聽聽雙方怎麼說！</p><p><b>大書櫃：</b>翻開書本，發現法律小秘密！</p><p><b>心電圖牆：</b>嗶嗶！你能發現異常嗎？</p><p><b>病歷證據：</b>翻開病歷，看看事務所又發生什麼事！</p><p><b>接待櫃檯：</b>有疑問？來這裡問問！</p><p><b>薪水掌門人：</b>點點她，看看有什麼驚喜！</p><button id="wyMedGuideClose" style="width:100%;padding:11px;border:0;border-radius:10px;background:#284d68;color:white;font-weight:bold">開始探索</button>';document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
 const medGuideAgain=document.createElement('button');medGuideAgain.textContent='醫法指南';medGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #d7b77b;border-radius:12px;background:#fffaf0;color:#20354c;font-weight:bold';document.body.append(medGuideAgain);medGuideAgain.onclick=()=>medGuide.style.display='block';
 let medGuideSeen=false;
 
 function enterIslandRoom(i){
  if(i===0){enterOffice();return;}
- activeIslandRoom=i;insideOffice=true;medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;medicalExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
- document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent='🏛️ '+names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=i===2?'none':'';document.getElementById('wyContactPanel').hidden=true;
+ activeIslandRoom=i;insideOffice=true;medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
+ document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent='🏛️ '+names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=(i===2||i===3)?'none':'';document.getElementById('wyContactPanel').hidden=true;
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
  for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';
- if(i===2){const r=themeRooms[i];r.camera.position.set(5,21,34);r.orbit.target.set(0,3,-.6);r.orbit.update();}else talk(names[i]);
+ if(i===2){const r=themeRooms[i];r.camera.position.set(5,21,34);r.orbit.target.set(0,3,-.6);r.orbit.update();}else if(i===3){const r=themeRooms[i];r.camera.position.set(5,27,38);r.orbit.target.set(0,2,0);r.orbit.update();}else talk(names[i]);
 }
 const originalEnterOffice=enterOffice;
 // Existing direct castle clicking still enters the original office.
@@ -1177,7 +1178,7 @@ function updateDoorPrompt(){
 // All six large 3D entrance-cloud sprites removed; keep elevated island-name clouds intact.
 const entranceSigns=[];
 let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;if(insideOffice){if(activeIslandRoom){
- if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
+ if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){familyExperience.open(hit[0].object.userData.familyAction);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
  const objects=themeRooms[2].medicalRoom?.interactionTargets||[];
  const hit=ray.intersectObjects(objects,true);if(hit.length){const target=hit[0].object;medicalExperience.open(target.userData.medicalAction||'staff');return;}
  return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(clickable);if(hits.length){talk(hits[0].object.userData.label);return}const labelHits=ray.intersectObjects(islandLabels);if(labelHits.length){const idx=labelHits[0].object.userData.islandIndex;enterIslandRoom(idx);return;}
