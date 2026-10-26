@@ -291,26 +291,26 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const bookGroup=new THREE.Group();root.add(bookGroup);
  const bookX=-8.05;
  // Back, sides and top are BEHIND the book spines in the visitor-facing (+Z) direction.
- box(4.48,7.20,.26,walnut,bookX,4.08,-8.42);
- for(const side of [-1,1])box(.24,7.20,1.30,walnut,bookX+side*2.13,4.08,-7.80);
- box(4.52,.25,1.34,gold,bookX,7.72,-7.80);
- box(4.52,.25,1.34,walnut,bookX,.51,-7.80);
+ box(4.85,7.20,.30,walnut,bookX,4.08,-8.55);
+ for(const side of [-1,1])box(.34,7.20,2.10,walnut,bookX+side*2.28,4.08,-7.54);
+ box(4.86,.28,2.14,gold,bookX,7.72,-7.52);
+ box(4.86,.28,2.14,walnut,bookX,.51,-7.52);
  for(let row=0;row<5;row++){
   const shelfY=1.22+row*1.29;
-  box(4.20,.18,1.24,gold,bookX,shelfY,-7.78);
+  box(4.42,.20,1.98,gold,bookX,shelfY,-7.54);
   // 17 tightly packed books per row, with staggered heights and contrasting spines.
   for(let k=0;k<17;k++){
    const palette=[navy,velvet,cream,walnut,material(0x446b70),material(0x9b7850)];
-   const bh=.81+((k*3+row)%5)*.075;
-   const bx=bookX-1.88+k*.235;
-   const book=box(.205,bh,.66,palette[(k+row)%palette.length],bx,shelfY+.11+bh/2,-7.35);
+   const bh=.87+((k*3+row)%5)*.055;
+   const bx=bookX-1.95+k*.243;
+   const book=box(.225,bh,1.12,palette[(k+row)%palette.length],bx,shelfY+.11+bh/2,-6.93);
    if(k===8&&row===2){book.userData.medicalAction='books';book.userData.book=true;}
    // Narrow gold spine stamp, visible from the room.
-   box(.065,.035,.012,lightGold,bx,shelfY+.24,-7.011);
+   box(.12,.035,.018,lightGold,bx,shelfY+.24,-6.36);
   }
  }
  // Raised front corner pillars emphasize thickness without blocking the book rows.
- for(const side of [-1,1])box(.13,7.00,.14,gold,bookX+side*2.02,4.08,-7.12);
+ for(const side of [-1,1])box(.17,7.00,.20,gold,bookX+side*2.15,4.08,-6.49);
  // Two framed artwork panels on side walls, adding depth without extra thematic zones.
  for(const x of [-11.65,11.65]){
   box(.13,2.4,2.3,gold,x,4.3,1.2);
@@ -356,6 +356,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  box(1.65,.65,1.55,chairMat,-3.55,.64,1.20);
  box(1.65,1.36,.38,chairMat,-2.96,1.42,1.20);
  for(const dz of [-.64,.64])box(1.38,.76,.23,chairMat,-3.55,.98,1.20+dz);
+ // Contact hotspot is attached to the SINGLE consultation chair, not a screen-top button.
+ const contactChairHit=box(1.85,1.9,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-3.55,1.20,1.20);
  // Case file: a visible, clickable object on the table.
  const caseFile=box(.95,.10,.67,material(0xE6E0D3),-7.7,.87,1.5);
  for(const x of [-10.2,10.2]){
@@ -383,17 +385,17 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   register(panel,title==='醫療爭議'?'computer':'computer');
  };
  // v47: more dimensional wall-attached medical evidence cabinet with distinct doors and drawers.
- const evidenceBody=box(2.05,1.95,6.65,material(0xB8D1CA,0,.8),10.08,1.20,-1.65);
- const evidenceTop=box(2.24,.20,6.94,stone,10.08,2.25,-1.65);
+ const evidenceBody=box(2.85,1.95,6.65,material(0xB8D1CA,0,.8),9.75,1.20,-1.65);
+ const evidenceTop=box(3.03,.20,6.94,stone,9.75,2.25,-1.65);
  // Exposed front-facing (-X) drawer fronts, handles and raised file holders.
  for(const zz of [-3.78,-2.35,-.92,.51]){
-  box(.075,1.35,1.30,cream,9.015,1.24,zz);
-  box(.095,.085,.56,gold,8.96,1.30,zz);
+  box(.075,1.35,1.30,cream,8.28,1.24,zz);
+  box(.095,.085,.56,gold,8.20,1.30,zz);
  }
  for(const zz of [-3.25,-1.65,-.05]){
-  box(.32,.98,1.13,cream,9.70,2.83,zz);
-  box(.34,.10,.85,navy,9.52,2.89,zz);
-  box(.04,.60,.07,gold,9.51,2.55,zz);
+  box(.32,.98,1.13,cream,9.30,2.83,zz);
+  box(.34,.10,.85,navy,9.12,2.89,zz);
+  box(.04,.60,.07,gold,9.11,2.55,zz);
  }
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
@@ -404,7 +406,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
- const bookHit=box(4.15,6.65,.35,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.90);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
+ const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(contactChairHit,'contact');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
@@ -419,6 +421,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
  hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
  hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
+ hint('☎ 聯絡我們',-3.55,3.28,1.20,'contact');
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
  hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
  hint('⚖️ 認識德威陽',0,8.10,-6.80,'logo');
@@ -426,14 +429,43 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  let last=0;
  const animation=(time)=>{
   if(guide){
-   // v47: visibly roaming staff, smooth loop with pauses, staying in reception-side zone.
-   const phase=(time*.000042)%1;
-   const stops=[[7.2,3.55],[8.7,3.0],[9.0,1.65],[7.45,1.35],[6.15,2.05],[6.35,3.30],[7.2,3.55]];
-   const u=phase*(stops.length-1),k=Math.min(stops.length-2,Math.floor(u));
-   const a=stops[k],b=stops[k+1],local=u-k;
-   const f=Math.max(0,Math.min(1,(local-.12)/.76));const ease=f*f*(3-2*f);
-   guide.position.set(a[0]+(b[0]-a[0])*ease,Math.abs(Math.sin(time*.009))*.028,a[1]+(b[1]-a[1])*ease);
-   if(f>.02&&f<.98)guide.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+   // v49: work-motivated routine: reception paperwork -> medical records -> book sorting -> reception.
+   // Long pauses at each work station, not aimless constant pacing.
+   const workStops=[
+    {x:7.2,z:3.55,hold:6,task:'desk'},
+    {x:6.0,z:1.2,hold:0},
+    {x:6.0,z:-3.2,hold:0},
+    {x:7.25,z:-3.3,hold:6,task:'records'},
+    {x:5.5,z:-5.3,hold:0},
+    {x:0,z:-5.3,hold:0},
+    {x:-5.65,z:-5.3,hold:0},
+    {x:-6.1,z:-6.05,hold:8,task:'books'},
+    {x:-5.65,z:-5.3,hold:0},
+    {x:0,z:-5.3,hold:0},
+    {x:5.5,z:-5.3,hold:0},
+    {x:6.0,z:-3.2,hold:0},
+    {x:6.0,z:1.2,hold:0},
+    {x:7.2,z:3.55,hold:5,task:'desk'}
+   ];
+   const legs=[];let duration=0;
+   for(let i=0;i<workStops.length;i++){
+    const p=workStops[i],next=workStops[i+1];
+    if(p.hold){legs.push({a:p,b:p,start:duration,len:p.hold,task:p.task});duration+=p.hold;}
+    if(next){const len=Math.hypot(next.x-p.x,next.z-p.z)/1.45;legs.push({a:p,b:next,start:duration,len});duration+=len;}
+   }
+   const elapsed=(time*.001)%duration;
+   const leg=legs.find(l=>elapsed>=l.start&&elapsed<l.start+l.len)||legs[0];
+   const u=Math.max(0,Math.min(1,(elapsed-leg.start)/leg.len));
+   const moving=leg.a!==leg.b;
+   const smooth=u*u*(3-2*u);
+   guide.position.set(leg.a.x+(leg.b.x-leg.a.x)*smooth,moving?Math.abs(Math.sin(time*.009))*.025:0,leg.a.z+(leg.b.z-leg.a.z)*smooth);
+   if(moving)guide.rotation.y=Math.atan2(leg.b.x-leg.a.x,leg.b.z-leg.a.z);
+   else if(leg.task==='books')guide.rotation.y=Math.PI;
+   else if(leg.task==='records')guide.rotation.y=Math.PI/2;
+   else guide.rotation.y=-.35;
+   // Working gestures: slight body lean/arm movements when organizing, never a teleport.
+   if(!moving){guide.rotation.z=Math.sin(time*.003)*.028;}
+   else guide.rotation.z=0;
    // Keep the staff's visible clickable label close as she moves.
    const staffLabel=labels.find(o=>o.userData.medicalAction==='staff');
    if(staffLabel){staffLabel.position.x=guide.position.x;staffLabel.position.z=guide.position.z+.1;}
@@ -506,6 +538,7 @@ export function createMedicalExperience(){
    ['病歷與醫囑','病歷可協助確認診斷、用藥、處置及事件時間線。','申請資料時可一併確認護理紀錄、檢查結果及影像是否齊全。'],
    ['手術與治療同意書','同意書有助於了解告知與同意的內容，但簽名不代表醫療機構當然免責。','仍應依個案判斷告知義務、診療處置與實際損害。'],
    ['檢查報告及收據','檢查報告可輔助判讀病況變化，收據可作為部分費用損害的證明。','建議保留原件或完整副本，並依日期整理；個案證據價值仍需具體評估。']]},
+  contact:{name:'聯絡我們｜德威陽國際法律事務所',icon:'☎',intro:'歡迎聯絡德威陽國際法律事務所。您可以透過下列方式了解服務或洽詢諮詢安排。',options:[['LINE 官方帳號｜@wylaw','LINE ID：@wylaw，可搜尋官方帳號聯繫。','如需諮詢，建議先整理案件類型、時間及相關文件。'],['官方網站｜weiandyang.com','官方網站：https://weiandyang.com','可查看本所法律服務及相關資訊。'],['Facebook｜weiandyang','Facebook：https://www.facebook.com/weiandyang','可瀏覽本所公開資訊與法律內容。'],['Instagram｜weiyang_ceo','Instagram：https://www.instagram.com/weiyang_ceo/','可瀏覽德威陽公開分享內容。']]},
   logo:{name:'WEIYANG 形象牆' ,icon:'⚖️',intro:'歡迎來到德威陽國際法律事務所！想認識我們的哪一面？',options:[
    ['認識林柏均律師','林律師具臺灣及紐約州律師資格，擁有 Emory LL.M. 與 ULV MBA 學位。','服務領域包含跨國商務、契約、訴訟及醫療法律等。'],
    ['了解法律服務','德威陽提供商務契約、公司治理、智慧財產及民刑事爭議等法律服務。','想進一步了解？LINE｜@wylaw　weiandyang.com']]}
@@ -531,7 +564,7 @@ export function createMedicalExperience(){
  function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
- function home(){if(current==='ecg'){ecgHome();return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function home(){if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
  return {show(){el.style.display='none'},open(action='staff'){current=scenes[action]?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
