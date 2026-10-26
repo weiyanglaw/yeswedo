@@ -3,7 +3,7 @@ export function createNewFairytaleCastle(parent,THREE){
  const C=new THREE.Group();parent.add(C);
  const wall=new THREE.MeshStandardMaterial({color:'#FFF3E4',roughness:.67,metalness:.02,side:THREE.DoubleSide});
  const wallLight=new THREE.MeshStandardMaterial({color:'#FFFAF0',roughness:.61,metalness:.02,side:THREE.DoubleSide});
- const trim=new THREE.MeshPhysicalMaterial({color:'#F0D394',roughness:.25,metalness:.57,clearcoat:.72,clearcoatRoughness:.18});
+ const trim=new THREE.MeshPhysicalMaterial({color:'#D9BE88',roughness:.15,metalness:.82,clearcoat:1,clearcoatRoughness:.07});
  const blueRoof=new THREE.MeshStandardMaterial({color:'#254C7C',roughness:.48,metalness:.13});
  const darkBlue=new THREE.MeshStandardMaterial({color:'#12355D',roughness:.75,side:THREE.DoubleSide});
  const doorMat=new THREE.MeshStandardMaterial({color:'#775438',roughness:.42,metalness:.13});
@@ -73,7 +73,7 @@ export function createNewFairytaleCastle(parent,THREE){
  // Architectural detailing: warm ivory stone, blue enamel and restrained champagne-gold ornament.
  const marble=new THREE.MeshStandardMaterial({color:'#FFF6E8',roughness:.62});
  const pearl=new THREE.MeshStandardMaterial({color:'#FFFCF3',roughness:.48});
- const brightGold=new THREE.MeshPhysicalMaterial({color:'#F1D28C',metalness:.65,roughness:.20,clearcoat:.85,clearcoatRoughness:.13});
+ const brightGold=new THREE.MeshPhysicalMaterial({color:'#E6CD98',metalness:.85,roughness:.13,clearcoat:1,clearcoatRoughness:.06});
  const recess=new THREE.MeshStandardMaterial({color:'#F1D8AC',roughness:.83});
  const winBlue=new THREE.MeshStandardMaterial({color:'#91C9E2',emissive:'#E6D1A0',emissiveIntensity:.20,roughness:.19});
  const frontZ=2.50;
