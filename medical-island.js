@@ -256,13 +256,12 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  }
  box(22.9,.12,.14,gold,0,8.35,-8.6); // Back wall cornice only; no front crossbar
  for(const x of [-11.1,11.1])box(.14,.12,17.3,gold,x,8.35,0);
- // Curved marble reception desk; height deliberately below the logo and set forward.
- const desk=new THREE.Group();root.add(desk);desk.position.set(0,0,3.9);
- const front=add(new THREE.CylinderGeometry(3.55,3.45,1.28,64,1,false,0,Math.PI),cream,0,.76,0,desk);
- front.scale.z=.47;
- const top=add(new THREE.CylinderGeometry(3.78,3.78,.13,64,1,false,0,Math.PI),stone,0,1.48,0,desk);top.scale.z=.53;
- // v42: omit detached torus: viewed obliquely it appeared as a floating railing.
-
+ // v45: wide, straight medical reception on the right-front side, clear of the entrance aisle.
+ // Keep a single solid counter rather than an open semicircle or detached brass rods.
+ const desk=new THREE.Group();root.add(desk);desk.position.set(7.1,0,5.75);
+ add(new THREE.BoxGeometry(5.45,1.35,1.38),material(0xD8E8E6,0,.78),0,.78,0,desk);
+ add(new THREE.BoxGeometry(5.7,.16,1.58),material(0xC9D8D2,0,.64),0,1.52,0,desk);
+ add(new THREE.BoxGeometry(4.65,.47,.07),material(0x214A4B,0,.7),0,.85,.73,desk);
  // v42: no isolated gold posts in front of reception desk. 
  // Boutique details: marble veining, coves, ceiling lines, sconces and wall art.
  const marbleLine=material(0xd5c9bb,.15,.6), warm=new THREE.MeshBasicMaterial({color:0xffedc7});
@@ -281,21 +280,13 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.20,.50,.22,warm,x,5.35,-8.21);
  }
  // Desk accessories; intentionally small enough not to obscure the WEIYANG wall.
- const laptop=box(.82,.55,.055,navy,-1.2,1.87,3.68);laptop.rotation.x=-.19;
- box(.90,.045,.58,gold,-1.2,1.59,4.03);
- cyl(.16,.13,.27,cream,.25,1.69,3.72);
- box(.75,.10,.46,walnut,1.05,1.60,3.73);
- box(.70,.04,.43,cream,1.05,1.68,3.73);
- cyl(.16,.19,.30,gold,2.0,1.7,3.72);
- for(const x of [-8.2,8.2]){
-  const rug=box(4.6,.025,3.5,material(0xece2d4),x,.095,5.5);
-  rug.position.y=.10;
-  cyl(.13,.13,.37,cream,x+.5,.99,7.0);
-  add(new THREE.SphereGeometry(.21,12,10),material(0xc58b9b),x+.5,1.22,7.0);
-  box(.45,.055,.32,cream,x-.4,.75,7.0);
-  cyl(.10,.10,1.75,gold,x>0?10.7:-10.7,1.15,6.7);
-  add(new THREE.SphereGeometry(.35,16,12),warm,x>0?10.7:-10.7,2.05,6.7);
- }
+ const laptop=box(.82,.55,.055,navy,6.2,1.87,5.55);laptop.rotation.x=-.19;
+ box(.90,.045,.58,stone,6.2,1.64,5.9);
+ cyl(.16,.13,.27,cream,7.2,1.75,5.55);
+ box(.75,.10,.46,walnut,8.15,1.67,5.55);
+ box(.70,.04,.43,cream,8.15,1.75,5.55);
+ cyl(.16,.19,.30,stone,9.0,1.78,5.55);
+ // v45: remove the duplicated front waiting lounge. Left-side case sofa is the sole seating zone.
  // Back-wall built-in illuminated bookcase, clear of the central logo.
  const bookGroup=new THREE.Group();root.add(bookGroup);
  const bookX=-8.05;
@@ -334,7 +325,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  let guide=null;
  if(staffFactory){
   const result=staffFactory({name:'薪水掌門人',kind:'bun',skin:'#f4c9a6',hair:'#503529',top:'#e7a8bf',bottom:'#5b6b85'});
-  guide=result.root||result;guide.position.set(4.8,0,4.0);guide.rotation.y=-.35;root.add(guide);
+  guide=result.root||result;guide.position.set(7.2,0,3.55);guide.rotation.y=-.35;root.add(guide);
    // Real Three.js geometry (not a flat illustration): tailored staff badge and gold brooch.
    // The existing bun hairstyle and staff click targets are preserved.
    const badge=new THREE.Group();badge.position.set(0,1.08,.355);guide.add(badge);
@@ -344,15 +335,14 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
 
  }
  // Keep the original interactive chibi staff. No GLB replacement.
- // Boutique seating and calm architectural details. No giant sculptures, no visitors.
- for(const x of [-8.3,8.3]){
-  box(3.7,.52,1.75,material(0xA9C9C7),x,.59,4.7);
-  box(3.7,1.05,.35,material(0xA9C9C7),x,1.21,3.94);
-  for(const dx of [-1.64,1.64])box(.35,.68,1.75,material(0xA9C9C7),x+dx,.92,4.7);
-  box(3.9,.09,1.8,gold,x,.25,4.7);
-  cyl(.75,.78,.47,walnut,x,.40,7.0);
-  cyl(.82,.82,.07,gold,x,.68,7.0);
- }
+ // v45: one identifiable left-side case sofa and coffee table, leaving the front-left open.
+ box(4.2,.55,1.8,material(0xA9C9C7),-7.7,.58,-.35);
+ box(4.2,1.08,.40,material(0xA9C9C7),-7.7,1.19,-1.12);
+ for(const dx of [-1.88,1.88])box(.4,.72,1.8,material(0xA9C9C7),-7.7+dx,.92,-.35);
+ box(2.25,.12,1.1,stone,-7.7,.75,1.5);
+ box(.24,.58,.24,walnut,-7.7,.42,1.5);
+ // Case file: a visible, clickable object on the table.
+ const caseFile=box(.95,.10,.67,material(0xE6E0D3),-7.7,.87,1.5);
  for(const x of [-10.2,10.2]){
   cyl(.42,.49,.5,cream,x,.29,-2.0);
   cyl(.055,.055,1.7,gold,x,1.35,-2.0);
@@ -377,7 +367,14 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const panel=add(new THREE.PlaneGeometry(w-.14,2.0),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}),x,3.15,z+.24);
   register(panel,title==='醫療爭議'?'computer':'computer');
  };
- display(-7.7,-8.08,3.3,'醫療爭議'); // The right wall is reserved for one ECG monitor only.
+ // v45: medical-record evidence is a horizontal side-wall cabinet, not a freestanding island.
+ const evidenceBody=box(.82,1.35,5.35,material(0xC8DAD4,0,.8),10.55,1.10,-1.65);
+ const evidenceTop=box(1.02,.13,5.6,stone,10.55,1.85,-1.65);
+ for(const zz of [-3.15,-1.65,-.15]){
+  box(.12,.72,.92,cream,9.98,2.25,zz);
+  box(.14,.08,.68,navy,9.88,2.29,zz);
+ }
+
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
@@ -386,8 +383,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-7.80);
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
- const deskHit=box(5.9,.25,1.2,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),0,1.65,3.9);register(deskHit,'computer');
- const bookHit=box(3.6,5.7,.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.15,-7.55);register(bookHit,'books');
+ const deskHit=box(5.55,.25,1.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
+ const bookHit=box(3.6,5.7,.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.15,-7.55);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
@@ -398,10 +395,12 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- hint('💬 跟我聊聊',5.1,4.0,4.85,'staff');
+ hint('💬 跟我聊聊',7.2,3.65,3.6,'staff');
  hint('📚 點我翻翻',-8.05,7.55,-7.15,'books');
  hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
- hint('✨ 點我探索',0,2.7,5.3,'computer');
+ hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
+ hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
+ hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
  hint('⚖️ 認識德威陽',0,8.10,-6.80,'logo');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
@@ -409,7 +408,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   if(guide){
    // Short realistic reception-side patrol; stays clear of central desk, walls and visitor corridor.
    const phase=(time*.000065)%1;
-   const stops=[[4.8,4.0],[7.4,4.0],[7.4,1.3],[5.6,1.3],[4.8,4.0]];
+   const stops=[[7.2,3.55],[7.85,3.55],[7.85,3.15],[7.2,3.15],[7.2,3.55]];
    const u=phase*stops.length;const k=Math.min(stops.length-1,Math.floor(u));const a=stops[k],b=stops[(k+1)%stops.length];
    const f=Math.max(0,Math.min(1,(u-k-.18)/.64));const ease=f*f*(3-2*f);
    guide.position.set(a[0]+(b[0]-a[0])*ease,Math.abs(Math.sin(time*.008))*.018,a[1]+(b[1]-a[1])*ease);
@@ -450,14 +449,6 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.06,.05,16.8,v41Glow,x,8.02,0);
  }
  // v44: remove detached gold vertical strips in front of reception. Keep solid curved reception geometry.
- // Refined seating gold legs and two understated marble tables, without occupying center walkway.
- for(const x of [-8.3,8.3]){
-  for(const dx of [-1.5,1.5])for(const dz of [-.55,.55]){
-   box(.08,.27,.08,v41Brass,x+dx,.20,4.7+dz);
-  }
-  cyl(.68,.68,.075,v41Ivory,x,.75,7.0);
-  cyl(.12,.12,.43,v41Brass,x,.47,7.0);
- }
  // Gold corner uplights are emissive meshes, not expensive additional realtime lights.
  for(const x of [-10.15,10.15]){
   box(.20,.9,.20,v41Brass,x,1.4,-7.6);
@@ -482,7 +473,15 @@ export function createMedicalExperience(){
    ['醫療糾紛一定要提告？','不一定！可先整理資料，評估溝通、調解或法律程序。','律師可以協助檢視證據、法律爭點及處理策略。'],
    ['健保爭議怎麼處理？','先確認通知或行政處分內容，尤其要留意救濟期限。','不同程序期限可能不同，建議儘早確認文件及法定期間。'],
    ['我想找德威陽諮詢','歡迎先說明案件類型，由本所協助安排諮詢。','LINE｜@wylaw　官網｜weiandyang.com']]},
-  logo:{name:'WEIYANG 形象牆',icon:'⚖️',intro:'歡迎來到德威陽國際法律事務所！想認識我們的哪一面？',options:[
+  case:{name:'醫療糾紛案例區',icon:'📋',intro:'一位病患在手術後出現併發症，家屬認為醫院一定有錯。你會建議先做什麼？',options:[
+   ['A．先申請完整病歷','先保存病歷、檢查報告及同意書，有助於釐清診療過程。','可依時間建立事件紀錄，再由專業人士評估醫療常規、過失與因果關係。'],
+   ['B．立刻在網路指控醫師','情緒可以理解，但公開未經查證的指控，可能衍生名譽與個資風險。','建議先保存資料、列出具體疑點，再評估溝通、調解或法律途徑。'],
+   ['C．直接要求醫院賠償','提出請求前，應先確認損害、可能的注意義務違反及因果關係。','醫療結果不理想不等於必然有過失；必要時可尋求醫療及法律專業評估。']]},
+  evidence:{name:'病歷與證據展示櫃',icon:'📑',intro:'醫療爭議常需要比對多種證據。請選擇想查看的資料：',options:[
+   ['病歷與醫囑','病歷可協助確認診斷、用藥、處置及事件時間線。','申請資料時可一併確認護理紀錄、檢查結果及影像是否齊全。'],
+   ['手術與治療同意書','同意書有助於了解告知與同意的內容，但簽名不代表醫療機構當然免責。','仍應依個案判斷告知義務、診療處置與實際損害。'],
+   ['檢查報告及收據','檢查報告可輔助判讀病況變化，收據可作為部分費用損害的證明。','建議保留原件或完整副本，並依日期整理；個案證據價值仍需具體評估。']]},
+  logo:{name:'WEIYANG 形象牆' ,icon:'⚖️',intro:'歡迎來到德威陽國際法律事務所！想認識我們的哪一面？',options:[
    ['認識林柏均律師','林律師具臺灣及紐約州律師資格，擁有 Emory LL.M. 與 ULV MBA 學位。','服務領域包含跨國商務、契約、訴訟及醫療法律等。'],
    ['了解法律服務','德威陽提供商務契約、公司治理、智慧財產及民刑事爭議等法律服務。','想進一步了解？LINE｜@wylaw　weiandyang.com']]}
  };
