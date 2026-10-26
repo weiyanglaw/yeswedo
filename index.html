@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v71';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v71';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v71';import {createCastleGardens} from './castle-garden.js?v=20261026-v71';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v70';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v70';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v70';import {createCastleGardens} from './castle-garden.js?v=20261026-v70';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -322,18 +322,18 @@ if(i===0){
    tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.60,8.7);/* no raised perimeter rail */
    // 2026-10-25: Original WEIYANG artwork is used on the ground, not redrawn.
    // The text faces the front bridge (+Z) and stays fixed in world space.
-   const officialGroundTex=new THREE.TextureLoader().load('ground-logo-cropped.png?v=20261026-ground-v71');
+   const officialGroundTex=new THREE.TextureLoader().load('ground-logo-cropped.png?v=20261026-ground-v59');
    officialGroundTex.colorSpace=THREE.SRGBColorSpace;
    officialGroundTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
    // Pre-cropped official artwork preserves original pixels and makes the ground seal legible.
    const groundSeal=new THREE.Group();court.add(groundSeal);
    groundSeal.position.set(0,1.56,18.65);
    const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(6.40,96),new THREE.MeshBasicMaterial({color:'#fff4dc',side:THREE.DoubleSide}));
-   sealBacking.rotation.x=-Math.PI/2;sealBacking.renderOrder=0;sealBacking.material.depthTest=true;sealBacking.material.depthWrite=true;groundSeal.add(sealBacking);
+   sealBacking.rotation.x=-Math.PI/2;sealBacking.renderOrder=23;groundSeal.add(sealBacking);
    const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(6.27,.085,10,96),gold);
-   sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;sealOutline.renderOrder=0;groundSeal.add(sealOutline);
+   sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;sealOutline.renderOrder=24;groundSeal.add(sealOutline);
    const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(7.70,9.50),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
-   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;sealImage.renderOrder=0;sealImage.material.depthTest=true;sealImage.material.depthWrite=false;groundSeal.add(sealImage);
+   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;sealImage.renderOrder=25;sealImage.material.depthTest=false;groundSeal.add(sealImage);
    // Existing GLB flags are enlarged and anchored to their actual tower tips above.
    // No free-floating banner objects are added to the scene.
    // Keep existing towers intact: do not globally scale the castle or change its footprint.
