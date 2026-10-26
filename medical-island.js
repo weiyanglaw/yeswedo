@@ -317,7 +317,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    const bh=.87+((k*3+row)%5)*.055;
    const bx=bookX-1.95+k*.243;
    const book=box(.225,bh,1.12,palette[(k+row)%palette.length],bx,shelfY+.11+bh/2,-6.93);
-   if(k===8&&row===2){book.userData.medicalAction='books';book.userData.book=true;}
+   if(k===8&&row===2){book.userData.book=true;}
    // Narrow gold spine stamp, visible from the room.
    box(.12,.035,.018,lightGold,bx,shelfY+.24,-6.36);
   }
@@ -357,15 +357,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),lightGold);pin.position.set(-.18,.15,.04);guide.add(pin);
 
  }
- // Three additional recognizable 3D characters; positions kept off the main aisle.
- if(staffFactory){
-  const roles=[
-   {name:'林律師',kind:'lawyer',skin:'#f1c7a9',hair:'#382a27',top:'#1b304d',bottom:'#202b40',x:-5.8,z:-2.8,action:'lawyer'},
-   {name:'夢奇奇飼養者',kind:'ponytail',skin:'#f4d2b6',hair:'#593e31',top:'#ffffff',bottom:'#7286a3',x:4.7,z:-4.2,action:'keeper'},
-   {name:'哈姆太',kind:'short',skin:'#f3d0b2',hair:'#513a30',top:'#272e3b',bottom:'#647282',x:-2.8,z:7.65,action:'hamuta'}
-  ];
-  for(const def of roles){const obj=staffFactory(def);const npc=obj.root||obj;npc.position.set(def.x,0,def.z);npc.rotation.y=Math.PI*.25;root.add(npc);otherStaff.push({npc,action:def.action,name:def.name});}
- }
+ // v89: only 薪水掌門人 is present in the medical island.
+ // Other characters may be mentioned in stories, but have no 3D avatars here.
  // Keep the original interactive chibi staff. No GLB replacement.
  // v45: one identifiable left-side case sofa and coffee table, leaving the front-left open.
  box(5.0,.73,2.25,material(0xA9C9C7),-7.7,.66,-.35);
@@ -394,7 +387,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Display zones: gold-edged touch panels at accessible height, not covering the emblem.
  const interactionTargets=[];
  const interactionMap=new Map();
- const register=(object,action)=>{object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
+ const fiveActions=new Set(['mediation','records','forensics','ecg','computer']);
+ const register=(object,action)=>{if(!fiveActions.has(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
@@ -502,12 +496,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  box(5.31,2.90,.16,navy,8.0,4.3,-8.24);
  const wavePanel=add(new THREE.PlaneGeometry(5.08,2.72),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-7.80);
  register(wavePanel,'ecg');
- // Clickable props and restrained, legible floating hints.
+ // v89: exactly five interactive hotspots. Reception computer is the fifth.
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
- const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
- const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
- if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
- for(const n of otherStaff)n.npc.traverse(o=>{if(o.isMesh)register(o,n.action)});
  const labels=[];
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
@@ -516,26 +506,12 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- hint('💬 薪水掌門人',7.2,3.95,3.6,'staff');
- hint('⚖️ 林律師',-5.8,3.05,-2.8,'lawyer');
- hint('🌸 夢奇奇飼養者',4.7,3.05,-4.2,'keeper');
- hint('🐹 哈姆太',-2.8,3.05,7.65,'hamuta');
- hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
- hint('❤️ 時間回放',8,6.70,-7.60,'ecg');
+ // Exactly five visible labels, one per station; all other objects are decoration.
+ hint('🤝 協商圓桌',-4.65,2.65,4.45,'mediation');
+ hint('🗂️ 病歷證據',8.2,4.0,-3.8,'records');
+ hint('🔍 X光影像',-5.15,5.52,-5.75,'forensics');
+ hint('❤️ 心電圖',8,6.70,-7.60,'ecg');
  hint('😄 事務所趣事',7.1,2.8,6.5,'computer');
- hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
- 
- 
- hint('認識德威陽',0,8.10,-6.80,'logo');
- hint('🤝 和解條款',-4.65,2.25,4.45,'mediation');
- hint('📝 告知與時間軸',-9.35,2.6,5.3,'consent');
- hint('🔍 大型X光鑑定',-5.15,5.52,-5.75,'forensics');
- // Visible imaging exhibit halo and click target, independent of existing furnishings.
- const imagingFrame=new THREE.Mesh(new THREE.BoxGeometry(3.45,2.55,.10),new THREE.MeshBasicMaterial({color:0xF4D8A4,transparent:true,opacity:.75}));imagingFrame.position.set(-9.3,4.2,-4.14);root.add(imagingFrame);imagingFrame.userData.medicalAction='forensics';interactionTargets.push(imagingFrame);
- 
- 
- hint('🗂️ 病歷攻防',8.2,4.0,-3.8,'records');
- hint('⚖️ 責任分析',8.9,4.5,2.05,'liability');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -577,9 +553,6 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    // Working gestures: slight body lean/arm movements when organizing, never a teleport.
    if(!moving){guide.rotation.z=Math.sin(time*.003)*.028;}
    else guide.rotation.z=0;
-   // Keep the staff's visible clickable label close as she moves.
-   const staffLabel=labels.find(o=>o.userData.medicalAction==='staff');
-   if(staffLabel){staffLabel.position.x=guide.position.x;staffLabel.position.z=guide.position.z+.1;}
 
   }
   for(let k=0;k<labels.length;k++)labels[k].position.y=labels[k].userData.baseY+Math.sin(time*.0015+k)*.075;
