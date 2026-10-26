@@ -162,12 +162,60 @@ function createIslandLabel(i){
 for(let i=0;i<6;i++)createIslandLabel(i);
 function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
 
+
+// v64: native, visible Family Island mansion; no dependency on missing family GLB assets.
+function createFamilyMansion(parent,THREE){
+ const g=new THREE.Group();parent.add(g);
+ const material=(color,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness:.68,metalness});
+ const ivory=material('#F7EBDD'),trim=material('#D6B77D',.32),rose=material('#A66C7C'),wine=material('#773D49'),glass=material('#BBDCE7'),stone=material('#E9D9C8'),leaf=material('#72976B'),brown=material('#9A7158');
+ function cube(w,h,d,x,y,z,m){const a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);a.position.set(x,y,z);g.add(a);return a;}
+ function cone(r,h,x,y,z,m,n=4){const a=new THREE.Mesh(new THREE.ConeGeometry(r,h,n),m);a.position.set(x,y,z);a.rotation.y=Math.PI/4;g.add(a);return a;}
+ function cylinder(r,h,x,y,z,m,n=16){const a=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,n),m);a.position.set(x,y,z);g.add(a);return a;}
+ // Two-storey appearance; accessible front is level with garden.
+ cube(17,10,10,0,5,-1,ivory);cube(17.5,.32,10.6,0,5,-1,trim);
+ cube(18,.45,11,0,10.1,-1,trim);cube(19,1.0,12,0,10.8,-1,rose);
+ // Pitched roof with four-sided silhouettes, simplified for Three.js.
+ const roof=cone(12,5,0,13.6,-1,wine,4);roof.scale.z=.72;
+ for(const x of [-7.7,7.7]){cylinder(2.5,11.8,x,6,-.3,ivory,12);cylinder(2.7,.35,x,12,-.3,trim,12);cone(3.6,5.2,x,14.7,-.3,rose,12);}
+ // Front columns and cornice.
+ for(const x of [-5.6,5.6]){cylinder(.38,7,x,3.6,4.55,ivory,12);cylinder(.55,.3,x,7.2,4.55,trim,12);}
+ cube(13,.35,.6,0,7.5,4.7,trim);
+ // Windows: gold framing and pale blue panes on both levels.
+ for(const y of [3.2,7.7])for(const x of [-5.4,-2.9,2.9,5.4]){
+   cube(1.75,2.35,.16,x,y,4.08,trim);cube(1.47,2.05,.18,x,y,4.19,glass);
+   cube(.09,2.05,.19,x,y,4.31,ivory);cube(1.47,.08,.19,x,y,4.31,ivory);
+ }
+ // Front entrance: no stairs, level garden and path.
+ cube(2.8,4.3,.25,0,2.2,4.3,brown);cube(2.4,3.95,.26,0,2.07,4.48,wine);
+ cylinder(.11,.12,.86,2.1,4.68,trim,12).rotation.x=Math.PI/2;
+ cube(5.2,.13,2.7,0,.09,6.2,stone);cube(4,.13,5,0,.1,10.0,stone);
+ for(const side of [-1,1])for(let j=0;j<4;j++){
+  const x=side*(6.1+j*.75),z=7+j*.95;
+  cylinder(.42,.65,x,.34,z,leaf,10);
+  const flower=new THREE.Mesh(new THREE.SphereGeometry(.23,8,6),material(j%2?'#F2C8D0':'#FFF1CB'));flower.position.set(x,.85,z);g.add(flower);
+ }
+ // Gold original official emblem: actual PNG, never approximated with geometry.
+ const tex=new THREE.TextureLoader().load('./office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
+ const plaque=new THREE.Mesh(new THREE.PlaneGeometry(2.8,2.8),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));plaque.position.set(0,9.1,5.07);g.add(plaque);
+ // Flag and original emblem, at the right tower.
+ cylinder(.055,4.4,7.6,18.8,-.3,trim,8);
+ const flag=cube(2.1,1.3,.06,8.7,19.5,-.3,wine);
+ const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.0,1.0),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));flagLogo.position.set(8.7,19.5,-.25);g.add(flagLogo);
+ // Small low-poly treehouse behind left, pergola behind right; kept away from façade.
+ for(const [x,z] of [[-11,-8],[-12,-9]]){cylinder(.34,3.8,x,1.9,z,brown,8);cone(1.45,2.3,x,4.8,z,leaf,8);}
+ cube(3.1,2.0,2.8,-11,4.7,-8,brown);cone(2.5,2,-11,6.8,-8,rose,4);
+ for(const x of [9,12])for(const z of [-8,-5])cylinder(.12,4.1,x,2,z,trim,8);
+ for(const z of [-8,-5])cube(3.4,.16,.2,10.5,4.1,z,trim);
+ return g;
+}
+
 // Brand-new native THREE.js castle: no disconnected legacy GLB parts.
 
-let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=(i===0||i===2)?{scene:new THREE.Group()}:await getGLB(keys[i]);const model=g.scene;
+let castleClickTarget=null;const keys=['castle','litigation','medical','family','business','library'];const widths=[33,31,28,29,27,29];async function loadIsland(i){try{const g=(i===0||i===2||i===3)?{scene:new THREE.Group()}:await getGLB(keys[i]);const model=g.scene;
 if(i!==0&&i!==2)fit(model,widths[i]);
 groups[i].add(model);
 if(i===2)createMedicalExterior(groups[i],THREE);
+if(i===3)createFamilyMansion(groups[i],THREE);
 if(i===0)castleClickTarget=createNewFairytaleCastle(groups[0],THREE);
 if(i===0)createCastleGardens(groups[0],THREE);
 
@@ -732,12 +780,12 @@ function plant(x,z){
  }
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
-roomBox(0,-.24,0,27,.48,22,'#9d7959');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#d8c3a9');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#c6ad94');
-roomBox(13.3,3.7,0,.40,7.4,22,'#c6ad94');
-for(let x=-12.5;x<=12.5;x+=1.8)roomBox(x,.009,0,.022,.016,21.6,'#80644e');
-for(let z=-9.7;z<=9.7;z+=3.5)roomBox(0,.012,z,26,.012,.018,'#80644e');
+roomBox(0,-.24,0,27,.48,22,'#765744');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#F5EBDD');
+roomBox(-13.3,3.7,0,.40,7.4,22,'#F5EBDD');
+roomBox(13.3,3.7,0,.40,7.4,22,'#F5EBDD');
+for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#654735');
+for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#654735');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 for(const x of [-8,0,8]){
@@ -796,11 +844,11 @@ desk(9.1,1.1,3.25,'#b89d8c',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
 officeSign('薪水掌門人｜事務所今天又怎麼了？',9.1,3.1,1.5,4.5,'#3b3546',8);
 roomBox(10.15,1.2,1.3,.5,.13,.40,'#efb7c8');
 // Curved reception desk with marble counter and gold trim.
-const reception=registerOffice(roomCylinder(0,1.05,4.7,2.45,2.45,1.75,'#d9c5ad'),2);
-reception.scale.set(1.42,1,.48);
-roomCylinder(0,1.99,4.7,3.45,3.45,.18,'#c9a267').scale.set(1,.99,.38);
-screen(0,2.58,4.43,2);
-officeSign('接待櫃檯｜諮詢與聯絡',0,3.30,4.6,4.6,'#fff8ed',2);
+const reception=registerOffice(roomCylinder(0,.58,4.7,2.1,2.1,1.08,'#F1E4D5'),2);
+reception.scale.set(1.22,1,.45);
+roomCylinder(0,1.18,4.7,2.62,2.62,.13,'#D5B77A').scale.set(1,.99,.42);
+screen(0,1.65,4.43,2);
+officeSign('接待櫃檯｜諮詢與聯絡',0,2.65,4.6,4.6,'#fff8ed',2);
 plant(-4.3,5.3);plant(4.3,5.3);
 // Printer station: visible office equipment and comic easter egg.
 roomBox(3.2,.78,-.8,1.8,1.55,1.3,'#9bb9bb');
