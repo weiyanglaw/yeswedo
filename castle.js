@@ -42,7 +42,7 @@ export function createNewFairytaleCastle(parent,THREE){
  block(13.3,8.5,6.8,0,4.95,-1.1,wall);
  block(14.0,.45,7.4,0,9.38,-1.1,roofChampagne);
  block(12.4,.35,7.1,0,8.75,-1.1,wallLight);
- block(10.4,2.0,4.7,0,9.55,-1.9,wallLight);
+ block(10.4,2.0,4.7,0,9.55,-1.9,roofChampagne);
  block(10.9,.3,5.0,0,10.55,-1.9,roofChampagne);
  // Side turret roofs are physically connected to their bodies.
  tower(-6.5,-.4,1.85,8.2,3.0,true);

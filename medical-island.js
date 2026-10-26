@@ -208,9 +208,10 @@ export function createMedicalExterior(group, THREE){
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
- const crest=add(new THREE.CircleGeometry(1.78,64),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}),0,7.3,4.63);
- crest.renderOrder=60;
- const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,4.56);rim.renderOrder=59;
+ const logoBacking=add(new THREE.CircleGeometry(1.91,64),new THREE.MeshStandardMaterial({color:'#21483F',roughness:.7,side:THREE.DoubleSide,depthTest:true,depthWrite:true}),0,7.3,4.585);
+ const crest=add(new THREE.CircleGeometry(1.73,64),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}),0,7.3,4.64);
+ const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,4.58);
+ // All exterior emblems respect building occlusion; never draw on top of other islands.
  return {door,crest};
 }
 export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){

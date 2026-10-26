@@ -47,9 +47,37 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  for(const x of [-2.8,-1.1,.6])box(1.75,.18,1.5,x,1.39,.72,white,'sofa');
  box(.9,.25,.8,-1,1.45,.65,wine);box(.9,.25,.8,2.9,1.45,1.5,pink);cyl(1.25,.43,-.4,.35,3.3,walnut);
  // EXACT same shared character constructor as the main office, black T-shirt.
- if(makeStaffChibi){const npc=makeStaffChibi({name:'家庭島接待',kind:'short',skin:'#E9B79D',hair:'#3C302D',top:'#22242A',bottom:'#32333A'});npc.root.position.set(4.9,.05,1.1);root.add(npc.root);npc.root.traverse(o=>{if(o.isMesh){o.userData.familyAction='staff';targets.push(o);}});}
+ let walkingNpc=null;
+ if(makeStaffChibi){const npc=makeStaffChibi({name:'哈姆太郎',kind:'short',skin:'#E9B79D',hair:'#3C302D',top:'#22242A',bottom:'#32333A'});npc.root.position.set(4.9,.05,1.1);root.add(npc.root);walkingNpc=npc.root;npc.root.traverse(o=>{if(o.isMesh){o.userData.familyAction='staff';targets.push(o);}});}
  const boyHit=box(1.7,3.5,1.6,4.9,1.75,1.1,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),'staff');
  // Floating labels match the medical island canvas resolution, font and dimensions.
+ // v66: furniture details intentionally made from light-weight low-poly shapes.
+ // Visible stove, hood, utensils and wall cabinets.
+ box(2.1,.16,1.2,-5.6,1.67,-3.8,walnut);
+ for(const x of [-6.2,-5.0])for(const z of [-4.2,-3.4]){cyl(.26,.025,x,1.77,z,wine);cyl(.16,.03,x,1.80,z,gold);}
+ box(2.6,.32,1.25,-6.2,6.1,-8.1,cream);box(2.3,.18,1.1,-6.2,5.75,-8.1,gold);
+ for(const x of [-9.4,-7.4,-5.4]){box(1.75,1.4,.65,x,4.25,-8.3,cream);box(.13,.48,.08,x+.62,4.2,-7.92,gold);}
+ // Faucet arches over inset dark sink, with a distinct spout.
+ box(1.2,.045,.82,-8.15,1.7,-3.75,mat('#899FA1'));
+ const faucet=cyl(.055,.72,-8.4,2.02,-3.85,gold);box(.5,.09,.09,-8.2,2.38,-3.85,gold);
+ // Play area: unmistakable toy car, stacking blocks, train and teddy paws.
+ for(const [x,z,m] of [[6.0,-2.65,gold],[6.65,-2.65,sage],[7.3,-2.65,pink]])box(.52,.52,.52,x,.28,z,m);
+ box(1.15,.37,.56,8.4,.29,-2.75,mat('#D48D8D'));
+ for(const x of [7.99,8.78])for(const z of [-2.5,-3.02]){const wheel=cyl(.19,.14,x,.16,z,walnut);wheel.rotation.x=Math.PI/2;}
+ for(const x of [8.2,8.8,9.4]){box(.48,.35,.48,x,.36,-7.35,mat(x<8.5?'#A9C5CC':'#E7C88C'));}
+ for(const x of [8.6,9.7])sphere(.32,x,.53,-6.1,wood);
+ // Inheritance area: legible family portrait frames, documents and a keepsake chest.
+ box(1.5,.12,1.0,-8.65,1.61,4.45,white);box(1.25,.025,.7,-8.65,1.69,4.45,gold);
+ for(let j=0;j<3;j++){box(.95,.045,.63,-7.4+j*.19,1.68+j*.035,4.45,cream);}
+ box(1.05,.65,.85,-5.75,1.86,4.5,wood);box(1.12,.10,.9,-5.75,2.21,4.5,gold);
+ // Vintage phone: two separate earpieces, curved bridge and front-facing rotary dial.
+ const phoneDial=cyl(.48,.055,8,1.78,4.0,gold);phoneDial.rotation.x=Math.PI/2;
+ for(let k=0;k<10;k++){let a=k*Math.PI/5;sphere(.075,8+Math.cos(a)*.31,1.78+Math.sin(a)*.31,3.95,white);}
+ for(const x of [7.2,8.8])sphere(.26,x,2.18,4.6,wine);
+ // Softer cushions, clear armrests and low table legs.
+ for(const x of [-3.2,-1.5,.2,1.9]){box(1.45,.33,1.34,x,1.45,.65,white);box(1.1,.75,.24,x,1.95,-.01,cream);}
+ for(const x of [-1.1,.3])box(.8,.75,.24,x,1.8,.43,pink);
+ for(const x of [-1.1,.3])for(const z of [2.55,4.05])cyl(.09,.55,x,.35,z,wood);
  const labels=[];
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
@@ -63,10 +91,22 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  hint('遺囑繼承',-7.3,3.4,4.5,'heritage');
  hint('家事保護',8.0,3.7,4.6,'protect');
  hint('德威陽諮詢',0,3.15,1.7,'sofa');
+ const staffLabelText='哈姆太郎';hint(staffLabelText,4.9,3.45,1.1,'staff');
  // Large invisible tap areas improve mobile touch targeting.
  const invisible=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
  box(7,3.4,3.4,-6.6,1.7,-3.7,invisible,'kitchen');box(4.6,3.1,4.2,7,1.5,-4.8,invisible,'child');box(6,3.4,2.6,-7.3,1.7,4.5,invisible,'heritage');box(4.1,3.3,3.1,8,1.7,4.6,invisible,'protect');box(9.5,3.1,6.5,0,1.6,1.7,invisible,'sofa');
- return {targets,root,labels};
+ // Keep Hamutaro walking in a small clear area, while his click target and label follow.
+ let walkingTime=0;const staffLabel=labels[labels.length-1];
+ function animation(time){
+  if(!walkingNpc)return;
+  walkingTime=time*.00055;
+  const x=4.9+Math.sin(walkingTime)*.52,z=1.1+Math.cos(walkingTime)*.42;
+  walkingNpc.position.set(x,.05+Math.abs(Math.sin(time*.004))*.045,z);
+  walkingNpc.rotation.y=Math.atan2(Math.cos(walkingTime),-Math.sin(walkingTime));
+  boyHit.position.x=x;boyHit.position.z=z;
+  staffLabel.position.x=x;staffLabel.position.z=z;staffLabel.position.y=3.45+Math.sin(time*.0018)*.07;
+ }
+ return {targets,root,labels,animation};
 }
 
 export function createFamilyExperience(){
@@ -83,6 +123,6 @@ export function createFamilyExperience(){
  function quiz(k){const q=questions[k];title.textContent=q.title;body.textContent=q.q;choices.replaceChildren();q.options.forEach((opt,i)=>button(opt,()=>{body.textContent=(i===q.correct?'答對了！':'這個選項不太正確。')+'\n'+q.explain;choices.replaceChildren();button('再看一次題目',()=>quiz(k));button('返回探索',()=>el.style.display='none');}));}
  function contact(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回家事諮詢沙發',desk);}
  function desk(){title.textContent='家事法律諮詢沙發｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('婚姻／家庭法律需求',()=>{body.textContent='可先整理事件經過、婚姻及財產相關文件，再由律師評估適用法律與處理方式。';});button('親子／繼承法律需求',()=>{body.textContent='可先整理親權、扶養或繼承關係及相關證明文件，協助釐清案件需求。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contact);}
- let staffIndex=0;const staffLines=['歡迎來家庭島！每個角落都有故事喔！','孩子跟誰住？可不是猜拳決定！','遺囑寫好了，就一定有效嗎？','家人的安全，比什麼都重要。'];function open(action){el.style.display='block';if(action==='sofa')desk();else if(action==='staff'){title.textContent='德威陽｜家庭島接待';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('了解家事法律諮詢',desk);}else quiz(action);}
+ let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索紀念桌。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('了解家事法律諮詢',desk);}else quiz(action);}
  return {open,hide:()=>el.style.display='none'};
 }
