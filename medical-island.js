@@ -287,23 +287,30 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  box(.70,.04,.43,cream,8.15,1.75,5.55);
  cyl(.16,.19,.30,stone,9.0,1.78,5.55);
  // v45: remove the duplicated front waiting lounge. Left-side case sofa is the sole seating zone.
- // Back-wall built-in illuminated bookcase, clear of the central logo.
+ // v47: deep architectural bookcase, every shelf visibly full of three-dimensional books.
  const bookGroup=new THREE.Group();root.add(bookGroup);
  const bookX=-8.05;
- for(const y of [1.35,2.65,3.95,5.25,6.55]){
-  box(3.55,.11,.62,gold,bookX,y,-7.9);
-  for(let k=0;k<11;k++){
-   const heights=[.68,.85,.62,.74];
-   const m=[navy,velvet,walnut,cream][k%4];
-   const book=box(.19,heights[k%4],.39,m,bookX-1.43+k*.28,y+heights[k%4]/2+.07,-7.72);
-   if(k===5&&y===3.95){book.userData.medicalAction='books';book.userData.book=true;}
+ // Back, sides and top are BEHIND the book spines in the visitor-facing (+Z) direction.
+ box(4.48,7.20,.26,walnut,bookX,4.08,-8.42);
+ for(const side of [-1,1])box(.24,7.20,1.30,walnut,bookX+side*2.13,4.08,-7.80);
+ box(4.52,.25,1.34,gold,bookX,7.72,-7.80);
+ box(4.52,.25,1.34,walnut,bookX,.51,-7.80);
+ for(let row=0;row<5;row++){
+  const shelfY=1.22+row*1.29;
+  box(4.20,.18,1.24,gold,bookX,shelfY,-7.78);
+  // 17 tightly packed books per row, with staggered heights and contrasting spines.
+  for(let k=0;k<17;k++){
+   const palette=[navy,velvet,cream,walnut,material(0x446b70),material(0x9b7850)];
+   const bh=.81+((k*3+row)%5)*.075;
+   const bx=bookX-1.88+k*.235;
+   const book=box(.205,bh,.66,palette[(k+row)%palette.length],bx,shelfY+.11+bh/2,-7.35);
+   if(k===8&&row===2){book.userData.medicalAction='books';book.userData.book=true;}
+   // Narrow gold spine stamp, visible from the room.
+   box(.065,.035,.012,lightGold,bx,shelfY+.24,-7.011);
   }
  }
- box(4.35,7.05,.90,walnut,bookX,4.1,-7.92);
- // v46: deep, solid bookcase with visible side panels and thick shelves.
- for(const side of [-1,1])box(.23,7.05,1.20,walnut,bookX+side*2.16,4.1,-7.65);
- box(4.48,.24,1.22,gold,bookX,7.67,-7.65);
- for(const y of [1.35,2.65,3.95,5.25,6.55])box(4.12,.17,1.08,gold,bookX,y,-7.62);
+ // Raised front corner pillars emphasize thickness without blocking the book rows.
+ for(const side of [-1,1])box(.13,7.00,.14,gold,bookX+side*2.02,4.08,-7.12);
  // Two framed artwork panels on side walls, adding depth without extra thematic zones.
  for(const x of [-11.65,11.65]){
   box(.13,2.4,2.3,gold,x,4.3,1.2);
@@ -375,14 +382,19 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const panel=add(new THREE.PlaneGeometry(w-.14,2.0),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}),x,3.15,z+.24);
   register(panel,title==='醫療爭議'?'computer':'computer');
  };
- // v45: medical-record evidence is a horizontal side-wall cabinet, not a freestanding island.
- const evidenceBody=box(1.45,1.70,6.40,material(0xC8DAD4,0,.8),10.30,1.14,-1.65);
- const evidenceTop=box(1.66,.18,6.65,stone,10.30,2.06,-1.65);
- for(const zz of [-3.15,-1.65,-.15]){
-  box(.20,.87,1.10,cream,9.42,2.60,zz);
-  box(.23,.10,.84,navy,9.29,2.65,zz);
+ // v47: more dimensional wall-attached medical evidence cabinet with distinct doors and drawers.
+ const evidenceBody=box(2.05,1.95,6.65,material(0xB8D1CA,0,.8),10.08,1.20,-1.65);
+ const evidenceTop=box(2.24,.20,6.94,stone,10.08,2.25,-1.65);
+ // Exposed front-facing (-X) drawer fronts, handles and raised file holders.
+ for(const zz of [-3.78,-2.35,-.92,.51]){
+  box(.075,1.35,1.30,cream,9.015,1.24,zz);
+  box(.095,.085,.56,gold,8.96,1.30,zz);
  }
-
+ for(const zz of [-3.25,-1.65,-.05]){
+  box(.32,.98,1.13,cream,9.70,2.83,zz);
+  box(.34,.10,.85,navy,9.52,2.89,zz);
+  box(.04,.60,.07,gold,9.51,2.55,zz);
+ }
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
@@ -392,7 +404,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
- const bookHit=box(3.6,5.7,.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.15,-7.55);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
+ const bookHit=box(4.15,6.65,.35,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.90);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
@@ -404,7 +416,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
  hint('💬 跟我聊聊',7.2,3.65,3.6,'staff');
- hint('📚 點我翻翻',-8.05,7.55,-7.15,'books');
+ hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
  hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
  hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
@@ -414,13 +426,18 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  let last=0;
  const animation=(time)=>{
   if(guide){
-   // Short realistic reception-side patrol; stays clear of central desk, walls and visitor corridor.
-   const phase=(time*.000065)%1;
-   const stops=[[7.2,3.55],[7.85,3.55],[7.85,3.15],[7.2,3.15],[7.2,3.55]];
-   const u=phase*stops.length;const k=Math.min(stops.length-1,Math.floor(u));const a=stops[k],b=stops[(k+1)%stops.length];
-   const f=Math.max(0,Math.min(1,(u-k-.18)/.64));const ease=f*f*(3-2*f);
-   guide.position.set(a[0]+(b[0]-a[0])*ease,Math.abs(Math.sin(time*.008))*.018,a[1]+(b[1]-a[1])*ease);
-   if(f>.03&&f<.97)guide.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+   // v47: visibly roaming staff, smooth loop with pauses, staying in reception-side zone.
+   const phase=(time*.000042)%1;
+   const stops=[[7.2,3.55],[8.7,3.0],[9.0,1.65],[7.45,1.35],[6.15,2.05],[6.35,3.30],[7.2,3.55]];
+   const u=phase*(stops.length-1),k=Math.min(stops.length-2,Math.floor(u));
+   const a=stops[k],b=stops[k+1],local=u-k;
+   const f=Math.max(0,Math.min(1,(local-.12)/.76));const ease=f*f*(3-2*f);
+   guide.position.set(a[0]+(b[0]-a[0])*ease,Math.abs(Math.sin(time*.009))*.028,a[1]+(b[1]-a[1])*ease);
+   if(f>.02&&f<.98)guide.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+   // Keep the staff's visible clickable label close as she moves.
+   const staffLabel=labels.find(o=>o.userData.medicalAction==='staff');
+   if(staffLabel){staffLabel.position.x=guide.position.x;staffLabel.position.z=guide.position.z+.1;}
+
   }
   for(let k=0;k<labels.length;k++)labels[k].position.y=labels[k].userData.baseY+Math.sin(time*.0015+k)*.075;
   if(time-last<55)return;last=time;
