@@ -385,8 +385,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Display zones: gold-edged touch panels at accessible height, not covering the emblem.
  const interactionTargets=[];
  const interactionMap=new Map();
- const allowedMedicalActions=new Set(['mediation','records','forensics','consent','computer']);
- const register=(object,action)=>{if(!allowedMedicalActions.has(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
+ const register=(object,action)=>{object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
@@ -485,15 +484,23 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(23,42,62,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
   c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,canvas.width/2,canvas.height/2,448);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
-  if(!allowedMedicalActions.has(action)&&action!=='staff')return;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;if(action!=='staff')register(sprite,action);else sprite.userData.medicalAction='staff';root.add(sprite);labels.push(sprite);
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- hint('薪水掌門人',7.2,3.95,3.6,'staff');
- hint('😄 奇妙日常',7.1,2.8,6.5,'computer');
- hint('🤝 醫療協商',-7.7,2.25,1.5,'mediation');
- hint('📝 告知時間軸',-9.35,2.6,5.3,'consent');
- hint('🔍 鑑定影像',-9.3,3.5,-3.95,'forensics');
- hint('🗂️ 病歷探索',8.2,4.0,-3.8,'records');
+ hint('💬 跟我聊聊',7.2,3.95,3.6,'staff');
+ hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
+ hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
+ hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
+ hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
+ 
+ 
+ hint('認識德威陽',0,8.10,-6.80,'logo');
+ hint('🤝 醫療調解',-4.65,2.25,4.45,'mediation');
+ hint('📝 告知與時間軸',-9.35,2.6,5.3,'consent');
+ hint('🔍 鑑定與影像',-9.3,3.5,-3.95,'forensics');
+ 
+ 
+ hint('🗂️ 病歷閱覽',8.2,4.0,-3.8,'records');
+ hint('⚖️ 責任分析',8.9,4.5,2.05,'liability');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -672,191 +679,12 @@ export function createMedicalExperience(){
  notes.push(causation?'因果：已有損害與因果資料，仍須專業評估其證明力。':'因果：尚未釐清損害是否與特定診療處置相關，不能直接認定責任。');
  body.textContent='請切換三個條件（已勾選＝有初步資料）：\n\n'+notes.join('\n')+'\n\n以上僅是證據盤點；是否成立責任仍須綜合醫療常規、注意義務、損害與個案證據。';[
  ['notice','告知與同意'],['records','病歷是否完整'],['causation','損害因果關係']].forEach(([key,label])=>button((liabilityState[key]?'☑ ':'□ ')+label,()=>{liabilityState[key]=!liabilityState[key];liabilityHome()}));button('重設條件',()=>{Object.keys(liabilityState).forEach(k=>liabilityState[k]=false);liabilityHome()});button('✕ 繼續探索',()=>el.style.display='none');}
-
- // v86: exactly five physical interaction entrances, each with twenty short situations.
- const scenarioSets={
- mediation:[
- ['術後效果不如預期，家屬要求賠償。','先確認術前說明','立刻答應賠償','拒絕所有溝通'],
- ['病患說醫師沒有解釋風險。','核對告知紀錄','只看簽名','直接指責病患'],
- ['醫院提出一次性和解金。','核對和解範圍','立刻簽字','先上網公布'],
- ['雙方對診療時間各說各話。','整理時間線','只聽一方','先談金額'],
- ['家屬情緒激動，要求院長出面。','安排溝通窗口','不理會','當場爭吵'],
- ['患者認為醫院拖延回覆。','保存往來紀錄','每日公開指責','放棄詢問'],
- ['雙方願意進行醫療調解。','列出爭議重點','只帶情緒','不帶資料'],
- ['醫院否認處置有問題。','核對醫療資料','認定必然無責','直接定罪'],
- ['患者提出高額賠償請求。','整理損害項目','隨意喊價','不查證據'],
- ['醫師願意解釋但患者不信任。','安排具體問答','拒絕聽取','只談媒體'],
- ['調解時發現病歷缺少一頁。','先確認資料完整','忽略缺頁','直接猜測'],
- ['患者希望院方正式道歉。','釐清訴求與事實','強迫道歉','拒絕談話'],
- ['醫院表示需時間調查。','約定回覆期限','無限等待','立即辱罵'],
- ['雙方爭執術後照護方式。','比對醫囑紀錄','只靠印象','跳過查證'],
- ['患者說醫療費用不合理。','核對收據明細','直接拒付','公開個資'],
- ['家屬和患者意見不同。','確認患者意願','只聽家屬','忽略當事人'],
- ['協商中出現新的檢查資料。','先評估新證據','立即結案','直接忽略'],
- ['院方提議改由第三人協助。','評估調解方式','立即拒絕','只求勝負'],
- ['雙方對醫師承諾有爭議。','查看書面紀錄','只靠傳聞','先決定賠償'],
- ['調解未能達成共識。','保存紀錄評估後續','撕毀文件','放棄期限']
- ],
- records:[
- ['懷疑用錯藥，先找哪份資料？','醫囑與給藥紀錄','只有收據','只看出院單'],
- ['病歷日期與檢驗日期不一致。','比對時間戳記','直接認定造假','忽略差異'],
- ['護理交班記載不清。','查看前後紀錄','只看一行','直接刪除'],
- ['病患說半夜曾呼叫護理師。','核對護理紀錄','只問其他病患','不查證'],
- ['住院用藥劑量疑似不同。','比對醫囑與藥單','只看藥袋顏色','猜測原因'],
- ['手術紀錄缺少附件。','確認資料是否齊全','直接下結論','忽略附件'],
- ['檢查報告有兩個版本。','核對版本日期','隨意選一份','刪除舊版'],
- ['患者說醫師曾口頭承諾。','找對話及病歷記載','只靠猜測','不理會'],
- ['轉院資料缺少檢驗結果。','申請補齊資料','放棄比對','只看收據'],
- ['出院後症狀持續惡化。','整理回診紀錄','只記得感覺','不保存'],
- ['病歷有事後補記內容。','核對補記時間','直接認定違法','一律忽略'],
- ['護理紀錄與醫囑不同。','比對執行時間','只選有利版本','不查證'],
- ['病患懷疑院內跌倒未記錄。','查看照護紀錄','只看照片','直接猜測'],
- ['影像報告找不到原始檔。','確認影像資料','只看摘要','不再詢問'],
- ['同意書日期晚於治療日。','核對實際時間','直接定罪','忽略日期'],
- ['急診分流時間有疑問。','核對到院紀錄','只聽傳聞','猜測時間'],
- ['家屬拍下監測器畫面。','核對正式紀錄','只憑照片','刪除照片'],
- ['診療單寫法難以理解。','請專業人士解讀','自行猜測','忽略術語'],
- ['收據與療程項目不一致。','核對費用明細','只看總額','直接認定詐欺'],
- ['資料太多不知道怎麼整理。','按日期分類','隨機刪除','只留一頁']
- ],
- forensics:[
- ['術後影像出現新的陰影。','比對術前影像','直接認定疏失','只看照片'],
- ['X光片與報告說法不同。','核對原始影像','直接忽略','只選一方'],
- ['病情突然惡化。','查看當時監測','只看最終結果','猜測原因'],
- ['檢查報告晚了一天出來。','核對處置時序','直接認定延誤','忽略時間'],
- ['麻醉期間血氧下降。','比對麻醉紀錄','只看一個數字','不查背景'],
- ['醫師對影像有不同解讀。','評估專業意見','投票決定','直接責怪'],
- ['影像品質不清楚。','確認是否需重拍','隨意判讀','忽略限制'],
- ['術前已有相同異常。','核對前後變化','只看術後','直接定責'],
- ['病患感染指標升高。','結合臨床資料','只看一個數字','直接定罪'],
- ['急診影像顯示疑似骨折。','核對診斷與處置','只看照片','不查時間'],
- ['術後出現神經症狀。','核對診療過程','直接認定醫師錯','只靠猜測'],
- ['醫院提出鑑定意見。','核對鑑定依據','照單全收','全部否定'],
- ['兩次檢查結果不一致。','比對檢查條件','隨意選一份','不查差異'],
- ['患者認為手術位置不對。','核對影像及紀錄','只憑感覺','先定責'],
- ['病歷與影像日期有落差。','確認檢查時間','直接認定造假','忽略日期'],
- ['醫師說異常屬已知風險。','查風險與處置','一律相信','一律否定'],
- ['術後疼痛比預期嚴重。','核對症狀與處置','只憑痛感定責','不查資料'],
- ['影像顯示舊傷與新傷。','辨別傷害時點','全部算新傷','忽略舊傷'],
- ['患者詢問鑑定是否必勝。','說明鑑定限制','保證勝訴','拒絕回答'],
- ['報告結論與症狀不一致。','綜合臨床資訊','只看結論','忽略症狀']
- ],
- consent:[
- ['簽了同意書卻說沒聽懂。','核對說明過程','只看簽名','直接否定'],
- ['手術風險在術後才說明。','核對告知時間','只看結果','忽略時序'],
- ['病患聽不懂醫學術語。','確認理解方式','繼續用術語','直接簽字'],
- ['同意書上缺少日期。','核對簽署時點','直接猜日期','忽略問題'],
- ['家屬代簽手術同意書。','確認代理權限','只看筆跡','一律有效'],
- ['醫師臨時更改治療方案。','確認是否需再告知','不作說明','只問護士'],
- ['患者說沒被告知替代療法。','核對替代方案說明','只看簽名','忽略疑問'],
- ['急診處置時間非常緊迫。','核對緊急情況','一律不必告知','直接停治'],
- ['說明會議沒有書面紀錄。','查其他佐證資料','直接認定無告知','完全忽略'],
- ['同意書內容和實際術式不同。','核對變更原因','只看結果','直接定責'],
- ['患者術前曾提出疑問。','查看回應紀錄','忽略問題','直接猜測'],
- ['告知與簽署相隔很久。','核對是否有變更','只看日期','一律有效'],
- ['家屬說病患當時意識不清。','確認同意能力','只看簽名','直接否定'],
- ['術前檢查發現新風險。','確認追加告知','忽略新資料','只看舊單'],
- ['醫師使用影片進行說明。','確認理解與提問','只看影片','直接免責'],
- ['病患要求第二意見。','說明可行安排','立即拒絕','直接簽字'],
- ['同意書影本字跡模糊。','確認完整文件','猜測文字','忽略內容'],
- ['患者對麻醉風險有疑問。','核對麻醉告知','只談手術','不予理會'],
- ['治療前後的說法不一致。','建立告知時間軸','只聽一方','不查證'],
- ['病患說當時受到催促。','確認簽署情境','只看簽名','直接定責']
- ],
- computer:[
- ['訪客：「這裡能看感冒嗎？」','「我是不是走錯了？」','「那有咖啡嗎？」','「你們會打針嗎？」'],
- ['小編：「咖啡機今天又罷工。」','「請它寫請假單。」','「換一台吧！」','「它有薪水嗎？」'],
- ['員工：「律師說今天準時下班。」','「我先拍照存證！」','「真的嗎？」','「鬧鐘壞了？」'],
- ['訪客：「這裡有掛號機嗎？」','「那我要抽號碼牌。」','「有叫號嗎？」','「我找誰？」'],
- ['小編：「印表機又卡紙了。」','「它想放假吧。」','「先哄哄它。」','「找律師談判！」'],
- ['員工：「有人把茶放進冰箱。」','「這算冷靜處理。」','「我的茶呢？」','「是誰？」'],
- ['訪客：「你們的椅子很舒服。」','「我可以住這嗎？」','「有午睡服務？」','「要收費嗎？」'],
- ['小編：「今天的待辦清單好長。」','「折起來就短了。」','「還有明天啊！」','「先喝茶。」'],
- ['員工：「電腦突然自動更新。」','「它很有上進心。」','「選錯時間了！」','「給它鼓掌？」'],
- ['訪客：「你們這裡好安靜。」','「我可以唱歌嗎？」','「有背景音樂？」','「太安靜了吧！」'],
- ['小編：「誰拿走我的筆？」','「筆去開會了。」','「問問抽屜。」','「它自己走了？」'],
- ['員工：「律師的行程又滿了。」','「行事曆要加班。」','「還有空白嗎？」','「它喘不過氣了。」'],
- ['訪客：「這是醫療島還是咖啡廳？」','「有甜點嗎？」','「菜單在哪？」','「能外帶嗎？」'],
- ['小編：「電梯門又慢慢關上。」','「它在等主角。」','「要配音樂嗎？」','「別演了啦！」'],
- ['員工：「今天有人帶三個便當。」','「那是備援系統。」','「幫我留一個！」','「好有遠見！」'],
- ['訪客：「你們有吉祥物嗎？」','「是那台咖啡機？」','「是律師嗎？」','「可以投票嗎？」'],
- ['小編：「會議室冷氣太冷。」','「企鵝會喜歡。」','「借我外套！」','「這是南極嗎？」'],
- ['員工：「今天電話響不停。」','「它想當歌手。」','「先喝口水。」','「有安可嗎？」'],
- ['訪客：「這裡能充手機嗎？」','「我的電量剩1%。」','「先救手機！」','「有插座嗎？」'],
- ['小編：「今天終於清空信箱。」','「明天它會長回來。」','「值得慶祝！」','「先別刷新！」']
- ]
- };
- const scenarioCursor={mediation:0,records:0,forensics:0,consent:0,computer:0};
- // v87: twenty independent humorous conversations; no fallback repeated dialogue.
- const funnyReplies=[
- ['接待員：「昨天還有人來問能不能洗牙，我們真的不是牙科。」','小編：「咖啡有，咖啡機今天心情比較複雜。」','接待員：「針沒有，倒是有很多迴紋針。」'],
- ['小編：「我幫它填：因咖啡豆意見不合，請假一天。」','員工：「換新機前，先問舊機要不要辦歡送會。」','小編：「沒有薪水，但它比我還會準時休息。」'],
- ['小編：「先拍照，這可能是歷史性的一刻！」','員工：「我已經問了三次，律師都說是真的。」','小編：「鬧鐘沒壞，是大家不敢相信。」'],
- ['接待員：「號碼牌只有一張，上面寫歡迎光臨。」','員工：「有叫號，但通常叫的是我去拿文件。」','接待員：「找陳小姐可以，先別找醫師。」'],
- ['小編：「它去年就想退休了，今天終於提出申請。」','員工：「哄了十分鐘，它只回我一張白紙。」','小編：「律師說這件案子證據很皺。」'],
- ['員工：「茶冷靜了，我的心情還沒有。」','小編：「你的茶正在冷藏區參加冬令營。」','員工：「嫌疑人可能只是想喝冰茶。」'],
- ['接待員：「住下來要先問椅子同不同意。」','員工：「午睡服務沒有，午睡夢想很多。」','接待員：「椅子免費坐，別把它搬回家就好。」'],
- ['小編：「清單折短了，工作卻一件都沒少。」','員工：「明天的清單已經在門口排隊。」','小編：「喝完茶，清單好像又長高了。」'],
- ['員工：「電腦很努力，挑了我最忙的時候進修。」','小編：「它專挑截止日前更新，真有眼光。」','員工：「等它更新完再鼓掌，我現在手忙。」'],
- ['接待員：「可以唱，但隔壁的印表機可能會合音。」','員工：「背景音樂是鍵盤聲與咖啡機嘆氣。」','小編：「太安靜？我可以開啟影印機。」'],
- ['小編：「筆去開會了，還沒送回會議紀錄。」','員工：「抽屜說它沒有藏，是筆自己跑的。」','小編：「它若有腳，請叫它把文件也送了。」'],
- ['員工：「行事曆申請加班費，老闆還在考慮。」','小編：「空白有，在明年的封面上。」','員工：「我替行事曆安排了深呼吸時間。」'],
- ['接待員：「甜點沒有，倒是有一堆甜甜圈狀的資料夾。」','員工：「菜單上只有咖啡與今天的待辦事項。」','接待員：「文件不能外帶當點心喔！」'],
- ['小編：「電梯覺得自己是電影主角。」','員工：「配上交響樂，門會不會關快點？」','小編：「好啦，我先按開門鍵。」'],
- ['員工：「便當是重要的備援系統，還有熱量備份。」','小編：「留可以，但它們已經被主人點名了。」','員工：「有遠見，也有很大的胃口。」'],
- ['小編：「咖啡機表示它不想承擔這個職位。」','員工：「律師太忙，吉祥物得自己開會。」','接待員：「投票箱放這裡，候選人先別跑。」'],
- ['小編：「企鵝來了可能會要求加暖氣。」','員工：「外套在椅背，先跟椅子借。」','小編：「南極沒有，冷氣遙控器倒是失蹤了。」'],
- ['員工：「電話已經唱完三張專輯。」','小編：「先喝水，不然待會連聲音都沙啞。」','員工：「安可沒有，請留到明天再打。」'],
- ['接待員：「1%很緊急，但請先不要把我當充電器。」','員工：「先救手機，然後救找不到線的你。」','接待員：「插座在旁邊，充電線要自備喔。」'],
- ['小編：「信箱有再生能力，清空只是短暫勝利。」','員工：「值得慶祝三秒，然後繼續工作。」','小編：「不要刷新！讓這份寧靜多活一下。」']
- ];
- const areaNames={mediation:'🤝 醫療協商',records:'🗂️ 病歷探索',forensics:'🔍 鑑定影像',consent:'📝 告知時間軸',computer:'😄 奇妙日常'};
- function scenarioHome(action){
-  const list=scenarioSets[action],i=scenarioCursor[action]%list.length,item=list[i];
-  title.textContent=areaNames[action]+'｜'+String(i+1).padStart(2,'0')+'/20';
-  choices.replaceChildren();
-  if(action==='computer'){
-   body.textContent=item[0]+'\n你要怎麼回話？';
-   for(let k=1;k<=3;k++)button(String.fromCharCode(64+k)+'．'+item[k],()=>{
-    body.textContent=item[0]+'\n你：「'+item[k]+'」\n'+funnyReplies[i][k-1];
-    choices.replaceChildren();button('再選一次',()=>scenarioHome(action));nextScenario(action,i);
-   });
-  }else if(action==='records'){
-   body.textContent=item[0]+'\n請打開資料，找出需要核對的線索。';
-   const docs=['📄 醫囑與處置','📋 護理與時間','🧪 檢驗與附件'];const opened=new Set();
-   docs.forEach((d,k)=>button(d,()=>{opened.add(k);body.textContent=item[0]+'\n已查看：'+[...opened].map(j=>docs[j]).join('、')+'。\n'+(k===0?'留意醫師指示與實際執行是否相符。':k===1?'比對紀錄時間與交班、通知內容。':'確認檢驗結果、附件版本與資料完整性。');if(opened.size===3){choices.replaceChildren();button('🔎 查看調查結論',()=>showOutcome(action,i,0));}}));
-   button('💡 我先提出判斷',()=>showOutcome(action,i,0));
-  }else if(action==='forensics'){
-   body.textContent=item[0]+'\n先比較影像與診療紀錄，再決定鑑定方向。';
-   let viewed=false;button('🖼️ 術前／原始影像',()=>{viewed=true;body.textContent=item[0]+'\n已查看術前資料：注意檢查日期、原始狀況及影像品質。';});
-   button('🖼️ 術後／追蹤影像',()=>{viewed=true;body.textContent=item[0]+'\n已查看追蹤資料：比對時間點、變化與當時臨床症狀。';});
-   button('🔬 選擇鑑定重點',()=>{body.textContent=item[0]+'\n'+(viewed?'已進行影像比對。':'建議先看原始及追蹤影像。')+'\n請選擇接下來的分析方向。';choices.replaceChildren();for(let k=1;k<=3;k++)button(String.fromCharCode(64+k)+'．'+item[k],()=>showOutcome(action,i,k-1));});
-  }else if(action==='consent'){
-   body.textContent=item[0]+'\n請依序核對醫療事件。';let step=0;
-   const phases=['① 術前說明','② 同意文件','③ 實際處置／追蹤'];
-   function phase(){choices.replaceChildren();button(phases[step]+'｜點擊核對',()=>{body.textContent=item[0]+'\n'+phases[step]+'：'+['確認說明風險與替代方案的時間。','核對簽署人、日期及文件內容。','比對實際治療與事後紀錄。'][step];step++;if(step<3)phase();else{choices.replaceChildren();button('📝 查看時間軸結論',()=>showOutcome(action,i,0));}});}
-   phase();
-  }else{
-   body.textContent=item[0]+'\n你會怎麼回應雙方？';
-   for(let k=1;k<=3;k++)button(String.fromCharCode(64+k)+'．'+item[k],()=>showOutcome(action,i,k-1));
-  }
-  button('換一個情境',()=>{scenarioCursor[action]=(i+1)%list.length;scenarioHome(action)});
- }
- function showOutcome(action,i,k){
-  const item=scenarioSets[action][i];let feedback;
-  if(k===0){feedback='你選擇「'+item[1]+'」。這是較適合先查證的方向。請以本案的「'+item[0]+'」為核心，核對相關紀錄與當時情況，再決定下一步。';}
-  else if(k===1){feedback='你選擇「'+item[2]+'」。這可能忽略本案尚待確認的事實。先查證「'+item[0]+'」，避免只憑單一說法下結論。';}
-  else{feedback='你選擇「'+item[3]+'」。這無法充分處理「'+item[0]+'」的爭點；應保留證據並依個案情況評估。';}
-  body.textContent=item[0]+'\n\n'+feedback+'\n\n提醒：模擬內容不等於個案責任認定。';choices.replaceChildren();
-  button('↩ 重玩本題',()=>scenarioHome(action));nextScenario(action,i);
- }
- function nextScenario(action,i){button('下一個情境',()=>{scenarioCursor[action]=(i+1)%scenarioSets[action].length;scenarioHome(action)});button('✕ 繼續探索',()=>el.style.display='none');}
  let current='staff';
  function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:10px 12px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
  function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
- function home(){if(scenarioSets[current]){scenarioHome(current);return;}if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function home(){if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
- return {show(){el.style.display='none'},open(action='staff'){current=(scenarioSets[action]||scenes[action]||customMedical[action]||action==='liability')?action:'computer';home();el.style.display='block'},hide(){el.style.display='none'}};
+ return {show(){el.style.display='none'},open(action='staff'){current=(scenes[action]||customMedical[action]||action==='liability')?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
