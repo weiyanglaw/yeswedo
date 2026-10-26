@@ -1,5 +1,5 @@
 // WEIYANG Family Island v63 — intentionally simple, mobile-friendly low-poly scene.
-export function createFamilyInterior(scene, THREE){
+export function createFamilyInterior(scene, THREE, makeStaffChibi){
  const root=new THREE.Group();root.name='FamilyOpenPlan';scene.add(root);
  const mat=(c)=>new THREE.MeshStandardMaterial({color:c,roughness:.82});
  const cream=mat('#F7F0E5'),pink=mat('#D9B6B9'),blush=mat('#F4DFE4'),wine=mat('#773D49'),gold=mat('#D5B77A'),wood=mat('#B89B80'),walnut=mat('#9C7557'),white=mat('#FFF8F7'),sage=mat('#B7C7B2');
@@ -19,26 +19,54 @@ export function createFamilyInterior(scene, THREE){
  // Marriage kitchen, left rear.
  box(8,.25,1.5,-7.0,.9,-7.8,cream);for(const x of [-10,-8,-6,-4.4])box(1.7,2.3,1,-x+(-14),2.4,-8.1,cream);
  box(5.4,1.45,2.35,-6.6,.73,-3.7,pink,'kitchen');box(5.7,.18,2.55,-6.6,1.54,-3.7,white,'kitchen');
- for(const x of [-8,-6.6,-5.2])cyl(.43,.4,x,.3,-1.7,wood);
+ for(const x of [-8,-6.6,-5.2]){cyl(.43,.4,x,.55,-1.7,wood);box(.85,.12,.75,x,.84,-1.7,white);box(.85,.85,.12,x,1.22,-1.36,cream);}
+ // Sink and hob make the kitchen recognisable.
+ box(1.2,.035,.7,-7.9,1.66,-3.7,wood);cyl(.12,.35,-8.1,1.9,-3.8,gold);
+ for(const x of [-5.7,-5.1])cyl(.24,.035,x,1.66,-3.7,walnut);
+ for(const x of [-9.6,-7.9,-6.2,-4.5])box(.08,.4,.08,x,2.35,-7.5,gold);
  // Children: simple toy box, rug and blocks.
  box(6.5,.06,5.1,7.2,.04,-4.6,blush);box(2.9,1.65,2.15,6.9,.85,-4.8,pink,'child');box(3.1,.19,2.35,6.9,1.76,-4.8,cream,'child');
  for(const [x,z,m] of [[5.5,-2.9,gold],[8.8,-3.3,sage],[8.4,-6.4,wood]])box(.65,.65,.65,x,.4,z,m);
+ // Toy-chest handle and large teddy bear.
+ box(.85,.14,.09,6.9,1.25,-3.59,gold);
+ sphere(.7,9.15,1.15,-6.1,wood);sphere(.54,9.15,2.03,-6.1,wood);
+ sphere(.22,8.77,2.47,-6.12,wood);sphere(.22,9.53,2.47,-6.12,wood);
+ sphere(.11,9.0,2.09,-5.62,walnut);sphere(.11,9.32,2.09,-5.62,walnut);
  // Family remembrance: low console and large portrait frame on rear/right wall.
  box(4.9,1.5,1.3,-7.3,.75,4.5,walnut,'heritage');box(1.1,.12,.7,-7.3,1.57,4.5,white);box(1.6,2.1,.12,-10.6,4.7,4.2,gold);box(1.3,1.8,.14,-10.48,4.7,4.2,blush);
+ for(const x of [-8.7,-7.2,-5.8]){box(.78,1.0,.10,x,2.22,4.5,gold);box(.64,.85,.12,x,2.22,4.59,blush);}
+ box(.85,.52,.72,-5.8,1.77,4.5,cream);
  // Protection telephone table and oversized burgundy telephone.
- box(3,1.2,2.2,8,.62,4.6,cream,'protect');box(1.7,.5,1.2,8,1.43,4.6,wine,'protect');cyl(.43,.16,8,1.78,4.6,gold);box(.9,.35,.4,8,1.95,4.6,wine);cyl(.35,.12,9.1,1.4,4.2,gold);
+ box(3,1.2,2.2,8,.62,4.6,cream,'protect');box(1.7,.5,1.2,8,1.43,4.6,wine,'protect');cyl(.43,.16,8,1.78,4.6,gold);// Large classic handset: two rounded ear cups joined by a thick bar, above a gold dial.
+ box(1.65,.20,.32,8,2.08,4.6,wine,'protect');
+ for(const x of [7.2,8.8])cyl(.26,.42,x,2.03,4.6,wine);
+ cyl(.35,.12,9.1,1.4,4.2,gold);
+ for(let k=0;k<8;k++){const a=k*Math.PI/4;sphere(.045,8+Math.cos(a)*.27,1.88,4.6+Math.sin(a)*.27,white);}
  // Central cream L-shaped sofa and table; single reception interaction.
  box(8.8,.06,6.3,0,.06,1.7,blush);box(6.8,1.15,1.65,-.7,.8,.7,cream,'sofa');box(1.7,1.15,4.5,3.45,.8,2.05,cream,'sofa');box(6.8,1.1,.45,-.7,1.5,-.05,cream);box(.45,1.1,4.5,4.05,1.5,2.05,cream);
+ for(const x of [-2.8,-1.1,.6])box(1.75,.18,1.5,x,1.39,.72,white,'sofa');
  box(.9,.25,.8,-1,1.45,.65,wine);box(.9,.25,.8,2.9,1.45,1.5,pink);cyl(1.25,.43,-.4,.35,3.3,walnut);
- // Short-haired receptionist in a BLACK T-shirt, intentionally simple and recognizable.
- const black=mat('#22242A'),skin=mat('#E9B79D'),hair=mat('#3C302D');
- cyl(.48,1.45,4.9,1.65,1.1,black);sphere(.47,4.9,2.67,1.1,skin);box(.92,.36,.65,4.9,2.96,1.1,hair);
- for(const x of [4.5,5.3]){box(.24,1.1,.3,x,.52,1.1,black);box(.26,.8,.3,x,1.8,1.1,skin);}
- const boyHit=box(1.65,3.6,1.6,4.9,1.8,1.1,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),'staff');
+ // EXACT same shared character constructor as the main office, black T-shirt.
+ if(makeStaffChibi){const npc=makeStaffChibi({name:'家庭島接待',kind:'short',skin:'#E9B79D',hair:'#3C302D',top:'#22242A',bottom:'#32333A'});npc.root.position.set(4.9,.05,1.1);root.add(npc.root);npc.root.traverse(o=>{if(o.isMesh){o.userData.familyAction='staff';targets.push(o);}});}
+ const boyHit=box(1.7,3.5,1.6,4.9,1.75,1.1,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),'staff');
+ // Floating labels match the medical island canvas resolution, font and dimensions.
+ const labels=[];
+ function hint(text,x,y,z,action){
+  const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
+  const c=canvas.getContext('2d');c.fillStyle='rgba(119,61,73,.97)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
+  c.strokeStyle='#D5B77A';c.lineWidth=6;c.stroke();c.fillStyle='#FFF8F7';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
+  const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;
+  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));label.position.set(x,y,z);label.scale.set(4.35,1.02,1);label.renderOrder=80;label.userData.familyAction=action;label.userData.baseY=y;root.add(label);targets.push(label);labels.push(label);
+ }
+ hint('婚姻家事',-6.6,3.0,-3.7,'kitchen');
+ hint('親權扶養',7.0,3.25,-4.8,'child');
+ hint('遺囑繼承',-7.3,3.4,4.5,'heritage');
+ hint('家事保護',8.0,3.7,4.6,'protect');
+ hint('德威陽諮詢',0,3.15,1.7,'sofa');
  // Large invisible tap areas improve mobile touch targeting.
  const invisible=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
  box(7,3.4,3.4,-6.6,1.7,-3.7,invisible,'kitchen');box(4.6,3.1,4.2,7,1.5,-4.8,invisible,'child');box(6,3.4,2.6,-7.3,1.7,4.5,invisible,'heritage');box(4.1,3.3,3.1,8,1.7,4.6,invisible,'protect');box(9.5,3.1,6.5,0,1.6,1.7,invisible,'sofa');
- return {targets,root};
+ return {targets,root,labels};
 }
 
 export function createFamilyExperience(){

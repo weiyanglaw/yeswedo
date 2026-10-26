@@ -423,7 +423,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
  hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
- hint('⚖️ 認識德威陽',0,8.10,-6.80,'logo');
+ hint('認識德威陽',0,8.10,-6.80,'logo');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
