@@ -236,7 +236,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   // Three.js: angle 0 points toward +Z; leave the front-central door approach open.
   const theta=mid+Math.PI*.57;
   const x=12.5*Math.sin(theta),z=12.5*Math.cos(theta);
-  if(z>10.0 && Math.abs(x)<4.8)continue;
+  if(z>8.8 && Math.abs(x)<9.0)continue; // v85: wider front opening, shorten both transparent glass arcs and gold trim together
   const arcLen=12.5*(a1-a0)+.055;
   const panel=box(arcLen,7.35,.17,curvedGlass,x,4.0,z);panel.rotation.y=theta;
   const foot=box(arcLen,.11,.24,gold,x,.32,z);foot.rotation.y=theta;
