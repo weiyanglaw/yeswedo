@@ -209,16 +209,17 @@ if(i===0){
    tileRing.rotation.x=Math.PI/2;tileRing.position.set(0,.60,8.7);/* no raised perimeter rail */
    // 2026-10-25: Original WEIYANG artwork is used on the ground, not redrawn.
    // The text faces the front bridge (+Z) and stays fixed in world space.
-   const officialGroundTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261026-ground-v18');
+   const officialGroundTex=new THREE.TextureLoader().load('ground-logo-cropped.png?v=20261026-ground-v58');
    officialGroundTex.colorSpace=THREE.SRGBColorSpace;
    officialGroundTex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+   // Pre-cropped official artwork preserves original pixels and makes the ground seal legible.
    const groundSeal=new THREE.Group();court.add(groundSeal);
    groundSeal.position.set(0,1.56,18.65);
    const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(3.15,96),new THREE.MeshBasicMaterial({color:'#fff4dc',side:THREE.DoubleSide}));
    sealBacking.rotation.x=-Math.PI/2;sealBacking.renderOrder=23;groundSeal.add(sealBacking);
    const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(3.08,.075,10,96),gold);
    sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;sealOutline.renderOrder=24;groundSeal.add(sealOutline);
-   const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(6.10,6.10),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
+   const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(4.78,5.90),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
    sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;sealImage.renderOrder=25;sealImage.material.depthTest=false;groundSeal.add(sealImage);
    // Existing GLB flags are enlarged and anchored to their actual tower tips above.
    // No free-floating banner objects are added to the scene.
@@ -974,7 +975,7 @@ function wyConfigure3DGestures(control,{minDistance=7,maxDistance=65}={}){
  control.touches.TWO=THREE.TOUCH.DOLLY_PAN;
  control.mouseButtons.LEFT=THREE.MOUSE.ROTATE;
  control.mouseButtons.RIGHT=THREE.MOUSE.PAN;
- control.panSpeed=0.92;control.zoomSpeed=0.88;control.rotateSpeed=0.72;control.dampingFactor=0.075;
+ control.panSpeed=0.92;control.zoomSpeed=0.88;control.rotateSpeed=-0.72;control.dampingFactor=0.075;
 }
 wyConfigure3DGestures(orbit,{minDistance:12,maxDistance:240});
 wyConfigure3DGestures(officeOrbit,{minDistance:7,maxDistance:65});
