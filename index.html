@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v66';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=66';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v66-classic-gold';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v67';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=67';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v67-classic-gold';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -178,8 +178,7 @@ function createFamilyMansion(parent,THREE){
  // Pitched roof with four-sided silhouettes, simplified for Three.js.
  const roof=cone(12,5,0,13.6,-1,wine,4);roof.scale.z=.72;
  for(const x of [-7.7,7.7]){cylinder(2.5,11.8,x,6,-.3,ivory,12);cylinder(2.7,.35,x,12,-.3,trim,12);cone(3.6,5.2,x,14.7,-.3,rose,12);}
- // Front columns and cornice.
- for(const x of [-5.6,5.6]){cylinder(.38,7,x,3.6,4.55,ivory,12);cylinder(.55,.3,x,7.2,4.55,trim,12);}
+ // v67: remove the two tall, purposeless facade columns entirely.
  // The previous long front stripe crossed upper windows; removed.
 
  // Windows: gold framing and pale blue panes on both levels.
@@ -191,11 +190,7 @@ function createFamilyMansion(parent,THREE){
  cube(2.8,4.3,.25,0,2.2,4.3,brown);cube(2.4,3.95,.26,0,2.07,4.48,wine);
  cylinder(.11,.12,.86,2.1,4.68,trim,12).rotation.x=Math.PI/2;
  cube(5.2,.13,2.7,0,.09,6.2,stone);cube(4,.13,5,0,.1,10.0,stone);
- for(const side of [-1,1])for(let j=0;j<4;j++){
-  const x=side*(6.1+j*.75),z=7+j*.95;
-  cylinder(.42,.65,x,.34,z,leaf,10);
-  const flower=new THREE.Mesh(new THREE.SphereGeometry(.23,8,6),material(j%2?'#F2C8D0':'#FFF1CB'));flower.position.set(x,.85,z);g.add(flower);
- }
+
  // v66 French-classical townhouse refinements, all inside existing mansion group.
  const warmLight=material('#F5D99B',.12),rosePale=material('#F2D6D4');
  // Sculpted facade frames, sill stones and classic gold keystones.
@@ -204,13 +199,6 @@ function createFamilyMansion(parent,THREE){
    cube(2.10,.18,.48,x,y-1.27,4.30,trim);
    cube(.15,2.4,.28,x-1.0,y,4.26,stone);
    cube(.15,2.4,.28,x+1.0,y,4.26,stone);
- }
- // Warm lanterns and sculpted entry porch, without stairs or blocking the door.
- for(const x of [-2.1,2.1]){
-   cube(.28,.65,.28,x,3.7,4.56,trim);
-   cube(.35,.43,.35,x,3.68,4.78,warmLight);
-   cube(.46,.11,.46,x,3.98,4.78,wine);
-   cube(.46,.11,.46,x,3.39,4.78,wine);
  }
  cube(5.3,.28,1.35,0,7.35,5.05,ivory);
  cube(5.6,.16,1.6,0,7.56,5.05,trim);
@@ -224,35 +212,63 @@ function createFamilyMansion(parent,THREE){
  // Gold original official emblem: actual PNG, never approximated with geometry.
  const tex=new THREE.TextureLoader().load('./office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
  const plaqueBack=cube(4.15,4.15,.16,0,9.2,4.97,wine);
- const plaque=new THREE.Mesh(new THREE.PlaneGeometry(3.65,3.65),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));plaque.position.set(0,9.2,5.075);g.add(plaque);
+ const plaque=new THREE.Mesh(new THREE.PlaneGeometry(3.65,3.65),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:true}));plaque.position.set(0,9.2,5.075);g.add(plaque);
  // Flag and original emblem, at the right tower.
  cylinder(.065,5.4,7.6,19.3,-.3,trim,8);
  const flag=cube(3.25,2.05,.06,9.3,20,-.3,wine);
- const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.75,1.75),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));flagLogo.position.set(9.3,20,-.25);g.add(flagLogo);
- // Flower-wrapped low garden fences along both sides of a completely open entry path.
- const petal=material('#E7A9BA'),flowerWhite=material('#FFF0E4'),fence=material('#FFF4E5');
- for(const side of [-1,1]){
-   for(const z of [6.4,8.2,10,11.8,13.6]){
-     const x=side*3.45;
-     cylinder(.085,1.05,x,.55,z,fence,8);
-     const bloom=new THREE.Mesh(new THREE.SphereGeometry(.29,9,7),((Math.round(z*10))%2)?petal:flowerWhite);bloom.position.set(x,.95,z);g.add(bloom);
-   }
-   for(const z of [7.3,9.1,10.9,12.7])cube(.1,.13,1.8,side*3.45,.67,z,trim);
+ const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.75,1.75),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:true}));flagLogo.position.set(9.3,20,-.25);g.add(flagLogo);
+ // v67: clear open entrance; no swing poles, rear pergola rods, treehouse,
+ // freestanding signboards, benches, lampposts or entrance topiary pots.
+ const whiteStone=material('#F8F2E9'),deepWine=material('#873F55'),warmPink=material('#E5A7B7'),green=material('#5D8966');
+ // Layered front-facing pediment: recognizable rooflines, not tiny floating trim.
+ const pediment=cone(4.5,3.2,0,13.0,4.0,wine,4);pediment.scale.z=.30;
+ cube(6.7,.24,.8,0,11.20,4.85,whiteStone);
+ cube(6.5,.14,.85,0,11.40,4.9,trim);
+ // Two projecting dormers, with full window panes, frames and small pitched roofs.
+ for(const x of [-4.55,4.55]){
+   cube(2.35,2.3,.8,x,12.2,3.35,ivory);
+   cube(1.60,1.65,.16,x,12.22,3.79,whiteStone);
+   cube(1.34,1.40,.19,x,12.22,3.91,glass);
+   cube(.10,1.45,.20,x,12.22,4.04,whiteStone);
+   cube(1.42,.09,.20,x,12.22,4.04,whiteStone);
+   const dormer=cone(1.92,1.25,x,14.0,3.3,wine,4);dormer.scale.z=.64;
+   cube(2.40,.18,.78,x,11.07,3.85,trim);
  }
- // Garden swing in left enclosure, well away from the entrance.
- for(const x of [-7.9,-5.3]){cylinder(.12,3.1,x,1.55,10.7,trim,9);cylinder(.045,1.75,x,2.0,10.7,trim,8);}
- cube(3.1,.2,.18,-6.6,3.13,10.7,trim);
- for(const x of [-7.45,-5.75])cylinder(.045,1.8,x,2.14,10.7,trim,8);
- cube(2.55,.18,.8,-6.6,1.3,10.7,ivory);cube(2.55,.8,.15,-6.6,1.72,11.1,ivory);
- // Right-hand garden bench and round side table.
- cube(2.9,.22,.9,6.8,.85,10.3,ivory);cube(2.9,1.05,.18,6.8,1.35,10.7,ivory);
- for(const x of [5.7,7.9])cube(.16,.85,.16,x,.43,10.3,trim);
- cylinder(.68,.12,8.1,1.1,12.4,ivory);cylinder(.12,1,8.1,.55,12.4,trim);
- // Small low-poly treehouse behind left, pergola behind right; kept away from façade.
- for(const [x,z] of [[-11,-8],[-12,-9]]){cylinder(.34,3.8,x,1.9,z,brown,8);cone(1.45,2.3,x,4.8,z,leaf,8);}
- cube(3.1,2.0,2.8,-11,4.7,-8,brown);cone(2.5,2,-11,6.8,-8,rose,4);
- for(const x of [9,12])for(const z of [-8,-5])cylinder(.12,4.1,x,2,z,trim,8);
- for(const z of [-8,-5])cube(3.4,.16,.2,10.5,4.1,z,trim);
+ // Strong entrance surround and curved-looking canopy assembled from visible segments.
+ cube(4.25,4.35,.24,0,2.18,4.68,whiteStone);
+ cube(3.05,3.72,.32,0,1.90,4.87,material('#68403F'));
+ cube(.07,3.62,.35,0,1.87,5.06,trim);
+ for(const x of [-1.2,1.2]){
+   cube(.12,3.45,.38,x,1.85,5.08,trim);
+   const handle=cube(.13,.47,.14,x*.50,1.86,5.16,trim);
+ }
+ cube(5.15,.30,1.28,0,4.52,5.05,deepWine);
+ cube(5.40,.13,1.42,0,4.76,5.05,trim);
+ // Brand plaque fixed on front of entrance canopy, depth tested.
+ const brandPanel=cube(2.85,1.08,.12,0,4.19,5.75,deepWine);
+ const entranceLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.13,1.13),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthTest:true,depthWrite:true,polygonOffset:true,polygonOffsetFactor:-1}));entranceLogo.position.set(0,4.18,5.84);g.add(entranceLogo);
+ // Repeated masonry detailing and generous flower boxes with recognizable leaves/petals.
+ for(const x of [-5.4,-2.9,2.9,5.4]){
+   cube(1.65,.28,.67,x,5.85,4.52,whiteStone);
+   cube(1.78,.11,.70,x,6.05,4.52,trim);
+   for(const dx of [-.53,-.20,.16,.50]){
+     const xx=x+dx;
+     const foliage=new THREE.Mesh(new THREE.SphereGeometry(.22,9,7),green);foliage.position.set(xx,6.20,4.62);g.add(foliage);
+     const bloom=new THREE.Mesh(new THREE.SphereGeometry(.15,9,7),dx>0?warmPink:rosePale);bloom.position.set(xx,6.38,4.69);g.add(bloom);
+   }
+ }
+ // Symmetrical, LOW flower beds only; path kept clear for visitors.
+ for(const side of [-1,1]){
+   const cx=side*6.65,cz=9.7;
+   const bed=new THREE.Mesh(new THREE.CylinderGeometry(2.0,2.1,.22,20),whiteStone);bed.scale.z=.82;bed.position.set(cx,.18,cz);g.add(bed);
+   for(let i=0;i<13;i++){
+     const a=i*Math.PI*2/13,r=.35+(i%3)*.46,x=cx+Math.cos(a)*r,z=cz+Math.sin(a)*r*.80;
+     const shrub=new THREE.Mesh(new THREE.SphereGeometry(.37,9,7),green);shrub.position.set(x,.50,z);g.add(shrub);
+     const flower=new THREE.Mesh(new THREE.SphereGeometry(.17,9,7),i%2?warmPink:rosePale);flower.position.set(x,.80,z);g.add(flower);
+   }
+ }
+ // Correct front and side brand images' depth behavior: never show through another island.
+ for(const obj of [plaque,flagLogo]){obj.material.depthTest=true;obj.material.depthWrite=true;obj.renderOrder=0;}
  return g;
 }
 
@@ -829,11 +845,11 @@ function plant(x,z){
  }
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
-roomBox(0,-.24,0,27,.48,22,'#D8B990');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#F5EBDD');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#F5EBDD');
-roomBox(13.3,3.7,0,.40,7.4,22,'#F5EBDD');
-for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#C9A985');
+roomBox(0,-.24,0,27,.48,22,'#E7E0DD');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#F8F5F2');
+roomBox(-13.3,3.7,0,.40,7.4,22,'#F8F5F2');
+roomBox(13.3,3.7,0,.40,7.4,22,'#F8F5F2');
+for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D5CFCD');
 for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#C9A985');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
@@ -843,9 +859,9 @@ for(const x of [-8,0,8]){
 }
 // Signature illuminated brand installation. The official image itself is NEVER recolored or redrawn.
 // Navy presentation backing, fine champagne-gold trim and warm wall-wash lighting increase contrast.
-const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#172a3e');
-const logoTrim=roomBox(0,4.32,-10.115,4.83,4.83,.075,'#d3aa67');
-const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#172a3e');
+const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#30465D');
+const logoTrim=roomBox(0,4.32,-10.115,4.83,4.83,.075,'#B9C1C8');
+const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#30465D');
 for(const px of [-2.35,2.35])for(const py of [2.03,6.60]){
  const rivet=roomBall(px,py,-9.99,.085,'#e3c18a');
 }
@@ -883,19 +899,19 @@ roomBox(-7.8,4.1,-10.39,1.05,1.40,.04,'#f9f5e9');
 officeSign('林柏均律師｜所長辦公室',-8.2,3.7,-3.8,5.4,'#fff8e9',5);
 plant(-5.2,-7.7);
 // Three individual, decorated staff desks along the right, with clear labels.
-desk(5.0,-6.2,3.05,'#FFF5E5',6);elegantDeskDetails(5,-6.2,3.05,'#f2d8c4');
+desk(5.0,-6.2,3.05,'#5C6A78',6);elegantDeskDetails(5,-6.2,3.05,'#f2d8c4');
 officeSign('夢奇奇飼養者｜事務所今天又怎麼了？',5.0,3.1,-5.9,4.6,'#3b3546',6);
 roomBall(6.15,1.28,-5.7,.20,'#f4b4c6');
-desk(10.0,-5.4,3.05,'#FFF5E5',7);elegantDeskDetails(10,-5.4,3.05,'#aa8c78');screen(10.8,1.61,-5.75,7);
+desk(10.0,-5.4,3.05,'#5C6A78',7);elegantDeskDetails(10,-5.4,3.05,'#aa8c78');screen(10.8,1.61,-5.75,7);
 officeSign('哈姆太郎｜事務所今天又怎麼了？',10.0,3.1,-5.0,4.1,'#3b3546',7);
 roomBall(11.1,1.28,-5.0,.21,'#e6b46a');
-desk(9.1,1.1,3.25,'#FFF5E5',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
+desk(9.1,1.1,3.25,'#5C6A78',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
 officeSign('薪水掌門人｜事務所今天又怎麼了？',9.1,3.1,1.5,4.5,'#3b3546',8);
 roomBox(10.15,1.2,1.3,.5,.13,.40,'#efb7c8');
 // Curved reception desk with marble counter and gold trim.
-const reception=registerOffice(roomCylinder(0,.51,4.7,2.1,2.1,.92,'#FFF8EF'),2);
+const reception=registerOffice(roomCylinder(0,.51,4.7,2.1,2.1,.92,'#F3E8E8'),2);
 reception.scale.set(1.22,1,.45);
-roomCylinder(0,1.01,4.7,2.62,2.62,.13,'#D5B77A').scale.set(1,.99,.42);
+roomCylinder(0,1.01,4.7,2.62,2.62,.13,'#45576A').scale.set(1,.99,.42);
 screen(0,1.46,4.43,2);
 officeSign('接待櫃檯｜諮詢與聯絡',0,2.65,4.6,4.6,'#fff8ed',2);
 plant(-4.3,5.3);plant(4.3,5.3);
@@ -1137,7 +1153,7 @@ const medicalExperience=createMedicalExperience();const familyExperience=createF
 const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fffaf0;border:2px solid #cfa96c;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#20354c;font:14px/1.65 system-ui';medGuide.innerHTML='<h3 style="margin:0 0 7px">歡迎來到德威陽醫療法律島！</h3><p>點點看，這間辦公室藏了什麼秘密？</p><p><b>雙人沙發：</b>醫療糾紛，聽聽雙方怎麼說！</p><p><b>大書櫃：</b>翻開書本，發現法律小秘密！</p><p><b>心電圖牆：</b>嗶嗶！你能發現異常嗎？</p><p><b>病歷證據：</b>翻開病歷，看看事務所又發生什麼事！</p><p><b>接待櫃檯：</b>有疑問？來這裡問問！</p><p><b>薪水掌門人：</b>點點她，看看有什麼驚喜！</p><button id="wyMedGuideClose" style="width:100%;padding:11px;border:0;border-radius:10px;background:#284d68;color:white;font-weight:bold">開始探索</button>';document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
 const medGuideAgain=document.createElement('button');medGuideAgain.textContent='醫法指南';medGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #d7b77b;border-radius:12px;background:#fffaf0;color:#20354c;font-weight:bold';document.body.append(medGuideAgain);medGuideAgain.onclick=()=>medGuide.style.display='block';
 let medGuideSeen=false;
-const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML='<h3 style="margin:0 0 7px;text-align:center">歡迎來到德威陽家庭法律島！</h3><p>點擊家具上方的標示或家具本身，探索家事法律知識。</p><p><b>婚姻家事：</b>點擊廚房中島</p><p><b>親權扶養：</b>點擊親子玩具箱</p><p><b>遺囑繼承：</b>點擊家族紀念桌</p><p><b>家事保護：</b>點擊復古電話桌</p><p><b>德威陽諮詢：</b>點擊中央沙發</p><p>拖曳旋轉視角，雙指縮放畫面。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#773D49;color:white;font-weight:bold">開始探索</button>';document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
+const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML='<h3 style="margin:0 0 7px;text-align:center">歡迎來到德威陽家庭法律島！</h3><p>點擊家具上方的標示或家具本身，探索家事法律知識。</p><p><b>婚姻家事：</b>點擊廚房中島</p><p><b>親權扶養：</b>點擊親子玩具箱</p><p><b>遺囑繼承：</b>點擊立體遺囑書櫃與書桌</p><p><b>家事保護：</b>點擊復古電話桌</p><p><b>德威陽諮詢：</b>點擊中央沙發</p><p>拖曳旋轉視角，雙指縮放畫面。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#773D49;color:white;font-weight:bold">開始探索</button>';document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
 const familyGuideAgain=document.createElement('button');familyGuideAgain.textContent='家事指南';familyGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #D2AD77;border-radius:12px;background:#F4DFE4;color:#713F4C;font-weight:bold';document.body.append(familyGuideAgain);familyGuideAgain.onclick=()=>familyGuide.style.display='block';let familyGuideSeen=false;
 
 

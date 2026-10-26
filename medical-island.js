@@ -414,9 +414,9 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
   const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(23,42,62,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
-  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
+  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,canvas.width/2,canvas.height/2,448);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
  hint('💬 跟我聊聊',7.2,3.95,3.6,'staff');
  hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
