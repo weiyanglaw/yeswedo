@@ -299,8 +299,11 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    if(k===5&&y===3.95){book.userData.medicalAction='books';book.userData.book=true;}
   }
  }
- box(3.85,6.6,.14,walnut,bookX,4.1,-8.15);
- for(const y of [1.35,2.65,3.95,5.25,6.55])box(3.55,.11,.7,gold,bookX,y,-7.77);
+ box(4.35,7.05,.90,walnut,bookX,4.1,-7.92);
+ // v46: deep, solid bookcase with visible side panels and thick shelves.
+ for(const side of [-1,1])box(.23,7.05,1.20,walnut,bookX+side*2.16,4.1,-7.65);
+ box(4.48,.24,1.22,gold,bookX,7.67,-7.65);
+ for(const y of [1.35,2.65,3.95,5.25,6.55])box(4.12,.17,1.08,gold,bookX,y,-7.62);
  // Two framed artwork panels on side walls, adding depth without extra thematic zones.
  for(const x of [-11.65,11.65]){
   box(.13,2.4,2.3,gold,x,4.3,1.2);
@@ -336,11 +339,16 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  }
  // Keep the original interactive chibi staff. No GLB replacement.
  // v45: one identifiable left-side case sofa and coffee table, leaving the front-left open.
- box(4.2,.55,1.8,material(0xA9C9C7),-7.7,.58,-.35);
- box(4.2,1.08,.40,material(0xA9C9C7),-7.7,1.19,-1.12);
- for(const dx of [-1.88,1.88])box(.4,.72,1.8,material(0xA9C9C7),-7.7+dx,.92,-.35);
- box(2.25,.12,1.1,stone,-7.7,.75,1.5);
- box(.24,.58,.24,walnut,-7.7,.42,1.5);
+ box(5.0,.73,2.25,material(0xA9C9C7),-7.7,.66,-.35);
+ box(5.0,1.46,.56,material(0xA9C9C7),-7.7,1.48,-1.30);
+ for(const dx of [-2.24,2.24])box(.48,1.00,2.25,material(0xA9C9C7),-7.7+dx,.92,-.35);
+ box(2.85,.18,1.55,stone,-7.7,.86,1.55);
+ for(const dx of [-1.08,1.08])for(const dz of [-.52,.52])box(.18,.72,.18,walnut,-7.7+dx,.44,1.55+dz);
+ // v46: one substantial consultation chair facing the case sofa, not a waiting area.
+ const chairMat=material(0xB7CFC9);
+ box(1.65,.65,1.55,chairMat,-3.55,.64,1.20);
+ box(1.65,1.36,.38,chairMat,-2.96,1.42,1.20);
+ for(const dz of [-.64,.64])box(1.38,.76,.23,chairMat,-3.55,.98,1.20+dz);
  // Case file: a visible, clickable object on the table.
  const caseFile=box(.95,.10,.67,material(0xE6E0D3),-7.7,.87,1.5);
  for(const x of [-10.2,10.2]){
@@ -368,11 +376,11 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   register(panel,title==='醫療爭議'?'computer':'computer');
  };
  // v45: medical-record evidence is a horizontal side-wall cabinet, not a freestanding island.
- const evidenceBody=box(.82,1.35,5.35,material(0xC8DAD4,0,.8),10.55,1.10,-1.65);
- const evidenceTop=box(1.02,.13,5.6,stone,10.55,1.85,-1.65);
+ const evidenceBody=box(1.45,1.70,6.40,material(0xC8DAD4,0,.8),10.30,1.14,-1.65);
+ const evidenceTop=box(1.66,.18,6.65,stone,10.30,2.06,-1.65);
  for(const zz of [-3.15,-1.65,-.15]){
-  box(.12,.72,.92,cream,9.98,2.25,zz);
-  box(.14,.08,.68,navy,9.88,2.29,zz);
+  box(.20,.87,1.10,cream,9.42,2.60,zz);
+  box(.23,.10,.84,navy,9.29,2.65,zz);
  }
 
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
@@ -383,7 +391,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-7.80);
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
- const deskHit=box(5.55,.25,1.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
+ const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
  const bookHit=box(3.6,5.7,.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.15,-7.55);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}

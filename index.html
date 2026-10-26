@@ -100,7 +100,8 @@ $('startExplore').addEventListener('click',enterIsland);
 @media(max-width:620px){#wyInfo .wyContactGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#wyInfo .wyContact{margin:25px -5px -4px}}
 </style><div id="wyInfo" role="dialog" aria-modal="true" aria-label="事務所資訊"><article><button class="wyClose" id="wyInfoClose" aria-label="關閉">×</button><div id="wyInfoBody"></div></article></div>
 <div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
-<div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
+<div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeContact" onclick="document.getElementById('wyContactPanel').hidden=!document.getElementById('wyContactPanel').hidden" style="border:1px solid #d8b97e;border-radius:12px;background:#fff9ed;padding:10px 12px;font-weight:bold;color:#203b4d">☎ 聯絡我們</button><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
+<div id="wyContactPanel" hidden style="position:absolute;top:75px;right:12px;z-index:120;background:#fffdf7;color:#203b4d;border:2px solid #d8b97e;border-radius:16px;padding:16px;max-width:min(330px,90vw);box-shadow:0 10px 30px #203b4d33;pointer-events:auto;font-size:14px;line-height:1.9"><strong>德威陽國際法律事務所</strong><br>LINE：@wylaw<br><a href="https://weiandyang.com" target="_blank" rel="noopener">官方網站</a>　<a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener">Facebook</a><br><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener">Instagram</a><br><button onclick="document.getElementById('wyContactPanel').hidden=true" style="padding:6px 12px;border-radius:8px;border:1px solid #d8b97e;background:white">關閉</button></div>
 <div style="position:absolute;bottom:10px;left:12px;right:12px;pointer-events:none;text-align:center"><span style="display:inline-block;background:#fff9efec;border:1px solid #d4b681;border-radius:20px;padding:6px 10px;font-size:11px">點擊辦公設備互動 · 拖曳旋轉、雙指縮放</span></div></div>
 
 <div id="wyDoorPrompt" style="display:none;position:fixed;z-index:34;bottom:clamp(160px,23vh,225px);left:50%;transform:translateX(-50%);width:min(355px,88vw);background:#fffaf2f2;border:2px double #cfa976;outline:1px solid #fff7e5;outline-offset:-7px;border-radius:19px;padding:14px 16px;box-shadow:0 12px 35px #1a2a3b55;text-align:center;font-family:system-ui,'Noto Sans TC',sans-serif;color:#23364a;pointer-events:auto"><div id="wyDoorTitle" style="font-size:14px;font-weight:800;margin-bottom:9px">已抵達入口</div><button id="wyDoorEnter" style="background:#1c3552;color:#fff5df;border:1px solid #d9b781;border-radius:13px;padding:10px 24px;font-size:15px;font-weight:800;cursor:pointer">🚪 進入參觀</button><div style="font-size:11px;color:#8a6d55;margin-top:7px">只有按下按鈕才會進入，路過不會自動切換</div></div>
@@ -301,7 +302,8 @@ for(let i=1;i<6;i++){
   mesh(new THREE.BoxGeometry(9.65,.08,len/segments+.01),rm[k%6],group,0,.37,z);
  }
  // No railing within 12 world units of the center: a completely open approach.
- const railStart=-len/2+(i===2?1.0:12.5),railEnd=len/2-(i===2?12.5:0);
+ // v46: remove the two circled castle-side railing stretches on the front and right bridges.
+ const railStart=-len/2+((i===1||i===2)?25:12.5),railEnd=len/2;
  const railLen=Math.max(0,railEnd-railStart);
  if(railLen>1){
   for(const side of [-1,1]){
