@@ -208,9 +208,9 @@ export function createMedicalExterior(group, THREE){
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
- const logoBacking=add(new THREE.CircleGeometry(1.91,64),new THREE.MeshStandardMaterial({color:'#21483F',roughness:.7,side:THREE.DoubleSide,depthTest:true,depthWrite:true}),0,7.3,5.65);
- const crest=add(new THREE.CircleGeometry(1.73,64),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}),0,7.3,5.70);
- const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,5.66);
+ const logoBacking=add(new THREE.CircleGeometry(1.91,64),new THREE.MeshStandardMaterial({color:'#21483F',roughness:.7,side:THREE.DoubleSide,depthTest:true,depthWrite:true}),0,7.3,5.82);
+ const crest=add(new THREE.CircleGeometry(1.73,64),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}),0,7.3,5.85);
+ const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,5.83);
  // All exterior emblems respect building occlusion; never draw on top of other islands.
  return {door,crest};
 }
@@ -237,7 +237,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  box(8.64,6.79,.11,material(0x214A4B),0,4.58,-8.60);
  const tex=new THREE.TextureLoader().load('office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
  const seal=add(new THREE.PlaneGeometry(5.3,5.3),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,depthTest:true}),0,4.85,-8.45);
- seal.renderOrder=15;
+ seal.renderOrder=0;
  for(const x of [-5.1,5.1]){
   box(.10,6.9,.18,gold,x,4.58,-8.75);
   for(const y of [2.15,4.6,7.05]){
@@ -398,6 +398,12 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.34,.10,.85,navy,9.12,2.89,zz);
   box(.04,.60,.07,gold,9.11,2.55,zz);
  }
+ // v71: a compact, functional legal-analysis terminal along the RIGHT wall.
+ // This is an interaction surface, not a new wall or obstacle in the central walking route.
+ const analysisShell=box(.70,1.9,2.4,material(0xC6D9D5,0,.65),10.05,2.12,2.05);
+ const analysisPanel=box(.11,1.42,2.13,navy,9.64,2.65,2.05);
+ // Front-facing -X clickable screen; legal conditions are adjusted in the popup.
+ const analysisHit=box(.12,2.0,2.55,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),9.52,2.45,2.05);
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
@@ -407,7 +413,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
- const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
+ const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');register(analysisHit,'analysis');register(analysisPanel,'analysis');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
@@ -425,6 +431,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
  hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
  hint('認識德威陽',0,8.10,-6.80,'logo');
+ hint('責任分析台',8.2,4.2,2.0,'analysis');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -576,12 +583,29 @@ export function createMedicalExperience(){
  function ecgShow(){const t=ecgTitles[ecgIndex++%ecgTitles.length];title.textContent='心電圖監測｜'+t;body.textContent='監測畫面出現變化，什麼時候應提醒醫療團隊評估？';choices.replaceChildren();['發現異常變化時即依臨床情況評估','等到下一次例行巡房','只看單一數字，不確認患者狀況'].forEach((a,i)=>button(a,()=>{body.textContent=i===0?'答對了！應結合病人狀況、監測趨勢與臨床規範及時評估。':'不建議只等待或只看單一數字；應依患者情況與監測趨勢及時評估。';}));button('下一個監測事件',ecgShow);}
  function deskHome(){title.textContent='接待櫃檯｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('患者／家屬法律需求',()=>{body.textContent='可先整理病歷、醫療經過及相關損害資料，再評估法律諮詢。';});button('醫療院所法律需求',()=>{body.textContent='可協助醫療機構檢視診療紀錄、風險、申訴及爭議處理。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contactHome);}
  function contactHome(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回接待櫃檯',deskHome);}
+ let analysisState={notice:false,records:false,causation:false};
+ function analysisHome(){
+  title.textContent='⚖️ 醫療責任分析台｜條件觀察';
+  const on=Object.values(analysisState).filter(Boolean).length;
+  body.textContent='這不是責任判決機。請開關三項資料條件，觀察法律評估還缺少什麼。\n目前可供評估的資訊：'+on+'／3項。';
+  choices.replaceChildren();
+  [['notice','有術前告知及溝通紀錄'],['records','有完整病歷及處置紀錄'],['causation','有損害與因果關係的專業資料']].forEach(([key,label])=>button((analysisState[key]?'☑ ':'☐ ')+label,()=>{analysisState[key]=!analysisState[key];analysisHome()}));
+  button('查看分析結果',()=>{
+   const gaps=[];
+   if(!analysisState.notice)gaps.push('告知義務與實際說明內容');
+   if(!analysisState.records)gaps.push('診療過程及醫療常規');
+   if(!analysisState.causation)gaps.push('損害、因果關係與專業判斷');
+   body.textContent=gaps.length?'仍需進一步釐清：'+gaps.join('、')+'。資料不足不能直接判定責任。':'三項資料都有助於評估，但仍須確認真實性、完整性、注意義務及具體事實；不能自動認定有無過失。';
+   choices.replaceChildren();button('重新調整條件',analysisHome);
+  });
+  button('重設分析台',()=>{analysisState={notice:false,records:false,causation:false};analysisHome()});
+ }
  let current='staff';
  function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:10px 12px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
  function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
- function home(){if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgShow();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function home(){if(current==='analysis'){analysisHome();return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgShow();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
- return {show(){el.style.display='none'},open(action='staff'){current=scenes[action]?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
+ return {show(){el.style.display='none'},open(action='staff'){current=(action==='analysis'||scenes[action])?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }

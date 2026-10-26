@@ -32,24 +32,25 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  sphere(.7,9.15,1.15,-6.1,wood);sphere(.54,9.15,2.03,-6.1,wood);
  sphere(.22,8.77,2.47,-6.12,wood);sphere(.22,9.53,2.47,-6.12,wood);
  sphere(.11,9.0,2.09,-5.62,walnut);sphere(.11,9.32,2.09,-5.62,walnut);
- // v67: tall inheritance library and adjacent writing desk, replacing the low console.
- const libraryWood=mat('#74505B'),bookPaper=mat('#F1E5D7'),bookNavy=mat('#344D68');
- box(4.9,5.25,.95,-8.0,2.66,8.05,libraryWood,'heritage');
- for(const y of [.50,1.65,2.8,3.95,5.05])box(4.75,.13,1.06,-8.0,y,8.05,gold,'heritage');
- for(let shelf=0;shelf<4;shelf++)for(let i=0;i<9;i++){
-   const x=-10.0+i*.48,yy=.76+shelf*1.13;
-   box(.28,.68+(i%3)*.11,.66,x,yy,8.05,i%3===0?wine:i%3===1?bookPaper:bookNavy,'heritage');
-   box(.04,.50,.69,x+.07,yy,8.05,gold);
- }
- // Adjacent desk, chair and clearly visible will document.
- box(3.2,.24,1.65,-5.4,1.33,5.35,white,'heritage');
- for(const x of [-6.72,-4.10])for(const z of [4.77,5.95])box(.16,1.19,.16,x,.63,z,libraryWood);
- box(1.18,.035,.78,-5.7,1.48,5.3,bookPaper,'heritage');
- for(let j=0;j<4;j++)box(.76,.018,.03,-5.7,1.51,5.08+j*.15,libraryWood);
- box(.08,.08,.85,-4.5,1.52,5.18,bookNavy);
- box(1.15,.18,1.1,-5.2,.60,7.1,libraryWood);
- for(const x of [-5.65,-4.75])for(const z of [6.65,7.53])box(.10,.55,.10,x,.28,z,libraryWood);
- box(1.14,1.28,.18,-5.2,1.25,7.62,libraryWood);
+  // v71: inheritance library sits against the RIGHT wall, immediately beside the writing desk.
+  // Books face the visitor from the room centre (towards -X), rather than blocking the front view.
+  const libraryWood=mat('#74505B'),bookPaper=mat('#F1E5D7'),bookNavy=mat('#344D68');
+  box(.94,5.25,4.1,10.82,2.66,4.45,libraryWood,'heritage');
+  for(const y of [.50,1.65,2.8,3.95,5.05])box(1.02,.13,3.94,10.78,y,4.45,gold,'heritage');
+  for(let shelf=0;shelf<4;shelf++)for(let i=0;i<8;i++){
+    const z=2.72+i*.49,yy=.76+shelf*1.13;
+    box(.70,.68+(i%3)*.11,.29,10.27,yy,z,i%3===0?wine:i%3===1?bookPaper:bookNavy,'heritage');
+    box(.08,.50,.035,9.89,yy,z+.06,gold);
+  }
+  // Desk immediately to the left of the bookcase, with its chair on the visitor side.
+  box(3.1,.24,1.75,7.95,1.33,5.35,white,'heritage');
+  for(const x of [6.75,9.12])for(const z of [4.72,5.97])box(.16,1.19,.16,x,.63,z,libraryWood);
+  box(1.18,.035,.78,7.6,1.48,5.25,bookPaper,'heritage');
+  for(let j=0;j<4;j++)box(.76,.018,.03,7.6,1.51,5.04+j*.15,libraryWood);
+  box(.08,.08,.85,8.75,1.52,5.18,bookNavy);
+  box(1.15,.18,1.1,7.9,.60,7.05,libraryWood);
+  for(const x of [7.45,8.35])for(const z of [6.60,7.48])box(.10,.55,.10,x,.28,z,libraryWood);
+  box(1.14,1.28,.18,7.9,1.25,7.55,libraryWood);
  // v67: oversized legible rotary telephone, with receiver and dial facing the visitor.
  box(3.6,1.14,2.8,8.1,.57,4.9,cream,'protect');
  box(2.7,.20,2.0,8.1,1.23,4.9,white,'protect');
@@ -111,8 +112,8 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  cyl(.13,.46,5.6,.82,-2.55,walnut);
  for(const [x,z,m] of [[6.0,-7.5,gold],[6.6,-7.5,sage],[7.2,-7.5,pink]])box(.52,.52,.52,x,.27,z,m);
  // Inheritance writing desk lamp, next to the bookcase.
- const lampStem=cyl(.055,.67,-4.2,1.85,5.25,gold);
- const shade=cyl(.34,.22,-4.2,2.24,5.25,white);
+ const lampStem=cyl(.055,.67,8.85,1.85,5.25,gold);
+ const shade=cyl(.34,.22,8.85,2.24,5.25,white);
  // Softer cushions, clear armrests and low table legs.
  for(const x of [-3.2,-1.5,.2,1.9]){box(1.45,.33,1.34,x,1.45,.65,white);box(1.1,.75,.24,x,1.95,-.01,cream);}
  for(const x of [-1.1,.3])box(.8,.75,.24,x,1.8,.43,pink);
@@ -127,13 +128,13 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  }
  hint('婚姻家事',-6.6,3.0,-3.7,'kitchen');
  hint('親權扶養',7.0,3.25,-4.8,'child');
- hint('遺囑繼承',-8.0,5.9,7.15,'heritage');
+ hint('遺囑繼承',9.2,5.9,4.4,'heritage');
  hint('家事保護',8.0,3.7,4.6,'protect');
  hint('德威陽諮詢',0,3.15,1.7,'sofa');
  const staffLabelText='哈姆太郎';hint(staffLabelText,4.9,3.45,1.1,'staff');
  // Large invisible tap areas improve mobile touch targeting.
  const invisible=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
- box(7,3.4,3.4,-6.6,1.7,-3.7,invisible,'kitchen');box(4.6,3.1,4.2,7,1.5,-4.8,invisible,'child');box(5.2,5.3,1.3,-8.0,2.65,7.5,invisible,'heritage');box(4.1,3.3,3.1,8,1.7,4.6,invisible,'protect');box(9.5,3.1,6.5,0,1.6,1.7,invisible,'sofa');
+ box(7,3.4,3.4,-6.6,1.7,-3.7,invisible,'kitchen');box(4.6,3.1,4.2,7,1.5,-4.8,invisible,'child');box(1.25,5.3,4.25,10.05,2.65,4.45,invisible,'heritage');box(4.1,3.3,3.1,8,1.7,4.6,invisible,'protect');box(9.5,3.1,6.5,0,1.6,1.7,invisible,'sofa');
  // v67 waypoint walk: traverse clear corridor and stop to work, not spin in place.
  const staffLabel=labels[labels.length-1];
  const route=[[4.9,1.1],[5.0,3.9],[2.0,5.3],[-2.1,5.1],[-2.3,3.6],[.7,3.7],[3.1,4.2],[5.0,3.9]];
