@@ -190,7 +190,7 @@ export function createMedicalExterior(group, THREE){
  const foliage=new THREE.MeshStandardMaterial({color:0x47865d,roughness:.85});
  const soil=new THREE.MeshStandardMaterial({color:0x604a3a,roughness:1});
  const blossom=[0xf6a9c8,0xfff9ee,0xe6a7ca,0xf9dce8,0xf7b7b4].map(color=>new THREE.MeshStandardMaterial({color,roughness:.75}));
- const gardenX=0,gardenZ=12.4,gardenRadius=2.25;
+ const gardenX=7.5,gardenZ=12.4,gardenRadius=2.25;
  // Raised round ivory rim, gold lip and green flower-filled planting surface.
  add(new THREE.CylinderGeometry(gardenRadius,gardenRadius+.15,.52,64),ivory,gardenX,.67,gardenZ);
  add(new THREE.CylinderGeometry(gardenRadius-.19,gardenRadius-.19,.06,64),soil,gardenX,.975,gardenZ);
@@ -208,9 +208,9 @@ export function createMedicalExterior(group, THREE){
  }
  // Original, unchanged WEIYANG image faces the approach (+Z), in front of facade.
  const tex=new THREE.TextureLoader().load('official-logo.png');tex.colorSpace=THREE.SRGBColorSpace;
- const logoBacking=add(new THREE.CircleGeometry(1.91,64),new THREE.MeshStandardMaterial({color:'#21483F',roughness:.7,side:THREE.DoubleSide,depthTest:true,depthWrite:true}),0,7.3,4.585);
- const crest=add(new THREE.CircleGeometry(1.73,64),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}),0,7.3,4.64);
- const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,4.58);
+ const logoBacking=add(new THREE.CircleGeometry(1.91,64),new THREE.MeshStandardMaterial({color:'#21483F',roughness:.7,side:THREE.DoubleSide,depthTest:true,depthWrite:true}),0,7.3,5.65);
+ const crest=add(new THREE.CircleGeometry(1.73,64),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}),0,7.3,5.70);
+ const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,5.66);
  // All exterior emblems respect building occlusion; never draw on top of other islands.
  return {door,crest};
 }
@@ -237,7 +237,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  box(8.64,6.79,.11,material(0x214A4B),0,4.58,-8.60);
  const tex=new THREE.TextureLoader().load('office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
  const seal=add(new THREE.PlaneGeometry(5.3,5.3),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,depthTest:true}),0,4.85,-8.45);
- seal.renderOrder=0;
+ seal.renderOrder=15;
  for(const x of [-5.1,5.1]){
   box(.10,6.9,.18,gold,x,4.58,-8.75);
   for(const y of [2.15,4.6,7.05]){

@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v68';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=68';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v68-depth';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v70';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v70';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v70';import {createCastleGardens} from './castle-garden.js?v=20261026-v70';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -226,13 +226,13 @@ function createFamilyMansion(parent,THREE){
  cube(6.5,.14,.85,0,11.40,4.9,trim);
  // Two projecting dormers, with full window panes, frames and small pitched roofs.
  for(const x of [-4.55,4.55]){
-   cube(2.35,2.3,.8,x,12.2,3.35,ivory);
-   cube(1.60,1.65,.16,x,12.22,3.79,whiteStone);
-   cube(1.34,1.40,.19,x,12.22,3.91,glass);
-   cube(.10,1.45,.20,x,12.22,4.04,whiteStone);
-   cube(1.42,.09,.20,x,12.22,4.04,whiteStone);
-   const dormer=cone(1.92,1.25,x,14.0,3.3,wine,4);dormer.scale.z=.64;
-   cube(2.40,.18,.78,x,11.07,3.85,trim);
+   cube(2.35,2.3,.8,x,12.5,5.65,ivory);
+   cube(1.60,1.65,.16,x,12.52,6.09,whiteStone);
+   cube(1.34,1.40,.19,x,12.52,6.21,glass);
+   cube(.10,1.45,.20,x,12.52,6.34,whiteStone);
+   cube(1.42,.09,.20,x,12.52,6.34,whiteStone);
+   const dormer=cone(1.92,1.25,x,14.45,5.65,wine,4);dormer.scale.z=.64;
+   cube(2.40,.18,.78,x,11.27,6.15,trim);
  }
  // Strong entrance surround and curved-looking canopy assembled from visible segments.
  cube(4.25,4.35,.24,0,2.18,4.68,whiteStone);
@@ -421,7 +421,7 @@ for(let i=1;i<6;i++){
  const mainIslandRailInset=11.5;
  const railStart=-len/2+mainIslandRailInset,railEnd=len/2;
  const railLen=Math.max(0,railEnd-railStart);
- if(railLen>1){
+ if(railLen>1 && i!==2){
   for(const side of [-1,1]){
    mesh(new THREE.BoxGeometry(.24,.22,railLen),mats.gold,group,side*4.82,1.65,(railStart+railEnd)/2);
    const count=Math.ceil(railLen/4);
@@ -849,13 +849,13 @@ roomBox(0,-.24,0,27,.48,22,'#DDD9D7');
 roomBox(0,3.7,-10.75,27,7.4,.40,'#F4F2EF');
 roomBox(-13.3,3.7,0,.40,7.4,22,'#F4F2EF');
 roomBox(13.3,3.7,0,.40,7.4,22,'#F4F2EF');
-for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D1CCCA');
-for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#D1CCCA');
+for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D6D4D2');
+for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#C6B9AC');
 // Warm skirting and picture lights.
-roomBox(0,.30,-10.48,26.5,.20,.15,'#D1CCCA');
+roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 for(const x of [-8,0,8]){
  roomBall(x,6.75,-10.1,.19,'#fff4c7');
- const light=new THREE.PointLight(0xfff7ee,.48,12);light.position.set(x,6.2,-9.2);roomRoot.add(light);
+ const light=new THREE.PointLight(0xffdfad,.55,12);light.position.set(x,6.2,-9.2);roomRoot.add(light);
 }
 // Signature illuminated brand installation. The official image itself is NEVER recolored or redrawn.
 // Navy presentation backing, fine champagne-gold trim and warm wall-wash lighting increase contrast.
@@ -865,15 +865,15 @@ const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#30465D');
 for(const px of [-2.35,2.35])for(const py of [2.03,6.60]){
  const rivet=roomBall(px,py,-9.99,.085,'#e3c18a');
 }
-const logoLight=new THREE.PointLight(0xfff6ee,.85,9);logoLight.position.set(0,6.8,-7.7);roomRoot.add(logoLight);
+const logoLight=new THREE.PointLight(0xffe6b8,1.1,9);logoLight.position.set(0,6.8,-7.7);roomRoot.add(logoLight);
 // Office-only transparent-background version of the official logo: same original gold emblem, no white square.
 const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261026-v44'),transparent:true,side:THREE.DoubleSide})),0);
 logoOffice.position.set(0,4.32,-9.995);roomRoot.add(logoOffice);
-officeSign('認識德威陽',0,7.35,-9.80,4.4,'#fff8ed',0);
+officeSign('認識德威陽｜點擊查看事務所介紹',4.5,6.65,-9.80,4.4,'#fff8ed',0);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
-roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#7C858E');
-roomBox(-8.45,.073,-5.8,8.15,.027,7.3,'#A7B0B8');
+roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#51443d');
+roomBox(-8.45,.073,-5.8,8.15,.027,7.3,'#846d5b');
 // v44: restore unobstructed original executive desk, chair and bookshelf; no freestanding rods or hanging lights.
 // Gold-edged executive wall panels and awards.
 for(const x of [-10.7,-5.9]){
@@ -890,7 +890,7 @@ for(const x of [-10.3,-6.5]){
 roomCylinder(-8.4,.42,-1.7,.63,.68,.11,'#8d6447');
 roomCylinder(-8.4,.31,-1.7,.14,.14,.55,'#b99a64');
 // Lawyer desk at back left, with certificates and books.
-desk(-8.4,-5.0,5.2,'#526273',5);elegantDeskDetails(-8.4,-5,5.2,'#778594');
+desk(-8.4,-5.0,5.2,'#4b3028',5);elegantDeskDetails(-8.4,-5,5.2,'#50362b');
 roomBox(-8.4,1.17,-4.2,4.95,.07,.08,'#d2ad71');
 roomBox(-8.4,.82,-4.14,4.75,.08,.10,'#b99259');
 shelf(-11.6,-8.6,2.4);
@@ -899,17 +899,17 @@ roomBox(-7.8,4.1,-10.39,1.05,1.40,.04,'#f9f5e9');
 officeSign('林柏均律師｜所長辦公室',-8.2,3.7,-3.8,5.4,'#fff8e9',5);
 plant(-5.2,-7.7);
 // Three individual, decorated staff desks along the right, with clear labels.
-desk(5.0,-6.2,3.05,'#687887',6);elegantDeskDetails(5,-6.2,3.05,'#E4DEDB');
+desk(5.0,-6.2,3.05,'#687887',6);elegantDeskDetails(5,-6.2,3.05,'#f2d8c4');
 officeSign('夢奇奇飼養者｜事務所今天又怎麼了？',5.0,3.1,-5.9,4.6,'#3b3546',6);
 roomBall(6.15,1.28,-5.7,.20,'#f4b4c6');
-desk(10.0,-5.4,3.05,'#687887',7);elegantDeskDetails(10,-5.4,3.05,'#E4DEDB');screen(10.8,1.61,-5.75,7);
+desk(10.0,-5.4,3.05,'#687887',7);elegantDeskDetails(10,-5.4,3.05,'#aa8c78');screen(10.8,1.61,-5.75,7);
 officeSign('哈姆太郎｜事務所今天又怎麼了？',10.0,3.1,-5.0,4.1,'#3b3546',7);
 roomBall(11.1,1.28,-5.0,.21,'#e6b46a');
-desk(9.1,1.1,3.25,'#687887',8);elegantDeskDetails(9.1,1.1,3.25,'#E4DEDB');
+desk(9.1,1.1,3.25,'#687887',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
 officeSign('薪水掌門人｜事務所今天又怎麼了？',9.1,3.1,1.5,4.5,'#3b3546',8);
 roomBox(10.15,1.2,1.3,.5,.13,.40,'#efb7c8');
 // Curved reception desk with marble counter and gold trim.
-const reception=registerOffice(roomCylinder(0,.51,4.7,2.1,2.1,.92,'#E4DEDB'),2);
+const reception=registerOffice(roomCylinder(0,.51,4.7,2.1,2.1,.92,'#F3E8E8'),2);
 reception.scale.set(1.22,1,.45);
 roomCylinder(0,1.01,4.7,2.62,2.62,.13,'#45576A').scale.set(1,.99,.42);
 screen(0,1.46,4.43,2);
@@ -923,7 +923,7 @@ registerOffice(roomBox(3.2,1.38,-.13,1.18,.13,.12,'#37444e'),9);
 roomBox(3.2,1.27,-.09,1.0,.06,.32,'#ffffff');
 officeSign('印表機｜事務所今天又怎麼了？',3.2,2.7,-.8,4.4,'#263b51',9);
 // Comic production workstation: monitor is the IG link trigger.
-desk(-8.0,2.3,4.7,'#687887',3,false);elegantDeskDetails(-8,2.3,4.7,'#8895A1');
+desk(-8.0,2.3,4.7,'#b98d68',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
 const comicScreen=screen(-8.0,1.78,1.88,3,'#443b53');
 roomBox(-9.7,1.19,2.55,1.12,.06,.85,'#f6d7df');
 roomBox(-6.8,1.17,2.45,.65,.06,.8,'#f6e7ba');
@@ -1153,7 +1153,7 @@ const medicalExperience=createMedicalExperience();const familyExperience=createF
 const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fffaf0;border:2px solid #cfa96c;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#20354c;font:14px/1.65 system-ui';medGuide.innerHTML='<h3 style="margin:0 0 7px">歡迎來到德威陽醫療法律島！</h3><p>點點看，這間辦公室藏了什麼秘密？</p><p><b>雙人沙發：</b>醫療糾紛，聽聽雙方怎麼說！</p><p><b>大書櫃：</b>翻開書本，發現法律小秘密！</p><p><b>心電圖牆：</b>嗶嗶！你能發現異常嗎？</p><p><b>病歷證據：</b>翻開病歷，看看事務所又發生什麼事！</p><p><b>接待櫃檯：</b>有疑問？來這裡問問！</p><p><b>薪水掌門人：</b>點點她，看看有什麼驚喜！</p><button id="wyMedGuideClose" style="width:100%;padding:11px;border:0;border-radius:10px;background:#284d68;color:white;font-weight:bold">開始探索</button>';document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
 const medGuideAgain=document.createElement('button');medGuideAgain.textContent='醫法指南';medGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #d7b77b;border-radius:12px;background:#fffaf0;color:#20354c;font-weight:bold';document.body.append(medGuideAgain);medGuideAgain.onclick=()=>medGuide.style.display='block';
 let medGuideSeen=false;
-const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML='<h3 style="margin:0 0 7px;text-align:center">歡迎來到德威陽家庭法律島！</h3><p>點擊家具上方的標示或家具本身，體驗家事法律生活情境。</p><p><b>婚姻家事：</b>點擊廚房中島</p><p><b>親權扶養：</b>點擊親子玩具箱</p><p><b>遺囑繼承：</b>點擊立體遺囑書櫃與書桌</p><p><b>家事保護：</b>點擊復古電話桌</p><p><b>德威陽諮詢：</b>點擊中央沙發</p><p>拖曳旋轉視角，雙指縮放畫面。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#773D49;color:white;font-weight:bold">開始探索</button>';document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
+const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML='<h3 style="margin:0 0 7px;text-align:center">歡迎來到德威陽家庭法律島！</h3><p>點擊家具上方的標示或家具本身，探索家事法律知識。</p><p><b>婚姻家事：</b>點擊廚房中島</p><p><b>親權扶養：</b>點擊親子玩具箱</p><p><b>遺囑繼承：</b>點擊立體遺囑書櫃與書桌</p><p><b>家事保護：</b>點擊復古電話桌</p><p><b>德威陽諮詢：</b>點擊中央沙發</p><p>拖曳旋轉視角，雙指縮放畫面。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#773D49;color:white;font-weight:bold">開始探索</button>';document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
 const familyGuideAgain=document.createElement('button');familyGuideAgain.textContent='家事指南';familyGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #D2AD77;border-radius:12px;background:#F4DFE4;color:#713F4C;font-weight:bold';document.body.append(familyGuideAgain);familyGuideAgain.onclick=()=>familyGuide.style.display='block';let familyGuideSeen=false;
 
 
@@ -1216,7 +1216,7 @@ for(const [x,z] of [[-14.5,10.2],[-15.5,14.5],[14.5,10.2],[15.5,14.5],[-16.4,2],
  addSolidCircle(x,z,2.2,'flower-bed');
 }
 // Actual centered round planter from medical-island.js v28, not the walkway.
-addSolidCircle(xy[2][0],xy[2][1]+12.4,2.25,'medical-flower-bed');
+addSolidCircle(xy[2][0]+7.5,xy[2][1]+12.4,2.25,'medical-flower-bed');
 // A solid-object registry is reusable for later ponds, parked vehicles, trees,
 // sculptures and other props. Only register the physical footprint, not floors.
 function hitsSolid(x,z){
