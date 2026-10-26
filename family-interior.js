@@ -171,14 +171,22 @@ export function createFamilyExperience(){
  el.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b id="wyFamilyTitle"></b><button id="wyFamilyClose" aria-label="關閉">✕</button></div><p id="wyFamilyBody" style="margin:12px 0"></p><div id="wyFamilyChoices" style="display:grid;gap:7px"></div><small style="display:block;margin-top:10px;color:#8C6872">德威陽｜有法度・一般法律資訊，個案仍需評估</small>';
  document.body.append(el);const title=el.querySelector('#wyFamilyTitle'),body=el.querySelector('#wyFamilyBody'),choices=el.querySelector('#wyFamilyChoices');el.querySelector('#wyFamilyClose').onclick=()=>el.style.display='none';
  function button(label,fn){const b=document.createElement('button');b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#FFF8F7;border:1px solid #DBB8C0;border-radius:10px;padding:10px 12px;color:#713F4C;font-weight:650;cursor:pointer';b.onclick=fn;choices.append(b);}
+ // v79: preserve all 120 original topics and their source texts; use compact mobile-first excerpts.
+ const short=(text,max=64)=>{const clean=String(text||'').replace(/\s+/g,' ').trim();if(clean.length<=max)return clean;const lead=clean.slice(0,max);const cut=Math.max(lead.lastIndexOf('。'),lead.lastIndexOf('；'));return (cut>max*.48?lead.slice(0,cut+1):lead.replace(/[，、；：\s]+$/,'')+'…');};
+ const questionText=s=>{
+  const original=String(s.story||'');const scene=original.split('。')[0];
+  return short(scene,47)+'\n你會先怎麼做？';
+ };
+ function compactChoice(text){return short(text.replace(/，列出尚未確認的事實/g,'').replace(/，暫不核對文件/g,''),34);}
+ function compactResult(text){return short(text,85);}
  function quiz(k){
   const items=scenarios[k];const i=scenarioPosition[k]%items.length;const s=items[i];
   title.textContent=(k==='kitchen'?'婚姻廚房':k==='child'?'親子生活區':k==='heritage'?'遺囑繼承區':'家庭守護區')+'｜'+s.title;
-  body.textContent=s.story;choices.replaceChildren();
-  button('📁 '+s.choiceA,()=>outcome(s.a,s,k));
-  button('💬 '+s.choiceB,()=>outcome(s.b,s,k));
+  body.textContent=questionText(s);choices.replaceChildren();
+  button('A｜'+compactChoice(s.choiceA),()=>outcome(s.a,s,k));
+  button('B｜'+compactChoice(s.choiceB),()=>outcome(s.b,s,k));
  }
- function outcome(result,s,k){body.textContent='【你的處理方式】\n'+result+'\n\n【律師實務提醒】\n'+s.tip;choices.replaceChildren();button('下一則不同情境（共30則）',()=>{scenarioPosition[k]=(scenarioPosition[k]+1)%scenarios[k].length;quiz(k)});button('回到家事館',()=>el.style.display='none');}
+ function outcome(result,s,k){title.textContent=s.title;body.textContent='結果｜'+compactResult(result);choices.replaceChildren();button('📖 查看法律提醒',()=>{body.textContent='結果｜'+compactResult(result)+'\n\n提醒｜'+short(s.tip,92);});button('下一題 →',()=>{scenarioPosition[k]=(scenarioPosition[k]+1)%scenarios[k].length;quiz(k)});button('返回家事館',()=>el.style.display='none');}
  function contact(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回家事諮詢沙發',desk);}
  function desk(){title.textContent='家事法律諮詢沙發｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('婚姻／家庭法律需求',()=>{body.textContent='可先整理事件經過、婚姻及財產相關文件，再由律師評估適用法律與處理方式。';});button('親子／繼承法律需求',()=>{body.textContent='可先整理親權、扶養或繼承關係及相關證明文件，協助釐清案件需求。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contact);}
  let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索書櫃。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('婚姻廚房｜30則',()=>quiz('kitchen'));button('親子生活｜30則',()=>quiz('child'));button('遺囑繼承｜30則',()=>quiz('heritage'));button('家庭守護｜30則',()=>quiz('protect'));button('了解家事法律諮詢',desk);}else quiz(action);}

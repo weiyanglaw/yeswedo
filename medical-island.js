@@ -413,6 +413,46 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    box(.63,.025,.38,cream,8.72,1.79,1.0+j*.66);
  }
  register(labPanel,'evidence');register(labBase,'evidence');
+ // v79: seven distinct compact, walk-up 3D exhibits. Original sofa, staff, shelves and ECG remain.
+ const mint=material(0xA7C6BB),paper=material(0xFFF8E8),teal=material(0x2E6668);
+ const exhibit=(x,z,w,d,action)=>{
+  const base=box(w,.86,d,cream,x,.53,z);box(w+.10,.10,d+.10,gold,x,1.01,z);
+  register(base,action);return base;
+ };
+ // 1. Dispute mediation roundtable, offset left of the clear central aisle.
+ const round=add(new THREE.CylinderGeometry(1.05,1.05,.14,24),stone,-4.65,1.13,4.45);
+ cyl(.15,.22,1.05,gold,-4.65,.57,4.45);register(round,'mediation');
+ for(const [x,z] of [[-6.2,4.45],[-3.15,4.45]]){
+  box(.70,.40,.74,mint,x,.44,z);box(.72,.90,.18,teal,x,.98,z+.40);
+ }
+ const papers=box(.62,.045,.50,paper,-4.65,1.23,4.45);register(papers,'mediation');
+ // 2. Informed consent signing desk, tucked into left-front perimeter.
+ exhibit(-9.45,5.30,2.75,1.24,'consent');
+ const consentPaper=box(.84,.055,.65,paper,-9.4,1.12,5.24);register(consentPaper,'consent');
+ const pen=box(.06,.06,.62,navy,-8.84,1.16,5.27);register(pen,'consent');
+ // 3. Medical standards / anatomical evidence showcase on the left wall.
+ exhibit(-10.25,-3.95,1.65,2.05,'standards');
+ const anatomy=cyl(.32,.28,1.30,mint,-10.25,1.80,-3.95);register(anatomy,'standards');
+ add(new THREE.SphereGeometry(.29,16,12),paper,-10.25,2.65,-3.95);
+ // 4. Separate X-ray evidence comparison console on rear-left, not over the logo.
+ exhibit(-4.55,-5.75,2.15,1.05,'forensics');
+ const xray=box(1.78,1.62,.14,navy,-4.55,2.05,-6.12);register(xray,'forensics');
+ for(const dx of [-.43,.43]){
+  const scan=box(.59,.97,.02,glass,-4.55+dx,2.10,-6.02);register(scan,'forensics');
+ }
+ // 5. Timeline kiosk beside the left side wall, independent of ECG.
+ exhibit(-10.20,2.20,1.25,1.20,'timeline');
+ const timeline=box(1.32,1.55,.14,navy,-10.20,2.07,2.10);register(timeline,'timeline');
+ for(let i=0;i<4;i++)box(.72,.055,.035,i===2?gold:mint,-10.20,2.55-i*.33,2.21);
+ // 6. Evidence file reader (existing evidence cabinet remains untouched).
+ const fileReader=box(.16,1.20,1.40,teal,8.25,2.80,-3.80);register(fileReader,'records');
+ for(let i=0;i<3;i++)box(.18,.12,.94,paper,8.10,3.19-i*.33,-3.80);
+ // 7. Liability decision console, independent toggles for consent, records and causation.
+ const liability=box(.25,1.10,2.60,teal,8.95,2.76,2.05);register(liability,'liability');
+ for(const zz of [1.34,2.05,2.76]){
+  const toggle=box(.27,.25,.44,gold,8.78,2.81,zz);register(toggle,'liability');
+ }
+
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
@@ -441,6 +481,13 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
  hint('⚖️ 醫療責任分析',9.3,4.10,2.05,'evidence');
  hint('認識德威陽',0,8.10,-6.80,'logo');
+ hint('🤝 醫療調解',-4.65,2.25,4.45,'mediation');
+ hint('📝 告知同意',-9.35,2.6,5.3,'consent');
+ hint('🧬 醫療鑑定',-10.1,3.5,-3.95,'standards');
+ hint('🔍 影像比對',-4.55,3.35,-5.7,'forensics');
+ hint('🕒 事件時間軸',-10.1,3.55,2.2,'timeline');
+ hint('🗂️ 病歷閱覽',8.2,4.0,-3.8,'records');
+ hint('⚖️ 條件分析',8.9,4.5,2.05,'liability');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -592,12 +639,47 @@ export function createMedicalExperience(){
  function ecgShow(){const t=ecgTitles[ecgIndex++%ecgTitles.length];title.textContent='心電圖監測｜'+t;body.textContent='監測畫面出現變化，什麼時候應提醒醫療團隊評估？';choices.replaceChildren();['發現異常變化時即依臨床情況評估','等到下一次例行巡房','只看單一數字，不確認患者狀況'].forEach((a,i)=>button(a,()=>{body.textContent=i===0?'答對了！應結合病人狀況、監測趨勢與臨床規範及時評估。':'不建議只等待或只看單一數字；應依患者情況與監測趨勢及時評估。';}));button('下一個監測事件',ecgShow);}
  function deskHome(){title.textContent='接待櫃檯｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('患者／家屬法律需求',()=>{body.textContent='可先整理病歷、醫療經過及相關損害資料，再評估法律諮詢。';});button('醫療院所法律需求',()=>{body.textContent='可協助醫療機構檢視診療紀錄、風險、申訴及爭議處理。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contactHome);}
  function contactHome(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回接待櫃檯',deskHome);}
+ const liabilityState={notice:false,records:false,causation:false};
+ const customMedical={
+  mediation:['🤝 醫療爭議協商桌','雙方對手術結果有不同看法。先選一個協商步驟。',[
+   ['先核對爭議事實','整理診療時間線、病歷與雙方疑問，確認需要釐清的事項。'],
+   ['討論調解方案','依醫療爭議處理程序評估調解，記錄雙方提出的條件。'],
+   ['協商未成怎麼辦','保留往來紀錄，請專業人士評估後續法律途徑及期限。']]],
+  consent:['📝 手術告知展示桌','簽了同意書，醫師就一定免責嗎？',[
+   ['看同意書','簽名只是證據之一，仍需確認告知內容及當時情況。'],
+   ['看告知過程','比較風險、替代方案與患者提問是否得到適當說明。'],
+   ['看法律重點','告知義務與診療是否符合醫療常規，應分別判斷。']]],
+  standards:['🧬 醫療常規展示','人體模型與診療資料，哪個才是判斷醫療責任的依據？',[
+   ['診療當時資訊','應考量當時可得的症狀、檢查與臨床資訊。'],
+   ['鑑定意見','專業鑑定可協助分析醫療常規，但仍須結合其他證據。'],
+   ['結果與過失','治療結果不佳，並不自動等於醫療疏失。']]],
+  forensics:['🔍 醫療影像證據中心','三份模擬資料，請選擇你要先比對的線索。',[
+   ['影像拍攝時間','確認影像日期與症狀變化，避免把不同時點混在一起。'],
+   ['影像報告版本','核對原始影像、報告與補充紀錄是否一致。'],
+   ['醫師處置紀錄','比對影像發現與後續處置，才有助釐清爭點。']]],
+  timeline:['🕒 醫療事件時間軸','醫療爭議往往發生在不同時間點，先看哪一段？',[
+   ['就診與檢查','核對症狀、分流、檢驗時間及相關紀錄。'],
+   ['治療與告知','確認治療決策、風險告知與同意過程。'],
+   ['術後與追蹤','核對病情變化、醫囑、交班與追蹤安排。']]],
+  records:['🗂️ 病歷證據閱覽台','病歷資料不只一張紙，請選擇查看項目。',[
+   ['醫囑與護理紀錄','核對給藥、觀察與交班時間，保存完整副本。'],
+   ['檢驗與影像','比對報告日期、原始資料與臨床處置。'],
+   ['同意書與收據','確認告知文件、支出憑證及事件時間線。']]]
+ };
+ function customHome(action){const d=customMedical[action];title.textContent=d[0];body.textContent=d[1];choices.replaceChildren();d[2].forEach(([q,a])=>button(q,()=>{body.textContent=a;choices.replaceChildren();button('↩ 查看其他項目',()=>customHome(action));button('✕ 繼續探索',()=>el.style.display='none');}));}
+ function liabilityHome(){title.textContent='⚖️ 醫療責任條件分析';choices.replaceChildren();const {notice,records,causation}=liabilityState;
+ const notes=[];
+ notes.push(notice?'告知：已有告知資料，仍要檢視內容是否充分及是否符合當時情況。':'告知：尚缺告知內容與同意過程資料，不能只憑有無簽名判斷。');
+ notes.push(records?'病歷：已有相關紀錄，需核對時間、完整性與實際處置。':'病歷：紀錄仍不完整，宜先依法取得並保存診療、護理與檢驗資料。');
+ notes.push(causation?'因果：已有損害與因果資料，仍須專業評估其證明力。':'因果：尚未釐清損害是否與特定診療處置相關，不能直接認定責任。');
+ body.textContent='請切換三個條件（已勾選＝有初步資料）：\n\n'+notes.join('\n')+'\n\n以上僅是證據盤點；是否成立責任仍須綜合醫療常規、注意義務、損害與個案證據。';[
+ ['notice','告知與同意'],['records','病歷是否完整'],['causation','損害因果關係']].forEach(([key,label])=>button((liabilityState[key]?'☑ ':'□ ')+label,()=>{liabilityState[key]=!liabilityState[key];liabilityHome()}));button('重設條件',()=>{Object.keys(liabilityState).forEach(k=>liabilityState[k]=false);liabilityHome()});button('✕ 繼續探索',()=>el.style.display='none');}
  let current='staff';
  function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:10px 12px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
  function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
- function home(){if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgShow();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function home(){if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
- return {show(){el.style.display='none'},open(action='staff'){current=scenes[action]?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
+ return {show(){el.style.display='none'},open(action='staff'){current=(scenes[action]||customMedical[action]||action==='liability')?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }

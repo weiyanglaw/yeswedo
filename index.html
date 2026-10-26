@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v75';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v75';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v75';import {createCastleGardens} from './castle-garden.js?v=20261026-v75';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v80';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v80';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v76';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -175,19 +175,32 @@ function createFamilyMansion(parent,THREE){
  cube(17,10,10,0,5,-1,ivory);// No horizontal decorative stripe cutting across front windows.
 
  cube(18,.45,11,0,10.1,-1,trim);cube(19,1.0,12,0,10.8,-1,rose);
- // v75: true two-slope gable roof instead of a four-sided cone that cuts across dormer windows.
- // Roof spans x=-9.35..9.35, z=-6.7..5.45; dormer fronts sit beyond z=5.45.
- const roofPeak=16.10,roofEave=11.48,roofBack=-6.7,roofFront=5.45,roofHalf=9.35;
- const roofSurface=new THREE.MeshStandardMaterial({color:'#773D49',roughness:.68,side:THREE.DoubleSide});
- function roofPanel(x1,y1,x2,y2){
-  const verts=new Float32Array([x1,y1,roofBack,x2,y2,roofBack,x2,y2,roofFront,x1,y1,roofBack,x2,y2,roofFront,x1,y1,roofFront]);
-  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(verts,3));geo.computeVertexNormals();g.add(new THREE.Mesh(geo,roofSurface));
+ // v77: closed solid gable roof; a single extruded cross-section prevents sky-visible gaps.
+ // Keep the existing turrets, dormers, walls, signage and all other island geometry unchanged.
+ const roofPeak=15.55,roofEave=11.58,roofBack=-6.3,roofFront=5.20,roofHalf=5.32;
+ const roofSurface=new THREE.MeshStandardMaterial({color:'#773D49',roughness:.72,side:THREE.DoubleSide});
+ function pitchedPlane(x1,y1,x2,y2,z0,z1,mat=roofSurface){
+  const v=new Float32Array([x1,y1,z0,x2,y2,z0,x2,y2,z1,x1,y1,z0,x2,y2,z1,x1,y1,z1]);
+  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(v,3));geo.computeVertexNormals();
+  const obj=new THREE.Mesh(geo,mat);g.add(obj);return obj;
  }
- roofPanel(-roofHalf,roofEave,0,roofPeak);roofPanel(0,roofPeak,roofHalf,roofEave);
- // Continuous edge trims, but no red solid mass in front of the two dormer panes.
- cube(19,.20,.26,0,roofEave,roofFront,trim);
- cube(.22,.18,12.15,0,roofPeak,-.63,trim);
- for(const x of [-7.7,7.7]){cylinder(2.5,11.8,x,6,-.3,ivory,12);cylinder(2.7,.35,x,12,-.3,trim,12);cone(3.6,5.2,x,14.7,-.3,rose,12);}
+ // The roof is one watertight triangular prism with solid front and rear gables.
+ // Its base is below the eaves; this closes the opening that was visible between roof planes.
+ const roofShape=new THREE.Shape();
+ roofShape.moveTo(-roofHalf,10.76);
+ roofShape.lineTo(-roofHalf,roofEave);
+ roofShape.lineTo(0,roofPeak);
+ roofShape.lineTo(roofHalf,roofEave);
+ roofShape.lineTo(roofHalf,10.76);
+ roofShape.closePath();
+ const roofGeometry=new THREE.ExtrudeGeometry(roofShape,{depth:roofFront-roofBack,bevelEnabled:false,steps:1,curveSegments:1});
+ const roofBody=new THREE.Mesh(roofGeometry,roofSurface);
+ roofBody.position.z=roofBack;
+ g.add(roofBody);
+ cube(10.7,.18,.22,0,roofEave,roofFront+.13,trim);
+ cube(.18,.16,11.5,0,roofPeak,-.55,trim);
+ // Corner turrets stand outside the main roof footprint.
+ for(const x of [-8.0,8.0]){cylinder(2.15,11.8,x,6,-.3,ivory,12);cylinder(2.35,.35,x,12,-.3,trim,12);cone(2.65,4.35,x,14.45,-.3,rose,12);}
  // v67: remove the two tall, purposeless facade columns entirely.
  // The previous long front stripe crossed upper windows; removed.
 
@@ -230,20 +243,20 @@ function createFamilyMansion(parent,THREE){
  // v67: clear open entrance; no swing poles, rear pergola rods, treehouse,
  // freestanding signboards, benches, lampposts or entrance topiary pots.
  const whiteStone=material('#F8F2E9'),deepWine=material('#873F55'),warmPink=material('#E5A7B7'),green=material('#5D8966');
- // Layered front-facing pediment: recognizable rooflines, not tiny floating trim.
- const pediment=cone(4.5,3.2,0,13.0,4.0,wine,4);pediment.scale.z=.30;
- cube(6.7,.24,.8,0,11.20,4.85,whiteStone);
- cube(6.5,.14,.85,0,11.40,4.9,trim);
- // Two projecting dormers, with full window panes, frames and small pitched roofs.
- for(const x of [-4.55,4.55]){
-   // Dormer walls and glazing are entirely forward of the main roof eave.
-   cube(2.35,2.65,1.55,x,12.87,5.88,ivory);
-   cube(1.78,1.95,.13,x,12.85,6.70,whiteStone);
-   cube(1.48,1.65,.15,x,12.85,6.80,glass);
-   cube(.09,1.68,.17,x,12.85,6.90,whiteStone);
-   cube(1.51,.09,.17,x,12.85,6.90,whiteStone);
-   const dormer=cone(1.83,1.35,x,14.87,5.90,wine,4);dormer.scale.z=.53;
-   cube(2.45,.17,.42,x,11.51,6.72,trim);
+ // Two visible dormers: upright wall, glazed face, and simple pitched cap.
+ // All geometry is in front of the roof front plane and never intersects the main roof.
+ for(const x of [-3.55,3.55]){
+   cube(2.28,2.35,1.05,x,12.82,5.86,ivory);
+   cube(1.78,1.80,.13,x,12.82,6.47,whiteStone);
+   cube(1.50,1.53,.15,x,12.82,6.57,glass);
+   cube(.09,1.55,.17,x,12.82,6.67,whiteStone);
+   cube(1.54,.09,.17,x,12.82,6.67,whiteStone);
+   const eaveY=14.05,peakY=14.85,halfW=1.32;
+   pitchedPlane(x-halfW,eaveY,x,peakY,5.25,6.68);
+   pitchedPlane(x,peakY,x+halfW,eaveY,5.25,6.68);
+   const tri=new THREE.Shape();tri.moveTo(x-halfW,eaveY);tri.lineTo(x,peakY);tri.lineTo(x+halfW,eaveY);tri.closePath();
+   const frontCap=new THREE.Mesh(new THREE.ShapeGeometry(tri),roofSurface);frontCap.position.z=6.69;g.add(frontCap);
+   cube(2.60,.14,.35,x,11.53,6.60,trim);
  }
  // Strong entrance surround and curved-looking canopy assembled from visible segments.
  cube(4.25,4.35,.24,0,2.18,4.68,whiteStone);
@@ -430,7 +443,11 @@ for(let i=1;i<6;i++){
  // perimeter, while the bridge's full-width entrance stays open. Never add a
  // transverse rail across the walking deck. All five bridges use one rule.
  const mainIslandRailInset=11.5;
- const railStart=-len/2+mainIslandRailInset,railEnd=len/2;
+ // v76: the medical bridge approaches from the castle at an angle to the facade.
+ // Stop its side rails before the island forecourt; otherwise in front view they
+ // project across the medical door. The last deck section remains open and walkable.
+ const medicalLandingInset=i===2?22.5:0;
+ const railStart=-len/2+mainIslandRailInset,railEnd=len/2-medicalLandingInset;
  const railLen=Math.max(0,railEnd-railStart);
  if(railLen>1){
   for(const side of [-1,1]){
