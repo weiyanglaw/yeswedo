@@ -100,7 +100,7 @@ $('startExplore').addEventListener('click',enterIsland);
 @media(max-width:620px){#wyInfo .wyContactGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#wyInfo .wyContact{margin:25px -5px -4px}}
 </style><div id="wyInfo" role="dialog" aria-modal="true" aria-label="事務所資訊"><article><button class="wyClose" id="wyInfoClose" aria-label="關閉">×</button><div id="wyInfoBody"></div></article></div>
 <div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
-<div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">🏛️ 德威陽｜3D 事務所</strong><button id="officeContact" onclick="document.getElementById('wyContactPanel').hidden=!document.getElementById('wyContactPanel').hidden" style="border:1px solid #d8b97e;border-radius:12px;background:#fff9ed;padding:10px 12px;font-weight:bold;color:#203b4d">☎ 聯絡我們</button><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">↩ 返回探索島</button></div>
+<div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">德威陽｜3D 事務所</strong><button id="officeContact" onclick="document.getElementById('wyContactPanel').hidden=!document.getElementById('wyContactPanel').hidden" style="border:1px solid #d8b97e;border-radius:12px;background:#fff9ed;padding:10px 12px;font-weight:bold;color:#203b4d">聯絡我們</button><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">返回探索島</button></div>
 <div id="wyContactPanel" hidden style="position:absolute;top:75px;right:12px;z-index:120;background:#fffdf7;color:#203b4d;border:2px solid #d8b97e;border-radius:16px;padding:16px;max-width:min(330px,90vw);box-shadow:0 10px 30px #203b4d33;pointer-events:auto;font-size:14px;line-height:1.9"><strong>德威陽國際法律事務所</strong><br>LINE：@wylaw<br><a href="https://weiandyang.com" target="_blank" rel="noopener">官方網站</a>　<a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener">Facebook</a><br><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener">Instagram</a><br><button onclick="document.getElementById('wyContactPanel').hidden=true" style="padding:6px 12px;border-radius:8px;border:1px solid #d8b97e;background:white">關閉</button></div>
 <div style="position:absolute;bottom:10px;left:12px;right:12px;pointer-events:none;text-align:center"><span style="display:inline-block;background:#fff9efec;border:1px solid #d4b681;border-radius:20px;padding:6px 10px;font-size:11px">點擊辦公設備互動 · 拖曳旋轉、雙指縮放</span></div></div>
 
@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261027-v94-medical-logo-click';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v94-logo-click';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v94-roof-unlit-faces';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261027-v95-medical-name';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v95-roof';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -861,9 +861,9 @@ function desk(x,z,w,color,zone,monitor=true){
  chair(x,z+1.23,'#6e8290');
 }
 function shelf(x,z,w=2.5){
- roomBox(x,2.1,z,w,3.6,.58,'#805c42');
+ roomBox(x,2.1,z,w,3.6,.58,'#42658A');
  for(const y of [.8,1.7,2.6,3.5]){
-  roomBox(x,y,z+.32,w,.12,.65,'#b58d62');
+  roomBox(x,y,z+.32,w,.12,.65,'#F5E6C5');
   for(let k=0;k<Math.floor(w/.25)-1;k++){
    const bx=x-w/2+.24+k*.25;
    roomBox(bx,y+.33,z+.32,.13,.55+(k%3)*.1,.27,['#344b60','#a77255','#c6ad76','#516f66'][k%4]);
@@ -890,12 +890,19 @@ function framedArt(x,y,z,w,h,color){
  roomBox(x,y,z+.107,w*.47,h*.08,.02,color);
 }
 function sofa(x,z){
- const cushion=roomBox(x,.55,z,2.45,.60,1.14,'#FFF8EF');cushion.rotation.y=.05;
- roomBox(x,1.03,z-.53,2.5,1.02,.28,'#F4D8CA');
- for(const dx of [-1.15,1.15])roomBox(x+dx,.77,z,.27,.76,1.20,'#F4D8CA');
- for(const dx of [-.58,.58]){const p=roomBox(x+dx,.88,z+.05,1.06,.17,.85,'#f7ead8');p.rotation.z=dx*.012;}
- roomBall(x-.72,1.14,z-.36,.22,'#e2b8b7');
+ // v95 readable 3D luxury sofa with separate upholstered cushions and rounded arms.
+ const pearl='#F8FAFC',navy='#345779';
+ roomBox(x,.37,z,2.75,.33,1.32,navy);
+ roomBox(x,.65,z+.12,2.58,.35,1.20,pearl);
+ for(const dx of [-.61,.61]){
+  roomBox(x+dx,.86,z+.18,1.13,.22,1.02,pearl);
+  const pillow=roomBall(x+dx,1.06,z-.43,.37,'#DCE6EF');pillow.scale.set(1.36,.90,.55);
+ }
+ roomBox(x,1.25,z-.57,2.75,1.02,.34,pearl);
+ for(const dx of [-1.31,1.31]){const arm=roomBall(x+dx,.98,z+.03,.41,pearl);arm.scale.set(.72,1.13,1.72);}
+ for(const dx of [-1.12,1.12])roomCylinder(x+dx,.13,z,.085,.085,.25,'#F5E6C5');
 }
+
 function plant(x,z){
  roomCylinder(x,.32,z,.35,.27,.58,'#efe0c7');
  roomCylinder(x,.72,z,.055,.055,.8,'#59724e');
@@ -905,12 +912,12 @@ function plant(x,z){
  }
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
-roomBox(0,-.24,0,27,.48,22,'#DDD9D7');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#F4F2EF');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#F4F2EF');
-roomBox(13.3,3.7,0,.40,7.4,22,'#F4F2EF');
-for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D6D4D2');
-for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#C6B9AC');
+roomBox(0,-.24,0,27,.48,22,'#E4EDF5');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#F7F8F6');
+roomBox(-13.3,3.7,0,.40,7.4,22,'#F7F8F6');
+roomBox(13.3,3.7,0,.40,7.4,22,'#F7F8F6');
+for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D8E5EF');
+for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#D7E3EB');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 for(const x of [-8,0,8]){
@@ -919,9 +926,9 @@ for(const x of [-8,0,8]){
 }
 // Signature illuminated brand installation. The official image itself is NEVER recolored or redrawn.
 // Navy presentation backing, fine champagne-gold trim and warm wall-wash lighting increase contrast.
-const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#30465D');
-const logoTrim=roomBox(0,4.32,-10.115,4.83,4.83,.075,'#B9C1C8');
-const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#30465D');
+const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#345779');
+const logoTrim=roomBox(0,4.32,-10.115,4.83,4.83,.075,'#F5E6C5');
+const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#345779');
 for(const px of [-2.35,2.35])for(const py of [2.03,6.60]){
  const rivet=roomBall(px,py,-9.99,.085,'#e3c18a');
 }
@@ -932,8 +939,8 @@ logoOffice.position.set(0,4.32,-9.995);roomRoot.add(logoOffice);
 officeSign('認識德威陽｜點擊查看事務所介紹',4.5,6.65,-9.80,4.4,'#fff8ed',0);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
-roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#51443d');
-roomBox(-8.45,.073,-5.8,8.15,.027,7.3,'#846d5b');
+roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#D5E2ED');
+roomBox(-8.45,.073,-5.8,8.15,.027,7.3,'#EAF1F7');
 // v44: restore unobstructed original executive desk, chair and bookshelf; no freestanding rods or hanging lights.
 // Gold-edged executive wall panels and awards.
 for(const x of [-10.7,-5.9]){
@@ -950,7 +957,7 @@ for(const x of [-10.3,-6.5]){
 roomCylinder(-8.4,.42,-1.7,.63,.68,.11,'#8d6447');
 roomCylinder(-8.4,.31,-1.7,.14,.14,.55,'#b99a64');
 // Lawyer desk at back left, with certificates and books.
-desk(-8.4,-5.0,5.2,'#4b3028',5);elegantDeskDetails(-8.4,-5,5.2,'#50362b');
+desk(-8.4,-5.0,5.2,'#345779',5);elegantDeskDetails(-8.4,-5,5.2,'#345779');
 roomBox(-8.4,1.17,-4.2,4.95,.07,.08,'#d2ad71');
 roomBox(-8.4,.82,-4.14,4.75,.08,.10,'#b99259');
 shelf(-11.6,-8.6,2.4);
@@ -969,10 +976,16 @@ desk(9.1,1.1,3.25,'#687887',8);elegantDeskDetails(9.1,1.1,3.25,'#d5b6a1');
 officeSign('薪水掌門人｜事務所今天又怎麼了？',9.1,3.1,1.5,4.5,'#3b3546',8);
 roomBox(10.15,1.2,1.3,.5,.13,.40,'#efb7c8');
 // Curved reception desk with marble counter and gold trim.
-const reception=registerOffice(roomCylinder(0,.51,4.7,2.1,2.1,.92,'#F3E8E8'),2);
+const reception=registerOffice(roomCylinder(0,.51,4.7,2.35,2.35,.95,'#345779'),2);
+const receptionGlow=new THREE.Mesh(new THREE.CylinderGeometry(2.38,2.38,.15,64),new THREE.MeshBasicMaterial({color:'#C5EAF5'}));
+receptionGlow.scale.set(1.22,1,.46);receptionGlow.position.set(0,.10,4.7);roomRoot.add(receptionGlow);
 reception.scale.set(1.22,1,.45);
-roomCylinder(0,1.01,4.7,2.62,2.62,.13,'#45576A').scale.set(1,.99,.42);
+roomCylinder(0,1.05,4.7,2.65,2.65,.20,'#F8FAFC').scale.set(1.12,1,.47);
+roomCylinder(0,.94,4.7,2.60,2.60,.07,'#F5E6C5').scale.set(1.12,1,.47);
 screen(0,1.46,4.43,2);
+// Official uploaded WEIYANG logo image on the front of the reception desk.
+const receptionLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.42,1.42),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261027-v95'),transparent:true,side:THREE.DoubleSide}));
+receptionLogo.position.set(0,.58,5.83);roomRoot.add(receptionLogo);
 officeSign('接待櫃檯｜諮詢與聯絡',0,2.65,4.6,4.6,'#fff8ed',2);
 plant(-4.3,5.3);plant(4.3,5.3);
 // Printer station: visible office equipment and comic easter egg.
@@ -983,7 +996,7 @@ registerOffice(roomBox(3.2,1.38,-.13,1.18,.13,.12,'#37444e'),9);
 roomBox(3.2,1.27,-.09,1.0,.06,.32,'#ffffff');
 officeSign('印表機｜事務所今天又怎麼了？',3.2,2.7,-.8,4.4,'#263b51',9);
 // Comic production workstation: monitor is the IG link trigger.
-desk(-8.0,2.3,4.7,'#b98d68',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
+desk(-8.0,2.3,4.7,'#527393',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
 const comicScreen=screen(-8.0,1.78,1.88,3,'#443b53');
 roomBox(-9.7,1.19,2.55,1.12,.06,.85,'#f6d7df');
 roomBox(-6.8,1.17,2.45,.65,.06,.8,'#f6e7ba');
@@ -995,18 +1008,16 @@ for(let i=0;i<3;i++){
 }
 plant(-11,5.4);framedArt(-10.8,4.5,-10.48,1.4,1.8,'#dba5ae');framedArt(-8.9,4.5,-10.48,1.4,1.8,'#d6b86c');
 // Waiting lounge with tailored cushions, floor rug, round coffee table and real seats.
-roomBox(0,.032,8.1,9,.04,4.1,'#e8ddd2');sofa(-3.2,8.0);sofa(3.2,8.0);
-for(const x of [-2.6,2.6]){
- roomBox(x,.52,8.3,1.85,.70,1.5,'#f2e5d5');
- roomBox(x,.95,8.85,1.85,1.18,.28,'#e8d9c9');
-}
-roomCylinder(0,.48,8.15,.85,.85,.12,'#b58b63');
-roomCylinder(0,.24,8.15,.14,.14,.44,'#9b7856');
+roomBox(0,.032,8.1,9,.04,4.1,'#D6E5F0');sofa(-3.2,8.0);sofa(3.2,8.0);
+// v95 oval table replaces original tiny disc
+// v95 visible pair of table legs replaces original tiny pedestal
 // Only ONE indoor NPC: original ponytail employee 夢奇奇飼養者.
 const indoorDef={name:'夢奇奇飼養者',skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail'};
 const indoorNpc=makeStaffChibi(indoorDef);
 roomRoot.add(indoorNpc.root);indoorNpc.root.position.set(-2.5,.06,2.5);
 indoorNpc.root.scale.setScalar(.8);
+// v95 nameplate follows the actual main-office employee, not the desk.
+const mainStaffName=officeSign('夢奇奇飼養者',-2.5,2.85,2.5,4.6,'#fff8ed',null);
 let indoorGoal=new THREE.Vector3(-2.5,0,2.5),indoorPause=.8,indoorStep=0;
 const indoorWaypoints=[[-2.5,2.5],[-4,4],[-5,-1],[-1,-4],[2,1],[4,4],[1,6]];
 function animateIndoor(dt,t){
@@ -1023,6 +1034,7 @@ function animateIndoor(dt,t){
    indoorNpc.root.rotation.y=Math.atan2(dx,dz);
   }
  }
+ mainStaffName.position.set(indoorNpc.root.position.x,2.85+Math.sin(t*1.8)*.04,indoorNpc.root.position.z);
  indoorNpc.body.position.y=Math.abs(Math.sin(t*6))*.035;
  indoorNpc.head.rotation.z=Math.sin(t*1.8)*.035;
 }
@@ -1076,6 +1088,26 @@ for(const x of [-13.09,13.09])for(const z of [-5.0,4.5]){
  v44Box(x+(x<0?.10:-.10),3.9,z,.12,5.13,4.05,v44Wall);
 }
 // Deliberately no chandelier, ceiling, hanging rods, additional reception facades, or floating ornaments.
+// v95 monumental wall-integrated royal arch, large and visible from isometric mobile camera.
+const royalWhite=new THREE.MeshStandardMaterial({color:'#F7F8F6',roughness:.38,metalness:.06});
+const royalGold=new THREE.MeshStandardMaterial({color:'#F5E6C5',roughness:.26,metalness:.22,emissive:'#E7CF9E',emissiveIntensity:.10});
+for(const x of [-3.48,3.48]){
+ for(const [w,h,y] of [[.82,5.55,3.6],[1.12,.40,6.52],[1.10,.33,.63]]){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.54),royalWhite);m.position.set(x,y,-10.14);roomRoot.add(m);
+ }
+ const band=new THREE.Mesh(new THREE.BoxGeometry(.24,5.2,.13),royalGold);band.position.set(x,3.6,-9.82);roomRoot.add(band);
+}
+const archCurve=new THREE.EllipseCurve(0,0,3.48,1.15,0,Math.PI,false,0);
+const archPoints=archCurve.getPoints(48).map(p=>new THREE.Vector3(p.x,p.y+6.2,-10.0));
+roomRoot.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPoints),72,.16,10,false),royalGold));
+// Large futuristic legal display attached to side wall, not blocking walking paths.
+roomBox(12.95,4.10,-3.1,.19,2.7,4.3,'#345779');
+roomBox(12.81,4.10,-3.1,.05,2.35,3.93,'#C5EAF5');
+roomBox(12.75,4.10,-3.1,.05,2.06,3.62,'#345779');
+// Clear oval coffee table with visible legs; replace visually ambiguous round disc.
+const ovalTable=new THREE.Mesh(new THREE.CylinderGeometry(1.10,1.10,.17,48),roomMat('#F8FAFC'));
+ovalTable.scale.set(1.36,1,.80);ovalTable.position.set(0,.64,8.15);roomRoot.add(ovalTable);
+for(const x of [-.64,.64]){const leg=new THREE.Mesh(new THREE.CylinderGeometry(.16,.20,.46,18),royalGold);leg.position.set(x,.33,8.15);roomRoot.add(leg);}
 const officeCam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,180);officeCam.position.set(19,19,25);officeCam.lookAt(0,1.3,-.5);
 const officeOrbit=new OrbitControls(officeCam,renderer.domElement);
 officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=7;officeOrbit.maxDistance=65;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(0,1.3,-.5);
@@ -1170,7 +1202,7 @@ function enterOffice(){
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
- closeWyInfo();medicalExperience.hide();familyExperience.hide();medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='🏛️ 德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
+ closeWyInfo();medicalExperience.hide();familyExperience.hide();medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
@@ -1220,7 +1252,7 @@ const familyGuideAgain=document.createElement('button');familyGuideAgain.textCon
 function enterIslandRoom(i){
  if(i===0){enterOffice();return;}
  activeIslandRoom=i;insideOffice=true;familyGuideAgain.style.display=i===3?'block':'none';if(i===3&&!familyGuideSeen){familyGuide.style.display='block';familyGuideSeen=true;}else familyGuide.style.display='none';medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
- document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent='🏛️ '+names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=(i===2||i===3)?'none':'';document.getElementById('wyContactPanel').hidden=true;
+ document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent=names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=(i===2||i===3)?'none':'';document.getElementById('wyContactPanel').hidden=true;
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
  for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';

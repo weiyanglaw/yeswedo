@@ -378,6 +378,18 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),lightGold);pin.position.set(-.18,.15,.04);guide.add(pin);
 
  }
+ // v95 non-game nameplate attached to the ONLY medical employee.
+ let medicalStaffName=null;
+ if(guide){
+  const c=document.createElement('canvas');c.width=560;c.height=124;const ctx=c.getContext('2d');
+  ctx.fillStyle='#FFF9EE';ctx.strokeStyle='#D9BB79';ctx.lineWidth=7;
+  ctx.beginPath();ctx.roundRect(6,6,548,112,26);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#24485A';ctx.font='bold 52px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('薪水掌門人',280,62);
+  const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;
+  medicalStaffName=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthTest:false}));
+  medicalStaffName.scale.set(3.6,.80,1);medicalStaffName.position.set(0,3.75,0);
+  guide.add(medicalStaffName);
+ }
  // v89: only 薪水掌門人 is present in the medical island.
  // Other characters may be mentioned in stories, but have no 3D avatars here.
  // Keep the original interactive chibi staff. No GLB replacement.
