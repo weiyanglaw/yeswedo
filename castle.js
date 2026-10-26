@@ -5,7 +5,7 @@ export function createNewFairytaleCastle(parent,THREE){
  const wallLight=new THREE.MeshStandardMaterial({color:'#FFFFFF',roughness:.18,metalness:.14,side:THREE.DoubleSide});
  const trim=new THREE.MeshPhysicalMaterial({color:'#F0DBB2',roughness:.18,metalness:.72,clearcoat:1,clearcoatRoughness:.08,emissive:'#735A30',emissiveIntensity:.13});
  // v93: make the ACTUAL roof slabs visibly pale even under mobile scene shadows.
- const roofChampagne=new THREE.MeshPhysicalMaterial({color:'#FFF1D6',metalness:.22,roughness:.18,clearcoat:1,clearcoatRoughness:.07,emissive:'#FFF1D6',emissiveIntensity:.68});
+ const roofChampagne=new THREE.MeshBasicMaterial({color:'#FFF1D6',side:THREE.DoubleSide}); // v94: unlit pale finish on ALL roof slab faces, including visible vertical sides
  const blueRoof=new THREE.MeshPhysicalMaterial({color:'#12355D',metalness:.22,roughness:.30,clearcoat:1,clearcoatRoughness:.11,emissive:'#806039',emissiveIntensity:.12});
  const darkBlue=new THREE.MeshStandardMaterial({color:'#12355D',roughness:.75,side:THREE.DoubleSide});
  const doorMat=new THREE.MeshStandardMaterial({color:'#775438',roughness:.42,metalness:.13});
@@ -48,7 +48,7 @@ export function createNewFairytaleCastle(parent,THREE){
  // v93: light-colored surface caps on all THREE real roof decks. Basic materials do not darken
  // under directional shadows; thin surface caps do not change the castle's geometry or turrets.
  const roofCapMat=new THREE.MeshBasicMaterial({color:'#FFF1D6',side:THREE.DoubleSide});
- for(const [w,d,x,y,z] of [[14,7.4,0,9.608,-1.1],[10.4,4.7,0,10.558,-1.9],[10.9,5.0,0,10.708,-1.9]]){
+ for(const [w,d,x,y,z] of [[14,7.4,0,9.615,-1.1],[10.4,4.7,0,10.562,-1.9],[10.9,5.0,0,10.716,-1.9]]){
   const cap=new THREE.Mesh(new THREE.PlaneGeometry(w,d),roofCapMat);
   cap.rotation.x=-Math.PI/2;cap.position.set(x,y,z);cap.renderOrder=3;C.add(cap);
  }
@@ -57,7 +57,7 @@ export function createNewFairytaleCastle(parent,THREE){
  const roofSheen=new THREE.MeshBasicMaterial({color:'#FFFDF4',transparent:true,opacity:.13,depthWrite:false,side:THREE.DoubleSide});
  for(const [x,w] of [[-2.45,.90],[1.65,1.18]]){
    const shine=new THREE.Mesh(new THREE.PlaneGeometry(w,4.25),roofSheen);
-   shine.rotation.x=-Math.PI/2;shine.rotation.z=-.16;shine.position.set(x,10.709,-1.9);C.add(shine);
+   shine.rotation.x=-Math.PI/2;shine.rotation.z=-.16;shine.position.set(x,10.720,-1.9);C.add(shine);
  }
  // Gentle roof-only fill light: ensures the upper flat roof reads bright in mobile 3D views.
  const roofFill=new THREE.PointLight(0xfff2dc,1.05,18,2);roofFill.position.set(0,13.5,-1.9);C.add(roofFill);
@@ -98,7 +98,7 @@ export function createNewFairytaleCastle(parent,THREE){
  // Continuous cornices and framed wall panels; no disconnected black wall pieces.
  for(const [y,w,d] of [[1.0,13.9,7.2],[7.5,13.9,7.2],[8.55,14.4,7.6],[10.75,11.1,5.2]]){
    block(w,.15,d,0,y,-1.1,pearl);
-   block(w+.13,.075,d+.13,0,y+.11,-1.1,brightGold);
+   block(w+.13,.075,d+.13,0,y+.11,-1.1,(y>=8.5?roofChampagne:brightGold));
  }
  // Pilasters on the front facade with capitals, plinths and recessed relief panels.
  for(const x of [-5.9,-2.65,2.65,5.9]){

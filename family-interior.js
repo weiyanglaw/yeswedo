@@ -15,7 +15,14 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  // Burgundy branded feature is attached directly to the EXISTING rear wall, no new partition.
  box(6.2,5.2,.14,0,5.35,-8.94,wine);box(6.35,.10,.22,0,7.96,-8.83,gold);box(6.35,.10,.22,0,2.75,-8.83,gold);
  // Exact original logo texture loaded from bundled file; not redrawn.
- const loader=new THREE.TextureLoader();loader.load('./office-logo-transparent.png',tex=>{tex.colorSpace=THREE.SRGBColorSpace;const p=new THREE.Mesh(new THREE.PlaneGeometry(3.7,3.7),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));p.position.set(0,5.3,-8.82);root.add(p);});
+ const loader=new THREE.TextureLoader();loader.load('./office-logo-transparent.png',tex=>{tex.colorSpace=THREE.SRGBColorSpace;const p=new THREE.Mesh(new THREE.PlaneGeometry(3.7,3.7),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));p.position.set(0,5.3,-8.82);p.userData.familyAction='logo';targets.push(p);root.add(p);});
+ // v94: same light-background / dark-text '認識德威陽' brand sign as Medical Island.
+ const aboutCanvas=document.createElement('canvas');aboutCanvas.width=960;aboutCanvas.height=180;
+ const ac=aboutCanvas.getContext('2d');ac.fillStyle='#FFF8ED';ac.beginPath();ac.roundRect(7,7,946,166,25);ac.fill();ac.strokeStyle='#D5B77A';ac.lineWidth=10;ac.stroke();
+ ac.fillStyle='#214A4B';ac.font='bold 85px sans-serif';ac.textAlign='center';ac.textBaseline='middle';ac.fillText('認識德威陽',480,92);
+ const aboutTexture=new THREE.CanvasTexture(aboutCanvas);aboutTexture.colorSpace=THREE.SRGBColorSpace;
+ const aboutSign=new THREE.Sprite(new THREE.SpriteMaterial({map:aboutTexture,transparent:true,depthTest:false,depthWrite:false}));
+ aboutSign.position.set(0,8.28,-8.45);aboutSign.scale.set(5.5,1.03,1);aboutSign.renderOrder=100;aboutSign.userData.familyAction='logo';root.add(aboutSign);targets.push(aboutSign);
  // Marriage kitchen, left rear.
  box(8,.25,1.5,-7.0,.9,-7.8,cream);for(const x of [-10,-8,-6,-4.4])box(1.7,2.3,1,-x+(-14),2.4,-8.1,cream);
  box(5.4,1.45,2.35,-6.6,.73,-3.7,pink,'kitchen');box(5.7,.18,2.55,-6.6,1.54,-3.7,white,'kitchen');

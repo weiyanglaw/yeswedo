@@ -260,7 +260,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const logoSignBase=box(5.9,.72,.16,new THREE.MeshPhysicalMaterial({color:0xFFF7E9,roughness:.27,metalness:.10,clearcoat:.45}),0,7.91,-8.35);
  box(6.03,.80,.09,gold,0,7.91,-8.47);
  const logoSignCanvas=document.createElement('canvas');logoSignCanvas.width=1024;logoSignCanvas.height=160;
- const lctx=logoSignCanvas.getContext('2d');lctx.fillStyle='#FFF7E9';lctx.fillRect(0,0,1024,160);lctx.fillStyle='#214A4B';lctx.font='bold 80px sans-serif';lctx.textAlign='center';lctx.textBaseline='middle';lctx.fillText('認識德威陽國際法律事務所',512,82,985);
+ const lctx=logoSignCanvas.getContext('2d');lctx.fillStyle='#FFF7E9';lctx.fillRect(0,0,1024,160);lctx.fillStyle='#214A4B';lctx.font='bold 80px sans-serif';lctx.textAlign='center';lctx.textBaseline='middle';lctx.fillText('認識德威陽',512,82,985);
  const logoSignTexture=new THREE.CanvasTexture(logoSignCanvas);logoSignTexture.colorSpace=THREE.SRGBColorSpace;
  const logoSignText=add(new THREE.PlaneGeometry(5.72,.67),new THREE.MeshBasicMaterial({map:logoSignTexture,side:THREE.DoubleSide,depthWrite:false}),0,7.91,-8.25);
  // v93: replicate the MAIN OFFICE floating "認識德威陽" clickable sign above the medical logo.
@@ -270,7 +270,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  mac.fillStyle='#FFF8ED';mac.beginPath();mac.roundRect(8,8,1184,194,34);mac.fill();
  mac.strokeStyle='#D5B477';mac.lineWidth=13;mac.stroke();
  mac.fillStyle='#214A4B';mac.font='bold 73px sans-serif';mac.textAlign='center';mac.textBaseline='middle';
- mac.fillText('認識德威陽｜點擊查看事務所介紹',600,106,1110);
+ mac.fillText('認識德威陽',600,106,1110);
  const medicalAboutTexture=new THREE.CanvasTexture(medicalAboutCanvas);medicalAboutTexture.colorSpace=THREE.SRGBColorSpace;
  const medicalAboutSign=new THREE.Sprite(new THREE.SpriteMaterial({map:medicalAboutTexture,transparent:true,depthTest:false,depthWrite:false}));
  medicalAboutSign.position.set(0,8.20,-7.95);medicalAboutSign.scale.set(6.5,1.14,1);medicalAboutSign.renderOrder=100;
@@ -410,8 +410,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const interactionMap=new Map();
  const fiveActions=new Set(['mediation','records','forensics','ecg','computer','logo']); // five game stations plus original non-game brand information sign
  const register=(object,action)=>{if(!fiveActions.has(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
- // Only the sign (not the entire logo wall) opens the existing firm introduction.
- register(logoSignText,'logo');register(logoSignBase,'logo');register(medicalAboutSign,'logo');
+ // v94: BOTH the actual official logo and the short sign open the same company introduction.
+ register(seal,'logo');register(logoSignText,'logo');register(logoSignBase,'logo');register(medicalAboutSign,'logo');
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
