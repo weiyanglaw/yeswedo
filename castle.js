@@ -4,7 +4,7 @@ export function createNewFairytaleCastle(parent,THREE){
  const wall=new THREE.MeshStandardMaterial({color:'#FFF3E4',roughness:.67,metalness:.02,side:THREE.DoubleSide});
  const wallLight=new THREE.MeshStandardMaterial({color:'#FFFAF0',roughness:.61,metalness:.02,side:THREE.DoubleSide});
  const trim=new THREE.MeshPhysicalMaterial({color:'#F0DBB2',roughness:.18,metalness:.72,clearcoat:1,clearcoatRoughness:.08,emissive:'#735A30',emissiveIntensity:.13});
- const roofChampagne=new THREE.MeshBasicMaterial({color:'#D4BD96'});
+ const roofChampagne=new THREE.MeshBasicMaterial({color:'#EBDDC7'});
  const blueRoof=new THREE.MeshStandardMaterial({color:'#254C7C',roughness:.48,metalness:.13});
  const darkBlue=new THREE.MeshStandardMaterial({color:'#12355D',roughness:.75,side:THREE.DoubleSide});
  const doorMat=new THREE.MeshStandardMaterial({color:'#775438',roughness:.42,metalness:.13});
