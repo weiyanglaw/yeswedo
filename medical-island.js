@@ -223,10 +223,28 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const box=(w,h,d,mat,x,y,z)=>add(new THREE.BoxGeometry(w,h,d),mat,x,y,z);
  const cyl=(rt,rb,h,mat,x,y,z)=>add(new THREE.CylinderGeometry(rt,rb,h,40),mat,x,y,z);
  // Purpose-built boutique reception: marble floor, gold inlays and uninterrupted central aisle.
- box(23.6,.1,18.6,material(0xD6D2C8,0,1),0,.02,0);
- // Large inset marble perimeter and champagne-brass border.
- for(const x of [-11.25,11.25])box(.055,.018,17.3,gold,x,.09,0);
- for(const z of [-8.25,8.25])box(22.5,.018,.055,gold,0,.09,z);
+ // v82: circular boutique interior with a front opening, not a rectangular room.
+ // The exterior medical pavilion, logo wall, existing people and entrance remain unchanged.
+ const roundFloor=cyl(13.35,13.35,.12,material(0xD6D2C8,0,.85),0,.02,0);
+ const floorRing=add(new THREE.TorusGeometry(12.45,.085,10,96),gold,0,.09,0);
+ floorRing.rotation.x=Math.PI/2;
+ // Curved segmented interior perimeter, open toward the entrance at +Z.
+ const curvedWall=material(0xE6E7E0,0,.78),curvedGlass=new THREE.MeshPhysicalMaterial({color:0xD6E9E9,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide});
+ for(let k=0;k<42;k++){
+  const a0=-Math.PI*.02+k*(Math.PI*1.87/42),a1=-Math.PI*.02+(k+1)*(Math.PI*1.87/42);
+  const mid=(a0+a1)/2;
+  // Three.js: angle 0 points toward +Z; leave the front-central door approach open.
+  const theta=mid+Math.PI*.57;
+  const x=12.5*Math.sin(theta),z=12.5*Math.cos(theta);
+  if(z>10.0 && Math.abs(x)<4.8)continue;
+  const arcLen=12.5*(a1-a0)+.055;
+  const panel=box(arcLen,7.35,.17,curvedGlass,x,4.0,z);panel.rotation.y=theta;
+  const foot=box(arcLen,.11,.24,gold,x,.32,z);foot.rotation.y=theta;
+  const crown=box(arcLen,.12,.22,gold,x,7.85,z);crown.rotation.y=theta;
+ }
+ // Round inset medallion and a gentle curved lounge rug.
+ const rug=cyl(3.6,3.6,.025,material(0xE6E5DC,0,.9),0,.11,1.2);
+ const rugRing=add(new THREE.TorusGeometry(3.58,.055,8,72),gold,0,.14,1.2);rugRing.rotation.x=Math.PI/2;
  // Removed thin floor grid lines: they appeared as dirt at mobile zoom.
  // Retain only the broad outer stone perimeter.
  box(23.5,.20,.35,material(0xD8E8E6),0,8.45,-9.05);
@@ -256,7 +274,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.075,7.6,.10,gold,x,4.2,8.75);
  }
  box(22.9,.12,.14,gold,0,8.35,-8.6); // Back wall cornice only; no front crossbar
- for(const x of [-11.1,11.1])box(.14,.12,17.3,gold,x,8.35,0);
+ // Curved wall cornices replace the former straight side beams.
  // v45: wide, straight medical reception on the right-front side, clear of the entrance aisle.
  // Keep a single solid counter rather than an open semicircle or detached brass rods.
  const desk=new THREE.Group();root.add(desk);desk.position.set(7.1,0,5.75);
@@ -267,13 +285,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Boutique details: marble veining, coves, ceiling lines, sconces and wall art.
  const marbleLine=material(0xd5c9bb,.15,.6), warm=new THREE.MeshBasicMaterial({color:0xffedc7});
  // v44: no tiny marble veins: they read as dirty streaks at mobile size.
- for(const x of [-10.9,10.9]){
-  for(const z of [-7.7,-2.6,2.5,7.6]){
-   box(.075,7.5,.09,gold,x,4.45,z);
-  }
-  box(.17,.16,17.4,gold,x,8.2,0);
-  box(.09,.08,16.9,warm,x,8.08,0);
- }
+ // The sidewall ribs are now supplied by the circular perimeter above.
  // Removed overhead transverse bars: they crossed the logo and ECG in mobile view.
 
  for(const x of [-6.4,6.4]){
@@ -413,46 +425,47 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    box(.63,.025,.38,cream,8.72,1.79,1.0+j*.66);
  }
  register(labPanel,'evidence');register(labBase,'evidence');
- // v79: seven distinct compact, walk-up 3D exhibits. Original sofa, staff, shelves and ECG remain.
+ // v82: five integrated interactive stations, with non-interactive furniture between them.
  const mint=material(0xA7C6BB),paper=material(0xFFF8E8),teal=material(0x2E6668);
- const exhibit=(x,z,w,d,action)=>{
-  const base=box(w,.86,d,cream,x,.53,z);box(w+.10,.10,d+.10,gold,x,1.01,z);
-  register(base,action);return base;
- };
- // 1. Dispute mediation roundtable, offset left of the clear central aisle.
- const round=add(new THREE.CylinderGeometry(1.05,1.05,.14,24),stone,-4.65,1.13,4.45);
+ const exhibit=(x,z,w,d,action)=>{const base=box(w,.86,d,cream,x,.53,z);box(w+.10,.10,d+.10,gold,x,1.01,z);register(base,action);return base;};
+ // 1: mediation and medical-dispute scenarios, left-front.
+ const round=add(new THREE.CylinderGeometry(1.05,1.05,.14,32),stone,-4.65,1.13,4.45);
  cyl(.15,.22,1.05,gold,-4.65,.57,4.45);register(round,'mediation');
- for(const [x,z] of [[-6.2,4.45],[-3.15,4.45]]){
-  box(.70,.40,.74,mint,x,.44,z);box(.72,.90,.18,teal,x,.98,z+.40);
- }
+ for(const [x,z] of [[-6.2,4.45],[-3.15,4.45]]){box(.70,.40,.74,mint,x,.44,z);box(.72,.90,.18,teal,x,.98,z+.40);}
  const papers=box(.62,.045,.50,paper,-4.65,1.23,4.45);register(papers,'mediation');
- // 2. Informed consent signing desk, tucked into left-front perimeter.
+ // 2: records reader integrated with the original evidence cabinet, right wall.
+ const fileReader=box(.16,1.20,1.40,teal,8.25,2.80,-3.80);register(fileReader,'records');
+ for(let i=0;i<3;i++)box(.18,.12,.94,paper,8.10,3.19-i*.33,-3.80);
+ // 3: standards + radiology in one anatomical/imagery display, left rear.
+ exhibit(-9.25,-3.95,1.65,2.05,'forensics');
+ const anatomy=cyl(.32,.28,1.30,mint,-9.25,1.80,-3.95);register(anatomy,'forensics');
+ add(new THREE.SphereGeometry(.29,16,12),paper,-9.25,2.65,-3.95);
+ const xray=box(1.72,1.52,.14,navy,-5.0,2.05,-6.12);register(xray,'forensics');
+ for(const dx of [-.41,.41])register(box(.55,.93,.02,glass,-5.0+dx,2.10,-6.02),'forensics');
+ // 4: consent document + timeline are a single workbench, left side.
  exhibit(-9.45,5.30,2.75,1.24,'consent');
  const consentPaper=box(.84,.055,.65,paper,-9.4,1.12,5.24);register(consentPaper,'consent');
  const pen=box(.06,.06,.62,navy,-8.84,1.16,5.27);register(pen,'consent');
- // 3. Medical standards / anatomical evidence showcase on the left wall.
- exhibit(-10.25,-3.95,1.65,2.05,'standards');
- const anatomy=cyl(.32,.28,1.30,mint,-10.25,1.80,-3.95);register(anatomy,'standards');
- add(new THREE.SphereGeometry(.29,16,12),paper,-10.25,2.65,-3.95);
- // 4. Separate X-ray evidence comparison console on rear-left, not over the logo.
- exhibit(-4.55,-5.75,2.15,1.05,'forensics');
- const xray=box(1.78,1.62,.14,navy,-4.55,2.05,-6.12);register(xray,'forensics');
- for(const dx of [-.43,.43]){
-  const scan=box(.59,.97,.02,glass,-4.55+dx,2.10,-6.02);register(scan,'forensics');
- }
- // 5. Timeline kiosk beside the left side wall, independent of ECG.
- exhibit(-10.20,2.20,1.25,1.20,'timeline');
- const timeline=box(1.32,1.55,.14,navy,-10.20,2.07,2.10);register(timeline,'timeline');
+ const timeline=box(1.32,1.55,.14,navy,-10.2,2.07,2.10);register(timeline,'consent');
  for(let i=0;i<4;i++)box(.72,.055,.035,i===2?gold:mint,-10.20,2.55-i*.33,2.21);
- // 6. Evidence file reader (existing evidence cabinet remains untouched).
- const fileReader=box(.16,1.20,1.40,teal,8.25,2.80,-3.80);register(fileReader,'records');
- for(let i=0;i<3;i++)box(.18,.12,.94,paper,8.10,3.19-i*.33,-3.80);
- // 7. Liability decision console, independent toggles for consent, records and causation.
+ // 5: liability desk with three decision switches, right side.
  const liability=box(.25,1.10,2.60,teal,8.95,2.76,2.05);register(liability,'liability');
- for(const zz of [1.34,2.05,2.76]){
-  const toggle=box(.27,.25,.44,gold,8.78,2.81,zz);register(toggle,'liability');
+ for(const zz of [1.34,2.05,2.76])register(box(.27,.25,.44,gold,8.78,2.81,zz),'liability');
+ // Interior styling: low sideboards, books, vases, tall plants, warm lamps and lounge seating.
+ const leaf=material(0x52846C),pot=material(0xE4D6BF),rose=material(0xDABBC1),softSeat=material(0xD5E6E0);
+ for(const [x,z] of [[-10.3,7.8],[10.4,7.8],[-10.7,-6.4],[10.8,-6.4]]){
+  cyl(.48,.36,.72,pot,x,.43,z);cyl(.09,.11,1.35,leaf,x,1.36,z);
+  for(let j=0;j<7;j++){const a=j*Math.PI*2/7;const frond=add(new THREE.SphereGeometry(.47,9,7),leaf,x+Math.cos(a)*.42,2.0+(j%3)*.20,z+Math.sin(a)*.42);frond.scale.set(.75,1.3,.75);}
  }
-
+ for(const [x,z] of [[-3.0,-6.8],[3.2,-6.8]]){
+  box(2.1,1.05,.78,walnut,x,.55,z);box(2.2,.11,.88,gold,x,1.12,z);
+  cyl(.20,.24,.52,pot,x-.55,1.45,z);add(new THREE.SphereGeometry(.32,10,8),rose,x-.55,1.88,z);
+  for(let j=0;j<4;j++)box(.18,.48,.42,j%2?navy:mint,x+.15+j*.24,1.42,z);
+ }
+ for(const [x,z] of [[-6.8,7.6],[5.1,8.0]]){
+  box(1.3,.43,1.0,softSeat,x,.52,z);box(1.3,.98,.20,softSeat,x,1.05,z-.42);
+  cyl(.12,.18,1.45,gold,x+1.05,.85,z);add(new THREE.SphereGeometry(.38,12,8),lightGold,x+1.05,1.66,z);
+ }
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
@@ -478,16 +491,16 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
  hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
- hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
- hint('⚖️ 醫療責任分析',9.3,4.10,2.05,'evidence');
+ 
+ 
  hint('認識德威陽',0,8.10,-6.80,'logo');
  hint('🤝 醫療調解',-4.65,2.25,4.45,'mediation');
- hint('📝 告知同意',-9.35,2.6,5.3,'consent');
- hint('🧬 醫療鑑定',-10.1,3.5,-3.95,'standards');
- hint('🔍 影像比對',-4.55,3.35,-5.7,'forensics');
- hint('🕒 事件時間軸',-10.1,3.55,2.2,'timeline');
+ hint('📝 告知與時間軸',-9.35,2.6,5.3,'consent');
+ hint('🔍 鑑定與影像',-9.3,3.5,-3.95,'forensics');
+ 
+ 
  hint('🗂️ 病歷閱覽',8.2,4.0,-3.8,'records');
- hint('⚖️ 條件分析',8.9,4.5,2.05,'liability');
+ hint('⚖️ 責任分析',8.9,4.5,2.05,'liability');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -555,19 +568,11 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.07,6.5,.11,v41Brass,x,4.3,-8.92);
   box(1.8,.06,.13,v41Brass,x,7.56,-8.86);
  }
- for(const x of [-10.95,10.95]){
-  for(const z of [-6.6,-1.5,3.6,7.3]){
-   box(.12,5.3,2.0,v41Brass,x,4.1,z);
-   box(.13,5.0,1.78,v41Ivory,x+(x<0?.08:-.08),4.1,z);
-  }
- }
+ // No rectangular side-wall panels: circular architecture stays visible.
  // Layered brass and illuminated cornice: no crossbeam across the open-front view.
  box(22.8,.12,.13,v41Brass,0,8.18,-8.63);
  box(22.3,.04,.09,v41Glow,0,8.02,-8.55);
- for(const x of [-11.08,11.08]){
-  box(.13,.13,17.2,v41Brass,x,8.17,0);
-  box(.06,.05,16.8,v41Glow,x,8.02,0);
- }
+ // The circular crown replaces the former side beams.
  // v44: remove detached gold vertical strips in front of reception. Keep solid curved reception geometry.
  // Gold corner uplights are emissive meshes, not expensive additional realtime lights.
  for(const x of [-10.15,10.15]){
@@ -648,7 +653,7 @@ export function createMedicalExperience(){
   consent:['📝 手術告知展示桌','簽了同意書，醫師就一定免責嗎？',[
    ['看同意書','簽名只是證據之一，仍需確認告知內容及當時情況。'],
    ['看告知過程','比較風險、替代方案與患者提問是否得到適當說明。'],
-   ['看法律重點','告知義務與診療是否符合醫療常規，應分別判斷。']]],
+   ['看事件時間軸','從就診檢查、治療告知到術後追蹤，逐段核對紀錄與時間。']]],
   standards:['🧬 醫療常規展示','人體模型與診療資料，哪個才是判斷醫療責任的依據？',[
    ['診療當時資訊','應考量當時可得的症狀、檢查與臨床資訊。'],
    ['鑑定意見','專業鑑定可協助分析醫療常規，但仍須結合其他證據。'],
@@ -656,7 +661,7 @@ export function createMedicalExperience(){
   forensics:['🔍 醫療影像證據中心','三份模擬資料，請選擇你要先比對的線索。',[
    ['影像拍攝時間','確認影像日期與症狀變化，避免把不同時點混在一起。'],
    ['影像報告版本','核對原始影像、報告與補充紀錄是否一致。'],
-   ['醫師處置紀錄','比對影像發現與後續處置，才有助釐清爭點。']]],
+   ['醫療常規與鑑定','結合當時臨床資訊、影像與鑑定意見，分析注意義務及因果關係。']]],
   timeline:['🕒 醫療事件時間軸','醫療爭議往往發生在不同時間點，先看哪一段？',[
    ['就診與檢查','核對症狀、分流、檢驗時間及相關紀錄。'],
    ['治療與告知','確認治療決策、風險告知與同意過程。'],

@@ -45,15 +45,17 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
     shelfBox(.28,.68+(i%3)*.11,.66,x,yy,.24,i%3===0?wine:i%3===1?bookPaper:bookNavy,'heritage');
     shelfBox(.04,.50,.69,x+.07,yy,.25,gold);
   }
+ // v82: desk moved 0.65 units toward the unchanged bookshelf; leave an aisle.
+ const heritageDeskOffset=-.65;
  // Adjacent desk, chair and clearly visible will document.
- box(3.2,.24,1.65,-5.4,1.33,5.35,white,'heritage');
- for(const x of [-6.72,-4.10])for(const z of [4.77,5.95])box(.16,1.19,.16,x,.63,z,libraryWood);
- box(1.18,.035,.78,-5.7,1.48,5.3,bookPaper,'heritage');
- for(let j=0;j<4;j++)box(.76,.018,.03,-5.7,1.51,5.08+j*.15,libraryWood);
- box(.08,.08,.85,-4.5,1.52,5.18,bookNavy);
- box(1.15,.18,1.1,-5.2,.60,7.1,libraryWood);
- for(const x of [-5.65,-4.75])for(const z of [6.65,7.53])box(.10,.55,.10,x,.28,z,libraryWood);
- box(1.14,1.28,.18,-5.2,1.25,7.62,libraryWood);
+ box(3.2,.24,1.65,-6.05,1.33,5.35,white,'heritage');
+ for(const x of [-7.37,-4.10])for(const z of [4.77,5.95])box(.16,1.19,.16,x,.63,z,libraryWood);
+ box(1.18,.035,.78,-6.35,1.48,5.3,bookPaper,'heritage');
+ for(let j=0;j<4;j++)box(.76,.018,.03,-6.35,1.51,5.08+j*.15,libraryWood);
+ box(.08,.08,.85,-5.15,1.52,5.18,bookNavy);
+ box(1.15,.18,1.1,-5.85,.60,7.1,libraryWood);
+ for(const x of [-6.30,-5.40])for(const z of [6.65,7.53])box(.10,.55,.10,x,.28,z,libraryWood);
+ box(1.14,1.28,.18,-5.85,1.25,7.62,libraryWood);
  // v67: oversized legible rotary telephone, with receiver and dial facing the visitor.
  box(3.6,1.14,2.8,8.1,.57,4.9,cream,'protect');
  box(2.7,.20,2.0,8.1,1.23,4.9,white,'protect');

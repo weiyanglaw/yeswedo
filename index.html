@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v80';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v80';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v81';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v82';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261026-v82';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v81';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -443,10 +443,12 @@ for(let i=1;i<6;i++){
  // perimeter, while the bridge's full-width entrance stays open. Never add a
  // transverse rail across the walking deck. All five bridges use one rule.
  const mainIslandRailInset=11.5;
- // v76: the medical bridge approaches from the castle at an angle to the facade.
- // Stop its side rails before the island forecourt; otherwise in front view they
- // project across the medical door. The last deck section remains open and walkable.
- const medicalLandingInset=i===2?2.5:0;
+ // Medical island: the bridge side rails end exactly at the circular island rim.
+ // Beyond that rim is the open forecourt leading to the glass building's front door.
+ // Do not create gold posts or horizontal bars on the medical island platform.
+ // The bridge deck itself stays continuous and both rails remain along its full span
+ // OUTSIDE the island. 17 = medical island radius; 4.82 = lateral rail offset.
+ const medicalLandingInset=i===2?Math.sqrt(17*17-4.82*4.82):0;
  const railStart=-len/2+mainIslandRailInset,railEnd=len/2-medicalLandingInset;
  const railLen=Math.max(0,railEnd-railStart);
  if(railLen>1){
