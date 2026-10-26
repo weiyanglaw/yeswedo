@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v56';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v60-champagne';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261026-v56';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261026-v61-light-roof';import {createCastleGardens} from './castle-garden.js?v=20261025-palace-v5-rose-v12';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -215,9 +215,9 @@ if(i===0){
    // Pre-cropped official artwork preserves original pixels and makes the ground seal legible.
    const groundSeal=new THREE.Group();court.add(groundSeal);
    groundSeal.position.set(0,1.56,18.65);
-   const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(5.10,96),new THREE.MeshBasicMaterial({color:'#fff4dc',side:THREE.DoubleSide}));
+   const sealBacking=new THREE.Mesh(new THREE.CircleGeometry(6.40,96),new THREE.MeshBasicMaterial({color:'#fff4dc',side:THREE.DoubleSide}));
    sealBacking.rotation.x=-Math.PI/2;sealBacking.renderOrder=23;groundSeal.add(sealBacking);
-   const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(5.00,.085,10,96),gold);
+   const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(6.27,.085,10,96),gold);
    sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;sealOutline.renderOrder=24;groundSeal.add(sealOutline);
    const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(7.70,9.50),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
    sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;sealImage.renderOrder=25;sealImage.material.depthTest=false;groundSeal.add(sealImage);
@@ -1004,13 +1004,13 @@ function leaveOffice(){
 document.getElementById('officeExit').onclick=leaveOffice;
 // Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
 let activeIslandRoom=0;const themeRooms=[];
-const roomPalettes=[null,['#f3e6d6','#6d4b3b','#c8a66d'],['#C5D1D8','#426f82','#b7d4d7'],['#fff0ec','#9c6678','#e8b7be'],['#e9edf5','#253b60','#b8a16f'],['#f0eee3','#546b55','#b3c3a2']];
+const roomPalettes=[null,['#f3e6d6','#6d4b3b','#c8a66d'],['#C9D3DC','#426f82','#b7d4d7'],['#fff0ec','#9c6678','#e8b7be'],['#e9edf5','#253b60','#b8a16f'],['#f0eee3','#546b55','#b3c3a2']];
 for(let i=1;i<6;i++){
  const sc=new THREE.Scene();sc.background=new THREE.Color(roomPalettes[i][0]);sc.add(new THREE.HemisphereLight(0xffffff,0xaab3c2,2.5));
  const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(7,12,9);sc.add(light);
  const root=new THREE.Group();sc.add(root);
  const floor=new THREE.Mesh(new THREE.BoxGeometry(24,.35,19),new THREE.MeshStandardMaterial({color:roomPalettes[i][0]}));floor.position.y=-.2;if(i!==2)root.add(floor);
- const wallMat=new THREE.MeshStandardMaterial({color:i===2?0xC5D1D8:0xfff9ee,roughness:.82});
+ const wallMat=new THREE.MeshStandardMaterial({color:i===2?0xDCE5DC:0xfff9ee,roughness:.82});
  const back=new THREE.Mesh(new THREE.BoxGeometry(24,9,.35),wallMat);back.position.set(0,4.35,-9.2);root.add(back);
  for(const x of [-11.9,11.9]){const side=new THREE.Mesh(new THREE.BoxGeometry(.3,9,19),wallMat);side.position.set(x,4.35,0);root.add(side);}
  if(i!==2){const carpet=new THREE.Mesh(new THREE.BoxGeometry(9,.06,13),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],roughness:.95}));carpet.position.set(0,.02,0);root.add(carpet);}

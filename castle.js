@@ -3,7 +3,8 @@ export function createNewFairytaleCastle(parent,THREE){
  const C=new THREE.Group();parent.add(C);
  const wall=new THREE.MeshStandardMaterial({color:'#FFF3E4',roughness:.67,metalness:.02,side:THREE.DoubleSide});
  const wallLight=new THREE.MeshStandardMaterial({color:'#FFFAF0',roughness:.61,metalness:.02,side:THREE.DoubleSide});
- const trim=new THREE.MeshPhysicalMaterial({color:'#D9BE88',roughness:.15,metalness:.82,clearcoat:1,clearcoatRoughness:.07});
+ const trim=new THREE.MeshPhysicalMaterial({color:'#F0DBB2',roughness:.18,metalness:.72,clearcoat:1,clearcoatRoughness:.08,emissive:'#735A30',emissiveIntensity:.13});
+ const roofChampagne=new THREE.MeshPhysicalMaterial({color:'#F5E8CA',roughness:.23,metalness:.48,clearcoat:1,clearcoatRoughness:.09,emissive:'#A98B54',emissiveIntensity:.20});
  const blueRoof=new THREE.MeshStandardMaterial({color:'#254C7C',roughness:.48,metalness:.13});
  const darkBlue=new THREE.MeshStandardMaterial({color:'#12355D',roughness:.75,side:THREE.DoubleSide});
  const doorMat=new THREE.MeshStandardMaterial({color:'#775438',roughness:.42,metalness:.13});
@@ -39,10 +40,10 @@ export function createNewFairytaleCastle(parent,THREE){
  };
  // Continuous castle mass: no dark black/coffee facade or floating pieces.
  block(13.3,8.5,6.8,0,4.95,-1.1,wall);
- block(14.0,.45,7.4,0,9.38,-1.1,trim);
+ block(14.0,.45,7.4,0,9.38,-1.1,roofChampagne);
  block(12.4,.35,7.1,0,8.75,-1.1,wallLight);
  block(10.4,2.0,4.7,0,9.55,-1.9,wallLight);
- block(10.9,.3,5.0,0,10.55,-1.9,trim);
+ block(10.9,.3,5.0,0,10.55,-1.9,roofChampagne);
  // Side turret roofs are physically connected to their bodies.
  tower(-6.5,-.4,1.85,8.2,3.0,true);
  tower( 6.5,-.4,1.85,8.2,3.0,false);
@@ -73,7 +74,7 @@ export function createNewFairytaleCastle(parent,THREE){
  // Architectural detailing: warm ivory stone, blue enamel and restrained champagne-gold ornament.
  const marble=new THREE.MeshStandardMaterial({color:'#FFF6E8',roughness:.62});
  const pearl=new THREE.MeshStandardMaterial({color:'#FFFCF3',roughness:.48});
- const brightGold=new THREE.MeshPhysicalMaterial({color:'#E6CD98',metalness:.85,roughness:.13,clearcoat:1,clearcoatRoughness:.06});
+ const brightGold=new THREE.MeshPhysicalMaterial({color:'#F4E1B9',metalness:.76,roughness:.17,clearcoat:1,clearcoatRoughness:.08,emissive:'#806234',emissiveIntensity:.12});
  const recess=new THREE.MeshStandardMaterial({color:'#F1D8AC',roughness:.83});
  const winBlue=new THREE.MeshStandardMaterial({color:'#91C9E2',emissive:'#E6D1A0',emissiveIntensity:.20,roughness:.19});
  const frontZ=2.50;
