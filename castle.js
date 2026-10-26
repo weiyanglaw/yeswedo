@@ -1,10 +1,11 @@
 // WEIYANG standalone castle module. Does not load the legacy castle GLB.
 export function createNewFairytaleCastle(parent,THREE){
  const C=new THREE.Group();parent.add(C);
- const wall=new THREE.MeshStandardMaterial({color:'#FFF8EC',roughness:.28,metalness:.10,side:THREE.DoubleSide});
- const wallLight=new THREE.MeshStandardMaterial({color:'#FFFCF5',roughness:.26,metalness:.08,side:THREE.DoubleSide});
+ const wall=new THREE.MeshStandardMaterial({color:'#FFFDF5',roughness:.16,metalness:.18,side:THREE.DoubleSide});
+ const wallLight=new THREE.MeshStandardMaterial({color:'#FFFFFF',roughness:.18,metalness:.14,side:THREE.DoubleSide});
  const trim=new THREE.MeshPhysicalMaterial({color:'#F0DBB2',roughness:.18,metalness:.72,clearcoat:1,clearcoatRoughness:.08,emissive:'#735A30',emissiveIntensity:.13});
- const roofChampagne=new THREE.MeshPhysicalMaterial({color:'#F9EACB',metalness:.28,roughness:.24,clearcoat:.95,clearcoatRoughness:.12});
+ // v91: broad flat roof between blue turrets, not facade or blue domes. Pale polished champagne ivory with visible mobile-scale highlights.
+ const roofChampagne=new THREE.MeshPhysicalMaterial({color:'#FFF6E3',metalness:.34,roughness:.12,clearcoat:1,clearcoatRoughness:.055,emissive:'#D7B985',emissiveIntensity:.19});
  const blueRoof=new THREE.MeshPhysicalMaterial({color:'#12355D',metalness:.22,roughness:.30,clearcoat:1,clearcoatRoughness:.11,emissive:'#806039',emissiveIntensity:.12});
  const darkBlue=new THREE.MeshStandardMaterial({color:'#12355D',roughness:.75,side:THREE.DoubleSide});
  const doorMat=new THREE.MeshStandardMaterial({color:'#775438',roughness:.42,metalness:.13});
@@ -44,6 +45,12 @@ export function createNewFairytaleCastle(parent,THREE){
  block(12.4,.35,7.1,0,8.75,-1.1,wallLight);
  block(10.4,2.0,4.7,0,9.55,-1.9,roofChampagne);
  block(10.9,.3,5.0,0,10.55,-1.9,roofChampagne);
+ // v91 roof-only specular streaks, just above the main upper roof plane (y=10.70).
+ const roofSheen=new THREE.MeshBasicMaterial({color:'#FFFDF4',transparent:true,opacity:.17,depthWrite:false,side:THREE.DoubleSide});
+ for(const [x,w] of [[-2.45,.90],[1.65,1.18]]){
+   const shine=new THREE.Mesh(new THREE.PlaneGeometry(w,4.25),roofSheen);
+   shine.rotation.x=-Math.PI/2;shine.rotation.z=-.16;shine.position.set(x,10.709,-1.9);C.add(shine);
+ }
  // Side turret roofs are physically connected to their bodies.
  tower(-6.5,-.4,1.85,8.2,3.0,true);
  tower( 6.5,-.4,1.85,8.2,3.0,false);
@@ -72,10 +79,10 @@ export function createNewFairytaleCastle(parent,THREE){
  crest.position.set(0,9.2,4.32);crest.renderOrder=0;crest.material.depthTest=true;crest.material.depthWrite=true;C.add(crest);
 
  // Architectural detailing: warm ivory stone, blue enamel and restrained champagne-gold ornament.
- const marble=new THREE.MeshStandardMaterial({color:'#FFFAF1',roughness:.29,metalness:.08});
+ const marble=new THREE.MeshStandardMaterial({color:'#FFFDF6',roughness:.19,metalness:.16});
  const pearl=new THREE.MeshStandardMaterial({color:'#FFFDF7',roughness:.28,metalness:.09});
  const brightGold=new THREE.MeshPhysicalMaterial({color:'#F4E1B9',metalness:.76,roughness:.17,clearcoat:1,clearcoatRoughness:.08,emissive:'#806234',emissiveIntensity:.12});
- const recess=new THREE.MeshStandardMaterial({color:'#F7E6C7',roughness:.39});
+ const recess=new THREE.MeshStandardMaterial({color:'#FFF4DF',roughness:.23});
  const winBlue=new THREE.MeshStandardMaterial({color:'#91C9E2',emissive:'#E6D1A0',emissiveIntensity:.20,roughness:.19});
  const frontZ=2.50;
  // Continuous cornices and framed wall panels; no disconnected black wall pieces.
@@ -175,7 +182,7 @@ export function createNewFairytaleCastle(parent,THREE){
  for(const x of [-2.1,2.1])for(const y of [3.6,4.4,5.2])ball(.13,x,y,3.32,brightGold);
  // Palace-level detailing: arched window bays, sculpted pediments, gilded roof ribs,
  // layered stone balconies and golden finials. These are real 3D meshes, not an image backdrop.
- const stoneEdge=new THREE.MeshStandardMaterial({color:'#FFFCF5',roughness:.51});
+ const stoneEdge=new THREE.MeshStandardMaterial({color:'#FFFDF7',roughness:.24});
  const royalGlass=new THREE.MeshStandardMaterial({color:'#9CC9DE',emissive:'#F3D69C',emissiveIntensity:.21,roughness:.19});
  const front=3.25;
  const ornament=(x,y,z,r=.14)=>{const o=new THREE.Mesh(new THREE.OctahedronGeometry(r,0),brightGold);o.position.set(x,y,z);C.add(o);};
