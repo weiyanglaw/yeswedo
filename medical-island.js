@@ -398,6 +398,21 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   box(.34,.10,.85,navy,9.12,2.89,zz);
   box(.04,.60,.07,gold,9.11,2.55,zz);
  }
+ // v73: physical medical-legal investigation station, placed along the right wall.
+ // It is a real 3D workstation rather than only a dialog option; central corridor stays clear.
+ const labBase=box(1.55,1.38,3.35,stone,9.30,.76,2.05);
+ box(1.80,.17,3.55,cream,9.30,1.54,2.05);
+ const labPanel=box(.20,2.05,2.95,navy,9.28,2.75,2.05);
+ for(const zz of [.98,2.02,3.06]){
+   box(.24,.55,.72,cream,9.12,2.80,zz);
+   box(.27,.09,.60,gold,8.97,2.72,zz);
+ }
+ // Four color-coded document trays: case chronology, consent, records and causation.
+ for(let j=0;j<4;j++){
+   box(.75,.09,.46,j%2?gold:navy,8.72,1.73,1.0+j*.66);
+   box(.63,.025,.38,cream,8.72,1.79,1.0+j*.66);
+ }
+ register(labPanel,'evidence');register(labBase,'evidence');
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
@@ -424,6 +439,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
  hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
+ hint('⚖️ 醫療責任分析',9.3,4.10,2.05,'evidence');
  hint('認識德威陽',0,8.10,-6.80,'logo');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
