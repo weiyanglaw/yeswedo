@@ -237,7 +237,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  box(8.64,6.79,.11,material(0x214A4B),0,4.58,-8.60);
  const tex=new THREE.TextureLoader().load('office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
  const seal=add(new THREE.PlaneGeometry(5.3,5.3),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,depthTest:true}),0,4.85,-8.45);
- seal.renderOrder=15;
+ seal.renderOrder=0;
  for(const x of [-5.1,5.1]){
   box(.10,6.9,.18,gold,x,4.58,-8.75);
   for(const y of [2.15,4.6,7.05]){

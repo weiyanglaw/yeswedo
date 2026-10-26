@@ -34,13 +34,14 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  sphere(.11,9.0,2.09,-5.62,walnut);sphere(.11,9.32,2.09,-5.62,walnut);
  // v67: tall inheritance library and adjacent writing desk, replacing the low console.
  const libraryWood=mat('#74505B'),bookPaper=mat('#F1E5D7'),bookNavy=mat('#344D68');
- box(4.9,5.25,.95,-8.0,2.66,5.6,libraryWood,'heritage');
- for(const y of [.50,1.65,2.8,3.95,5.05])box(4.75,.13,1.06,-8.0,y,5.6,gold,'heritage');
+ box(4.9,5.25,.95,-8.0,2.66,-8.1,libraryWood,'heritage');
+ for(const y of [.50,1.65,2.8,3.95,5.05])box(4.75,.13,1.06,-8.0,y,-7.52,gold,'heritage');
  for(let shelf=0;shelf<4;shelf++)for(let i=0;i<9;i++){
    const x=-10.0+i*.48,yy=.76+shelf*1.13;
-   box(.28,.68+(i%3)*.11,.66,x,yy,5.61,i%3===0?wine:i%3===1?bookPaper:bookNavy,'heritage');
-   box(.04,.50,.69,x+.07,yy,5.62,gold);
+   box(.28,.68+(i%3)*.11,.66,x,yy,-7.49,i%3===0?wine:i%3===1?bookPaper:bookNavy,'heritage');
+   box(.04,.50,.69,x+.07,yy,-7.46,gold);
  }
+ box(.20,5.3,1.15,-10.4,2.66,-7.57,bookNavy,'heritage');box(.20,5.3,1.15,-5.6,2.66,-7.57,bookNavy,'heritage');
  // Adjacent desk, chair and clearly visible will document.
  box(3.2,.24,1.65,-5.4,1.33,5.35,white,'heritage');
  for(const x of [-6.72,-4.10])for(const z of [4.77,5.95])box(.16,1.19,.16,x,.63,z,libraryWood);
@@ -121,19 +122,19 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
   const c=canvas.getContext('2d');c.fillStyle='rgba(119,61,73,.97)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
-  c.strokeStyle='#D5B77A';c.lineWidth=6;c.stroke();c.fillStyle='#FFF8F7';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
+  c.strokeStyle='#D5B77A';c.lineWidth=6;c.stroke();c.fillStyle='#FFF8F7';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,canvas.width/2,canvas.height/2,448);
   const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;
-  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));label.position.set(x,y,z);label.scale.set(4.35,1.02,1);label.renderOrder=80;label.userData.familyAction=action;label.userData.baseY=y;root.add(label);targets.push(label);labels.push(label);
+  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:true,depthWrite:false}));label.center.set(.5,.5);label.position.set(x,y,z);label.scale.set(4.35,1.02,1);label.renderOrder=0;label.userData.familyAction=action;label.userData.baseY=y;root.add(label);targets.push(label);labels.push(label);
  }
  hint('婚姻家事',-6.6,3.0,-3.7,'kitchen');
  hint('親權扶養',7.0,3.25,-4.8,'child');
- hint('遺囑繼承',-7.3,3.4,4.5,'heritage');
+ hint('遺囑繼承',-7.3,5.8,-7.0,'heritage');
  hint('家事保護',8.0,3.7,4.6,'protect');
  hint('德威陽諮詢',0,3.15,1.7,'sofa');
  const staffLabelText='哈姆太郎';hint(staffLabelText,4.9,3.45,1.1,'staff');
  // Large invisible tap areas improve mobile touch targeting.
  const invisible=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
- box(7,3.4,3.4,-6.6,1.7,-3.7,invisible,'kitchen');box(4.6,3.1,4.2,7,1.5,-4.8,invisible,'child');box(6,3.4,2.6,-7.3,1.7,4.5,invisible,'heritage');box(4.1,3.3,3.1,8,1.7,4.6,invisible,'protect');box(9.5,3.1,6.5,0,1.6,1.7,invisible,'sofa');
+ box(7,3.4,3.4,-6.6,1.7,-3.7,invisible,'kitchen');box(4.6,3.1,4.2,7,1.5,-4.8,invisible,'child');box(4.8,5.3,1.8,-8.0,2.65,-7.5,invisible,'heritage');box(3.3,2.2,2.0,-5.4,1.1,5.35,invisible,'heritage');box(4.1,3.3,3.1,8,1.7,4.6,invisible,'protect');box(9.5,3.1,6.5,0,1.6,1.7,invisible,'sofa');
  // v67 waypoint walk: traverse clear corridor and stop to work, not spin in place.
  const staffLabel=labels[labels.length-1];
  const route=[[4.9,1.1],[5.0,3.9],[2.0,5.3],[-2.1,5.1],[-2.3,3.6],[.7,3.7],[3.1,4.2],[5.0,3.9]];
@@ -174,6 +175,20 @@ export function createFamilyExperience(){
  function quiz(k){const q=questions[k];title.textContent=q.title;body.textContent=q.q;choices.replaceChildren();q.options.forEach((opt,i)=>button(opt,()=>{body.textContent=(i===q.correct?'答對了！':'這個選項不太正確。')+'\n'+q.explain;choices.replaceChildren();button('再看一次題目',()=>quiz(k));button('返回探索',()=>el.style.display='none');}));}
  function contact(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回家事諮詢沙發',desk);}
  function desk(){title.textContent='家事法律諮詢沙發｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('婚姻／家庭法律需求',()=>{body.textContent='可先整理事件經過、婚姻及財產相關文件，再由律師評估適用法律與處理方式。';});button('親子／繼承法律需求',()=>{body.textContent='可先整理親權、扶養或繼承關係及相關證明文件，協助釐清案件需求。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contact);}
- let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索書櫃。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('了解家事法律諮詢',desk);}else quiz(action);}
+ const comedy=[
+ ['洗碗換遺產','阿公說：「誰最乖，房子就給誰！」孫子們突然天天搶著洗碗。','洗最多碗的人就一定能繼承嗎？','洗碗值得鼓勵，但遺產分配仍要看有效遺囑、繼承及特留分等規定。'],
+ ['玩具抵扶養費','爸爸買了一百隻熊熊，開心地說：「這樣就不用付扶養費了吧？」','買玩具可以完全代替扶養費嗎？','扶養應考量孩子生活、教育與醫療需求；玩具不能當然抵掉扶養義務。'],
+ ['夫妻吵架的豪語','先生吵架時喊：「房子都是我的！」太太回：「我現在宣布冰箱歸我！」','誰喊得大聲，財產就歸誰嗎？','夫妻財產的權利歸屬，須看登記、財產制與有效法律行為，不靠音量決定。'],
+ ['搶著當乖孫','三個孫子為了爭阿公的疼愛，竟然同時拿掃把衝向客廳。','孝順就能直接取得全部遺產嗎？','孝順與法律繼承是不同問題；仍應確認遺囑、繼承人及相關規定。'],
+ ['離婚後的寵物','夫妻討論分居，家裡的貓卻先跳進行李箱，像在自己選監護人。','寵物歸誰照顧，跟子女親權一樣嗎？','寵物與未成年子女的法律地位不同，宜就照護與所有權另行協商。'],
+ ['忘記帶戶口名簿','夫妻說要辦離婚，卻只帶了兩杯咖啡，問櫃檯：「有誠意可以嗎？」','只有口頭說好就完成兩願離婚嗎？','兩願離婚依法有書面、證人及戶政登記等要件，不能只靠口頭承諾。'],
+ ['扶養費算零食','爸爸說：「我每週送孩子一大箱零食，這算扶養費吧？」','零食能當然取代扶養費嗎？','仍須看扶養安排、實際支出及孩子的合理需求。'],
+ ['家族群組的遺囑','阿嬤在家族群組發：「我的金戒指留給最早回貼圖的人。」大家秒回。','群組貼文就一定是有效遺囑嗎？','遺囑有法定方式與要件，不能只憑群組訊息就認定有效。'],
+ ['兄妹分蛋糕','兄妹為了蛋糕誰切得比較大吵翻，哥哥說：「以後遺產也這樣分！」','遺產分割真的像分蛋糕嗎？','遺產分割可能涉及繼承比例、遺囑、債務及協議，不能只靠目測。'],
+ ['吵架的錄音','夫妻爭執時，手機突然跳出「儲存空間不足」，兩人瞬間停下來整理照片。','蒐集資料只要有錄音就一定夠嗎？','資料取得方式、內容完整性及個案證據能力均須評估，避免違法蒐證。']
+ ];
+ let comedyIndex=0;
+ function funny(){const item=comedy[comedyIndex++%comedy.length];title.textContent='哈姆太郎｜家事趣味劇場・'+item[0];body.textContent=item[1]+'\n\n'+item[2];choices.replaceChildren();button('先聽哈姆太郎怎麼說',()=>{body.textContent=item[3];choices.replaceChildren();button('下一個趣味故事',funny);button('返回導覽',()=>open('staff'));});button('換一個故事',funny);}
+ let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索書櫃。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('家事趣味劇場（10則）',funny);button('認識德威陽與諮詢',desk);}else quiz(action);}
  return {open,hide:()=>el.style.display='none'};
 }
