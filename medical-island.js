@@ -406,7 +406,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  register(wavePanel,'ecg');
  // Clickable props and restrained, legible floating hints.
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
- const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(contactChairHit,'contact');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
+ const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
@@ -415,13 +415,12 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(23,42,62,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
   c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,240,56,448);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(2.9,.68,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- hint('💬 跟我聊聊',7.2,3.65,3.6,'staff');
+ hint('💬 跟我聊聊',7.2,3.95,3.6,'staff');
  hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
  hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
  hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
- hint('☎ 聯絡我們',-3.55,3.28,1.20,'contact');
  hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
  hint('📑 病歷證據',9.7,3.45,-1.65,'evidence');
  hint('⚖️ 認識德威陽',0,8.10,-6.80,'logo');
@@ -559,12 +558,29 @@ export function createMedicalExperience(){
  document.body.append(el);
  const title=el.querySelector('#wyMedTitle'),body=el.querySelector('#wyMedText'),choices=el.querySelector('#wyMedChoices');
  el.querySelector('#wyMedClose').onclick=()=>el.style.display='none';
+
+ const patientTopics=[['手術後神經損傷','患者術後持續不適，想了解手術風險是否充分告知。'],['急診延誤診斷','家屬質疑急診評估與後續處置是否及時。'],['癌症檢查延誤','檢查結果異常，患者質疑追蹤通知的流程。'],['一場改善生活的手術，卻帶來意外困擾','一名患者接受非緊急性的自費手術後，出現持續不適，影響日常生活，也開始質疑術前風險是否充分告知。'],['麻醉後併發症','患者在麻醉後出現異常，家屬希望釐清監測與應對。'],['產科醫療爭議','生產過程發生緊急狀況，家屬想確認醫療決策。'],['用藥錯誤爭議','患者用藥後出現不良反應，想確認醫囑與給藥紀錄。'],['住院跌倒受傷','患者住院期間跌倒，家屬質疑防護與照護安排。'],['術後感染爭議','術後發生感染，患者想了解感染控制及追蹤措施。'],['病歷記載爭議','患者發現病歷記載與記憶不同，想核對完整資料。']];
+ const providerTopics=[['手術風險與求償','患者術後提出求償，院方需要整理告知及診療紀錄。'],['急診分流爭議','家屬質疑候診時間，院方需要釐清分流依據。'],['檢查報告通知爭議','患者稱未收到通知，院方需確認追蹤及聯繫紀錄。'],['醫療契約與效果爭議','患者對自費療程成果不滿，院方需要檢視契約與說明。'],['麻醉監測爭議','家屬質疑監測處置，院方需要核對完整時序。'],['產科緊急處置爭議','緊急處置引發爭議，院方需要整理當時判斷依據。'],['處方與給藥爭議','患者主張用藥受損，院方需要確認醫囑及執行紀錄。'],['住院照護責任','患者住院發生意外，院方需要釐清照護與防護流程。'],['院內感染爭議','患者質疑感染控制，院方需檢視相關措施與紀錄。'],['病歷保存與調閱','病歷完整性受到質疑，院方需確認保存與調閱程序。']];
+ const facts=[
+ ['知情同意','簽署同意書不代表醫療院所當然免責，仍須依具體情況檢視告知與處置。'],['醫療風險','發生併發症不必然代表醫療疏失，仍要檢視當時的醫療判斷。'],['申請病歷','可依適用規定向醫療機構申請病歷複製本，並確認所需範圍。'],['病歷時間軸','將檢查、診斷、用藥與處置按日期排列，有助於釐清爭點。'],['醫療調解','醫療爭議可以評估適用的調解程序，並事先整理事實與資料。'],['患者隱私','醫療資訊涉及個人隱私，公開或轉傳前應注意合法性。'],['醫療費用','醫療支出應保留收據及明細，以利評估可能的損害。'],['術前說明','非緊急手術也要重視治療目的、替代方案及相關風險說明。'],['醫療紀錄','護理紀錄、醫囑及檢驗資料都可能是釐清爭議的重要線索。'],['醫病溝通','爭議發生時，盡量保留客觀、完整的書面溝通紀錄。']];
+ const factTitles=['檢驗報告','醫療影像','麻醉紀錄','急診分流','轉診流程','用藥安全','處方紀錄','護理交班','手術紀錄','術後追蹤','診斷告知','醫療常規','因果關係','損害證明','照護紀錄','院內感染','醫療契約','自費項目','療程期待','告知文件','醫師說明','申訴管道','資料保存','紀錄補記','個資保護','調解準備','訴訟時效','醫療鑑定','醫院回應','專業評估'];
+ factTitles.forEach(t=>facts.push([t,'遇到'+t+'相關疑問，應先保存完整資料，依個案事實及適用規範進一步評估。']));
+ const detectiveTitles=['消失的30分鐘','交班紀錄疑點','檢驗報告日期','手術同意書版本','麻醉紀錄缺頁','醫囑與給藥時間','急診分流紀錄','護理觀察落差','術後追蹤通知','影像報告差異','感染監測紀錄','轉診交接資訊','住院跌倒紀錄','補記病歷時間','收據與療程紀錄'];
+ const ecgTitles=['術後心率逐漸加快','術後疑似出血','胸痛患者病情變化','昏厥患者的心律異常','麻醉期間血氧下降','麻醉恢復期呼吸異常','心房顫動','心跳過慢','危險性心室心律異常','嚴重感染與生命徵象變化','用藥後疑似嚴重過敏','患者突然意識不清','夜間監測警報','急救前後的監測變化','儀器雜訊與真正異常'];
+ let factIndex=0,detectiveIndex=0,ecgIndex=0,storyIndex=0,storyRole='patient';
+ function storyChoose(){title.textContent='雙人沙發｜醫療故事';body.textContent='從哪個角度聽故事？';choices.replaceChildren();button('患者／家屬',()=>storyShow('patient',0));button('醫療院所',()=>storyShow('provider',0));}
+ function storyShow(role,i){storyRole=role;storyIndex=i;const d=(role==='patient'?patientTopics:providerTopics)[i];title.textContent=d[0];body.textContent=d[1];choices.replaceChildren();button('看看德威陽如何協助',()=>{body.textContent=i===3&&role==='patient'?'本所曾處理相關醫療訴訟，協助患者釐清術前告知、醫療處置及損害責任，透過法律程序維護權益。':'德威陽可協助整理相關資料、釐清告知與醫療處置、分析證據及法律責任，並評估溝通、調解或訴訟途徑。';});button('下一個故事',()=>storyShow(role,(i+1)%10));button('返回身分選擇',storyChoose);}
+ function bookShow(){const d=facts[factIndex++%facts.length];title.textContent='大書櫃｜'+d[0];body.textContent=d[1];choices.replaceChildren();button('再翻一本',bookShow);}
+ function detectiveShow(){const t=detectiveTitles[detectiveIndex++%detectiveTitles.length];title.textContent='醫療偵探｜'+t;body.textContent='調查任務：比較三份紀錄，找出需要進一步核對的線索。';choices.replaceChildren();[['病歷紀錄','先確認診療經過與記載時間。'],['護理紀錄','核對觀察、通知及交班內容。'],['檢查報告','比對檢查時間、結果及後續處置。']].forEach(([a,b])=>button(a,()=>{body.textContent=b;}));button('查看調查結果',()=>{body.textContent='關鍵是比對不同資料的時間、內容與完整性；單一差異不能直接認定疏失，仍須進一步查證。';});button('下一個案件',detectiveShow);}
+ function ecgShow(){const t=ecgTitles[ecgIndex++%ecgTitles.length];title.textContent='心電圖監測｜'+t;body.textContent='監測畫面出現變化，什麼時候應提醒醫療團隊評估？';choices.replaceChildren();['發現異常變化時即依臨床情況評估','等到下一次例行巡房','只看單一數字，不確認患者狀況'].forEach((a,i)=>button(a,()=>{body.textContent=i===0?'答對了！應結合病人狀況、監測趨勢與臨床規範及時評估。':'不建議只等待或只看單一數字；應依患者情況與監測趨勢及時評估。';}));button('下一個監測事件',ecgShow);}
+ function deskHome(){title.textContent='接待櫃檯｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('患者／家屬法律需求',()=>{body.textContent='可先整理病歷、醫療經過及相關損害資料，再評估法律諮詢。';});button('醫療院所法律需求',()=>{body.textContent='可協助醫療機構檢視診療紀錄、風險、申訴及爭議處理。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contactHome);}
+ function contactHome(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回接待櫃檯',deskHome);}
  let current='staff';
  function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#f5ebda;border:1px solid #d7bb8b;border-radius:10px;padding:10px 12px;color:#243b52;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
  function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
- function home(){if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function home(){if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgShow();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
  return {show(){el.style.display='none'},open(action='staff'){current=scenes[action]?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
