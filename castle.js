@@ -15,7 +15,7 @@ export function createNewFairytaleCastle(parent, THREE) {
  const block=(w,h,d,x,y,z,m)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);root.add(o);return o};
  const cylinder=(rt,rb,h,x,y,z,m,n=32)=>{let o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,n),m);o.position.set(x,y,z);root.add(o);return o};
  const arch=(x,y,z,r,t,m)=>{let o=new THREE.Mesh(new THREE.TorusGeometry(r,t,10,36,Math.PI),m);o.position.set(x,y,z);root.add(o);return o};
- const officialLogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png?v=99');
+ const officialLogoTexture=new THREE.TextureLoader().load('weiyang-logo-tight-v102.png');
  officialLogoTexture.colorSpace=THREE.SRGBColorSpace;
  const logoMaterial=new THREE.MeshBasicMaterial({map:officialLogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false});
  const roof=(x,z,r,baseY,height,flag=false)=>{let c=new THREE.Mesh(new THREE.ConeGeometry(r,height,36),navy);c.position.set(x,baseY+height/2,z);root.add(c);
@@ -23,10 +23,10 @@ export function createNewFairytaleCastle(parent, THREE) {
  cylinder(.09,.09,.4,x,baseY+height+.22,z,gold,12);
  if(flag){
   // Large navy flags with the *original* official transparent logo, visible from island overview.
-  cylinder(.065,.065,2.45,x,baseY+height+1.25,z,gold,10);
-  block(2.55,1.55,.09,x+1.30,baseY+height+1.60,z,deep);
-  const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.45,1.45),logoMaterial);
-  flagLogo.position.set(x+1.30,baseY+height+1.60,z+.075);root.add(flagLogo);
+  cylinder(.065,.065,2.70,x,baseY+height+1.38,z,gold,10);
+  block(2.95,1.92,.09,x+1.50,baseY+height+1.66,z,deep);
+  const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.43,1.76),logoMaterial);
+  flagLogo.position.set(x+1.50,baseY+height+1.66,z+.075);root.add(flagLogo);
  }
  };
  // Original footprint: 17.5 wide; raise only the actual facade to THREE floors.
@@ -124,8 +124,8 @@ export function createNewFairytaleCastle(parent, THREE) {
  block(4.37,6.69,.20,0,9.98,2.92,deep);
  arch(0,13.33,3.04,2.16,.19,gold);
  // Original official brand logo asset, never a hand-drawn substitute.
- const logo=new THREE.Mesh(new THREE.PlaneGeometry(3.15,3.15),logoMaterial);
- logo.position.set(0,10.25,3.10);root.add(logo);
+ const logo=new THREE.Mesh(new THREE.PlaneGeometry(3.65,4.54),logoMaterial);
+ logo.position.set(0,10.06,3.11);root.add(logo);
  // Warm, prominent illuminated upper bays; no tiny decorative ornaments.
  for(const x of [-4.5,4.5])block(2.1,.20,.44,x,top+.16,2.55,gold);
  return root;
