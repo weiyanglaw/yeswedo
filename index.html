@@ -1287,13 +1287,13 @@ lbText('電梯  1F・2F・3F',8.4,6.65,-6.0,4.7,.65,'elevator');
 const wyElevDoors1=[];
 for(const x of [7.23,9.57]){const d=lbBox(x,3.25,-6.30,2.22,5.55,.14,'#7891a8');wyElevDoors1.push(d)}
 // Keep the elevator portal visible from the office's existing camera; no employee or desk is removed.
-const wyElev2=new THREE.Group();roomRoot.add(wyElev2);wyElev2.position.set(10.7,0,7.7);
+const wyElev2=new THREE.Group();roomRoot.add(wyElev2);wyElev2.position.set(11.1,0,5.8);wyElev2.rotation.y=-Math.PI/2;
 const wy2Mat=c=>new THREE.MeshBasicMaterial({color:c});
 function wy2Box(x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy2Mat(c));m.position.set(x,y,z);wyElev2.add(m);return m}
 wy2Box(0,3,-.65,3.9,6,.5,'#243e5a');wy2Box(0,5.6,-.29,3.7,.55,.18,'#f4f2e9');
 const wyElevDoors2=[wy2Box(-.87,2.9,-.25,1.7,5.3,.12,'#7891a8'),wy2Box(.87,2.9,-.25,1.7,5.3,.12,'#7891a8')];
 wy2Box(0,.03,1.2,3.9,.06,3.0,'#284966');
-const wyElev2Label=officeSign('電梯｜1F–2F',10.7,6.0,7.7,3.5,'#fff8ed',null);
+const wyElev2Label=officeSign('電梯｜1F–2F',11.1,6.0,5.8,3.5,'#fff8ed',null);
 
 // Same small text-only floating interaction labels as 2F, never icons or large explainer boards.
 lbText('迎賓茶點區',-8.7,4.15,-4.0,3.3,.68,'tea');
@@ -1305,21 +1305,25 @@ floorBtn.style.cssText='display:none;position:fixed;z-index:60;top:70px;right:12
 document.body.appendChild(floorBtn);
 // v110 elevator ride state: walking, entering, selecting floor, closing, travelling, opening and exiting.
 let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
-const wyElev1Pos=new THREE.Vector3(8.4,0,-5.4),wyElev2Pos=new THREE.Vector3(10.7,0,7.7);
-const wyWalkUI=document.createElement('div');wyWalkUI.id='wyWalkUI';wyWalkUI.style.cssText='display:none;position:fixed;z-index:49;bottom:65px;left:8px;pointer-events:auto;touch-action:none;font:11px system-ui;color:#fff;text-align:center';
-wyWalkUI.innerHTML='<div style="background:#243e5add;padding:6px 9px;border-radius:8px;margin-bottom:5px">自由移動｜電梯可隨時點選</div><div><button data-move="up">上</button></div><div><button data-move="left">左</button><button data-move="down">下</button><button data-move="right">右</button></div>';
+const wyElev1Pos=new THREE.Vector3(8.4,0,-5.4),wyElev2Pos=new THREE.Vector3(9.1,0,5.8);
+const wyWalkUI=document.createElement('div');wyWalkUI.id='wyWalkUI';wyWalkUI.style.cssText='display:none;position:fixed;z-index:49;bottom:85px;left:18px;width:116px;height:116px;pointer-events:auto;touch-action:none;user-select:none';
+wyWalkUI.innerHTML='<div id="wyJoyBase" style="position:relative;width:112px;height:112px;border-radius:50%;background:rgba(245,239,255,.24);border:2px solid rgba(255,255,255,.68);box-shadow:0 3px 14px rgba(74,42,117,.18);touch-action:none"><div id="wyJoyKnob" style="position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#a879d8;border:3px solid #c9a7f0;box-sizing:border-box;box-shadow:0 2px 9px rgba(70,30,110,.38);pointer-events:none"></div></div>';
 document.body.append(wyWalkUI);
-wyWalkUI.querySelectorAll('button').forEach(b=>{b.style.cssText='width:42px;height:35px;margin:2px;background:#254b6a;color:white;border:1px solid #a6d2e3;border-radius:9px;font-weight:700;touch-action:none';});
-const wyMoveKeys=new Set();let wyMoveTouch=null;
-wyWalkUI.querySelectorAll('button').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);wyMoveTouch=b.dataset.move});for(const ev of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,()=>{if(wyMoveTouch===b.dataset.move)wyMoveTouch=null})});
+const wyMoveKeys=new Set();let wyMoveTouch=null,wyJoyX=0,wyJoyY=0,wyJoyPointer=null;
+const wyJoyBase=wyWalkUI.querySelector('#wyJoyBase'),wyJoyKnob=wyWalkUI.querySelector('#wyJoyKnob');
+function wyJoyUpdate(e){const r=wyJoyBase.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy),max=34,scale=len>max?max/len:1;wyJoyX=dx*scale/max;wyJoyY=dy*scale/max;wyJoyKnob.style.transform=`translate(${dx*scale}px,${dy*scale}px)`;}
+function wyJoyReset(){wyJoyPointer=null;wyJoyX=0;wyJoyY=0;wyJoyKnob.style.transform='translate(0px,0px)';}
+wyJoyBase.addEventListener('pointerdown',e=>{e.preventDefault();wyJoyPointer=e.pointerId;wyJoyBase.setPointerCapture(e.pointerId);wyJoyUpdate(e)});
+wyJoyBase.addEventListener('pointermove',e=>{if(e.pointerId===wyJoyPointer){e.preventDefault();wyJoyUpdate(e)}});
+for(const ev of ['pointerup','pointercancel','lostpointercapture'])wyJoyBase.addEventListener(ev,e=>{if(e.pointerId===wyJoyPointer)wyJoyReset()});
 addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){if(insideOffice&&!activeIslandRoom){e.preventDefault();wyMoveKeys.add(e.key.toLowerCase())}}});
 addEventListener('keyup',e=>wyMoveKeys.delete(e.key.toLowerCase()));
 const wyLiftPrompt=document.createElement('button');wyLiftPrompt.id='wyLiftPrompt';wyLiftPrompt.textContent='開啟電梯門・走進電梯';wyLiftPrompt.style.cssText='display:none;position:fixed;z-index:50;bottom:138px;right:12px;background:#203e5a;color:white;border:2px solid #d5e7f0;border-radius:12px;padding:9px;font-size:12px;font-weight:700';document.body.append(wyLiftPrompt);
-const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyRideShade.style.cssText='display:none;position:fixed;inset:0;z-index:95;background:#172c43ee;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:16px;font:700 25px system-ui;text-align:center';wyRideShade.innerHTML='<div>德威陽｜有法度</div><div id="wyRideProgress">電梯門關閉中…</div><div id="wyRideFloor" style="font-size:46px">1F</div>';document.body.append(wyRideShade);
+const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyRideShade.style.cssText='display:none;position:fixed;inset:0;z-index:95;background:#172c43ee;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:10px;font:700 21px system-ui;text-align:center';wyRideShade.innerHTML='<div>德威陽｜有法度</div><div id="wyRideProgress">電梯門關閉中…</div><div id="wyRideFloor" style="font-size:46px">1F</div>';document.body.append(wyRideShade);
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,9.3);lobbyRoot.add(wyIndoorActor)}
 function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:roomRoot;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
- const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-5.25):new THREE.Vector3(0,.08,9.3)):(atElevator?new THREE.Vector3(10.7,.08,7.65):new THREE.Vector3(8.9,.08,9.3));wyIndoorActor.position.copy(p);
- wyWalkUI.style.display='block';wyMoveTouch=null;wyMoveKeys.clear();}
+ const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-5.25):new THREE.Vector3(0,.08,9.3)):(atElevator?new THREE.Vector3(10.6,.08,5.8):new THREE.Vector3(8.9,.08,9.3));wyIndoorActor.position.copy(p);
+ wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=n===2?2:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':'德威陽｜2F 員工辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;
@@ -1346,12 +1350,12 @@ floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
  if(wyIndoorActor&&!wyRide){
-  let x=0,z=0;const k=wyMoveKeys,move=wyMoveTouch;
-  if(k.has('arrowleft')||k.has('a')||move==='left')x-=1;
-  if(k.has('arrowright')||k.has('d')||move==='right')x+=1;
-  if(k.has('arrowup')||k.has('w')||move==='up')z-=1;
-  if(k.has('arrowdown')||k.has('s')||move==='down')z+=1;
-  if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
+  let x=0,z=0;const k=wyMoveKeys;
+  if(k.has('arrowleft')||k.has('a'))x-=1;
+  if(k.has('arrowright')||k.has('d'))x+=1;
+  if(k.has('arrowup')||k.has('w'))z-=1;
+  if(k.has('arrowdown')||k.has('s'))z+=1;
+  x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
    if(wyOfficeFloor===1){if(nx>-12&&nx<12&&nz>-9.5&&nz<10&&!(Math.abs(nx)<7.2&&nz>4.4&&nz<7.6)&&!(Math.abs(nx)<4&&nz>-5.5&&nz<-1.2)){p.x=nx;p.z=nz;}}
    else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
@@ -1362,22 +1366,22 @@ function wyElevatorTick(dt){
  }
  if(wyRide){
   const r=wyRide;r.time+=dt;
-  if(r.phase==='close'&&r.time>=0.65){
+  if(r.phase==='close'&&r.time>=0.18){
    r.phase='travel';r.time=0;
    wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';
   }else if(r.phase==='travel'){
-   wyRideShade.querySelector('#wyRideFloor').textContent=(r.time<0.65?r.source:r.dest)+'F';
-   if(r.time>=1.25){
+   wyRideShade.querySelector('#wyRideFloor').textContent=(r.time<0.12?r.source:r.dest)+'F';
+   if(r.time>=0.28){
     wySetFloor(r.dest);
     wyIndoorPlace(r.dest,true);
     wyDoorOpen=1;
     r.phase='open';r.time=0;
     wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
    }
-  }else if(r.phase==='open'&&r.time>=0.8){
+  }else if(r.phase==='open'&&r.time>=0.18){
    wyRideShade.style.display='none';r.phase='exit';r.time=0;
   }else if(r.phase==='exit'){
-   const out=r.dest===1?new THREE.Vector3(8.4,.08,-3.2):new THREE.Vector3(10.7,.08,9.2);
+   const out=r.dest===1?new THREE.Vector3(8.4,.08,-3.2):new THREE.Vector3(8.8,.08,5.8);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
    if(len>0.12)wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*2.7)/len);
    else{wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';}
@@ -1497,7 +1501,7 @@ function enterOffice(){
 }
 function leaveOffice(){
  closeWyInfo();medicalExperience.hide();familyExperience.hide();medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
- document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
+ document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
 document.getElementById('officeExit').onclick=leaveOffice;
@@ -1690,7 +1694,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){const action=hit[0].object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
  const objects=themeRooms[2].medicalRoom?.interactionTargets||[];
  const hit=ray.intersectObjects(objects,true);if(hit.length){const target=hit[0].object;if(target.userData.medicalAction==='logo'){openWyInfo('company');return;}medicalExperience.open(target.userData.medicalAction||'staff');return;}
- return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);else if(wyIndoorActor&&Math.hypot(wyIndoorActor.position.x-10.7,wyIndoorActor.position.z-7.7)<4){wyElevatorOpen();wyLobbyOpen('elevator')}return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);if(ray.intersectObjects(islandLabels).length)return;if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}for(let idx=1;idx<6;idx++){const target=islandBuildingTargets[idx];if(target&&ray.intersectObject(target,true).length){enterIslandRoom(idx);return;}}const hits=ray.intersectObjects(clickable);if(hits.length){const label=hits[0].object.userData.label;const idx=names.indexOf(label);if(idx>0){enterIslandRoom(idx);return;}talk(label);return}// Cloud nameplates are decorative and NEVER act as entry buttons.
+ return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}ray.setFromCamera(pointer,officeCam);const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);else if(wyIndoorActor&&Math.hypot(wyIndoorActor.position.x-9.1,wyIndoorActor.position.z-5.8)<4){wyElevatorOpen();wyLobbyOpen('elevator')}return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);if(ray.intersectObjects(islandLabels).length)return;if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}for(let idx=1;idx<6;idx++){const target=islandBuildingTargets[idx];if(target&&ray.intersectObject(target,true).length){enterIslandRoom(idx);return;}}const hits=ray.intersectObjects(clickable);if(hits.length){const label=hits[0].object.userData.label;const idx=names.indexOf(label);if(idx>0){enterIslandRoom(idx);return;}talk(label);return}// Cloud nameplates are decorative and NEVER act as entry buttons.
 
 
  // Ground tap: raycast against the six floating island top surfaces and bridge decks.
