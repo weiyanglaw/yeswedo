@@ -251,15 +251,9 @@ export function createMedicalExterior(group, THREE){
    add(new THREE.CylinderGeometry(.045,.045,8.4,8),v127Gold,x+.105,5.15,z+.03);
   }
  }
- // A broad sculptural facade arch; floats above the original entrance with no ground supports.
- const archPts=[];
- for(let j=0;j<=28;j++){
-  const t=j/28;
-  archPts.push(new THREE.Vector3(-4.10+8.2*t,6.87+.82*Math.sin(Math.PI*t),5.57));
- }
- group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPts),40,.19,10,false),v127Pearl));
- const archGlint=archPts.map(p=>new THREE.Vector3(p.x,p.y+.18,p.z+.03));
- group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archGlint),40,.07,8,false),v127Gold));
+ // v128: remove the projecting arch entirely: it crossed the original round WEIYANG emblem in oblique views.
+ // Preserve the existing emblem, its gold rim and the original doorway.
+ // Add luxury only at the flanks, safely outside the emblem's projected silhouette.
  for(const side of [-1,1]){
   // Decorative facade panels are elevated, outside the walking corridor.
   add(new THREE.BoxGeometry(.28,4.55,.26),v127Pearl,side*3.55,3.20,4.59);
@@ -269,24 +263,43 @@ export function createMedicalExterior(group, THREE){
  // Two oversized, high-contrast cobalt/ice-blue flower urns to the SIDES of the entry.
  // No trees, bushes, tiny foliage clumps or additional center obstacles.
  for(const side of [-1,1]){
-  const x=side*10.45,z=7.45;
-  add(new THREE.CylinderGeometry(.79,1.0,.22,28),v127Gold,x,.49,z);
-  add(new THREE.CylinderGeometry(.44,.55,.44,28),v127Pearl,x,.80,z);
-  add(new THREE.CylinderGeometry(1.22,.67,1.12,36),v127Pearl,x,1.53,z);
-  v127Ring(1.22,.10,x,2.09,z);
-  add(new THREE.SphereGeometry(.98,20,12),v127Dark,x,2.22,z);
+  const x=side*7.75,z=7.95; // v128: symmetrical front-of-building urns, away from bridge landing and central doorway
+  add(new THREE.CylinderGeometry(.94,1.16,.24,28),v127Gold,x,.49,z);
+  add(new THREE.CylinderGeometry(.51,.65,.49,28),v127Pearl,x,.80,z);
+  add(new THREE.CylinderGeometry(1.43,.77,1.30,36),v127Pearl,x,1.53,z);
+  v127Ring(1.43,.12,x,2.20,z);
+  add(new THREE.SphereGeometry(1.13,20,12),v127Dark,x,2.38,z);
   for(let k=0;k<9;k++){
-   const a=k*Math.PI*2/9,r=k%2?.69:.91;
+   const a=k*Math.PI*2/9,r=k%2?.82:1.02;
    const fx=x+r*Math.cos(a),fz=z+r*Math.sin(a);
    const flowerMat=k%3===0?v127Ice:k%3===1?v127Blue:v127White;
    for(let pet=0;pet<5;pet++){
     const pa=pet*Math.PI*2/5;
-    add(new THREE.SphereGeometry(.22,12,10),flowerMat,fx+.23*Math.cos(pa),2.69+(k%2)*.22+.23*Math.sin(pa),fz+.12);
+    add(new THREE.SphereGeometry(.27,12,10),flowerMat,fx+.23*Math.cos(pa),2.95+(k%2)*.24+.23*Math.sin(pa),fz+.12);
    }
-   add(new THREE.SphereGeometry(.115,12,10),v127Gold,fx,2.69+(k%2)*.22,fz+.31);
+   add(new THREE.SphereGeometry(.115,12,10),v127Gold,fx,2.95+(k%2)*.24,fz+.31);
   }
-  add(new THREE.SphereGeometry(.49,14,10),v127Blue,x,3.05,z);
+  add(new THREE.SphereGeometry(.57,14,10),v127Blue,x,3.40,z);
  }
+ // v128: extra architectural depth WITHOUT light emission or any arch in front of the crest.
+ // Broad polished dome-base collar, double stepped tower crowns and ivory-gold flank accents.
+ v127Ring(6.23,.23,0,11.61,-1.8);
+ v127Ring(6.23,.085,0,11.86,-1.8,v127Bright);
+ for(const side of [-1,1]){
+   const cx=side*9.15;
+   v127Ring(3.34,.19,cx,10.86,-2.1);
+   v127Ring(3.35,.075,cx,11.09,-2.1,v127Bright);
+   add(new THREE.BoxGeometry(.45,4.7,.27),v127Pearl,side*5.05,4.2,4.47);
+   add(new THREE.BoxGeometry(.13,4.48,.30),v127Gold,side*5.34,4.2,4.49);
+ }
+ // A rigid, premium green banner mounted at the dome apex, with the ACTUAL supplied logo texture.
+ // Fixed flat flag: logo remains undistorted; double-sided for view changes.
+ const flagPole=add(new THREE.CylinderGeometry(.075,.085,4.3,12),v127Gold,0,20.20,-1.8);
+ add(new THREE.SphereGeometry(.20,12,10),v127Gold,0,22.40,-1.8);
+ const flagFrame=add(new THREE.BoxGeometry(4.65,2.72,.09),v127Gold,2.35,21.08,-1.8);
+ const flagField=add(new THREE.PlaneGeometry(4.35,2.42),new THREE.MeshBasicMaterial({color:0x087b66,side:THREE.DoubleSide}),2.35,21.08,-1.72);
+ const flagLogo=add(new THREE.PlaneGeometry(2.18,2.18),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthWrite:false}),2.35,21.08,-1.65);
+ flagPole.userData.decorative=true;flagFrame.userData.decorative=true;flagField.userData.decorative=true;flagLogo.userData.decorative=true;
  // Non-emissive metallic rim for the existing logo, preserving both logo image meshes.
  add(new THREE.TorusGeometry(2.05,.11,12,64),v127Gold,0,7.3,5.655);
  // All exterior emblems respect building occlusion; never draw on top of other islands.
