@@ -114,7 +114,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261027-v95-medical-name';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v103-small-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261027-v95-medical-name';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -828,7 +828,8 @@ const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#b5c
 officeScene.add(new THREE.HemisphereLight(0xfff1de,0x777083,1.85));
 const roomLight=new THREE.DirectionalLight(0xffe8c4,2.6);roomLight.position.set(-6,18,15);officeScene.add(roomLight);
 const roomRoot=new THREE.Group();officeScene.add(roomRoot);
-const roomMat=(c,metalness=0)=>new THREE.MeshPhysicalMaterial({color:c,roughness:metalness?.23:.39,metalness:metalness||.04,clearcoat:.48,clearcoatRoughness:.22});
+// v105: matte readable surfaces; no lighting-dependent gloss, metallic shine or clearcoat.
+const roomMat=(c,metalness=0)=>new THREE.MeshStandardMaterial({color:c,roughness:.91,metalness:0});
 const roomClickable=[];
 function roomBox(x,y,z,w,h,d,c,group=roomRoot){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function roomBall(x,y,z,r,c,group=roomRoot){const o=new THREE.Mesh(new THREE.SphereGeometry(r,28,22),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
@@ -943,8 +944,8 @@ function plant(x,z){
  }
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
-roomBox(0,-.24,0,27,.48,22,'#F3EEE5');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#F7F2E9');
+roomBox(0,-.24,0,27,.48,22,'#EADDCB');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#F8F4EB');
 roomBox(-13.3,3.7,0,.40,7.4,22,'#F7F2E9');
 roomBox(13.3,3.7,0,.40,7.4,22,'#F7F2E9');
 for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#E1D8CA');
@@ -954,9 +955,9 @@ roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 // v101: no tiny decorative wall lamps; visible geometry carries the luxury design.
 // Signature illuminated brand installation. The official image itself is NEVER recolored or redrawn.
 // Navy presentation backing, fine champagne-gold trim and warm wall-wash lighting increase contrast.
-const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#345779');
-const logoTrim=roomBox(0,4.32,-10.115,4.83,4.83,.075,'#F5E6C5');
-const logoInner=roomBox(0,4.32,-10.055,4.57,4.57,.085,'#345779');
+const logoFrame=roomBox(0,4.32,-10.30,5.95,5.65,.28,'#365B7B');
+const logoTrim=roomBox(0,4.32,-10.115,5.52,5.30,.075,'#FFF1D7');
+const logoInner=roomBox(0,4.32,-10.055,5.22,5.03,.085,'#365B7B');
 for(const px of [-2.35,2.35])for(const py of [2.03,6.60]){
  const rivet=roomBall(px,py,-9.99,.085,'#e3c18a');
 }
@@ -1012,7 +1013,7 @@ roomCylinder(0,1.05,4.7,2.65,2.65,.20,'#F8FAFC').scale.set(1.12,1,.47);
 roomCylinder(0,.94,4.7,2.60,2.60,.07,'#F5E6C5').scale.set(1.12,1,.47);
 screen(0,1.46,4.43,2);
 // Official uploaded WEIYANG logo image on the front of the reception desk.
-const receptionLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.42,1.42),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261027-v95'),transparent:true,side:THREE.DoubleSide}));
+const receptionLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.42,1.42),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261027-v105'),transparent:true,side:THREE.DoubleSide}));
 receptionLogo.position.set(0,.58,5.83);roomRoot.add(receptionLogo);
 officeSign('接待櫃檯｜諮詢與聯絡',0,2.65,4.6,4.6,'#fff8ed',2);
 plant(-4.3,5.3);plant(4.3,5.3);
@@ -1022,24 +1023,24 @@ registerOffice(roomBox(3.2,1.64,-.8,1.62,.56,1.16,'#e6e9e8'),9);
 registerOffice(roomBox(3.2,1.99,-.8,1.65,.17,1.25,'#394a55'),9);
 registerOffice(roomBox(3.2,1.38,-.13,1.18,.13,.12,'#37444e'),9);
 roomBox(3.2,1.27,-.09,1.0,.06,.32,'#ffffff');
-officeSign('印表機｜事務所今天又怎麼了？',3.2,5.20,-.8,4.4,'#263b51',9);
+officeSign('印表機｜事務所今天又怎麼了？',3.2,5.65,-.8,4.4,'#263b51',9);
 // v103: intentionally oversized bright-green Kuai Kuai snack bag on the printer.
 // One large texture makes the brand readable instead of dozens of tiny 3D pieces.
-const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png');
+const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
 kuaiTexture.colorSpace=THREE.SRGBColorSpace;
 const kuaiBag=new THREE.Group();
 roomRoot.add(kuaiBag);kuaiBag.position.set(3.2,2.08,-.8);
 const kuaiGreen=new THREE.MeshBasicMaterial({color:'#24C93D',side:THREE.DoubleSide});
 const kuaiFront=new THREE.MeshBasicMaterial({map:kuaiTexture,transparent:true,side:THREE.DoubleSide});
-const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.48,1.62,.34),kuaiGreen);
+const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.65,1.70,.34),kuaiGreen);
 kuaiBack.position.y=.81;kuaiBag.add(kuaiBack);
-const kuaiFace=new THREE.Mesh(new THREE.PlaneGeometry(1.47,1.60),kuaiFront);
+const kuaiFace=new THREE.Mesh(new THREE.PlaneGeometry(1.64,1.68),kuaiFront);
 kuaiFace.position.set(0,.81,.18);kuaiBag.add(kuaiFace);
 // Slightly angled towards the main office camera, without changing any collision geometry.
 kuaiBag.rotation.y=-.12;
 // Clearly readable snack-bag silhouette from mobile overview.
-const kuaiSeal=new THREE.Mesh(new THREE.BoxGeometry(1.47,.13,.36),new THREE.MeshBasicMaterial({color:'#A8F189'}));
-kuaiSeal.position.set(0,1.61,0);kuaiBag.add(kuaiSeal);
+const kuaiSeal=new THREE.Mesh(new THREE.BoxGeometry(1.65,.13,.36),new THREE.MeshBasicMaterial({color:'#A8F189'}));
+kuaiSeal.position.set(0,1.70,0);kuaiBag.add(kuaiSeal);
 
 // Comic production workstation: monitor is the IG link trigger.
 desk(-8.0,2.3,4.7,'#527393',3,false);elegantDeskDetails(-8,2.3,4.7,'#aa8062');
@@ -1054,12 +1055,12 @@ for(let i=0;i<3;i++){
 }
 plant(-11,5.4);framedArt(-10.8,4.5,-10.48,1.4,1.8,'#dba5ae');framedArt(-8.9,4.5,-10.48,1.4,1.8,'#d6b86c');
 // Waiting lounge with tailored cushions, floor rug, round coffee table and real seats.
-roomBox(0,.032,8.1,9,.04,4.1,'#D6E5F0');sofa(-3.2,8.0);sofa(3.2,8.0);
+roomBox(0,.032,8.1,9,.04,4.1,'#456989');sofa(-3.2,8.0);sofa(3.2,8.0);
 // v95 oval table replaces original tiny disc
 // v95 visible pair of table legs replaces original tiny pedestal
 // v101 INTERNATIONAL LAW OFFICE: large architectural elements, no furniture relocation.
 // Everything added is flush against the existing walls or high above workstations.
-const officeNavy='#304D6B',officeGold='#DCC18A',officePearl='#FFFDF8';
+const officeNavy='#365B7B',officeGold='#FFF0D2',officePearl='#FFFDF8';
 function officeWallPanel(x,y,z,w,h){
  roomBox(x,y,z,w,h,.10,officeNavy);
  roomBox(x,y+h/2-.12,z+.075,w,.20,.17,officeGold);
@@ -1079,9 +1080,9 @@ roomBox(0,7.18,-10.22,26.0,.28,.32,officeNavy);
 roomBox(0,6.96,-10.21,26.0,.15,.34,officeGold);
 // v103: removed both spherical wall bouquets entirely; replaced with broad flat panels.
 for(const x of [-6.7,6.7]){
- roomBox(x,4.05,-10.15,3.30,4.90,.20,'#456989');
- roomBox(x,4.05,-10.00,2.95,4.55,.12,'#FFFDF8');
- roomBox(x,4.05,-9.91,2.56,4.15,.10,'#E5EDF2');
+ roomBox(x,4.05,-10.15,3.48,5.08,.20,'#365B7B');
+ roomBox(x,4.05,-10.00,3.05,4.67,.12,'#FFF1D7');
+ roomBox(x,4.05,-9.91,2.68,4.28,.10,'#F8F4EB');
 }
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
 // printer, reception, official logos, clickable targets, NPC and routes intact.
@@ -1171,9 +1172,6 @@ for(const x of [-3.48,3.48]){
  }
  const band=new THREE.Mesh(new THREE.BoxGeometry(.24,5.2,.13),royalGold);band.position.set(x,3.6,-9.82);roomRoot.add(band);
 }
-const archCurve=new THREE.EllipseCurve(0,0,3.48,1.15,0,Math.PI,false,0);
-const archPoints=archCurve.getPoints(48).map(p=>new THREE.Vector3(p.x,p.y+6.2,-10.0));
-roomRoot.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPoints),72,.16,10,false),royalGold));
 // Large futuristic legal display attached to side wall, not blocking walking paths.
 roomBox(12.95,4.10,-3.1,.19,2.7,4.3,'#345779');
 roomBox(12.81,4.10,-3.1,.05,2.35,3.93,'#C5EAF5');

@@ -5,11 +5,12 @@ export function createNewFairytaleCastle(parent, THREE) {
  const mat=(color,roughness=.42,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness,side:THREE.DoubleSide});
  const ivory=new THREE.MeshPhysicalMaterial({color:'#F7F4ED',metalness:.08,roughness:.23,clearcoat:.95,clearcoatRoughness:.10,side:THREE.DoubleSide});
  const white=new THREE.MeshPhysicalMaterial({color:'#FFFDF6',metalness:.07,roughness:.20,clearcoat:1,clearcoatRoughness:.09,side:THREE.DoubleSide});
- const navy=new THREE.MeshPhysicalMaterial({color:'#456989',metalness:.32,roughness:.17,clearcoat:1,clearcoatRoughness:.08,side:THREE.DoubleSide});
- const deep=new THREE.MeshPhysicalMaterial({color:'#345779',metalness:.30,roughness:.18,clearcoat:1,clearcoatRoughness:.07,side:THREE.DoubleSide});
- const gold=new THREE.MeshPhysicalMaterial({color:'#FFF4D8',metalness:.76,roughness:.13,clearcoat:1,clearcoatRoughness:.06,side:THREE.DoubleSide});
+ // v105: MATTE architectural slate tiles, not plastic-looking glossy metal.
+ const navy=new THREE.MeshStandardMaterial({color:'#557895',metalness:0,roughness:.92,flatShading:true,side:THREE.DoubleSide});
+ const deep=new THREE.MeshStandardMaterial({color:'#365B7B',metalness:0,roughness:.84,side:THREE.DoubleSide});
+ const gold=new THREE.MeshBasicMaterial({color:'#FFF1CF',side:THREE.DoubleSide});
  const light=new THREE.MeshPhysicalMaterial({color:'#FFE8C7',metalness:.10,roughness:.20,clearcoat:.7,side:THREE.DoubleSide});
- const frame=new THREE.MeshPhysicalMaterial({color:'#F6EBDD',metalness:.45,roughness:.19,clearcoat:.85,side:THREE.DoubleSide});
+ const frame=new THREE.MeshStandardMaterial({color:'#F9F3E8',metalness:0,roughness:.87,side:THREE.DoubleSide});
  const leaf=mat('#648B66',.72);
  const flowerMaterials=['#F4A7C5','#F9C3D9','#F7D3E5','#FFF4F6','#DDB4E9'].map(c=>mat(c,.54));
  const block=(w,h,d,x,y,z,m)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);root.add(o);return o};
@@ -40,8 +41,8 @@ export function createNewFairytaleCastle(parent, THREE) {
  }
  // v103: two SMALL side pavilion towers, each within the existing island edge.
  // Outer extent about +/- 10.2 (main island radius 21); keep surrounding paths free.
- for(const x of [-9.15,9.15]){
-  block(2.20,story*2.1,3.8,x,floorBottom+story*1.05,-.95,ivory);
+ for(const x of [-9.75,9.75]){
+  block(2.65,story*2.1,3.8,x,floorBottom+story*1.05,-.95,ivory);
   for(let floor=0;floor<2;floor++){
    const y=floorBottom+story*floor+story*.53;
    block(1.16,2.22,.18,x,y,1.01,frame);
@@ -49,8 +50,8 @@ export function createNewFairytaleCastle(parent, THREE) {
    block(.11,1.98,.23,x,y,1.27,white);
    block(1.24,.18,.29,x,y-1.13,1.19,white);
   }
-  block(2.55,.27,4.12,x,floorBottom+story*2.1,-.95,white);
-  roof(x,-.95,1.67,floorBottom+story*2.1+.1,2.65,false);
+  block(2.98,.27,4.12,x,floorBottom+story*2.1,-.95,white);
+  roof(x,-.95,1.79,floorBottom+story*2.1+.1,2.65,false);
  }
  // Central original tower raised, NOT counted as a storey.
  cylinder(2.15,2.20,4.0,0,top+2.0,-3.6,white,40);
@@ -95,13 +96,6 @@ export function createNewFairytaleCastle(parent, THREE) {
     flower.position.set(xx,fy+.66+(j%2)*.13,3.43);root.add(flower);
    }
   }
- }
- // Reflection needs both glossy materials and an actual large highlight.
- // Two broad, subtle surface highlights avoid tiny, unreadable ornaments.
- const shineMat=new THREE.MeshBasicMaterial({color:'#FFFFFF',transparent:true,opacity:.18,depthWrite:false,side:THREE.DoubleSide});
- for(const x of [-6.0,6.0]){
-  const shine=new THREE.Mesh(new THREE.PlaneGeometry(.21,8.0),shineMat);
-  shine.position.set(x,7.25,2.995);root.add(shine);
  }
  // Four major ivory pillars across the full THREE floors, not micro-ornaments.
  for(const x of [-6.45,-2.38,2.38,6.45]){
