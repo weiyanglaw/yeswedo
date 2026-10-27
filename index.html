@@ -1331,39 +1331,65 @@ function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
  if(dest===3){wyLobbyOpen('floor3');return;}
  if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
- const source=wyOfficeFloor;
- wyIndoorMakeActor();
+ // Direct elevator access from anywhere in the room: no proximity or pathfinding prerequisite.
  wyLobbyDialog.style.display='none';wyLiftPrompt.style.display='none';
- // Selecting a floor works from ANY location. The actor approaches the lift automatically.
- // The existing v107 2F roomRoot and all its staff/furniture are rendered on arrival.
- wyDoorOpen=1;
- wyRide={phase:'enter',time:0,source,dest,start:wyIndoorActor?.position.clone(),target:(source===1?wyElev1Pos:wyElev2Pos).clone()};
+ wyIndoorMakeActor();
+ wyRide={phase:'close',time:0,source:wyOfficeFloor,dest};
+ wyDoorOpen=0;
+ wyRideShade.style.display='flex';
+ wyRideShade.querySelector('#wyRideProgress').textContent='電梯門關閉中…';
+ wyRideShade.querySelector('#wyRideFloor').textContent=wyOfficeFloor+'F';
 }
+
 wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
 floorBtn.onclick=()=>wyLobbyOpen('elevator');
-function wyElevatorTick(dt){if(!insideOffice||activeIslandRoom)return;
- if(wyIndoorActor&&!wyRide){let x=0,z=0;const k=wyMoveKeys;const move=wyMoveTouch;
- if(k.has('arrowleft')||k.has('a')||move==='left')x-=1;if(k.has('arrowright')||k.has('d')||move==='right')x+=1;
- if(k.has('arrowup')||k.has('w')||move==='up')z-=1;if(k.has('arrowdown')||k.has('s')||move==='down')z+=1;
- if(x||z){const d=Math.hypot(x,z),speed=4.2*dt;x=x/d*speed;z=z/d*speed;const p=wyIndoorActor.position;const nx=p.x+x,nz=p.z+z;
- if(wyOfficeFloor===1){if(nx>-12&&nx<12&&nz>-9.5&&nz<10 && !(Math.abs(nx)<7.2&&nz>4.4&&nz<7.6) && !(Math.abs(nx)<4&&nz>-5.5&&nz<-1.2)){p.x=nx;p.z=nz}}
- else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz}
- wyIndoorActor.rotation.y=Math.atan2(x,z);}}
- const target=wyOfficeFloor===1?wyElev1Pos:wyElev2Pos;
- const dist=Math.hypot(wyIndoorActor.position.x-target.x,wyIndoorActor.position.z-target.z);
- if(dist<3.4){wyLiftPrompt.style.display='block';wyLiftPrompt.textContent=wyDoorOpen?'進入電梯・選擇樓層':'開啟電梯門'}else{wyLiftPrompt.style.display='none';wyDoorOpen=0}
+function wyElevatorTick(dt){
+ if(!insideOffice||activeIslandRoom)return;
+ if(wyIndoorActor&&!wyRide){
+  let x=0,z=0;const k=wyMoveKeys,move=wyMoveTouch;
+  if(k.has('arrowleft')||k.has('a')||move==='left')x-=1;
+  if(k.has('arrowright')||k.has('d')||move==='right')x+=1;
+  if(k.has('arrowup')||k.has('w')||move==='up')z-=1;
+  if(k.has('arrowdown')||k.has('s')||move==='down')z+=1;
+  if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
+   if(wyOfficeFloor===1){if(nx>-12&&nx<12&&nz>-9.5&&nz<10&&!(Math.abs(nx)<7.2&&nz>4.4&&nz<7.6)&&!(Math.abs(nx)<4&&nz>-5.5&&nz<-1.2)){p.x=nx;p.z=nz;}}
+   else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
+   wyIndoorActor.rotation.y=Math.atan2(x,z);
+  }
+  const target=wyOfficeFloor===1?wyElev1Pos:wyElev2Pos;
+  const dist=Math.hypot(wyIndoorActor.position.x-target.x,wyIndoorActor.position.z-target.z);
+  wyLiftPrompt.style.display=dist<3.4?'block':'none';
  }
- if(wyRide){const r=wyRide;r.time+=dt;
- if(r.phase==='enter'){
-  const d=r.target.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();if(len>.08){const step=Math.min(len,dt*2.9);wyIndoorActor.position.addScaledVector(d,step/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
-  else{r.phase='close';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent='電梯門關閉中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F';}
- }else if(r.phase==='close'&&r.time>.85){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.querySelector('#wyRideProgress').textContent='電梯上升中…';}
- else if(r.phase==='travel'){wyRideShade.querySelector('#wyRideFloor').textContent=r.time<.85?r.source+'F':r.dest+'F';if(r.time>1.7){wySetFloor(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=1;r.phase='exit';r.time=0;wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';}
- else if(r.phase==='exit'&&r.time>1){wyRideShade.style.display='none';r.phase='walkout';r.time=0;}
- else if(r.phase==='walkout'){const out=r.dest===1?new THREE.Vector3(8.4,.08,-3.2):new THREE.Vector3(10.7,.08,9.2);const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*2.7)/len)}else{wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';}}
+ if(wyRide){
+  const r=wyRide;r.time+=dt;
+  if(r.phase==='close'&&r.time>=0.65){
+   r.phase='travel';r.time=0;
+   wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';
+  }else if(r.phase==='travel'){
+   wyRideShade.querySelector('#wyRideFloor').textContent=(r.time<0.65?r.source:r.dest)+'F';
+   if(r.time>=1.25){
+    wySetFloor(r.dest);
+    wyIndoorPlace(r.dest,true);
+    wyDoorOpen=1;
+    r.phase='open';r.time=0;
+    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
+   }
+  }else if(r.phase==='open'&&r.time>=0.8){
+   wyRideShade.style.display='none';r.phase='exit';r.time=0;
+  }else if(r.phase==='exit'){
+   const out=r.dest===1?new THREE.Vector3(8.4,.08,-3.2):new THREE.Vector3(10.7,.08,9.2);
+   const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
+   if(len>0.12)wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*2.7)/len);
+   else{wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';}
+  }
  }
- for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2]]){const f=(wyOfficeFloor===i?wyDoorOpen:0);const sep=i===1?1.6:1.22;doors[0].position.x=(i===1?7.23:-.87)-f*sep;doors[1].position.x=(i===1?9.57:.87)+f*sep;}
+ for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2]]){
+  const f=wyOfficeFloor===i?wyDoorOpen:0,sep=i===1?1.6:1.22;
+  doors[0].position.x=(i===1?7.23:-.87)-f*sep;
+  doors[1].position.x=(i===1?9.57:.87)+f*sep;
+ }
 }
+
 const wyLobbyDialog=document.createElement('section');wyLobbyDialog.id='wyLobbyDialog';
 wyLobbyDialog.style.cssText='display:none;position:fixed;z-index:90;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,440px);max-height:80dvh;overflow:auto;padding:20px;background:#faf7f0;border:2px solid #385c77;border-radius:16px;color:#263b52;font:15px/1.6 system-ui;box-shadow:0 12px 55px #15293a77';document.body.append(wyLobbyDialog);
 function wyLobbyOpen(action){
