@@ -63,22 +63,22 @@ export function createNewFairytaleCastle(parent, THREE) {
   // Taller turret windows also visibly repeat across three floors.
   for(const x of [-7.1,7.1])window(x,cy,-.65+1.69,.88,1.85);
  }
- // Broad flower boxes attached ONLY beneath facade windows; pink is the leading color.
+ // v100: LARGE flower boxes and bold pink-led blooms visible at normal mobile island distance.
  // No flowerpots beside the entrance, no lamps, no stairs, no plaza additions.
- const bloomGeometry=new THREE.SphereGeometry(.23,10,8);
- const leafGeometry=new THREE.SphereGeometry(.31,10,8);
+ const bloomGeometry=new THREE.SphereGeometry(.38,12,9);
+ const leafGeometry=new THREE.SphereGeometry(.43,12,9);
  for(let floor=0;floor<3;floor++){
   const cy=floorBottom+story*floor+story*.53;
   for(const x of [-5.45,-3.60,3.60,5.45]){
    const fy=cy-1.34;
-   block(1.65,.30,.50,x,fy,2.91,white);
-   block(1.71,.11,.57,x,fy-.18,2.92,gold);
+   block(2.10,.38,.72,x,fy,2.94,white);
+   block(2.16,.16,.76,x,fy-.24,2.96,gold);
    for(let j=0;j<5;j++){
-    const xx=x+(j-2)*.30;
+    const xx=x+(j-2)*.41;
     const foliage=new THREE.Mesh(leafGeometry,leaf);
-    foliage.position.set(xx,fy+.25,2.98);root.add(foliage);
+    foliage.position.set(xx,fy+.40,3.16);root.add(foliage);
     const flower=new THREE.Mesh(bloomGeometry,flowerMaterials[(j+floor)%flowerMaterials.length]);
-    flower.position.set(xx,fy+.42+(j%2)*.07,3.16);root.add(flower);
+    flower.position.set(xx,fy+.66+(j%2)*.13,3.43);root.add(flower);
    }
   }
  }
@@ -97,8 +97,25 @@ export function createNewFairytaleCastle(parent, THREE) {
  // High-end entrance; same level paving and door location.
  block(4.0,4.35,.24,0,3.05,2.83,gold);
  block(3.48,3.90,.25,0,3.02,3.02,deep);
- arch(0,5.16,3.15,1.92,.25,white);
- arch(0,5.16,3.22,1.69,.14,gold);
+ // v100: FLAT decorative arch line painted on the entrance facade, not a raised torus or 3D canopy.
+ // Keep the entrance itself flush with the facade, without any stairs or extra objects.
+ const flatArchPoints=[];
+ for(let i=0;i<=48;i++){
+   const a=Math.PI-(Math.PI*i/48);
+   flatArchPoints.push(new THREE.Vector3(1.80*Math.cos(a),5.08+1.10*Math.sin(a),3.195));
+ }
+ const flatArch=new THREE.Line(new THREE.BufferGeometry().setFromPoints(flatArchPoints),
+   new THREE.LineBasicMaterial({color:'#F2D99B',depthTest:false}));
+ flatArch.renderOrder=10;root.add(flatArch);
+ // A single planar wide band creates a clearly visible flat arch without any protruding geometry.
+ const flatBand=new THREE.Mesh(new THREE.ShapeGeometry((()=>{
+   const s=new THREE.Shape();
+   s.moveTo(-2.00,5.08);
+   for(let i=0;i<=48;i++){const a=Math.PI-(Math.PI*i/48);s.lineTo(2.00*Math.cos(a),5.08+1.28*Math.sin(a));}
+   for(let i=48;i>=0;i--){const a=Math.PI-(Math.PI*i/48);s.lineTo(1.79*Math.cos(a),5.08+1.07*Math.sin(a));}
+   s.closePath();return s;
+ })()),new THREE.MeshBasicMaterial({color:'#F2D99B',side:THREE.DoubleSide,depthTest:false}));
+ flatBand.position.z=3.195;flatBand.renderOrder=9;root.add(flatBand);
  block(.11,3.6,.08,0,2.94,3.21,gold);
  for(const x of [-.82,.82])block(1.34,.11,.10,x,3.15,3.23,gold);
  // Tall central brand facade on upper storeys.
