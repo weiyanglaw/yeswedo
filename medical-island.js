@@ -476,7 +476,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Display zones: gold-edged touch panels at accessible height, not covering the emblem.
  const interactionTargets=[];
  const interactionMap=new Map();
- const register=(object,action)=>{object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
+ const register=(object,action)=>{if(!['mediation','records','forensics','ecg','computer'].includes(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
@@ -531,13 +531,13 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  exhibit(-9.25,-3.95,1.65,2.05,'forensics');
  const anatomy=cyl(.32,.28,1.30,mint,-9.25,1.80,-3.95);register(anatomy,'forensics');
  add(new THREE.SphereGeometry(.29,16,12),paper,-9.25,2.65,-3.95);
- const xray=box(1.72,1.52,.14,navy,-5.0,2.05,-6.12);register(xray,'forensics');
- for(const dx of [-.41,.41])register(box(.55,.93,.02,glass,-5.0+dx,2.10,-6.02),'forensics');
+ const xray=box(3.28,2.86,.14,navy,-5.0,2.70,-6.12);register(xray,'forensics');
+ // v132: remove small glass overlays so the enlarged X-ray animation is unobstructed.
   // v130: animated radiology scan displayed on the EXISTING X-ray panel.
   const wyXrayCanvas=document.createElement('canvas');wyXrayCanvas.width=384;wyXrayCanvas.height=320;
   const wyXrayCtx=wyXrayCanvas.getContext('2d');
   const wyXrayTex=new THREE.CanvasTexture(wyXrayCanvas);wyXrayTex.colorSpace=THREE.SRGBColorSpace;
-  const wyXrayFace=add(new THREE.PlaneGeometry(1.58,1.35),new THREE.MeshBasicMaterial({map:wyXrayTex,side:THREE.DoubleSide,transparent:false}),-5,2.05,-6.025);
+  const wyXrayFace=add(new THREE.PlaneGeometry(3.08,2.65),new THREE.MeshBasicMaterial({map:wyXrayTex,side:THREE.DoubleSide,transparent:false}),-5,2.70,-6.025);
   register(wyXrayFace,'forensics');
   function wyDrawXray(t){
     const c=wyXrayCtx,w=384,h=320;c.fillStyle='#071a2b';c.fillRect(0,0,w,h);
@@ -599,25 +599,28 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
   const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(23,42,62,.98)';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();
-  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='bold 39px sans-serif';c.fillText(text,canvas.width/2,canvas.height/2,448);
+  c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='900 55px sans-serif';c.fillText(text,canvas.width/2,canvas.height/2,448);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(5.3,1.24,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- hint('💬 跟我聊聊',7.2,3.95,3.6,'staff');
- hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
- hint('❤️ 事件回放',8,6.70,-7.60,'ecg');
- hint('💬 趣味一問一答',7.1,2.8,6.5,'computer');
- hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
- 
- 
- hint('認識德威陽',0,8.10,-6.80,'logo');
- hint('🤝 糾紛協商',-4.65,2.25,4.45,'mediation');
- hint('📝 告知與時間軸',-9.35,2.6,5.3,'consent');
- hint('🔍 X光醫療鑑定',-9.3,3.5,-3.95,'forensics');
- 
- 
+ // Staff identity sign only; not a sixth interaction zone.
+ let staffNameLabel=null;
+ if(guide){
+  const nameCanvas=document.createElement('canvas');nameCanvas.width=480;nameCanvas.height=112;
+  const nc=nameCanvas.getContext('2d');nc.fillStyle='rgba(23,42,62,.98)';nc.beginPath();nc.roundRect(5,5,470,102,36);nc.fill();
+  nc.strokeStyle='#d9b779';nc.lineWidth=6;nc.stroke();nc.fillStyle='#fff9ec';nc.textAlign='center';nc.textBaseline='middle';
+  nc.font='900 55px sans-serif';nc.fillText('薪水掌門人',240,56,448);
+  const nameTexture=new THREE.CanvasTexture(nameCanvas);nameTexture.colorSpace=THREE.SRGBColorSpace;
+  staffNameLabel=new THREE.Sprite(new THREE.SpriteMaterial({map:nameTexture,transparent:true,depthTest:false}));
+  staffNameLabel.scale.set(5.3,1.24,1);staffNameLabel.renderOrder=80;
+  staffNameLabel.position.set(guide.position.x,guide.position.y+3.6,guide.position.z);root.add(staffNameLabel);
+ }
+ // v133: five interaction labels plus one non-interactive staff nameplate.
+ hint('🤝 醫療糾紛協商',-4.65,2.35,4.45,'mediation');
  hint('🗂️ 病歷證據探索',8.2,4.0,-3.8,'records');
- hint('⚖️ 責任分析',8.9,4.5,2.05,'liability');
+ hint('🔍 X光醫療鑑定',-5.0,4.55,-6.02,'forensics');
+ hint('❤️ 心電圖事件回放',8,6.70,-7.60,'ecg');
+ hint('💬 接待趣味問答',7.1,2.8,6.5,'computer');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -662,6 +665,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    // Keep the staff's visible clickable label close as she moves.
    const staffLabel=labels.find(o=>o.userData.medicalAction==='staff');
    if(staffLabel){staffLabel.position.x=guide.position.x;staffLabel.position.z=guide.position.z+.1;}
+   if(staffNameLabel){staffNameLabel.position.x=guide.position.x;staffNameLabel.position.y=guide.position.y+3.6;staffNameLabel.position.z=guide.position.z+.1;}
 
   }
   for(let k=0;k<labels.length;k++)labels[k].position.y=labels[k].userData.baseY+Math.sin(time*.0015+k)*.075;
