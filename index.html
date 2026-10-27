@@ -115,7 +115,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261027-v107';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v133-unified-signs';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261027-v107';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v135-lobby-medical';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -853,18 +853,10 @@ function officeSign(label,x,y,z,w=3,fg='#23364b',zone=null){
  c.textAlign='center';c.textBaseline='middle';
  const family='"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif';
  if(isBoss){
-   c.fillStyle=p[1];c.font=`700 38px ${family}`;c.fillText('WEI & YANG INTERNATIONAL LAW FIRM',640,75,1170);
-   c.fillStyle=p[2];c.font=`900 144px ${family}`;c.fillText('林柏均 律師',640,191,1140);
-   c.fillStyle=p[3];c.font=`800 68px ${family}`;c.fillText('創辦人暨主持律師',640,286,1150);
-   c.fillStyle=p[2];c.font=`700 40px ${family}`;c.fillText('點擊查看完整專業履歷',640,354,1150);
+   c.fillStyle=p[2];c.font=`900 144px ${family}`;c.fillText('林柏均 律師',640,logicalH/2,1140);
  }else{
-   // Uniform headline/subtitle font size across staff, reception, comics, info and printer.
-   let headline=label.split('｜')[0],subtitle=label.split('｜').slice(1).join('｜')||'點擊探索';
-   if(isPrinter){headline='印表機叛亂中！';subtitle='事務所今天又怎麼了？';}
-   if(isStaff)subtitle='事務所今天又怎麼了？';
-   c.fillStyle=p[2];c.font=`900 138px ${family}`;c.fillText(headline,640,143,1150);
-   c.fillStyle=p[3];c.font=`800 70px ${family}`;c.fillText(subtitle,640,263,1150);
-   c.font=`600 34px ${family}`;c.fillText(isPrinter?'點擊看看今天又發生什麼事':'點擊互動',640,327,1130);
+   const headline=isPrinter?'印表機叛亂中！':label.split('｜')[0];
+   c.fillStyle=p[2];c.font=`900 138px ${family}`;c.fillText(headline,640,logicalH/2,1150);
  }
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
  texture.minFilter=THREE.LinearMipmapLinearFilter;texture.magFilter=THREE.LinearFilter;
@@ -1221,8 +1213,8 @@ function lbText(text,x,y,z,w=3.0,h=.68,action=null,face='front'){
  g.fillStyle='#203c57';g.beginPath();g.roundRect(9,8,1006,204,37);g.fill();g.strokeStyle='#e2e9ef';g.lineWidth=8;g.stroke();
  g.fillStyle='#fffdf7';g.textAlign='center';g.textBaseline='middle';g.font='bold 90px "Noto Sans TC",sans-serif';g.fillText(text,512,114,935);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;
- const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,transparent:true,side:THREE.FrontSide,depthTest:true}));
- m.position.set(x,y,z);if(face==='side')m.rotation.y=Math.PI/2;
+ const m=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,depthWrite:false}));
+ m.scale.set(w,h,1);m.position.set(x,y,z);
  m.renderOrder=20;lobbyRoot.add(m);if(action){m.userData.lobbyAction=action;lobbyTargets.push(m)}return m;
 }
 function lbLogo(x,y,z,w,h,side=false){
@@ -1302,19 +1294,19 @@ function wyRoyalOrnament(x,y,z,side=false){
  const g=new THREE.Group();g.position.set(x,y,z);if(side)g.rotation.y=x<0?Math.PI/2:-Math.PI/2;lobbyRoot.add(g);
  const addCurve=(pts,r=.033)=>{const path=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],0)));g.add(new THREE.Mesh(new THREE.TubeGeometry(path,22,r,7,false),goldMat));};
  for(const sign of [-1,1]){
-  addCurve([[sign*1.76,-1.63],[sign*2.12,-.93],[sign*1.90,-.14],[sign*2.16,.65],[sign*1.77,1.54]],.042);
+  addCurve([[sign*2.94,-1.63],[sign*3.08,-.93],[sign*2.98,-.14],[sign*3.08,.65],[sign*2.94,1.54]],.042);
   for(let k=0;k<5;k++){
-   const yy=-1.20+k*.64,xx=sign*(2.00+.08*Math.sin(k));
+   const yy=-1.20+k*.64,xx=sign*(2.96+.08*Math.sin(k));
    const leaf=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),goldMat);
    leaf.scale.set(.27,.09,.045);leaf.position.set(xx-sign*.14,yy+.14,.04);leaf.rotation.z=sign*(k%2?.6:-.6);g.add(leaf);
   }
-  addCurve([[sign*.32,1.78],[sign*.91,2.06],[sign*1.43,1.89],[sign*1.80,1.67]],.037);
-  addCurve([[sign*.32,-1.78],[sign*.92,-2.00],[sign*1.45,-1.83],[sign*1.78,-1.67]],.037);
+  addCurve([[sign*1.60,2.27],[sign*2.12,2.43],[sign*2.61,2.37],[sign*2.96,2.18]],.037);
+  addCurve([[sign*1.60,-2.27],[sign*2.12,-2.43],[sign*2.61,-2.37],[sign*2.96,-2.18]],.037);
  }
  const crest=new THREE.Mesh(new THREE.SphereGeometry(.12,12,10),goldMat);crest.position.set(0,2.02,.05);g.add(crest);
 }
-wyRoyalOrnament(0,4.03,-9.54,false);
-for(const side of [-1,1])wyRoyalOrnament(side*12.52,4.03,-1.4,true);
+wyRoyalOrnament(0,4.03,-9.83,false);
+for(const side of [-1,1])wyRoyalOrnament(side*12.69,4.03,-1.4,true);
 // v124: extended and forward royal diamond reception, forward of the central lounge.
 // Front is +Z, towards the entrance; all upright branding grows from that SAME front face.
 const wyReception=new THREE.Group();lobbyRoot.add(wyReception);
@@ -1354,7 +1346,10 @@ const wrCtx=wrCanvas.getContext('2d');const wrTex=new THREE.CanvasTexture(wrCanv
 const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(6.38,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
 wrScreen.position.set(0,2.64,.938);wyReception.add(wrScreen);
 function wyReceptionAnimate(ms){
- const t=ms*.001;const c=wrCtx;c.fillStyle='#20334C';c.fillRect(0,0,1024,384);
+ const t=ms*.001;const c=wrCtx;const glacier=c.createLinearGradient(0,0,1024,384);
+ glacier.addColorStop(0,'#103D63');glacier.addColorStop(.45,'#348BAF');glacier.addColorStop(1,'#A4DFEB');
+ c.fillStyle=glacier;c.fillRect(0,0,1024,384);
+ for(let i=0;i<9;i++){const x=((i*151+t*13)%1180)-80;c.fillStyle='rgba(211,249,255,.09)';c.beginPath();c.moveTo(x,0);c.lineTo(x+80,0);c.lineTo(x-60,384);c.lineTo(x-140,384);c.fill();}
  c.strokeStyle='#C9A15E';c.lineWidth=3;
  for(const side of [-1,1])for(let j=0;j<5;j++){
   const x=side<0?66:958,y=48+j*66;
