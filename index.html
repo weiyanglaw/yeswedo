@@ -99,7 +99,6 @@ $('startExplore').addEventListener('click',enterIsland);
 #wyInfo .wyContactGrid a{display:flex;flex-direction:column;justify-content:center;gap:6px;min-height:83px;background:#fffaf1;color:#243b50!important;border-radius:12px;text-decoration:none;padding:10px 5px;overflow-wrap:anywhere}
 #wyInfo .wyContactGrid b{font-size:16px}#wyInfo .wyContactGrid span{font-size:12px;font-weight:500}
 @media(max-width:620px){#wyInfo .wyContactGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#wyInfo .wyContact{margin:25px -5px -4px}}
-body.wy-conversation-active #wyWalkUI,body.wy-conversation-active #joy,body.wy-conversation-active #controls{display:none!important}#dialog{max-height:min(52dvh,390px);overscroll-behavior:contain} @media(max-width:600px){#dialog{bottom:max(24px,env(safe-area-inset-bottom));max-height:56dvh;width:min(92vw,430px)}}
 </style><div id="wyInfo" role="dialog" aria-modal="true" aria-label="事務所資訊"><article><button class="wyClose" id="wyInfoClose" aria-label="關閉">×</button><div id="wyInfoBody"></div></article></div>
 <div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
 <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">德威陽｜3D 事務所</strong><button id="officeContact" onclick="document.getElementById('wyContactPanel').hidden=!document.getElementById('wyContactPanel').hidden" style="border:1px solid #d8b97e;border-radius:12px;background:#fff9ed;padding:10px 12px;font-weight:bold;color:#203b4d">聯絡我們</button><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">返回探索島</button></div>
@@ -116,7 +115,7 @@ body.wy-conversation-active #wyWalkUI,body.wy-conversation-active #joy,body.wy-c
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261027-v107';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261027-v128-luxury-flag';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261027-v107';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v131';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -137,7 +136,7 @@ const groups=[];for(let i=0;i<6;i++){const g=new THREE.Group();g.position.set(xy
 const islandLabels=[];
 const islandSignColors=[
  ['#172a3e','#d3aa67','#fff8e9'],['#315b79','#b4d8eb','#f0faff'],
- ['#087B66','#D8B879','#FFFFFF'],['#874d69','#edc3d4','#fff5f8'],
+ ['#693d4b','#e3b7c2','#fff0f3'],['#874d69','#edc3d4','#fff5f8'],
  ['#364b70','#a9c1e7','#f1f5ff'],['#47664c','#c8dec3','#f2fff0']
 ];
 function createIslandLabel(i){
@@ -308,7 +307,7 @@ function createFamilyMansion(parent,THREE){
  const whiteStone=material('#F8F2E9'),deepWine=material('#873F55'),warmPink=material('#E5A7B7'),green=material('#5D8966');
  // Two visible dormers: upright wall, glazed face, and simple pitched cap.
  // All geometry is in front of the roof front plane and never intersects the main roof.
- for(const x of [-4.28,4.28]){
+ for(const x of [-3.55,3.55]){
    cube(2.28,2.35,1.05,x,12.82,5.86,ivory);
    cube(1.78,1.80,.13,x,12.82,6.47,whiteStone);
    cube(1.50,1.53,.15,x,12.82,6.57,glass);
@@ -843,7 +842,7 @@ function officeSign(label,x,y,z,w=3,fg='#23364b',zone=null){
  // All non-executive office labels use the same typography and same physical proportions.
  // Render at 2x logical resolution for sharper Chinese glyphs on high-DPI phones.
  const isStaff=[6,7,8].includes(zone),isPrinter=zone===9,isBoss=zone===5;
- const logicalW=1280,logicalH=218,quality=2;
+ const logicalW=1280,logicalH=isBoss?410:370,quality=2;
  const canvas=document.createElement('canvas');canvas.width=logicalW*quality;canvas.height=logicalH*quality;
  const c=canvas.getContext('2d');c.scale(quality,quality);
  const colors={5:['#172a3e','#d3aa67','#ffffff','#f0cf95'],6:['#874d69','#edc3d4','#fff5f8','#ffe1ec'],7:['#315b79','#b4d8eb','#f0faff','#d8efff'],8:['#47664c','#c8dec3','#f2fff0','#e0f3d9'],9:['#393354','#c3b2e5','#fff8e9','#eee1ff'],2:['#293e53','#d4b78b','#fff8ed','#f1e4d0'],3:['#513c46','#d9adb5','#fff4ee','#f5dfd9'],0:['#293e53','#d4b78b','#fff8ed','#f1e4d0']};
@@ -853,11 +852,20 @@ function officeSign(label,x,y,z,w=3,fg='#23364b',zone=null){
  c.beginPath();c.roundRect(28,25,1224,logicalH-50,44);c.fill();c.stroke();c.shadowColor='transparent';
  c.textAlign='center';c.textBaseline='middle';
  const family='"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif';
- // v127: exactly one title line for every second-floor office marker.
- // Preserve the original first-line typography (138px non-boss, 144px boss).
- const headline=isBoss?'林柏均 律師':(isPrinter?'印表機叛亂中！':label.split('｜')[0]);
- c.fillStyle=p[2];c.font=`900 ${isBoss?144:138}px ${family}`;
- c.fillText(headline,640,109,1150);
+ if(isBoss){
+   c.fillStyle=p[1];c.font=`700 38px ${family}`;c.fillText('WEI & YANG INTERNATIONAL LAW FIRM',640,75,1170);
+   c.fillStyle=p[2];c.font=`900 144px ${family}`;c.fillText('林柏均 律師',640,191,1140);
+   c.fillStyle=p[3];c.font=`800 68px ${family}`;c.fillText('創辦人暨主持律師',640,286,1150);
+   c.fillStyle=p[2];c.font=`700 40px ${family}`;c.fillText('點擊查看完整專業履歷',640,354,1150);
+ }else{
+   // Uniform headline/subtitle font size across staff, reception, comics, info and printer.
+   let headline=label.split('｜')[0],subtitle=label.split('｜').slice(1).join('｜')||'點擊探索';
+   if(isPrinter){headline='印表機叛亂中！';subtitle='事務所今天又怎麼了？';}
+   if(isStaff)subtitle='事務所今天又怎麼了？';
+   c.fillStyle=p[2];c.font=`900 138px ${family}`;c.fillText(headline,640,143,1150);
+   c.fillStyle=p[3];c.font=`800 70px ${family}`;c.fillText(subtitle,640,263,1150);
+   c.font=`600 34px ${family}`;c.fillText(isPrinter?'點擊看看今天又發生什麼事':'點擊互動',640,327,1130);
+ }
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
  texture.minFilter=THREE.LinearMipmapLinearFilter;texture.magFilter=THREE.LinearFilter;
  texture.generateMipmaps=true;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
@@ -1288,42 +1296,39 @@ for(const side of [-1,1]){
  for(const y of [1.36,6.64])lbBox(side*12.62,y,-1.4,.08,.08,6.06,wyGold120);
  lbLogo(side*12.60,4.03,-1.4,3.55,3.55,true);
 }
-// v126 A-style palace ornament: gold leaves and crest ATTACHED TO the outer frame only.
-// The official image and its navy field stay unobstructed; no free-floating foliage beside the logo.
-function wyFramePalaceA(cx,cy,cz,side=false){
- const g=new THREE.Group();g.position.set(cx,cy,cz);if(side)g.rotation.y=cx<0?Math.PI/2:-Math.PI/2;lobbyRoot.add(g);
- const mat=new THREE.MeshStandardMaterial({color:'#E7BE78',metalness:.63,roughness:.29,side:THREE.DoubleSide});
- const tube=(pts,r=.065)=>{const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));g.add(new THREE.Mesh(new THREE.TubeGeometry(curve,18,r,8,false),mat));};
- const leaf=(x,y,rot=0)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),mat);m.scale.set(.29,.115,.065);m.position.set(x,y,.025);m.rotation.z=rot;g.add(m)};
- // All motifs are anchored to the perimeter of the actual existing moulding.
- const hw=side?3.02:3.70,hh=side?2.70:2.64;
- for(const s of [-1,1]){
-  for(const y of [-hh,hh]){
-   tube([[s*(hw-.55),y,0],[s*(hw-.29),y+s*Math.sign(y)*.04,.02],[s*hw,y,.025]],.070);
-   leaf(s*(hw-.32),y-Math.sign(y)*.12,s*.35);
+// v124: substantial, symmetrical champagne-gold royal foliage OUTSIDE the original logo image.
+function wyRoyalOrnament(x,y,z,side=false){
+ const goldMat=new THREE.MeshStandardMaterial({color:'#E1B96E',metalness:.62,roughness:.32,side:THREE.DoubleSide});
+ const g=new THREE.Group();g.position.set(x,y,z);if(side)g.rotation.y=x<0?Math.PI/2:-Math.PI/2;lobbyRoot.add(g);
+ const addCurve=(pts,r=.033)=>{const path=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],0)));g.add(new THREE.Mesh(new THREE.TubeGeometry(path,22,r,7,false),goldMat));};
+ for(const sign of [-1,1]){
+  addCurve([[sign*1.76,-1.63],[sign*2.12,-.93],[sign*1.90,-.14],[sign*2.16,.65],[sign*1.77,1.54]],.042);
+  for(let k=0;k<5;k++){
+   const yy=-1.20+k*.64,xx=sign*(2.00+.08*Math.sin(k));
+   const leaf=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),goldMat);
+   leaf.scale.set(.27,.09,.045);leaf.position.set(xx-sign*.14,yy+.14,.04);leaf.rotation.z=sign*(k%2?.6:-.6);g.add(leaf);
   }
-  tube([[s*hw,-.75,0],[s*(hw+.11),0,.01],[s*hw,.75,0]],.068);
-  leaf(s*hw,-.35,s*.7);leaf(s*hw,.35,-s*.7);
-  tube([[s*.15,hh,.02],[s*.55,hh+.22,.03],[s*1.10,hh,.02]],.075);
+  addCurve([[sign*.32,1.78],[sign*.91,2.06],[sign*1.43,1.89],[sign*1.80,1.67]],.037);
+  addCurve([[sign*.32,-1.78],[sign*.92,-2.00],[sign*1.45,-1.83],[sign*1.78,-1.67]],.037);
  }
- const crown=new THREE.Mesh(new THREE.SphereGeometry(.18,14,10),mat);crown.position.set(0,hh+.14,.03);g.add(crown);
+ const crest=new THREE.Mesh(new THREE.SphereGeometry(.12,12,10),goldMat);crest.position.set(0,2.02,.05);g.add(crest);
 }
-wyFramePalaceA(0,4.02,-9.86,false);
-for(const side of [-1,1])wyFramePalaceA(side*12.57,4.0,-1.4,true);
+wyRoyalOrnament(0,4.03,-9.54,false);
+for(const side of [-1,1])wyRoyalOrnament(side*12.52,4.03,-1.4,true);
 // v124: extended and forward royal diamond reception, forward of the central lounge.
 // Front is +Z, towards the entrance; all upright branding grows from that SAME front face.
 const wyReception=new THREE.Group();lobbyRoot.add(wyReception);
-wyReception.position.set(0,0,5.25);
+wyReception.position.set(0,0,3.65);
 function wrBox(x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),lbMat(c));m.position.set(x,y,z);wyReception.add(m);return m;}
 const wrNavy='#20334C',wrGold='#D8AF61',wrIvory='#F6EADB';
-wrBox(0,.72,0,8.85,1.44,1.45,wrNavy);
-wrBox(0,1.54,0,9.10,.20,1.70,wrIvory);
-wrBox(0,1.41,.01,9.18,.09,1.76,wrGold);
-wrBox(0,.15,.748,8.88,.18,.09,wrGold);
+wrBox(0,.72,0,7.35,1.44,1.45,wrNavy);
+wrBox(0,1.54,0,7.62,.20,1.70,wrIvory);
+wrBox(0,1.41,.01,7.70,.09,1.76,wrGold);
+wrBox(0,.15,.748,7.38,.18,.09,wrGold);
 for(const x of [-3.55,3.55])wrBox(x,.76,.754,.10,1.23,.08,wrGold);
 // Substantial raised diamond facets on the front face.
-for(let i=-7;i<=7;i++){
- const x=i*.57;
+for(let i=-5;i<=5;i++){
+ const x=i*.62;
  const shape=new THREE.Shape();shape.moveTo(0,.26);shape.lineTo(.18,0);shape.lineTo(0,-.26);shape.lineTo(-.18,0);shape.closePath();
  const geom=new THREE.ShapeGeometry(shape);const m=new THREE.Mesh(geom,lbMat(i%2===0?'#355473':'#284461'));
  m.position.set(x,.72,.763);wyReception.add(m);
@@ -1333,9 +1338,9 @@ const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(.96,.96),new THREE.MeshBasic
 wrLogo.position.set(0,.76,.795);wyReception.add(wrLogo);
 // OPAQUE architectural display rises directly from the FRONT (+Z) logo face, not from the rear.
 const wrPanel=new THREE.Group();wyReception.add(wrPanel);wrPanel.position.set(0,1.60,.74);
-wrBox(0,2.64,.76,8.55,2.12,.18,wrGold);
-wrBox(0,2.64,.87,8.32,1.94,.11,wrNavy);
-for(const x of [-3.98,3.98]){
+wrBox(0,2.64,.76,7.02,2.12,.18,wrGold);
+wrBox(0,2.64,.87,6.83,1.94,.11,wrNavy);
+for(const x of [-3.22,3.22]){
  wrBox(x,2.64,.95,.12,1.84,.06,wrGold);
  for(let k=0;k<5;k++){
   const y=1.88+k*.36;
@@ -1346,10 +1351,10 @@ for(const x of [-3.98,3.98]){
 // One canvas for exactly three lines, no line wrapping. Golden filigree and slow star dust.
 const wrCanvas=document.createElement('canvas');wrCanvas.width=1024;wrCanvas.height=384;
 const wrCtx=wrCanvas.getContext('2d');const wrTex=new THREE.CanvasTexture(wrCanvas);wrTex.colorSpace=THREE.SRGBColorSpace;
-const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(7.86,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
+const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(6.38,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
 wrScreen.position.set(0,2.64,.938);wyReception.add(wrScreen);
 function wyReceptionAnimate(ms){
- const t=ms*.001;const c=wrCtx;c.fillStyle='#176B83';c.fillRect(0,0,1024,384);
+ const t=ms*.001;const c=wrCtx;c.fillStyle='#20334C';c.fillRect(0,0,1024,384);
  c.strokeStyle='#C9A15E';c.lineWidth=3;
  for(const side of [-1,1])for(let j=0;j<5;j++){
   const x=side<0?66:958,y=48+j*66;
@@ -1374,25 +1379,6 @@ function wyReceptionAnimate(ms){
   const a=.25+.7*(.5+.5*Math.sin(t*1.3+i*1.8));
   c.strokeStyle='rgba(255,219,126,'+a.toFixed(3)+')';c.lineWidth=1.5;
   c.beginPath();c.moveTo(x-5,y);c.lineTo(x+5,y);c.moveTo(x,y-5);c.lineTo(x,y+5);c.stroke();
- }
- // v125: clearly visible yet refined traveling champagne-gold sweep, every 7.5 seconds.
- // Broad enough to remain visible from the mobile isometric lobby view.
- const sweep=((t%7.5)/7.5)*1370-180;
- const sweepGrad=c.createLinearGradient(sweep-120,0,sweep+120,0);
- sweepGrad.addColorStop(0,'rgba(255,222,142,0)');
- sweepGrad.addColorStop(.38,'rgba(255,217,122,.10)');
- sweepGrad.addColorStop(.50,'rgba(255,246,198,.36)');
- sweepGrad.addColorStop(.62,'rgba(255,217,122,.10)');
- sweepGrad.addColorStop(1,'rgba(255,222,142,0)');
- c.fillStyle=sweepGrad;c.save();c.beginPath();c.rect(85,17,854,350);c.clip();
- c.beginPath();c.moveTo(sweep-90,10);c.lineTo(sweep+75,10);c.lineTo(sweep-80,375);c.lineTo(sweep-245,375);c.closePath();c.fill();c.restore();
- // Larger glowing royal accents and conspicuous animated corner glints.
- for(const side of [-1,1]){
-  const x=side<0?108:916;
-  const y=50+((t*67)%270);
-  const glow=c.createRadialGradient(x,y,2,x,y,42);
-  glow.addColorStop(0,'rgba(255,251,212,.96)');glow.addColorStop(.25,'rgba(255,214,108,.60)');glow.addColorStop(1,'rgba(255,214,108,0)');
-  c.fillStyle=glow;c.fillRect(x-43,y-43,86,86);
  }
  c.textAlign='center';c.textBaseline='middle';c.fillStyle='#F6D898';
  c.shadowColor='#DDB66A';c.shadowBlur=6+3*Math.sin(t*.6);
@@ -1484,43 +1470,25 @@ for(let i=0;i<13;i++){
  const x=-3.75+i*.625;
  lbBox(x,.095,-5.94,.19,.018,.10,'#D5B783');lbBox(x,.095,-1.06,.19,.018,.10,'#D5B783');
 }
-// v125: clean modern royal VIP sofas, readable from the mobile isometric camera.
-// No diamond quilting, tufting, tiny stitches or noisy textures; broad gold trims and bold silhouette.
+// Camel upholstery with visibly separate back, seats, armrests, cushion seams and gold legs.
 function wySofa(x,z,w,rot=0){
  const g=new THREE.Group();lobbyRoot.add(g);g.position.set(x,0,z);g.rotation.y=rot;
- const camel='#C5A17A',lightCamel='#D9B891',deepCamel='#A9825D',gold='#D9B66D',ivory='#F7E9D7',navy='#253E60';
- function part(px,py,pz,a,b,c,color=camel,round=0){
-  const geom=round?new THREE.CapsuleGeometry(Math.min(round,b*.46),Math.max(.02,b-2*Math.min(round,b*.46)),5,12):new THREE.BoxGeometry(a,b,c);
-  const m=new THREE.Mesh(geom,lbMat(color));
-  if(round){m.scale.x=a/(2*Math.min(round,b*.46));m.scale.z=c/(2*Math.min(round,b*.46));}
-  m.position.set(px,py,pz);g.add(m);m.userData.lobbyAction='lounge';lobbyTargets.push(m);return m;
+ function part(px,py,pz,a,b,c,color='#C5A17A'){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(a,b,c),lbMat(color));m.position.set(px,py,pz);g.add(m);m.userData.lobbyAction='lounge';lobbyTargets.push(m);return m;
  }
- // Solid elevated base and one broad, unbroken gold band.
- part(0,.42,.02,w,.35,1.44,deepCamel);
- part(0,.30,.02,w+.06,.17,1.50,gold);
- // High continuous back: broad camel upholstery with legible champagne-gold outline.
- part(0,1.24,-.58,w+.02,1.22,.28,gold);
- part(0,1.25,-.535,w-.16,1.08,.28,camel);
- part(0,1.73,-.54,w+.10,.13,.37,gold);
- // Thick, clean seat cushion panels: no tiny stitched pattern.
+ part(0,.60,.03,w,.30,1.28);part(0,1.13,-.54,w,.93,.29,'#B7946F');
  const count=w>2?3:1;
  for(let i=0;i<count;i++){
-  const sw=(w-.50)/count,xx=-w/2+.25+sw*(i+.5);
-  part(xx,.77,.17,sw-.055,.32,1.03,lightCamel);
+  const sw=(w-.55)/count,xx=-w/2+.275+sw*(i+.5);
+  part(xx,.84,.20,sw-.055,.22,.89,'#D1AD86');
+  part(xx,1.11,-.34,sw-.075,.56,.22,'#C5A17A');
  }
- // Strong curved-looking arm silhouette, wide gold outer caps and full-height gold feet.
- for(const sign of [-1,1]){
-  const xx=sign*(w/2-.18);
-  part(xx,.99,.02,.42,.91,1.53,gold);
-  part(xx-sign*.035,1.00,.04,.33,.81,1.40,camel);
-  part(xx,1.46,.02,.46,.15,1.52,gold);
-  for(const zz of [-.48,.49])part(xx,.16,zz,.23,.30,.23,gold);
+ for(const xx of [-w/2+.14,w/2-.14]){
+  part(xx,.84,.08,.29,.78,1.42,'#A98765');
+  part(xx,.19,.46,.12,.28,.12,'#B99A69');
+  part(xx,.19,-.46,.12,.28,.12,'#B99A69');
  }
- // Oversized contrast pillows: clean readable blocks, not speckles.
- for(const xx of w>2?[-w*.29,w*.29]:[0]){
-  part(xx,1.12,-.29,.57,.48,.17,ivory);
-  part(xx,1.12,-.185,.43,.33,.05,navy);
- }
+ for(const xx of w>2?[-w*.29,w*.29]:[0])part(xx,1.07,-.19,.40,.36,.16,'#F7E9D7');
 }
 wySofa(0,-5.0,4.2);wySofa(-3.4,-2.75,1.45,Math.PI/2);wySofa(3.4,-2.75,1.45,-Math.PI/2);
 lbCylinder(0,.55,-3.15,1.02,1.02,.2,'#F8F4EB','lounge',36);
@@ -1626,17 +1594,6 @@ const wyElev1Pos=new THREE.Vector3(8.4,0,-8.8),wyElev2Pos=new THREE.Vector3(9.1,
 const wyWalkUI=document.createElement('div');wyWalkUI.id='wyWalkUI';wyWalkUI.style.cssText='display:none;position:fixed;z-index:49;bottom:85px;left:18px;width:116px;height:116px;pointer-events:auto;touch-action:none;user-select:none';
 wyWalkUI.innerHTML='<div id="wyJoyBase" style="position:relative;width:112px;height:112px;border-radius:50%;background:rgba(245,239,255,.24);border:2px solid rgba(255,255,255,.68);box-shadow:0 3px 14px rgba(74,42,117,.18);touch-action:none"><div id="wyJoyKnob" style="position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#a879d8;border:3px solid #c9a7f0;box-sizing:border-box;box-shadow:0 2px 9px rgba(70,30,110,.38);pointer-events:none"></div></div>';
 document.body.append(wyWalkUI);
-// v126: any visible conversation or info overlay hides the indoor joystick and freezes movement.
-const wyDialogEl=document.getElementById('dialog');
-function wyConversationOpen(){return (wyDialogEl.style.display!=='none'&&getComputedStyle(wyDialogEl).display!=='none')||document.getElementById('wyInfo').classList.contains('open')||wyLobbyDialog.style.display==='block';}
-function wySyncConversationControls(){
- const opened=wyConversationOpen();
- document.body.classList.toggle('wy-conversation-active',opened);
- if(opened){wyJoyReset();wyMoveKeys.clear();}
-}
-new MutationObserver(wySyncConversationControls).observe(wyDialogEl,{attributes:true,attributeFilter:['style']});
-new MutationObserver(wySyncConversationControls).observe(document.getElementById('wyInfo'),{attributes:true,attributeFilter:['class']});
-
 const wyMoveKeys=new Set();let wyMoveTouch=null,wyJoyX=0,wyJoyY=0,wyJoyPointer=null;
 const wyJoyBase=wyWalkUI.querySelector('#wyJoyBase'),wyJoyKnob=wyWalkUI.querySelector('#wyJoyKnob');
 function wyJoyUpdate(e){const r=wyJoyBase.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy),max=34,scale=len>max?max/len:1;wyJoyX=dx*scale/max;wyJoyY=dy*scale/max;wyJoyKnob.style.transform=`translate(${dx*scale}px,${dy*scale}px)`;}
@@ -1651,7 +1608,7 @@ const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyR
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,10.85);lobbyRoot.add(wyIndoorActor)}
 function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:roomRoot;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
  const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3));wyIndoorActor.position.copy(p);
- wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();wySyncConversationControls();}
+ wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=n===2?2:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':'德威陽｜2F 員工辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;
@@ -1677,7 +1634,6 @@ wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
 floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
- if(wyConversationOpen()){wyJoyReset();wyMoveKeys.clear();return;}
  if(wyIndoorActor&&!wyRide){
   let x=0,z=0;const k=wyMoveKeys;
   if(k.has('arrowleft')||k.has('a'))x-=1;
@@ -1724,7 +1680,6 @@ function wyElevatorTick(dt){
 }
 
 const wyLobbyDialog=document.createElement('section');wyLobbyDialog.id='wyLobbyDialog';
-new MutationObserver(wySyncConversationControls).observe(wyLobbyDialog,{attributes:true,attributeFilter:['style']});
 wyLobbyDialog.style.cssText='display:none;position:fixed;z-index:90;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,440px);max-height:80dvh;overflow:auto;padding:20px;background:#faf7f0;border:2px solid #385c77;border-radius:16px;color:#263b52;font:15px/1.6 system-ui;box-shadow:0 12px 55px #15293a77';document.body.append(wyLobbyDialog);
 function wyLobbyOpen(action){
  const head={tea:'迎賓茶點區',lounge:'三層樓探索',elevator:'電梯｜選擇樓層'}[action]||'德威陽';
@@ -1809,7 +1764,6 @@ function wyConfigure3DGestures(control,{minDistance=7,maxDistance=65}={}){
  control.panSpeed=0.92;control.zoomSpeed=0.88;control.rotateSpeed=0.72;control.dampingFactor=0.075;
 }
 wyConfigure3DGestures(orbit,{minDistance:12,maxDistance:240});
-orbit.rotateSpeed=0.37;orbit.dampingFactor=0.105; // v128 fine-grained outdoor left/right orbit
 wyConfigure3DGestures(officeOrbit,{minDistance:7,maxDistance:65});
 function officeTalk(i){
  if(i===0||i===5){openWyInfo(i===5?'lawyer':'company');return;}
@@ -1894,20 +1848,6 @@ function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[
 // v42: initial creator completion shows the same six-island overview.
 document.getElementById('startExplore').addEventListener('click',()=>{if(document.getElementById('creator').classList.contains('finished')){follow=false;overview=true;medicalFocusAnim=null;camera.position.set(0,195,255);orbit.target.set(0,0,0);orbit.update();}});document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){if(!activeIslandRoom&&wyOfficeFloor===1)wyLobbyOpen('lounge');else officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};// Direct focus avoids repeated dragging and getting stuck at the map edge.
 let medicalFocusAnim=null;
-// v128 medical front-photo view: camera faces the +Z entrance from the island forecourt.
-// It approaches from inside the medical island rather than looking through the family island.
-const wyMedFrontButton=document.createElement('button');
-wyMedFrontButton.id='wyMedicalFrontView';wyMedFrontButton.type='button';wyMedFrontButton.textContent='📷 醫療島正面視角';
-wyMedFrontButton.style.cssText='position:fixed;right:12px;bottom:clamp(258px,34vh,330px);z-index:31;background:#fffaf1;color:#174c47;border:2px solid #d4b378;border-radius:15px;padding:10px 12px;font:700 13px system-ui;box-shadow:0 5px 14px #254c5840;display:none;cursor:pointer';
-document.body.append(wyMedFrontButton);
-wyMedFrontButton.addEventListener('click',()=>{
- if(insideOffice)return;
- follow=false;overview=false;
- const target=new THREE.Vector3(xy[2][0],8.6,xy[2][1]-1.5);
- const pos=new THREE.Vector3(xy[2][0],21.5,xy[2][1]+38);
- medicalFocusAnim={t:0,startTarget:orbit.target.clone(),endTarget:target,startPos:camera.position.clone(),endPos:pos};
-});
-
 
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
 // Walkable paths and a shared solid-object registry for buildings and props.
@@ -2048,6 +1988,6 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   if((onIsland||onBridge)&&walkAllowed(hitPoint.x,hitPoint.z))scheduleWalk(hitPoint);
  }
 });
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();wyMedFrontButton.style.display=(!insideOffice&&document.getElementById('creator').style.display==='none'&&Math.hypot(actor.position.x-xy[2][0],actor.position.z-xy[2][1])<22)?'block':'none';if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.15);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.startTarget,medicalFocusAnim.endTarget,ease);camera.position.lerpVectors(medicalFocusAnim.startPos,medicalFocusAnim.endPos,ease);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else{officeOrbit.update();renderer.render(officeScene,officeCam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else{officeOrbit.update();renderer.render(officeScene,officeCam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>
