@@ -1296,44 +1296,63 @@ for(const side of [-1,1]){
  for(const y of [1.36,6.64])lbBox(side*12.62,y,-1.4,.08,.08,6.06,wyGold120);
  lbLogo(side*12.60,4.03,-1.4,3.55,3.55,true);
 }
-// v123: integrated 1F royal diamond reception, forward of the central lounge.
+// v124: substantial, symmetrical champagne-gold royal foliage OUTSIDE the original logo image.
+function wyRoyalOrnament(x,y,z,side=false){
+ const goldMat=new THREE.MeshStandardMaterial({color:'#E1B96E',metalness:.62,roughness:.32,side:THREE.DoubleSide});
+ const g=new THREE.Group();g.position.set(x,y,z);if(side)g.rotation.y=x<0?Math.PI/2:-Math.PI/2;lobbyRoot.add(g);
+ const addCurve=(pts,r=.033)=>{const path=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],0)));g.add(new THREE.Mesh(new THREE.TubeGeometry(path,22,r,7,false),goldMat));};
+ for(const sign of [-1,1]){
+  addCurve([[sign*1.76,-1.63],[sign*2.12,-.93],[sign*1.90,-.14],[sign*2.16,.65],[sign*1.77,1.54]],.042);
+  for(let k=0;k<5;k++){
+   const yy=-1.20+k*.64,xx=sign*(2.00+.08*Math.sin(k));
+   const leaf=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),goldMat);
+   leaf.scale.set(.27,.09,.045);leaf.position.set(xx-sign*.14,yy+.14,.04);leaf.rotation.z=sign*(k%2?.6:-.6);g.add(leaf);
+  }
+  addCurve([[sign*.32,1.78],[sign*.91,2.06],[sign*1.43,1.89],[sign*1.80,1.67]],.037);
+  addCurve([[sign*.32,-1.78],[sign*.92,-2.00],[sign*1.45,-1.83],[sign*1.78,-1.67]],.037);
+ }
+ const crest=new THREE.Mesh(new THREE.SphereGeometry(.12,12,10),goldMat);crest.position.set(0,2.02,.05);g.add(crest);
+}
+wyRoyalOrnament(0,4.03,-9.54,false);
+for(const side of [-1,1])wyRoyalOrnament(side*12.52,4.03,-1.4,true);
+// v124: extended and forward royal diamond reception, forward of the central lounge.
 // Front is +Z, towards the entrance; all upright branding grows from that SAME front face.
 const wyReception=new THREE.Group();lobbyRoot.add(wyReception);
-wyReception.position.set(0,0,.38);
+wyReception.position.set(0,0,3.65);
 function wrBox(x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),lbMat(c));m.position.set(x,y,z);wyReception.add(m);return m;}
 const wrNavy='#20334C',wrGold='#D8AF61',wrIvory='#F6EADB';
-wrBox(0,.66,0,4.8,1.32,1.12,wrNavy);
-wrBox(0,1.39,0,5.04,.18,1.34,wrIvory);
-wrBox(0,1.29,.01,5.10,.075,1.39,wrGold);
-wrBox(0,.15,.57,4.83,.16,.09,wrGold);
-for(const x of [-2.32,2.32])wrBox(x,.73,.595,.075,1.13,.08,wrGold);
+wrBox(0,.72,0,7.35,1.44,1.45,wrNavy);
+wrBox(0,1.54,0,7.62,.20,1.70,wrIvory);
+wrBox(0,1.41,.01,7.70,.09,1.76,wrGold);
+wrBox(0,.15,.748,7.38,.18,.09,wrGold);
+for(const x of [-3.55,3.55])wrBox(x,.76,.754,.10,1.23,.08,wrGold);
 // Substantial raised diamond facets on the front face.
 for(let i=-5;i<=5;i++){
- const x=i*.40;
+ const x=i*.62;
  const shape=new THREE.Shape();shape.moveTo(0,.26);shape.lineTo(.18,0);shape.lineTo(0,-.26);shape.lineTo(-.18,0);shape.closePath();
  const geom=new THREE.ShapeGeometry(shape);const m=new THREE.Mesh(geom,lbMat(i%2===0?'#355473':'#284461'));
- m.position.set(x,.68,.61);wyReception.add(m);
+ m.position.set(x,.72,.763);wyReception.add(m);
 }
 // Original, unchanged official logo asset on the front cabinet face.
-const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(.96,.96),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261027-v123'),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
-wrLogo.position.set(0,.72,.651);wyReception.add(wrLogo);
+const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(.96,.96),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-logo-tight-v102.png'),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+wrLogo.position.set(0,.76,.795);wyReception.add(wrLogo);
 // OPAQUE architectural display rises directly from the FRONT (+Z) logo face, not from the rear.
-const wrPanel=new THREE.Group();wyReception.add(wrPanel);wrPanel.position.set(0,1.40,.60);
-wrBox(0,2.27,.61,4.56,1.82,.14,wrGold);
-wrBox(0,2.27,.70,4.38,1.65,.10,wrNavy);
-for(const x of [-2.05,2.05]){
- wrBox(x,2.27,.79,.095,1.55,.05,wrGold);
+const wrPanel=new THREE.Group();wyReception.add(wrPanel);wrPanel.position.set(0,1.60,.74);
+wrBox(0,2.64,.76,7.02,2.12,.18,wrGold);
+wrBox(0,2.64,.87,6.83,1.94,.11,wrNavy);
+for(const x of [-3.22,3.22]){
+ wrBox(x,2.64,.95,.12,1.84,.06,wrGold);
  for(let k=0;k<5;k++){
-  const y=1.64+k*.31;
+  const y=1.88+k*.36;
   const leaf=new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),lbMat('#E6C47E'));
-  leaf.scale.set(1.6,.58,.3);leaf.position.set(x+(x<0?.12:-.12),y,.80);leaf.rotation.z=(k%2?1:-1)*.48;wyReception.add(leaf);
+  leaf.scale.set(1.6,.58,.3);leaf.position.set(x+(x<0?.14:-.14),y,.97);leaf.rotation.z=(k%2?1:-1)*.48;wyReception.add(leaf);
  }
 }
 // One canvas for exactly three lines, no line wrapping. Golden filigree and slow star dust.
 const wrCanvas=document.createElement('canvas');wrCanvas.width=1024;wrCanvas.height=384;
 const wrCtx=wrCanvas.getContext('2d');const wrTex=new THREE.CanvasTexture(wrCanvas);wrTex.colorSpace=THREE.SRGBColorSpace;
-const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(4.03,1.49),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
-wrScreen.position.set(0,2.27,.772);wyReception.add(wrScreen);
+const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(6.38,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
+wrScreen.position.set(0,2.64,.938);wyReception.add(wrScreen);
 function wyReceptionAnimate(ms){
  const t=ms*.001;const c=wrCtx;c.fillStyle='#20334C';c.fillRect(0,0,1024,384);
  c.strokeStyle='#C9A15E';c.lineWidth=3;
@@ -1346,6 +1365,40 @@ function wyReceptionAnimate(ms){
   const x=80+((i*179)%870),y=28+((i*113)%320),a=.18+.42*(.5+.5*Math.sin(t*.7+i*2.7));
   c.fillStyle='rgba(247,207,127,'+a.toFixed(3)+')';c.beginPath();c.arc(x,y,i%4===0?2.3:1.3,0,Math.PI*2);c.fill();
  }
+ // Animated traveling glints along the royal side filigree, visible even on a small phone.
+ for(const side of [-1,1]){
+  for(let k=0;k<4;k++){
+   const y=34+((t*43+k*97)%330),x=side<0?62:962;
+   const halo=c.createRadialGradient(x,y,1,x,y,19);
+   halo.addColorStop(0,'rgba(255,239,171,.98)');halo.addColorStop(.3,'rgba(255,206,93,.62)');halo.addColorStop(1,'rgba(255,206,93,0)');
+   c.fillStyle=halo;c.fillRect(x-20,y-20,40,40);
+  }
+ }
+ for(let i=0;i<13;i++){
+  const x=110+(i*197)%810,y=34+((i*73+t*(8+i%3*4))%314);
+  const a=.25+.7*(.5+.5*Math.sin(t*1.3+i*1.8));
+  c.strokeStyle='rgba(255,219,126,'+a.toFixed(3)+')';c.lineWidth=1.5;
+  c.beginPath();c.moveTo(x-5,y);c.lineTo(x+5,y);c.moveTo(x,y-5);c.lineTo(x,y+5);c.stroke();
+ }
+ // v125: clearly visible yet refined traveling champagne-gold sweep, every 7.5 seconds.
+ // Broad enough to remain visible from the mobile isometric lobby view.
+ const sweep=((t%7.5)/7.5)*1370-180;
+ const sweepGrad=c.createLinearGradient(sweep-120,0,sweep+120,0);
+ sweepGrad.addColorStop(0,'rgba(255,222,142,0)');
+ sweepGrad.addColorStop(.38,'rgba(255,217,122,.10)');
+ sweepGrad.addColorStop(.50,'rgba(255,246,198,.36)');
+ sweepGrad.addColorStop(.62,'rgba(255,217,122,.10)');
+ sweepGrad.addColorStop(1,'rgba(255,222,142,0)');
+ c.fillStyle=sweepGrad;c.save();c.beginPath();c.rect(85,17,854,350);c.clip();
+ c.beginPath();c.moveTo(sweep-90,10);c.lineTo(sweep+75,10);c.lineTo(sweep-80,375);c.lineTo(sweep-245,375);c.closePath();c.fill();c.restore();
+ // Larger glowing royal accents and conspicuous animated corner glints.
+ for(const side of [-1,1]){
+  const x=side<0?108:916;
+  const y=50+((t*67)%270);
+  const glow=c.createRadialGradient(x,y,2,x,y,42);
+  glow.addColorStop(0,'rgba(255,251,212,.96)');glow.addColorStop(.25,'rgba(255,214,108,.60)');glow.addColorStop(1,'rgba(255,214,108,0)');
+  c.fillStyle=glow;c.fillRect(x-43,y-43,86,86);
+ }
  c.textAlign='center';c.textBaseline='middle';c.fillStyle='#F6D898';
  c.shadowColor='#DDB66A';c.shadowBlur=6+3*Math.sin(t*.6);
  c.font='bold 66px sans-serif';c.fillText('德威陽國際法律事務所',512,111,815);
@@ -1355,25 +1408,26 @@ function wyReceptionAnimate(ms){
 }
 wyReceptionAnimate(0);
 
+// v124: no cabinetry beneath the left-side WEIYANG logo; the rear L leg ends before that logo.
 // v121: true continuous wall-hugging L refreshment bar with a nearby inner-corner island.
 // Back wall is z=-10.55; left wall is x=-13.30. No floating counter segments.
 const teaNavy='#20334C',teaGold='#C9AD7A',teaStone='#F2E6D4';
 function teaBox(x,y,z,w,h,d,color){return lbBox(x,y,z,w,h,d,color,'tea')}
 // Two joined legs, meeting in the rear-left corner, with flush stone tops.
 teaBox(-9.05,.76,-9.30,7.80,1.52,2.35,teaNavy);
-teaBox(-12.12,.76,-5.20,2.35,1.52,8.2,teaNavy);
+teaBox(-12.12,.76,-7.46,2.35,1.52,3.68,teaNavy);
 teaBox(-9.05,1.57,-9.30,7.90,.16,2.50,teaStone);
-teaBox(-12.12,1.57,-5.20,2.50,.16,8.2,teaStone);
+teaBox(-12.12,1.57,-7.46,2.50,.16,3.68,teaStone);
 for(const x of [-11.1,-9.5,-7.9,-6.3,-5.7]){
  teaBox(x,.82,-8.10,.045,1.15,.07,teaGold);
  teaBox(x-.55,.82,-8.05,.13,.09,.08,teaGold);
 }
-for(const z of [-7.8,-6.3,-4.8,-3.3,-2.1]){
+for(const z of [-8.5,-7.5,-6.5]){
  teaBox(-10.87,.82,z,.08,1.15,.045,teaGold);
  teaBox(-10.82,.83,z,.08,.10,.18,teaGold);
 }
 teaBox(-9.05,.13,-8.05,7.75,.15,.11,teaGold);
-teaBox(-10.88,.13,-5.1,.11,.15,8.0,teaGold);
+teaBox(-10.88,.13,-7.46,.11,.15,3.65,teaGold);
 // Island INSIDE the L-shaped service area, not the center of the whole lobby.
 teaBox(-8.25,.79,-4.70,3.25,1.58,1.85,teaNavy);
 teaBox(-8.25,1.65,-4.70,3.50,.16,2.04,teaStone);
@@ -1435,25 +1489,43 @@ for(let i=0;i<13;i++){
  const x=-3.75+i*.625;
  lbBox(x,.095,-5.94,.19,.018,.10,'#D5B783');lbBox(x,.095,-1.06,.19,.018,.10,'#D5B783');
 }
-// Camel upholstery with visibly separate back, seats, armrests, cushion seams and gold legs.
+// v125: clean modern royal VIP sofas, readable from the mobile isometric camera.
+// No diamond quilting, tufting, tiny stitches or noisy textures; broad gold trims and bold silhouette.
 function wySofa(x,z,w,rot=0){
  const g=new THREE.Group();lobbyRoot.add(g);g.position.set(x,0,z);g.rotation.y=rot;
- function part(px,py,pz,a,b,c,color='#C5A17A'){
-  const m=new THREE.Mesh(new THREE.BoxGeometry(a,b,c),lbMat(color));m.position.set(px,py,pz);g.add(m);m.userData.lobbyAction='lounge';lobbyTargets.push(m);return m;
+ const camel='#C5A17A',lightCamel='#D9B891',deepCamel='#A9825D',gold='#D9B66D',ivory='#F7E9D7',navy='#253E60';
+ function part(px,py,pz,a,b,c,color=camel,round=0){
+  const geom=round?new THREE.CapsuleGeometry(Math.min(round,b*.46),Math.max(.02,b-2*Math.min(round,b*.46)),5,12):new THREE.BoxGeometry(a,b,c);
+  const m=new THREE.Mesh(geom,lbMat(color));
+  if(round){m.scale.x=a/(2*Math.min(round,b*.46));m.scale.z=c/(2*Math.min(round,b*.46));}
+  m.position.set(px,py,pz);g.add(m);m.userData.lobbyAction='lounge';lobbyTargets.push(m);return m;
  }
- part(0,.60,.03,w,.30,1.28);part(0,1.13,-.54,w,.93,.29,'#B7946F');
+ // Solid elevated base and one broad, unbroken gold band.
+ part(0,.42,.02,w,.35,1.44,deepCamel);
+ part(0,.30,.02,w+.06,.17,1.50,gold);
+ // High continuous back: broad camel upholstery with legible champagne-gold outline.
+ part(0,1.24,-.58,w+.02,1.22,.28,gold);
+ part(0,1.25,-.535,w-.16,1.08,.28,camel);
+ part(0,1.73,-.54,w+.10,.13,.37,gold);
+ // Thick, clean seat cushion panels: no tiny stitched pattern.
  const count=w>2?3:1;
  for(let i=0;i<count;i++){
-  const sw=(w-.55)/count,xx=-w/2+.275+sw*(i+.5);
-  part(xx,.84,.20,sw-.055,.22,.89,'#D1AD86');
-  part(xx,1.11,-.34,sw-.075,.56,.22,'#C5A17A');
+  const sw=(w-.50)/count,xx=-w/2+.25+sw*(i+.5);
+  part(xx,.77,.17,sw-.055,.32,1.03,lightCamel);
  }
- for(const xx of [-w/2+.14,w/2-.14]){
-  part(xx,.84,.08,.29,.78,1.42,'#A98765');
-  part(xx,.19,.46,.12,.28,.12,'#B99A69');
-  part(xx,.19,-.46,.12,.28,.12,'#B99A69');
+ // Strong curved-looking arm silhouette, wide gold outer caps and full-height gold feet.
+ for(const sign of [-1,1]){
+  const xx=sign*(w/2-.18);
+  part(xx,.99,.02,.42,.91,1.53,gold);
+  part(xx-sign*.035,1.00,.04,.33,.81,1.40,camel);
+  part(xx,1.46,.02,.46,.15,1.52,gold);
+  for(const zz of [-.48,.49])part(xx,.16,zz,.23,.30,.23,gold);
  }
- for(const xx of w>2?[-w*.29,w*.29]:[0])part(xx,1.07,-.19,.40,.36,.16,'#F7E9D7');
+ // Oversized contrast pillows: clean readable blocks, not speckles.
+ for(const xx of w>2?[-w*.29,w*.29]:[0]){
+  part(xx,1.12,-.29,.57,.48,.17,ivory);
+  part(xx,1.12,-.185,.43,.33,.05,navy);
+ }
 }
 wySofa(0,-5.0,4.2);wySofa(-3.4,-2.75,1.45,Math.PI/2);wySofa(3.4,-2.75,1.45,-Math.PI/2);
 lbCylinder(0,.55,-3.15,1.02,1.02,.2,'#F8F4EB','lounge',36);
