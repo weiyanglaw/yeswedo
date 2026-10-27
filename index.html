@@ -270,6 +270,37 @@ function createFamilyMansion(parent,THREE){
  cylinder(.065,5.4,7.6,19.3,-.3,trim,8);
  const flag=cube(3.25,2.05,.06,9.3,20,-.3,wine);
  const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.75,1.75),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:true}));flagLogo.position.set(9.3,20,-.25);g.add(flagLogo);
+ // v97: monumental high-visibility facade details only; no stairs, no landscape edits.
+ // Two LARGE burgundy-and-gold hanging banners on the outer piers, each carrying
+ // the actual original official logo texture, never a reconstructed emblem.
+ const bannerWine=new THREE.MeshStandardMaterial({color:'#773D49',roughness:.38,metalness:.08,side:THREE.DoubleSide});
+ const bannerGold=new THREE.MeshStandardMaterial({color:'#F2D69B',roughness:.24,metalness:.55});
+ for(const side of [-1,1]){
+   const bx=side*7.52, by=7.40, bz=4.91;
+   cube(2.00,4.25,.24,bx,by,bz,bannerWine);
+   // Wide readable gold frame, not tiny embroidery.
+   cube(2.16,.17,.34,bx,by+2.17,bz+.02,bannerGold);
+   cube(2.16,.17,.34,bx,by-2.17,bz+.02,bannerGold);
+   for(const dx of [-1.04,1.04])cube(.12,4.30,.32,bx+dx,by,bz+.02,bannerGold);
+   const emblem=new THREE.Mesh(new THREE.PlaneGeometry(1.70,1.70),
+     new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));
+   emblem.position.set(bx,by+.30,bz+.145);g.add(emblem);
+   // Large, readable upper banner cap and lower pointed tail.
+   const tail=new THREE.Shape();tail.moveTo(bx-.94,by-2.13);tail.lineTo(bx,by-2.70);tail.lineTo(bx+.94,by-2.13);tail.closePath();
+   const tailMesh=new THREE.Mesh(new THREE.ShapeGeometry(tail),bannerWine);
+   tailMesh.position.z=bz+.01;g.add(tailMesh);
+ }
+ // Bold golden arch surrounding the original burgundy logo panel.
+ const logoArchPoints=[];
+ for(let i=0;i<=36;i++){
+   const a=Math.PI-i*Math.PI/36;
+   logoArchPoints.push(new THREE.Vector3(Math.cos(a)*2.30,11.30+Math.sin(a)*1.22,5.12));
+ }
+ const logoArch=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(logoArchPoints),48,.19,10,false),bannerGold);
+ g.add(logoArch);
+ // Broad architectural entrance canopy: warm and prominent from distant mobile view.
+ cube(6.35,.30,1.75,0,5.00,5.55,bannerWine);
+ cube(6.50,.17,1.82,0,5.19,5.55,bannerGold);
  // v67: clear open entrance; no swing poles, rear pergola rods, treehouse,
  // freestanding signboards, benches, lampposts or entrance topiary pots.
  const whiteStone=material('#F8F2E9'),deepWine=material('#873F55'),warmPink=material('#E5A7B7'),green=material('#5D8966');
@@ -793,11 +824,11 @@ function animateStaff(dt,elapsed){
 
 
 // Detailed second-level dollhouse office. All desks and objects are genuine 3D geometry.
-const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#dcebf5');
-officeScene.add(new THREE.HemisphereLight(0xffffff,0xb7c9db,1.65));
-const roomLight=new THREE.DirectionalLight(0xffffff,2.45);roomLight.position.set(-6,18,15);officeScene.add(roomLight);
+const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#b5c5ca');
+officeScene.add(new THREE.HemisphereLight(0xfff1de,0x777083,1.85));
+const roomLight=new THREE.DirectionalLight(0xffe8c4,2.6);roomLight.position.set(-6,18,15);officeScene.add(roomLight);
 const roomRoot=new THREE.Group();officeScene.add(roomRoot);
-const roomMat=(c,metalness=0)=>new THREE.MeshStandardMaterial({color:c,roughness:metalness?.30:.58,metalness});
+const roomMat=(c,metalness=0)=>new THREE.MeshStandardMaterial({color:c,roughness:metalness?.34:.76,metalness});
 const roomClickable=[];
 function roomBox(x,y,z,w,h,d,c,group=roomRoot){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function roomBall(x,y,z,r,c,group=roomRoot){const o=new THREE.Mesh(new THREE.SphereGeometry(r,28,22),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
@@ -891,7 +922,7 @@ function framedArt(x,y,z,w,h,color){
 }
 function sofa(x,z){
  // v95 readable 3D luxury sofa with separate upholstered cushions and rounded arms.
- const pearl='#FFFFFF',navy='#345779';
+ const pearl='#F8FAFC',navy='#345779';
  roomBox(x,.37,z,2.75,.33,1.32,navy);
  roomBox(x,.65,z+.12,2.58,.35,1.20,pearl);
  for(const dx of [-.61,.61]){
@@ -913,9 +944,9 @@ function plant(x,z){
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
 roomBox(0,-.24,0,27,.48,22,'#E4EDF5');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#F8F8F4');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#F8F8F4');
-roomBox(13.3,3.7,0,.40,7.4,22,'#F8F8F4');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#F7F8F6');
+roomBox(-13.3,3.7,0,.40,7.4,22,'#F7F8F6');
+roomBox(13.3,3.7,0,.40,7.4,22,'#F7F8F6');
 for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D8E5EF');
 for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#D7E3EB');
 // Warm skirting and picture lights.
@@ -981,10 +1012,10 @@ const receptionGlow=new THREE.Mesh(new THREE.CylinderGeometry(2.38,2.38,.15,64),
 receptionGlow.scale.set(1.22,1,.46);receptionGlow.position.set(0,.10,4.7);roomRoot.add(receptionGlow);
 reception.scale.set(1.22,1,.45);
 roomCylinder(0,1.05,4.7,2.65,2.65,.20,'#F8FAFC').scale.set(1.12,1,.47);
-roomCylinder(0,.94,4.7,2.60,2.60,.12,'#F5E6C5').scale.set(1.12,1,.47);
+roomCylinder(0,.94,4.7,2.60,2.60,.07,'#F5E6C5').scale.set(1.12,1,.47);
 screen(0,1.46,4.43,2);
 // Official uploaded WEIYANG logo image on the front of the reception desk.
-const receptionLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.42,1.42),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261027-v96'),transparent:true,side:THREE.DoubleSide}));
+const receptionLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.42,1.42),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261027-v95'),transparent:true,side:THREE.DoubleSide}));
 receptionLogo.position.set(0,.58,5.83);roomRoot.add(receptionLogo);
 officeSign('接待櫃檯｜諮詢與聯絡',0,2.65,4.6,4.6,'#fff8ed',2);
 plant(-4.3,5.3);plant(4.3,5.3);
@@ -1089,17 +1120,17 @@ for(const x of [-13.09,13.09])for(const z of [-5.0,4.5]){
 }
 // Deliberately no chandelier, ceiling, hanging rods, additional reception facades, or floating ornaments.
 // v95 monumental wall-integrated royal arch, large and visible from isometric mobile camera.
-const royalWhite=new THREE.MeshStandardMaterial({color:'#F8F8F4',roughness:.38,metalness:.06});
-const royalGold=new THREE.MeshStandardMaterial({color:'#F5E6C5',roughness:.20,metalness:.48,emissive:'#E7CF9E',emissiveIntensity:.07});
+const royalWhite=new THREE.MeshStandardMaterial({color:'#F7F8F6',roughness:.38,metalness:.06});
+const royalGold=new THREE.MeshStandardMaterial({color:'#F5E6C5',roughness:.26,metalness:.22,emissive:'#E7CF9E',emissiveIntensity:.10});
 for(const x of [-3.48,3.48]){
  for(const [w,h,y] of [[.82,5.55,3.6],[1.12,.40,6.52],[1.10,.33,.63]]){
   const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.54),royalWhite);m.position.set(x,y,-10.14);roomRoot.add(m);
  }
- const band=new THREE.Mesh(new THREE.BoxGeometry(.34,5.2,.18),royalGold);band.position.set(x,3.6,-9.82);roomRoot.add(band);
+ const band=new THREE.Mesh(new THREE.BoxGeometry(.24,5.2,.13),royalGold);band.position.set(x,3.6,-9.82);roomRoot.add(band);
 }
 const archCurve=new THREE.EllipseCurve(0,0,3.48,1.15,0,Math.PI,false,0);
 const archPoints=archCurve.getPoints(48).map(p=>new THREE.Vector3(p.x,p.y+6.2,-10.0));
-roomRoot.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPoints),72,.245,12,false),royalGold));
+roomRoot.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPoints),72,.16,10,false),royalGold));
 // Large futuristic legal display attached to side wall, not blocking walking paths.
 roomBox(12.95,4.10,-3.1,.19,2.7,4.3,'#345779');
 roomBox(12.81,4.10,-3.1,.05,2.35,3.93,'#C5EAF5');
