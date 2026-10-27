@@ -828,7 +828,7 @@ const officeScene=new THREE.Scene();officeScene.background=new THREE.Color('#b5c
 officeScene.add(new THREE.HemisphereLight(0xfff1de,0x777083,1.85));
 const roomLight=new THREE.DirectionalLight(0xffe8c4,2.6);roomLight.position.set(-6,18,15);officeScene.add(roomLight);
 const roomRoot=new THREE.Group();officeScene.add(roomRoot);
-const roomMat=(c,metalness=0)=>new THREE.MeshStandardMaterial({color:c,roughness:metalness?.34:.76,metalness});
+const roomMat=(c,metalness=0)=>new THREE.MeshPhysicalMaterial({color:c,roughness:metalness?.23:.39,metalness:metalness||.04,clearcoat:.48,clearcoatRoughness:.22});
 const roomClickable=[];
 function roomBox(x,y,z,w,h,d,c,group=roomRoot){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
 function roomBall(x,y,z,r,c,group=roomRoot){const o=new THREE.Mesh(new THREE.SphereGeometry(r,28,22),roomMat(c));o.position.set(x,y,z);group.add(o);return o;}
@@ -943,18 +943,15 @@ function plant(x,z){
  }
 }
 // Continuous wooden flooring with decorative plank seams, two substantial walls and open front.
-roomBox(0,-.24,0,27,.48,22,'#E4EDF5');
-roomBox(0,3.7,-10.75,27,7.4,.40,'#F7F8F6');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#F7F8F6');
-roomBox(13.3,3.7,0,.40,7.4,22,'#F7F8F6');
-for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#D8E5EF');
-for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#D7E3EB');
+roomBox(0,-.24,0,27,.48,22,'#F3EEE5');
+roomBox(0,3.7,-10.75,27,7.4,.40,'#F7F2E9');
+roomBox(-13.3,3.7,0,.40,7.4,22,'#F7F2E9');
+roomBox(13.3,3.7,0,.40,7.4,22,'#F7F2E9');
+for(let x=-12.5;x<=12.5;x+=3.6)roomBox(x,.009,0,.014,.012,21.6,'#E1D8CA');
+for(let z=-9.7;z<=9.7;z+=6.0)roomBox(0,.012,z,26,.012,.012,'#E1D8CA');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
-for(const x of [-8,0,8]){
- roomBall(x,6.75,-10.1,.19,'#fff4c7');
- const light=new THREE.PointLight(0xffdfad,.55,12);light.position.set(x,6.2,-9.2);roomRoot.add(light);
-}
+// v101: no tiny decorative wall lamps; visible geometry carries the luxury design.
 // Signature illuminated brand installation. The official image itself is NEVER recolored or redrawn.
 // Navy presentation backing, fine champagne-gold trim and warm wall-wash lighting increase contrast.
 const logoFrame=roomBox(0,4.32,-10.30,5.25,5.25,.28,'#345779');
@@ -1042,6 +1039,43 @@ plant(-11,5.4);framedArt(-10.8,4.5,-10.48,1.4,1.8,'#dba5ae');framedArt(-8.9,4.5,
 roomBox(0,.032,8.1,9,.04,4.1,'#D6E5F0');sofa(-3.2,8.0);sofa(3.2,8.0);
 // v95 oval table replaces original tiny disc
 // v95 visible pair of table legs replaces original tiny pedestal
+// v101 INTERNATIONAL LAW OFFICE: large architectural elements, no furniture relocation.
+// Everything added is flush against the existing walls or high above workstations.
+const officeNavy='#304D6B',officeGold='#DCC18A',officePearl='#FFFDF8';
+function officeWallPanel(x,y,z,w,h){
+ roomBox(x,y,z,w,h,.10,officeNavy);
+ roomBox(x,y+h/2-.12,z+.075,w,.20,.17,officeGold);
+ roomBox(x,y-h/2+.12,z+.075,w,.20,.17,officeGold);
+}
+// Three large panels add visual rhythm, visible from the default iPhone camera.
+officeWallPanel(-10.85,4.10,-10.42,2.75,4.45);
+officeWallPanel(10.85,4.10,-10.42,2.75,4.45);
+// Big ivory pillars frame the original logo wall, without replacing its official logo.
+for(const x of [-3.25,3.25]){
+ roomBox(x,3.80,-10.16,.55,6.65,.52,officePearl);
+ roomBox(x,7.07,-10.12,.90,.31,.65,officeGold);
+ roomBox(x,.53,-10.12,.90,.32,.65,officeGold);
+}
+// Bold wide navy and champagne-gold fascia at upper rear wall, not small lighting effects.
+roomBox(0,7.18,-10.22,26.0,.28,.32,officeNavy);
+roomBox(0,6.96,-10.21,26.0,.15,.34,officeGold);
+// Large wall-mounted decorative planters: no new obstacles in walking paths.
+const officeGreen=roomMat('#5C8867'),officePink=roomMat('#E9A2BF'),officeWhite=roomMat('#F7E9ED');
+function wallBouquet(x,z){
+ roomBox(x,3.03,z,2.20,.43,.56,officePearl);
+ roomBox(x,2.77,z,2.26,.16,.61,officeGold);
+ for(let i=0;i<5;i++){
+  const dx=(i-2)*.42;
+  const foliage=new THREE.Mesh(new THREE.SphereGeometry(.43,12,9),officeGreen);
+  foliage.position.set(x+dx,3.49+(i%2)*.17,z+.10);roomRoot.add(foliage);
+  const bloom=new THREE.Mesh(new THREE.SphereGeometry(.31,12,9),i%3===0?officeWhite:officePink);
+  bloom.position.set(x+dx,3.70+(i%2)*.13,z+.36);roomRoot.add(bloom);
+ }
+}
+wallBouquet(-6.7,-10.14);
+wallBouquet(6.7,-10.14);
+// Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
+// printer, reception, official logos, clickable targets, NPC and routes intact.
 // Only ONE indoor NPC: original ponytail employee 夢奇奇飼養者.
 const indoorDef={name:'夢奇奇飼養者',skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail'};
 const indoorNpc=makeStaffChibi(indoorDef);
