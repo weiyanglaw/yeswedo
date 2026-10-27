@@ -1221,14 +1221,14 @@ function lbText(text,x,y,z,w=3.0,h=.68,action=null,face='front'){
  g.fillStyle='#203c57';g.beginPath();g.roundRect(9,8,1006,204,37);g.fill();g.strokeStyle='#e2e9ef';g.lineWidth=8;g.stroke();
  g.fillStyle='#fffdf7';g.textAlign='center';g.textBaseline='middle';g.font='bold 90px "Noto Sans TC",sans-serif';g.fillText(text,512,114,935);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;
- const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,transparent:true,side:THREE.DoubleSide,depthTest:false}));
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:t,transparent:true,side:THREE.FrontSide,depthTest:true}));
  m.position.set(x,y,z);if(face==='side')m.rotation.y=Math.PI/2;
  m.renderOrder=20;lobbyRoot.add(m);if(action){m.userData.lobbyAction=action;lobbyTargets.push(m)}return m;
 }
 function lbLogo(x,y,z,w,h,side=false){
  const tex=new THREE.TextureLoader().load('weiyang-logo-tight-v102.png');tex.colorSpace=THREE.SRGBColorSpace;
- const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:false}));
- m.position.set(x,y,z);if(side)m.rotation.y=Math.PI/2;m.renderOrder=3;lobbyRoot.add(m);return m;
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.FrontSide,depthTest:true,depthWrite:false}));
+ m.position.set(x,y,z);if(side)m.rotation.y=x<0?Math.PI/2:-Math.PI/2;m.renderOrder=3;lobbyRoot.add(m);return m;
 }
 // v116: 1F floor and walls reproduce the 2F office geometry, materials and seams exactly.
 // Use the same StandardMaterial factory as 2F rather than the old flat BasicMaterial.
@@ -1265,6 +1265,22 @@ for(const side of [-1,1]){
  for(const z of [-8.1,5.4,8.6])wyLobbyWallFrame(side*13.00,4.1,z,2.7,4.9,true);
 }
 
+// v121: deep fluted pilasters on all three interior walls, matching 2F vocabulary.
+function wyLobbyPilaster(x,z,side=false){
+ const ivory='#F5E8D6',shadow='#D9C3A4',gold='#C9AD7A';
+ if(!side){
+  lbOfficeSurface(x,3.65,z,.43,6.42,.20,ivory);
+  for(const dx of [-.15,-.06,.06,.15])lbOfficeSurface(x+dx,3.65,z+.13,.025,5.95,.045,dx<0?gold:shadow);
+  for(const y of [.45,6.90])lbOfficeSurface(x,y,z+.10,.61,.19,.24,gold);
+ }else{
+  lbOfficeSurface(x,3.65,z,.20,6.42,.43,ivory);
+  for(const dz of [-.15,-.06,.06,.15])lbOfficeSurface(x+(x<0?.13:-.13),3.65,z+dz,.045,5.95,.025,dz<0?gold:shadow);
+  for(const y of [.45,6.90])lbOfficeSurface(x,y,z,.24,.19,.61,gold);
+ }
+}
+for(const x of [-11.9,-8.45,-4.6,4.6,8.45,11.9])wyLobbyPilaster(x,-10.31);
+for(const side of [-1,1])for(const z of [-9,-5.8,-2.2,2.1,5.6,9])wyLobbyPilaster(side*13.00,z,true);
+
 // v120: central brand wall is lower, centered and framed in layered champagne mouldings.
 const wyNavy120='#20334C',wyGold120='#C9AD7A',wyCream120='#E8D6B8';
 lbBox(0,4.02,-10.18,7.45,5.35,.23,wyCream120);
@@ -1280,56 +1296,76 @@ for(const side of [-1,1]){
  for(const y of [1.36,6.64])lbBox(side*12.62,y,-1.4,.08,.08,6.06,wyGold120);
  lbLogo(side*12.60,4.03,-1.4,3.55,3.55,true);
 }
-// v120: entirely new front-positioned five-star reception desk.
-// Remove the former stray wall-side crescent and detached upper curved strips.
-// Solid curved front and top share the same footprint; no unsupported floating pieces.
-function wyFrontDesk120(y,height,inner,outer,color){
- const shape=new THREE.Shape(),n=64;
- const pt=(r,t)=>[r*Math.sin(t),7.08+r*Math.cos(t)];
- for(let i=0;i<=n;i++){const q=pt(outer,-.96+1.92*i/n);if(i===0)shape.moveTo(...q);else shape.lineTo(...q)}
- for(let i=n;i>=0;i--){const q=pt(inner,-.96+1.92*i/n);shape.lineTo(...q)}
- shape.closePath();const geo=new THREE.ExtrudeGeometry(shape,{depth:height,bevelEnabled:false});geo.rotateX(-Math.PI/2);
- const mesh=new THREE.Mesh(geo,lbMat(color));mesh.position.y=y+height;lobbyRoot.add(mesh);mesh.userData.lobbyAction='reception';lobbyTargets.push(mesh);return mesh;
+// v121: NO first-floor reception desk, curved strips, floating desk logo, sign or animation.
+// The future reception design is intentionally left empty.
+// v121: true continuous wall-hugging L refreshment bar with a nearby inner-corner island.
+// Back wall is z=-10.55; left wall is x=-13.30. No floating counter segments.
+const teaNavy='#20334C',teaGold='#C9AD7A',teaStone='#F2E6D4';
+function teaBox(x,y,z,w,h,d,color){return lbBox(x,y,z,w,h,d,color,'tea')}
+// Two joined legs, meeting in the rear-left corner, with flush stone tops.
+teaBox(-8.7,.76,-9.30,8.9,1.52,2.35,teaNavy);
+teaBox(-12.12,.76,-5.20,2.35,1.52,8.2,teaNavy);
+teaBox(-8.7,1.57,-9.30,9.05,.16,2.50,teaStone);
+teaBox(-12.12,1.57,-5.20,2.50,.16,8.2,teaStone);
+for(const x of [-11.1,-9.5,-7.9,-6.3,-4.9]){
+ teaBox(x,.82,-8.10,.045,1.15,.07,teaGold);
+ teaBox(x-.55,.82,-8.05,.13,.09,.08,teaGold);
 }
-wyFrontDesk120(.08,1.13,2.45,3.05,'#182E46');
-wyFrontDesk120(1.20,.16,2.34,3.12,'#F6EBDD');
-wyFrontDesk120(.16,.055,3.07,3.12,wyGold120);
-wyFrontDesk120(1.06,.055,3.07,3.12,wyGold120);
-// The official logo is attached to the desk face (not to the floor or in mid-air).
-const deskFrontLogo=lbLogo(0,.77,10.18,1.16,1.10);
-deskFrontLogo.material.depthTest=true;deskFrontLogo.renderOrder=3;
-// Compact fixed brand sign, supported from behind; no curved floating panels.
-const holoGroup=new THREE.Group();lobbyRoot.add(holoGroup);
-for(const x of [-1.02,1.02]){
- const support=new THREE.Mesh(new THREE.BoxGeometry(.12,1.50,.14),lbMat(wyGold120));
- support.position.set(x,2.07,8.65);holoGroup.add(support);
+for(const z of [-7.8,-6.3,-4.8,-3.3,-2.1]){
+ teaBox(-10.87,.82,z,.08,1.15,.045,teaGold);
+ teaBox(-10.82,.83,z,.08,.10,.18,teaGold);
 }
-const signBack=new THREE.Mesh(new THREE.BoxGeometry(2.65,.65,.20),lbMat('#182E46'));
-signBack.position.set(0,2.95,8.69);holoGroup.add(signBack);
-const signTrim=new THREE.Mesh(new THREE.BoxGeometry(2.78,.055,.23),lbMat(wyGold120));
-signTrim.position.set(0,3.29,8.69);holoGroup.add(signTrim);
-const holoLogo=lbLogo(0,2.95,8.82,.63,.57);
-holoLogo.material.depthTest=true;holoLogo.renderOrder=4;
-const logoGlow={material:{opacity:0}};
-// Clear, large L-shaped refreshments counter with a separate central island.
-lbBox(-8.6,.78,-5.0,7.0,1.55,2.1,'#365B7B','tea');lbBox(-8.6,1.60,-5.0,7.25,.18,2.3,'#F8F4EB','tea');
-lbBox(-11.1,.78,-2.4,2.0,1.55,5.4,'#365B7B','tea');lbBox(-11.1,1.60,-2.4,2.25,.18,5.6,'#F8F4EB','tea');
-lbBox(-7.7,.85,-.45,4.2,1.65,2.0,'#365B7B','tea');lbBox(-7.7,1.76,-.45,4.45,.19,2.22,'#F8F4EB','tea');
-// Large, recognizable appliance silhouettes.
-lbBox(-10.6,2.43,-5.1,1.55,1.62,1.05,'#263a50','tea');lbBox(-10.6,2.82,-4.53,1.05,.48,.08,'#b4d6e6','tea');
-lbBox(-10.6,2.04,-4.5,.52,.14,.24,'#dbe6e9','tea');
-for(const x of [-10.98,-10.30])lbCylinder(x,1.88,-4.05,.25,.22,.44,'#faf7f0','tea');
-lbBox(-8.4,2.15,-5.1,1.05,1.10,.9,'#e4edf0','tea');lbCylinder(-8.4,3.06,-5.1,.45,.45,.82,'#80bed6','tea');
-lbCylinder(-6.6,2.0,-5.1,.65,.65,.72,'#f6f3eb','tea');lbCylinder(-6.6,2.43,-5.1,.3,.3,.14,'#2c526e','tea');
-lbBox(-7.75,1.95,-.45,3.25,.10,1.3,'#d7dfe5','tea');
-for(const x of [-8.7,-7.75,-6.8])lbBox(x,2.22,-.45,.68,.45,.75,'#c98f55','tea');
-// Lounge: navy carpet, a single large white sofa, two separate white armchairs, coffee table.
-lbBox(0,.038,-3.5,8.8,.06,5.2,'#2D4E70');
+teaBox(-8.7,.13,-8.05,8.8,.15,.11,teaGold);
+teaBox(-10.88,.13,-5.1,.11,.15,8.0,teaGold);
+// Island INSIDE the L-shaped service area, not the center of the whole lobby.
+teaBox(-8.25,.79,-4.70,3.25,1.58,1.85,teaNavy);
+teaBox(-8.25,1.65,-4.70,3.50,.16,2.04,teaStone);
+for(const x of [-9.15,-8.25,-7.35])teaBox(x,.82,-3.74,.045,1.1,.06,teaGold);
+teaBox(-8.25,.13,-3.74,3.1,.12,.10,teaGold);
+// Coffee machine: prominent dark body, screen, two outlets, handle, cups.
+teaBox(-10.0,2.38,-9.23,1.35,1.43,.98,'#333B45');
+teaBox(-10.0,2.73,-8.72,1.0,.44,.08,'#77AFC5');
+for(const x of [-10.28,-9.72]){
+ teaBox(x,2.03,-8.67,.14,.33,.16,'#C9CED2');
+ lbCylinder(x,1.82,-8.52,.19,.19,.32,'#FFF6E9','tea',18);
+}
+teaBox(-9.25,2.23,-8.67,.60,.09,.15,'#C9CED2');
+// Water dispenser with clearly blue tank and contrasting white base.
+teaBox(-7.8,2.07,-9.28,.90,.80,.82,'#E8EFF1');
+lbCylinder(-7.8,2.86,-9.28,.39,.39,.89,'#6BB5D5','tea',24);
+teaBox(-7.8,2.17,-8.82,.24,.12,.12,'#344F64');
+// Teapot, tray and colorful pastries.
+lbCylinder(-6.45,1.91,-9.23,.39,.43,.40,'#E7B980','tea',24);
+lbCylinder(-6.45,2.14,-9.23,.20,.20,.09,'#B98956','tea',24);
+teaBox(-5.35,1.71,-9.25,1.25,.08,.70,'#C6A16B');
+for(const [x,c] of [[-5.72,'#D39353'],[-5.35,'#E8B8B9'],[-4.98,'#F1CE70']])lbCylinder(x,1.91,-9.23,.20,.24,.30,c,'tea',16);
+for(const [x,c] of [[-8.95,'#C89156'],[-8.22,'#E3B8A2'],[-7.49,'#D7B15C']])lbCylinder(x,1.89,-4.7,.29,.34,.34,c,'tea',18);
+// Lounge rug: dark navy, visible double champagne borders and patterned edging.
+lbBox(0,.043,-3.5,8.8,.065,5.2,'#192D46');
+for(const [xx,zz,ww,dd] of [[0,-6.01,8.63,.055],[0,-.99,8.63,.055],[-4.26,-3.5,.055,5.0],[4.26,-3.5,.055,5.0],[0,-5.82,8.24,.025],[0,-1.18,8.24,.025],[-4.08,-3.5,.025,4.65],[4.08,-3.5,.025,4.65]])lbBox(xx,.092,zz,ww,.015,dd,'#D5B783');
+for(let i=0;i<13;i++){
+ const x=-3.75+i*.625;
+ lbBox(x,.095,-5.94,.19,.018,.10,'#D5B783');lbBox(x,.095,-1.06,.19,.018,.10,'#D5B783');
+}
+// Camel upholstery with visibly separate back, seats, armrests, cushion seams and gold legs.
 function wySofa(x,z,w,rot=0){
  const g=new THREE.Group();lobbyRoot.add(g);g.position.set(x,0,z);g.rotation.y=rot;
- function part(px,py,pz,a,b,c){const m=new THREE.Mesh(new THREE.BoxGeometry(a,b,c),lbMat('#F7F5F0'));m.position.set(px,py,pz);g.add(m);m.userData.lobbyAction='lounge';lobbyTargets.push(m)}
- part(0,.54,0,w,.76,1.38);part(0,1.12,-.61,w,1.02,.25);
- for(const xx of [-w/2+.17,w/2-.17])part(xx,.80,0,.32,.82,1.48);
+ function part(px,py,pz,a,b,c,color='#C5A17A'){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(a,b,c),lbMat(color));m.position.set(px,py,pz);g.add(m);m.userData.lobbyAction='lounge';lobbyTargets.push(m);return m;
+ }
+ part(0,.60,.03,w,.30,1.28);part(0,1.13,-.54,w,.93,.29,'#B7946F');
+ const count=w>2?3:1;
+ for(let i=0;i<count;i++){
+  const sw=(w-.55)/count,xx=-w/2+.275+sw*(i+.5);
+  part(xx,.84,.20,sw-.055,.22,.89,'#D1AD86');
+  part(xx,1.11,-.34,sw-.075,.56,.22,'#C5A17A');
+ }
+ for(const xx of [-w/2+.14,w/2-.14]){
+  part(xx,.84,.08,.29,.78,1.42,'#A98765');
+  part(xx,.19,.46,.12,.28,.12,'#B99A69');
+  part(xx,.19,-.46,.12,.28,.12,'#B99A69');
+ }
+ for(const xx of w>2?[-w*.29,w*.29]:[0])part(xx,1.07,-.19,.40,.36,.16,'#F7E9D7');
 }
 wySofa(0,-5.0,4.2);wySofa(-3.4,-2.75,1.45,Math.PI/2);wySofa(3.4,-2.75,1.45,-Math.PI/2);
 lbCylinder(0,.55,-3.15,1.02,1.02,.2,'#F8F4EB','lounge',36);
@@ -1345,7 +1381,7 @@ for(const x of [6.44,10.36]){
 }
 lbBox(wyLiftX,6.38,-9.85,3.9,.62,.20,'#243D58','elevator');
 lbBox(wyLiftX,6.73,-9.85,4.10,.08,.22,'#C8A56F','elevator');
-lbText('電梯｜選擇樓層',wyLiftX,6.39,-9.71,3.65,.50,'elevator');
+lbText('1',wyLiftX,6.39,-9.71,.60,.46,'elevator');
 lbBox(10.67,3.1,-9.71,.24,.86,.15,'#243D58','elevator');
 for(const y of [2.93,3.27])lbCylinder(10.67,y,-9.61,.07,.07,.04,'#E7C98D','elevator',12);
 const wyElevDoors1=[];
@@ -1368,9 +1404,9 @@ wy2Box(0,6.27,.25,3.95,.08,.19,'#C8A56F');
 const wyElevDoors2=[wy2Box(-.85,2.94,.31,1.68,5.35,.13,'#817B74'),wy2Box(.85,2.94,.31,1.68,5.35,.13,'#817B74')];
 wy2Box(0,2.94,.41,.05,5.35,.08,'#D5B77F');
 wy2Box(2.14,2.93,.36,.22,.76,.13,'#243D58');
-const wyElev2Label=officeSign('電梯｜選擇樓層',9.1,6.17,-9.2,3.4,'#fff8ed',null);
-// v120: real 2F elevator hit targets, independent of avatar distance.
-const wyElev2ClickTargets=[...wyElev2.children,wyElev2Label];
+// Integrated floor digit on the lift header; no floating label blocking the top.
+const wy2Digit=officeSign('2',9.1,5.95,-9.43,.58,'#fff8ed',null);
+const wyElev2ClickTargets=[...wyElev2.children,wy2Digit];
 
 // Same small text-only floating interaction labels as 2F, never icons or large explainer boards.
 lbText('迎賓茶點區',-8.7,4.15,-4.0,3.3,.68,'tea');
@@ -1474,9 +1510,8 @@ function wyElevatorTick(dt){
 const wyLobbyDialog=document.createElement('section');wyLobbyDialog.id='wyLobbyDialog';
 wyLobbyDialog.style.cssText='display:none;position:fixed;z-index:90;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,440px);max-height:80dvh;overflow:auto;padding:20px;background:#faf7f0;border:2px solid #385c77;border-radius:16px;color:#263b52;font:15px/1.6 system-ui;box-shadow:0 12px 55px #15293a77';document.body.append(wyLobbyDialog);
 function wyLobbyOpen(action){
- const head={reception:'智慧迎賓櫃檯',tea:'迎賓茶點區',lounge:'三層樓探索',elevator:'電梯｜選擇樓層'}[action]||'德威陽';
+ const head={tea:'迎賓茶點區',lounge:'三層樓探索',elevator:'電梯｜選擇樓層'}[action]||'德威陽';
  let html='';
- if(action==='reception')html='<p>歡迎來到德威陽國際法律事務所。請選擇服務：</p><button data-lb="about">關於我們</button><button data-lb="services">服務領域</button><button data-lb="contact">聯絡我們／預約諮詢</button><button data-lb="lounge">探索三層樓</button>';
  if(action==='tea')html='<p>歡迎來到迎賓茶點區！這裡有咖啡機、飲水機、茶壺、茶杯與麵包點心。</p><p>二樓還有員工茶水間，藏著可以探索的互動小遊戲。想去看看嗎？</p><button data-lb="floor2">前往2樓員工辦公室</button>';
  if(action==='lounge')html='<p><b>1F</b> 智慧迎賓大廳、咖啡茶點與接待服務。</p><p><b>2F</b> 夢奇奇飼養者、哈姆太郎、薪水掌門人的員工辦公室，還有茶水間互動。</p><p><b>3F</b> 林柏均律師專屬辦公室及專業履歷介紹。</p><button data-lb="floor2">搭電梯前往2F</button>';
  if(action==='elevator')html='<p>選擇想前往的樓層：</p><button data-lb="floor1"><b>1F｜法律冒險，從這裡開始！</b><small style="display:block;font-weight:400">先喝杯咖啡，再出發！</small></button><button data-lb="floor2"><b>2F｜小編生存戰！</b><small style="display:block;font-weight:400">辦公室祕密大公開！</small></button><button data-lb="floor3"><b>3F｜最終Boss登場！</b><small style="display:block;font-weight:400">老闆今天在辦公室嗎？</small></button>';
@@ -1490,11 +1525,7 @@ function wyLobbyOpen(action){
  }});wyLobbyDialog.style.display='block';
 }
 function wyLobbyAnimate(t){
- const v=t*.001;
- // 3-second smooth brightness pulse; sign stays physically fixed.
- const pulse=.5+.5*Math.sin(v*(Math.PI*2/3));
- holoLogo.material.opacity=.72+.28*pulse;
- logoGlow.material.opacity=.045+.15*pulse;
+ // No first-floor reception logo or pulse remains in this version.
 }
 
 // v38: one shared, Google-Maps-style touch system for all six islands,
@@ -1643,7 +1674,7 @@ const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。
 let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
 function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[i][1]+(i===0?12:12));alignActorToGround();document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(0,195,255);orbit.target.set(0,0,0);syncIslandCameraMode()};
 // v42: initial creator completion shows the same six-island overview.
-document.getElementById('startExplore').addEventListener('click',()=>{if(document.getElementById('creator').classList.contains('finished')){follow=false;overview=true;medicalFocusAnim=null;camera.position.set(0,195,255);orbit.target.set(0,0,0);orbit.update();}});document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){if(!activeIslandRoom&&wyOfficeFloor===1)wyLobbyOpen('reception');else officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};// Direct focus avoids repeated dragging and getting stuck at the map edge.
+document.getElementById('startExplore').addEventListener('click',()=>{if(document.getElementById('creator').classList.contains('finished')){follow=false;overview=true;medicalFocusAnim=null;camera.position.set(0,195,255);orbit.target.set(0,0,0);orbit.update();}});document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){if(!activeIslandRoom&&wyOfficeFloor===1)wyLobbyOpen('lounge');else officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};// Direct focus avoids repeated dragging and getting stuck at the map edge.
 let medicalFocusAnim=null;
 
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
