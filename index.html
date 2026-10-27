@@ -99,6 +99,7 @@ $('startExplore').addEventListener('click',enterIsland);
 #wyInfo .wyContactGrid a{display:flex;flex-direction:column;justify-content:center;gap:6px;min-height:83px;background:#fffaf1;color:#243b50!important;border-radius:12px;text-decoration:none;padding:10px 5px;overflow-wrap:anywhere}
 #wyInfo .wyContactGrid b{font-size:16px}#wyInfo .wyContactGrid span{font-size:12px;font-weight:500}
 @media(max-width:620px){#wyInfo .wyContactGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#wyInfo .wyContact{margin:25px -5px -4px}}
+body.wy-conversation-active #wyWalkUI,body.wy-conversation-active #joy,body.wy-conversation-active #controls{display:none!important}#dialog{max-height:min(52dvh,390px);overscroll-behavior:contain} @media(max-width:600px){#dialog{bottom:max(24px,env(safe-area-inset-bottom));max-height:56dvh;width:min(92vw,430px)}}
 </style><div id="wyInfo" role="dialog" aria-modal="true" aria-label="事務所資訊"><article><button class="wyClose" id="wyInfoClose" aria-label="關閉">×</button><div id="wyInfoBody"></div></article></div>
 <div id="officeUI" style="display:none;position:fixed;inset:0;z-index:35;pointer-events:none;font-family:system-ui,'Noto Sans TC',sans-serif;color:#392d26">
 <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;pointer-events:auto"><strong style="background:#fff9e9ee;padding:10px 13px;border-radius:12px">德威陽｜3D 事務所</strong><button id="officeContact" onclick="document.getElementById('wyContactPanel').hidden=!document.getElementById('wyContactPanel').hidden" style="border:1px solid #d8b97e;border-radius:12px;background:#fff9ed;padding:10px 12px;font-weight:bold;color:#203b4d">聯絡我們</button><button id="officeExit" style="border:0;border-radius:12px;background:#fff;padding:11px 16px;font-weight:bold">返回探索島</button></div>
@@ -307,7 +308,7 @@ function createFamilyMansion(parent,THREE){
  const whiteStone=material('#F8F2E9'),deepWine=material('#873F55'),warmPink=material('#E5A7B7'),green=material('#5D8966');
  // Two visible dormers: upright wall, glazed face, and simple pitched cap.
  // All geometry is in front of the roof front plane and never intersects the main roof.
- for(const x of [-3.55,3.55]){
+ for(const x of [-4.28,4.28]){
    cube(2.28,2.35,1.05,x,12.82,5.86,ivory);
    cube(1.78,1.80,.13,x,12.82,6.47,whiteStone);
    cube(1.50,1.53,.15,x,12.82,6.57,glass);
@@ -1296,39 +1297,42 @@ for(const side of [-1,1]){
  for(const y of [1.36,6.64])lbBox(side*12.62,y,-1.4,.08,.08,6.06,wyGold120);
  lbLogo(side*12.60,4.03,-1.4,3.55,3.55,true);
 }
-// v124: substantial, symmetrical champagne-gold royal foliage OUTSIDE the original logo image.
-function wyRoyalOrnament(x,y,z,side=false){
- const goldMat=new THREE.MeshStandardMaterial({color:'#E1B96E',metalness:.62,roughness:.32,side:THREE.DoubleSide});
- const g=new THREE.Group();g.position.set(x,y,z);if(side)g.rotation.y=x<0?Math.PI/2:-Math.PI/2;lobbyRoot.add(g);
- const addCurve=(pts,r=.033)=>{const path=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p[0],p[1],0)));g.add(new THREE.Mesh(new THREE.TubeGeometry(path,22,r,7,false),goldMat));};
- for(const sign of [-1,1]){
-  addCurve([[sign*1.76,-1.63],[sign*2.12,-.93],[sign*1.90,-.14],[sign*2.16,.65],[sign*1.77,1.54]],.042);
-  for(let k=0;k<5;k++){
-   const yy=-1.20+k*.64,xx=sign*(2.00+.08*Math.sin(k));
-   const leaf=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),goldMat);
-   leaf.scale.set(.27,.09,.045);leaf.position.set(xx-sign*.14,yy+.14,.04);leaf.rotation.z=sign*(k%2?.6:-.6);g.add(leaf);
+// v126 A-style palace ornament: gold leaves and crest ATTACHED TO the outer frame only.
+// The official image and its navy field stay unobstructed; no free-floating foliage beside the logo.
+function wyFramePalaceA(cx,cy,cz,side=false){
+ const g=new THREE.Group();g.position.set(cx,cy,cz);if(side)g.rotation.y=cx<0?Math.PI/2:-Math.PI/2;lobbyRoot.add(g);
+ const mat=new THREE.MeshStandardMaterial({color:'#E7BE78',metalness:.63,roughness:.29,side:THREE.DoubleSide});
+ const tube=(pts,r=.065)=>{const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)));g.add(new THREE.Mesh(new THREE.TubeGeometry(curve,18,r,8,false),mat));};
+ const leaf=(x,y,rot=0)=>{const m=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),mat);m.scale.set(.29,.115,.065);m.position.set(x,y,.025);m.rotation.z=rot;g.add(m)};
+ // All motifs are anchored to the perimeter of the actual existing moulding.
+ const hw=side?3.02:3.70,hh=side?2.70:2.64;
+ for(const s of [-1,1]){
+  for(const y of [-hh,hh]){
+   tube([[s*(hw-.55),y,0],[s*(hw-.29),y+s*Math.sign(y)*.04,.02],[s*hw,y,.025]],.070);
+   leaf(s*(hw-.32),y-Math.sign(y)*.12,s*.35);
   }
-  addCurve([[sign*.32,1.78],[sign*.91,2.06],[sign*1.43,1.89],[sign*1.80,1.67]],.037);
-  addCurve([[sign*.32,-1.78],[sign*.92,-2.00],[sign*1.45,-1.83],[sign*1.78,-1.67]],.037);
+  tube([[s*hw,-.75,0],[s*(hw+.11),0,.01],[s*hw,.75,0]],.068);
+  leaf(s*hw,-.35,s*.7);leaf(s*hw,.35,-s*.7);
+  tube([[s*.15,hh,.02],[s*.55,hh+.22,.03],[s*1.10,hh,.02]],.075);
  }
- const crest=new THREE.Mesh(new THREE.SphereGeometry(.12,12,10),goldMat);crest.position.set(0,2.02,.05);g.add(crest);
+ const crown=new THREE.Mesh(new THREE.SphereGeometry(.18,14,10),mat);crown.position.set(0,hh+.14,.03);g.add(crown);
 }
-wyRoyalOrnament(0,4.03,-9.54,false);
-for(const side of [-1,1])wyRoyalOrnament(side*12.52,4.03,-1.4,true);
+wyFramePalaceA(0,4.02,-9.86,false);
+for(const side of [-1,1])wyFramePalaceA(side*12.57,4.0,-1.4,true);
 // v124: extended and forward royal diamond reception, forward of the central lounge.
 // Front is +Z, towards the entrance; all upright branding grows from that SAME front face.
 const wyReception=new THREE.Group();lobbyRoot.add(wyReception);
-wyReception.position.set(0,0,3.65);
+wyReception.position.set(0,0,5.25);
 function wrBox(x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),lbMat(c));m.position.set(x,y,z);wyReception.add(m);return m;}
 const wrNavy='#20334C',wrGold='#D8AF61',wrIvory='#F6EADB';
-wrBox(0,.72,0,7.35,1.44,1.45,wrNavy);
-wrBox(0,1.54,0,7.62,.20,1.70,wrIvory);
-wrBox(0,1.41,.01,7.70,.09,1.76,wrGold);
-wrBox(0,.15,.748,7.38,.18,.09,wrGold);
+wrBox(0,.72,0,8.85,1.44,1.45,wrNavy);
+wrBox(0,1.54,0,9.10,.20,1.70,wrIvory);
+wrBox(0,1.41,.01,9.18,.09,1.76,wrGold);
+wrBox(0,.15,.748,8.88,.18,.09,wrGold);
 for(const x of [-3.55,3.55])wrBox(x,.76,.754,.10,1.23,.08,wrGold);
 // Substantial raised diamond facets on the front face.
-for(let i=-5;i<=5;i++){
- const x=i*.62;
+for(let i=-7;i<=7;i++){
+ const x=i*.57;
  const shape=new THREE.Shape();shape.moveTo(0,.26);shape.lineTo(.18,0);shape.lineTo(0,-.26);shape.lineTo(-.18,0);shape.closePath();
  const geom=new THREE.ShapeGeometry(shape);const m=new THREE.Mesh(geom,lbMat(i%2===0?'#355473':'#284461'));
  m.position.set(x,.72,.763);wyReception.add(m);
@@ -1338,9 +1342,9 @@ const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(.96,.96),new THREE.MeshBasic
 wrLogo.position.set(0,.76,.795);wyReception.add(wrLogo);
 // OPAQUE architectural display rises directly from the FRONT (+Z) logo face, not from the rear.
 const wrPanel=new THREE.Group();wyReception.add(wrPanel);wrPanel.position.set(0,1.60,.74);
-wrBox(0,2.64,.76,7.02,2.12,.18,wrGold);
-wrBox(0,2.64,.87,6.83,1.94,.11,wrNavy);
-for(const x of [-3.22,3.22]){
+wrBox(0,2.64,.76,8.55,2.12,.18,wrGold);
+wrBox(0,2.64,.87,8.32,1.94,.11,wrNavy);
+for(const x of [-3.98,3.98]){
  wrBox(x,2.64,.95,.12,1.84,.06,wrGold);
  for(let k=0;k<5;k++){
   const y=1.88+k*.36;
@@ -1351,10 +1355,10 @@ for(const x of [-3.22,3.22]){
 // One canvas for exactly three lines, no line wrapping. Golden filigree and slow star dust.
 const wrCanvas=document.createElement('canvas');wrCanvas.width=1024;wrCanvas.height=384;
 const wrCtx=wrCanvas.getContext('2d');const wrTex=new THREE.CanvasTexture(wrCanvas);wrTex.colorSpace=THREE.SRGBColorSpace;
-const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(6.38,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
+const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(7.86,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
 wrScreen.position.set(0,2.64,.938);wyReception.add(wrScreen);
 function wyReceptionAnimate(ms){
- const t=ms*.001;const c=wrCtx;c.fillStyle='#20334C';c.fillRect(0,0,1024,384);
+ const t=ms*.001;const c=wrCtx;c.fillStyle='#176B83';c.fillRect(0,0,1024,384);
  c.strokeStyle='#C9A15E';c.lineWidth=3;
  for(const side of [-1,1])for(let j=0;j<5;j++){
   const x=side<0?66:958,y=48+j*66;
@@ -1631,6 +1635,17 @@ const wyElev1Pos=new THREE.Vector3(8.4,0,-8.8),wyElev2Pos=new THREE.Vector3(9.1,
 const wyWalkUI=document.createElement('div');wyWalkUI.id='wyWalkUI';wyWalkUI.style.cssText='display:none;position:fixed;z-index:49;bottom:85px;left:18px;width:116px;height:116px;pointer-events:auto;touch-action:none;user-select:none';
 wyWalkUI.innerHTML='<div id="wyJoyBase" style="position:relative;width:112px;height:112px;border-radius:50%;background:rgba(245,239,255,.24);border:2px solid rgba(255,255,255,.68);box-shadow:0 3px 14px rgba(74,42,117,.18);touch-action:none"><div id="wyJoyKnob" style="position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#a879d8;border:3px solid #c9a7f0;box-sizing:border-box;box-shadow:0 2px 9px rgba(70,30,110,.38);pointer-events:none"></div></div>';
 document.body.append(wyWalkUI);
+// v126: any visible conversation or info overlay hides the indoor joystick and freezes movement.
+const wyDialogEl=document.getElementById('dialog');
+function wyConversationOpen(){return (wyDialogEl.style.display!=='none'&&getComputedStyle(wyDialogEl).display!=='none')||document.getElementById('wyInfo').classList.contains('open')||wyLobbyDialog.style.display==='block';}
+function wySyncConversationControls(){
+ const opened=wyConversationOpen();
+ document.body.classList.toggle('wy-conversation-active',opened);
+ if(opened){wyJoyReset();wyMoveKeys.clear();}
+}
+new MutationObserver(wySyncConversationControls).observe(wyDialogEl,{attributes:true,attributeFilter:['style']});
+new MutationObserver(wySyncConversationControls).observe(document.getElementById('wyInfo'),{attributes:true,attributeFilter:['class']});
+
 const wyMoveKeys=new Set();let wyMoveTouch=null,wyJoyX=0,wyJoyY=0,wyJoyPointer=null;
 const wyJoyBase=wyWalkUI.querySelector('#wyJoyBase'),wyJoyKnob=wyWalkUI.querySelector('#wyJoyKnob');
 function wyJoyUpdate(e){const r=wyJoyBase.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy),max=34,scale=len>max?max/len:1;wyJoyX=dx*scale/max;wyJoyY=dy*scale/max;wyJoyKnob.style.transform=`translate(${dx*scale}px,${dy*scale}px)`;}
@@ -1645,7 +1660,7 @@ const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyR
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,10.85);lobbyRoot.add(wyIndoorActor)}
 function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:roomRoot;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
  const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3));wyIndoorActor.position.copy(p);
- wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
+ wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();wySyncConversationControls();}
 function wySetFloor(n){wyOfficeFloor=n===2?2:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':'德威陽｜2F 員工辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;
@@ -1671,6 +1686,7 @@ wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
 floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
+ if(wyConversationOpen()){wyJoyReset();wyMoveKeys.clear();return;}
  if(wyIndoorActor&&!wyRide){
   let x=0,z=0;const k=wyMoveKeys;
   if(k.has('arrowleft')||k.has('a'))x-=1;
@@ -1717,6 +1733,7 @@ function wyElevatorTick(dt){
 }
 
 const wyLobbyDialog=document.createElement('section');wyLobbyDialog.id='wyLobbyDialog';
+new MutationObserver(wySyncConversationControls).observe(wyLobbyDialog,{attributes:true,attributeFilter:['style']});
 wyLobbyDialog.style.cssText='display:none;position:fixed;z-index:90;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,440px);max-height:80dvh;overflow:auto;padding:20px;background:#faf7f0;border:2px solid #385c77;border-radius:16px;color:#263b52;font:15px/1.6 system-ui;box-shadow:0 12px 55px #15293a77';document.body.append(wyLobbyDialog);
 function wyLobbyOpen(action){
  const head={tea:'迎賓茶點區',lounge:'三層樓探索',elevator:'電梯｜選擇樓層'}[action]||'德威陽';
