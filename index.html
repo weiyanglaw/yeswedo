@@ -1303,11 +1303,11 @@ for(const side of [-1,1]){
 const teaNavy='#20334C',teaGold='#C9AD7A',teaStone='#F2E6D4';
 function teaBox(x,y,z,w,h,d,color){return lbBox(x,y,z,w,h,d,color,'tea')}
 // Two joined legs, meeting in the rear-left corner, with flush stone tops.
-teaBox(-8.7,.76,-9.30,8.9,1.52,2.35,teaNavy);
+teaBox(-9.05,.76,-9.30,7.80,1.52,2.35,teaNavy);
 teaBox(-12.12,.76,-5.20,2.35,1.52,8.2,teaNavy);
-teaBox(-8.7,1.57,-9.30,9.05,.16,2.50,teaStone);
+teaBox(-9.05,1.57,-9.30,7.90,.16,2.50,teaStone);
 teaBox(-12.12,1.57,-5.20,2.50,.16,8.2,teaStone);
-for(const x of [-11.1,-9.5,-7.9,-6.3,-4.9]){
+for(const x of [-11.1,-9.5,-7.9,-6.3,-5.7]){
  teaBox(x,.82,-8.10,.045,1.15,.07,teaGold);
  teaBox(x-.55,.82,-8.05,.13,.09,.08,teaGold);
 }
@@ -1315,7 +1315,7 @@ for(const z of [-7.8,-6.3,-4.8,-3.3,-2.1]){
  teaBox(-10.87,.82,z,.08,1.15,.045,teaGold);
  teaBox(-10.82,.83,z,.08,.10,.18,teaGold);
 }
-teaBox(-8.7,.13,-8.05,8.8,.15,.11,teaGold);
+teaBox(-9.05,.13,-8.05,7.75,.15,.11,teaGold);
 teaBox(-10.88,.13,-5.1,.11,.15,8.0,teaGold);
 // Island INSIDE the L-shaped service area, not the center of the whole lobby.
 teaBox(-8.25,.79,-4.70,3.25,1.58,1.85,teaNavy);
@@ -1337,9 +1337,40 @@ teaBox(-7.8,2.17,-8.82,.24,.12,.12,'#344F64');
 // Teapot, tray and colorful pastries.
 lbCylinder(-6.45,1.91,-9.23,.39,.43,.40,'#E7B980','tea',24);
 lbCylinder(-6.45,2.14,-9.23,.20,.20,.09,'#B98956','tea',24);
-teaBox(-5.35,1.71,-9.25,1.25,.08,.70,'#C6A16B');
-for(const [x,c] of [[-5.72,'#D39353'],[-5.35,'#E8B8B9'],[-4.98,'#F1CE70']])lbCylinder(x,1.91,-9.23,.20,.24,.30,c,'tea',16);
+teaBox(-5.82,1.71,-9.25,1.00,.08,.70,'#C6A16B');
+for(const [x,c] of [[-6.12,'#D39353'],[-5.82,'#E8B8B9'],[-5.52,'#F1CE70']])lbCylinder(x,1.91,-9.23,.20,.24,.30,c,'tea',16);
 for(const [x,c] of [[-8.95,'#C89156'],[-8.22,'#E3B8A2'],[-7.49,'#D7B15C']])lbCylinder(x,1.89,-4.7,.29,.34,.34,c,'tea',18);
+// v122: fill the tea counter and inner island with distinct, colorful recognizable items.
+// Beverage jars and cups on the long rear counter.
+for(const [x,color] of [[-11.48,'#E95F50'],[-11.12,'#F7C34D'],[-8.88,'#7EC6C4'],[-8.45,'#A783C7']]){
+ lbCylinder(x,1.92,-8.84,.14,.14,.48,color,'tea',16);
+ lbCylinder(x,2.19,-8.84,.17,.17,.07,'#F7F0DE','tea',16);
+}
+// Espresso machine silver drip tray and handle, white coffee cups with dark coffee.
+teaBox(-10.02,1.82,-8.63,1.05,.07,.33,'#D9E0E2');
+for(const x of [-10.32,-9.75]){
+ lbCylinder(x,1.91,-8.42,.18,.18,.22,'#FFF5DF','tea',18);
+ lbCylinder(x,2.035,-8.42,.12,.12,.015,'#65432B','tea',18);
+}
+// Water station: vivid blue water tank, taps and three transparent-looking blue glasses.
+for(const x of [-7.98,-7.78,-7.58])lbCylinder(x,1.82,-8.60,.085,.09,.30,'#B1E7F1','tea',16);
+// Fruit platter: oranges, red apples, green grapes, yellow lemons.
+teaBox(-6.75,1.72,-8.55,1.20,.08,.60,'#D6B77E');
+for(const [x,z,c] of [[-7.1,-8.56,'#F28C36'],[-6.78,-8.45,'#D9413D'],[-6.48,-8.56,'#89B947'],[-6.22,-8.47,'#F1D349']]){
+ const m=new THREE.Mesh(new THREE.SphereGeometry(.17,12,10),lbMat(c));m.position.set(x,1.91,z);lobbyRoot.add(m);m.userData.lobbyAction='tea';lobbyTargets.push(m);
+}
+// Colorful desserts on the left-side return counter.
+for(const [z,c] of [[-7.6,'#F0B7C8'],[-6.9,'#E9D16A'],[-6.2,'#8DBAC8'],[-5.5,'#A77FCE'],[-4.8,'#D99564']]){
+ lbCylinder(-11.95,1.79,z,.27,.29,.21,'#F8E4C9','tea',16);
+ lbCylinder(-11.95,1.94,z,.22,.24,.13,c,'tea',16);
+ lbCylinder(-11.95,2.04,z,.065,.065,.07,'#F9F6E9','tea',12);
+}
+// Inner island: bakery display with identifiable croissants, macarons and cake slices.
+teaBox(-8.25,1.79,-4.7,2.88,.07,1.50,'#C9A56F');
+for(const [x,z,c] of [[-9.25,-5.12,'#B87940'],[-8.72,-5.12,'#D3934E'],[-8.20,-5.12,'#E3B367'],[-7.68,-5.12,'#B87940'],[-7.16,-5.12,'#D3934E'],[-9.25,-4.38,'#F39FB1'],[-8.72,-4.38,'#D8C169'],[-8.20,-4.38,'#92C3AD'],[-7.68,-4.38,'#C8A3D5'],[-7.16,-4.38,'#EABF9B']]){
+ lbCylinder(x,1.99,z,.22,.26,.22,c,'tea',18);
+ lbCylinder(x,2.12,z,.13,.13,.05,'#FFF0D6','tea',18);
+}
 // Lounge rug: dark navy, visible double champagne borders and patterned edging.
 lbBox(0,.043,-3.5,8.8,.065,5.2,'#192D46');
 for(const [xx,zz,ww,dd] of [[0,-6.01,8.63,.055],[0,-.99,8.63,.055],[-4.26,-3.5,.055,5.0],[4.26,-3.5,.055,5.0],[0,-5.82,8.24,.025],[0,-1.18,8.24,.025],[-4.08,-3.5,.025,4.65],[4.08,-3.5,.025,4.65]])lbBox(xx,.092,zz,ww,.015,dd,'#D5B783');
@@ -1370,6 +1401,17 @@ function wySofa(x,z,w,rot=0){
 wySofa(0,-5.0,4.2);wySofa(-3.4,-2.75,1.45,Math.PI/2);wySofa(3.4,-2.75,1.45,-Math.PI/2);
 lbCylinder(0,.55,-3.15,1.02,1.02,.2,'#F8F4EB','lounge',36);
 lbCylinder(0,.28,-3.15,.24,.24,.44,'#365B7B');
+// v122: legible large floor numerals rendered as a high-resolution texture.
+function wyLiftNumeral(n,x,y,z,w,h,parent){
+ const cv=document.createElement('canvas');cv.width=512;cv.height=512;
+ const cx=cv.getContext('2d');cx.clearRect(0,0,512,512);
+ cx.textAlign='center';cx.textBaseline='middle';cx.lineJoin='round';
+ cx.font='900 410px Arial,sans-serif';cx.lineWidth=19;cx.strokeStyle='#4B3520';
+ cx.strokeText(String(n),256,273);cx.fillStyle='#F7D58B';cx.fillText(String(n),256,273);
+ const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;
+ const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthTest:true,side:THREE.DoubleSide}));
+ mesh.position.set(x,y,z);parent.add(mesh);return mesh;
+}
 // v118: slim five-star hotel elevator; matte charcoal, champagne trim, cream side piers.
 // Keep original interactive door objects and room roots intact.
 const wyLiftX=8.4,wyLiftZ=-9.94;
@@ -1379,9 +1421,9 @@ for(const x of [6.44,10.36]){
  lbBox(x,3.22,-9.97,.22,6.3,.23,'#E7D1AB','elevator');
  lbBox(x,3.22,-9.82,.06,5.7,.07,'#B99660','elevator');
 }
-lbBox(wyLiftX,6.38,-9.85,3.9,.62,.20,'#243D58','elevator');
+lbBox(wyLiftX,6.38,-9.85,3.9,.80,.20,'#243D58','elevator');
 lbBox(wyLiftX,6.73,-9.85,4.10,.08,.22,'#C8A56F','elevator');
-lbText('1',wyLiftX,6.39,-9.71,.60,.46,'elevator');
+const wy1Digit=wyLiftNumeral('1',wyLiftX,6.38,-9.724,1.18,.57,lobbyRoot);wy1Digit.userData.lobbyAction='elevator';lobbyTargets.push(wy1Digit);
 lbBox(10.67,3.1,-9.71,.24,.86,.15,'#243D58','elevator');
 for(const y of [2.93,3.27])lbCylinder(10.67,y,-9.61,.07,.07,.04,'#E7C98D','elevator',12);
 const wyElevDoors1=[];
@@ -1399,13 +1441,13 @@ function wy2Box(x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,
 wy2Box(0,3.12,-.18,3.85,6.24,.36,'#D0AF7D');
 wy2Box(0,3.10,.055,3.55,6.03,.13,'#F6EAD7');
 for(const x of [-1.91,1.91])wy2Box(x,3.13,.22,.19,6.26,.24,'#E7D1AB');
-wy2Box(0,5.95,.25,3.8,.58,.17,'#243D58');
+wy2Box(0,5.95,.25,3.8,.78,.17,'#243D58');
 wy2Box(0,6.27,.25,3.95,.08,.19,'#C8A56F');
 const wyElevDoors2=[wy2Box(-.85,2.94,.31,1.68,5.35,.13,'#817B74'),wy2Box(.85,2.94,.31,1.68,5.35,.13,'#817B74')];
 wy2Box(0,2.94,.41,.05,5.35,.08,'#D5B77F');
 wy2Box(2.14,2.93,.36,.22,.76,.13,'#243D58');
 // Integrated floor digit on the lift header; no floating label blocking the top.
-const wy2Digit=officeSign('2',9.1,5.95,-9.43,.58,'#fff8ed',null);
+const wy2Digit=wyLiftNumeral('2',0,5.95,.348,1.30,.54,wyElev2);
 const wyElev2ClickTargets=[...wyElev2.children,wy2Digit];
 
 // Same small text-only floating interaction labels as 2F, never icons or large explainer boards.
