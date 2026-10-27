@@ -3,17 +3,31 @@
 export function createNewFairytaleCastle(parent, THREE) {
  const root=new THREE.Group(); parent.add(root);
  const mat=(color,roughness=.42,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness,side:THREE.DoubleSide});
- const ivory=mat('#F7F4ED',.55), white=mat('#FFFDF6',.45), navy=mat('#263D5B',.34,.12);
- const deep=mat('#213B59',.38,.15), gold=new THREE.MeshPhysicalMaterial({color:'#DCC18A',metalness:.55,roughness:.24,clearcoat:.65});
- const light=mat('#FFE4B5',.24), frame=mat('#E7CFA4',.42);
+ const ivory=new THREE.MeshPhysicalMaterial({color:'#F7F4ED',metalness:.08,roughness:.23,clearcoat:.95,clearcoatRoughness:.10,side:THREE.DoubleSide});
+ const white=new THREE.MeshPhysicalMaterial({color:'#FFFDF6',metalness:.07,roughness:.20,clearcoat:1,clearcoatRoughness:.09,side:THREE.DoubleSide});
+ const navy=new THREE.MeshPhysicalMaterial({color:'#263D5B',metalness:.32,roughness:.17,clearcoat:1,clearcoatRoughness:.08,side:THREE.DoubleSide});
+ const deep=new THREE.MeshPhysicalMaterial({color:'#172F52',metalness:.30,roughness:.18,clearcoat:1,clearcoatRoughness:.07,side:THREE.DoubleSide});
+ const gold=new THREE.MeshPhysicalMaterial({color:'#F2D99B',metalness:.76,roughness:.13,clearcoat:1,clearcoatRoughness:.06,side:THREE.DoubleSide});
+ const light=new THREE.MeshPhysicalMaterial({color:'#FFE8C7',metalness:.10,roughness:.20,clearcoat:.7,side:THREE.DoubleSide});
+ const frame=new THREE.MeshPhysicalMaterial({color:'#EBD7B1',metalness:.45,roughness:.19,clearcoat:.85,side:THREE.DoubleSide});
+ const leaf=mat('#648B66',.72);
+ const flowerMaterials=['#F4A7C5','#F9C3D9','#F7D3E5','#FFF4F6','#DDB4E9'].map(c=>mat(c,.54));
  const block=(w,h,d,x,y,z,m)=>{let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);root.add(o);return o};
  const cylinder=(rt,rb,h,x,y,z,m,n=32)=>{let o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,n),m);o.position.set(x,y,z);root.add(o);return o};
  const arch=(x,y,z,r,t,m)=>{let o=new THREE.Mesh(new THREE.TorusGeometry(r,t,10,36,Math.PI),m);o.position.set(x,y,z);root.add(o);return o};
+ const officialLogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png?v=99');
+ officialLogoTexture.colorSpace=THREE.SRGBColorSpace;
+ const logoMaterial=new THREE.MeshBasicMaterial({map:officialLogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false});
  const roof=(x,z,r,baseY,height,flag=false)=>{let c=new THREE.Mesh(new THREE.ConeGeometry(r,height,36),navy);c.position.set(x,baseY+height/2,z);root.add(c);
  cylinder(r+.12,r+.12,.26,x,baseY,z,gold);
  cylinder(.09,.09,.4,x,baseY+height+.22,z,gold,12);
- if(flag){cylinder(.045,.045,1.65,x,baseY+height+1.0,z,gold,10);
- block(1.35,.90,.055,x+.68,baseY+height+1.35,z,deep);}
+ if(flag){
+  // Large navy flags with the *original* official transparent logo, visible from island overview.
+  cylinder(.065,.065,2.45,x,baseY+height+1.25,z,gold,10);
+  block(2.55,1.55,.09,x+1.30,baseY+height+1.60,z,deep);
+  const flagLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.45,1.45),logoMaterial);
+  flagLogo.position.set(x+1.30,baseY+height+1.60,z+.075);root.add(flagLogo);
+ }
  };
  // Original footprint: 17.5 wide; raise only the actual facade to THREE floors.
  const floorBottom=.70, story=4.10, top=floorBottom+story*3;
@@ -49,6 +63,32 @@ export function createNewFairytaleCastle(parent, THREE) {
   // Taller turret windows also visibly repeat across three floors.
   for(const x of [-7.1,7.1])window(x,cy,-.65+1.69,.88,1.85);
  }
+ // Broad flower boxes attached ONLY beneath facade windows; pink is the leading color.
+ // No flowerpots beside the entrance, no lamps, no stairs, no plaza additions.
+ const bloomGeometry=new THREE.SphereGeometry(.23,10,8);
+ const leafGeometry=new THREE.SphereGeometry(.31,10,8);
+ for(let floor=0;floor<3;floor++){
+  const cy=floorBottom+story*floor+story*.53;
+  for(const x of [-5.45,-3.60,3.60,5.45]){
+   const fy=cy-1.34;
+   block(1.65,.30,.50,x,fy,2.91,white);
+   block(1.71,.11,.57,x,fy-.18,2.92,gold);
+   for(let j=0;j<5;j++){
+    const xx=x+(j-2)*.30;
+    const foliage=new THREE.Mesh(leafGeometry,leaf);
+    foliage.position.set(xx,fy+.25,2.98);root.add(foliage);
+    const flower=new THREE.Mesh(bloomGeometry,flowerMaterials[(j+floor)%flowerMaterials.length]);
+    flower.position.set(xx,fy+.42+(j%2)*.07,3.16);root.add(flower);
+   }
+  }
+ }
+ // Reflection needs both glossy materials and an actual large highlight.
+ // Two broad, subtle surface highlights avoid tiny, unreadable ornaments.
+ const shineMat=new THREE.MeshBasicMaterial({color:'#FFFFFF',transparent:true,opacity:.18,depthWrite:false,side:THREE.DoubleSide});
+ for(const x of [-6.0,6.0]){
+  const shine=new THREE.Mesh(new THREE.PlaneGeometry(.21,8.0),shineMat);
+  shine.position.set(x,7.25,2.995);root.add(shine);
+ }
  // Four major ivory pillars across the full THREE floors, not micro-ornaments.
  for(const x of [-6.45,-2.38,2.38,6.45]){
   block(.46,story*3,.48,x,floorBottom+story*1.5,2.68,white);
@@ -67,10 +107,7 @@ export function createNewFairytaleCastle(parent, THREE) {
  block(4.37,6.69,.20,0,9.98,2.92,deep);
  arch(0,13.33,3.04,2.16,.19,gold);
  // Original official brand logo asset, never a hand-drawn substitute.
- const texture=new THREE.TextureLoader().load('official-logo.png');
- texture.colorSpace=THREE.SRGBColorSpace;
- const logo=new THREE.Mesh(new THREE.PlaneGeometry(3.15,3.15),
-  new THREE.MeshBasicMaterial({map:texture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+ const logo=new THREE.Mesh(new THREE.PlaneGeometry(3.15,3.15),logoMaterial);
  logo.position.set(0,10.25,3.10);root.add(logo);
  // Warm, prominent illuminated upper bays; no tiny decorative ornaments.
  for(const x of [-4.5,4.5])block(2.1,.20,.44,x,top+.16,2.55,gold);
