@@ -3,13 +3,13 @@
 export function createMedicalExterior(group, THREE){
  const ivory=new THREE.MeshStandardMaterial({color:0xfff9ee,roughness:.62});
  const blue=new THREE.MeshStandardMaterial({color:0x5c9ccf,metalness:.18,roughness:.33});
- const gold=new THREE.MeshPhysicalMaterial({color:0xfff0cb,metalness:.24,roughness:.15,clearcoat:1,clearcoatRoughness:.07,emissive:0x8c6b37,emissiveIntensity:.12});
+ const gold=new THREE.MeshPhysicalMaterial({color:0xfff0cb,metalness:.24,roughness:.15,clearcoat:1,clearcoatRoughness:.07,emissive:0x000000,emissiveIntensity:0});
  const glass=new THREE.MeshPhysicalMaterial({color:0xc9f1fb,transparent:true,opacity:.91,roughness:.25,metalness:.04,clearcoat:.75,clearcoatRoughness:.1});
  const pink=new THREE.MeshStandardMaterial({color:0xf6d4e3,roughness:.7});
  const add=(geo,mat,x,y,z,parent=group)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
  // Modern high-end healthcare pavilion: rounded glass towers, luminous dome, no pagoda roof.
  const silver=new THREE.MeshStandardMaterial({color:0xf8fcff,roughness:.32,metalness:.12});
- const champagne=new THREE.MeshPhysicalMaterial({color:0xffefc9,roughness:.13,metalness:.27,clearcoat:1,clearcoatRoughness:.055,emissive:0x9a7846,emissiveIntensity:.14});
+ const champagne=new THREE.MeshPhysicalMaterial({color:0xffefc9,roughness:.13,metalness:.27,clearcoat:1,clearcoatRoughness:.055,emissive:0x000000,emissiveIntensity:0});
  const teal=new THREE.MeshStandardMaterial({color:0x52b4c4,emissive:0x174a63,emissiveIntensity:.14,roughness:.25});
  const cylinder=(r,h,x,y,z,mat=glass)=>add(new THREE.CylinderGeometry(r,r,h,48),mat,x,y,z);
  cylinder(15.2,.32,0,.19,0,ivory);
@@ -35,7 +35,7 @@ export function createMedicalExterior(group, THREE){
  // These accents stay above ground level, outside the entrance and do not add side platforms.
  const darkBlue=new THREE.MeshStandardMaterial({color:0x183c55,metalness:.38,roughness:.32});
  const pearl=new THREE.MeshStandardMaterial({color:0xfdf8f0,metalness:.18,roughness:.3});
- const led=new THREE.MeshBasicMaterial({color:0xffe6ad});
+ const led=new THREE.MeshPhysicalMaterial({color:0xf3dfb2,metalness:.34,roughness:.27,clearcoat:.6});
  // Layered champagne-gold parapet and warm light line make the silhouette more architectural.
  for(const y of [7.77,8.16]){
   add(new THREE.BoxGeometry(18.6,.075,.12),y===7.77?gold:led,0,y,4.09);
@@ -74,9 +74,9 @@ export function createMedicalExterior(group, THREE){
  // v33: Refined WEIYANG signature facade — intentionally simple low-poly geometry
  // rather than simulated cinematic reflections. These are decorative, not collision objects.
  const warmIvory=new THREE.MeshStandardMaterial({color:0xfff5e6,metalness:.06,roughness:.54});
- const bronze=new THREE.MeshPhysicalMaterial({color:0xffe8bb,metalness:.28,roughness:.16,clearcoat:1,clearcoatRoughness:.07,emissive:0x927044,emissiveIntensity:.12});
+ const bronze=new THREE.MeshPhysicalMaterial({color:0xffe8bb,metalness:.28,roughness:.16,clearcoat:1,clearcoatRoughness:.07,emissive:0x000000,emissiveIntensity:0});
  const coolGlass=new THREE.MeshPhysicalMaterial({color:0xb9ecf6,transparent:true,opacity:.86,roughness:.23,metalness:.04,clearcoat:.7,clearcoatRoughness:.09,depthWrite:false});
- const softLight=new THREE.MeshBasicMaterial({color:0xffe5b2});
+ const softLight=new THREE.MeshPhysicalMaterial({color:0xf2e5ca,metalness:.26,roughness:.28,clearcoat:.65});
  // True dome meridians: arched ribs hugging the existing hemisphere, not straight posts.
  for(let k=0;k<12;k++){
   const a=k*Math.PI/6,pts=[];
@@ -211,6 +211,84 @@ export function createMedicalExterior(group, THREE){
  const logoBacking=add(new THREE.CircleGeometry(1.91,64),new THREE.MeshStandardMaterial({color:'#21483F',roughness:.7,side:THREE.DoubleSide,depthTest:true,depthWrite:true}),0,7.3,5.65);
  const crest=add(new THREE.CircleGeometry(1.73,64),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}),0,7.3,5.70);
  const rim=add(new THREE.TorusGeometry(1.87,.10,12,64),gold,0,7.3,5.66);
+ // v127 luxury upgrade: original dome, towers, entry, flower bed, emblem, and collisions preserved.
+ // Non-emissive champagne metal with stable pale edge highlights (no glow or brown wash).
+ const v127Gold=new THREE.MeshPhysicalMaterial({color:0xdac08a,metalness:.42,roughness:.23,clearcoat:.75,clearcoatRoughness:.15});
+ const v127Bright=new THREE.MeshBasicMaterial({color:0xfff4d9});
+ const v127Pearl=new THREE.MeshStandardMaterial({color:0xfffbf4,roughness:.38,metalness:.07});
+ const v127Blue=new THREE.MeshStandardMaterial({color:0x2468c9,roughness:.57});
+ const v127Ice=new THREE.MeshStandardMaterial({color:0x8bcff6,roughness:.52});
+ const v127White=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.57});
+ const v127Dark=new THREE.MeshStandardMaterial({color:0x135d74,roughness:.48});
+ const v127Ring=(r,t,x,y,z,mat=v127Gold)=>{const m=add(new THREE.TorusGeometry(r,t,12,72),mat,x,y,z);m.rotation.x=Math.PI/2;return m;};
+ // Dome: stronger metal meridians laid over existing glass; no dome replacement.
+ for(let k=0;k<12;k++){
+  const a=k*Math.PI/6,pts=[];
+  for(let j=0;j<=24;j++){
+   const t=j/24*Math.PI/2;
+   pts.push(new THREE.Vector3(6.105*Math.sin(t)*Math.sin(a),11.75+6.105*Math.cos(t),-1.8+6.105*Math.sin(t)*Math.cos(a)));
+  }
+  group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),36,.104,8,false),v127Gold));
+ }
+ v127Ring(6.13,.135,0,11.76,-1.8);
+ // Clear crown silhouette: five large metal petals, not tiny floral noise.
+ add(new THREE.CylinderGeometry(.72,.88,.30,24),v127Gold,0,17.72,-1.8);
+ for(let k=0;k<5;k++){
+  const a=k*Math.PI*2/5;
+  const petal=add(new THREE.ConeGeometry(.26,1.15,4),v127Gold,.47*Math.sin(a),18.25,-1.8+.47*Math.cos(a));
+  petal.rotation.y=a;
+ }
+ add(new THREE.SphereGeometry(.19,12,10),v127Bright,0,18.85,-1.8);
+ // Bold upper/lower rotunda collars and pearly pilasters: no new towers.
+ for(const side of [-1,1]){
+  const cx=side*9.15;
+  v127Ring(3.28,.16,cx,10.52,-2.1);
+  v127Ring(3.22,.11,cx,9.95,-2.1);
+  v127Ring(3.14,.12,cx,.65,-2.1);
+  for(const a of [0,.92,1.84,2.76,3.68,4.60,5.52]){
+   const x=cx+3.08*Math.sin(a),z=-2.1+3.08*Math.cos(a);
+   add(new THREE.CylinderGeometry(.115,.115,8.75,10),v127Pearl,x,5.15,z);
+   add(new THREE.CylinderGeometry(.045,.045,8.4,8),v127Gold,x+.105,5.15,z+.03);
+  }
+ }
+ // A broad sculptural facade arch; floats above the original entrance with no ground supports.
+ const archPts=[];
+ for(let j=0;j<=28;j++){
+  const t=j/28;
+  archPts.push(new THREE.Vector3(-4.10+8.2*t,6.87+.82*Math.sin(Math.PI*t),5.57));
+ }
+ group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPts),40,.19,10,false),v127Pearl));
+ const archGlint=archPts.map(p=>new THREE.Vector3(p.x,p.y+.18,p.z+.03));
+ group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archGlint),40,.07,8,false),v127Gold));
+ for(const side of [-1,1]){
+  // Decorative facade panels are elevated, outside the walking corridor.
+  add(new THREE.BoxGeometry(.28,4.55,.26),v127Pearl,side*3.55,3.20,4.59);
+  add(new THREE.BoxGeometry(.095,4.34,.30),v127Gold,side*3.73,3.2,4.62);
+  add(new THREE.BoxGeometry(.68,.21,.39),v127Gold,side*3.55,5.52,4.60);
+ }
+ // Two oversized, high-contrast cobalt/ice-blue flower urns to the SIDES of the entry.
+ // No trees, bushes, tiny foliage clumps or additional center obstacles.
+ for(const side of [-1,1]){
+  const x=side*10.45,z=7.45;
+  add(new THREE.CylinderGeometry(.79,1.0,.22,28),v127Gold,x,.49,z);
+  add(new THREE.CylinderGeometry(.44,.55,.44,28),v127Pearl,x,.80,z);
+  add(new THREE.CylinderGeometry(1.22,.67,1.12,36),v127Pearl,x,1.53,z);
+  v127Ring(1.22,.10,x,2.09,z);
+  add(new THREE.SphereGeometry(.98,20,12),v127Dark,x,2.22,z);
+  for(let k=0;k<9;k++){
+   const a=k*Math.PI*2/9,r=k%2?.69:.91;
+   const fx=x+r*Math.cos(a),fz=z+r*Math.sin(a);
+   const flowerMat=k%3===0?v127Ice:k%3===1?v127Blue:v127White;
+   for(let pet=0;pet<5;pet++){
+    const pa=pet*Math.PI*2/5;
+    add(new THREE.SphereGeometry(.22,12,10),flowerMat,fx+.23*Math.cos(pa),2.69+(k%2)*.22+.23*Math.sin(pa),fz+.12);
+   }
+   add(new THREE.SphereGeometry(.115,12,10),v127Gold,fx,2.69+(k%2)*.22,fz+.31);
+  }
+  add(new THREE.SphereGeometry(.49,14,10),v127Blue,x,3.05,z);
+ }
+ // Non-emissive metallic rim for the existing logo, preserving both logo image meshes.
+ add(new THREE.TorusGeometry(2.05,.11,12,64),v127Gold,0,7.3,5.655);
  // All exterior emblems respect building occlusion; never draw on top of other islands.
  return {door,crest};
 }
@@ -256,27 +334,6 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const tex=new THREE.TextureLoader().load('office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
  const seal=add(new THREE.PlaneGeometry(5.3,5.3),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,depthTest:true}),0,4.85,-8.45);
  seal.renderOrder=15;
- // v92: a large high-contrast light sign above the dark logo wall. This is brand information, not a sixth game station.
- const logoSignBase=box(5.9,.72,.16,new THREE.MeshPhysicalMaterial({color:0xFFF7E9,roughness:.27,metalness:.10,clearcoat:.45}),0,7.91,-8.35);
- box(6.03,.80,.09,gold,0,7.91,-8.47);
- const logoSignCanvas=document.createElement('canvas');logoSignCanvas.width=1024;logoSignCanvas.height=160;
- const lctx=logoSignCanvas.getContext('2d');lctx.fillStyle='#FFF7E9';lctx.fillRect(0,0,1024,160);lctx.fillStyle='#214A4B';lctx.font='bold 80px sans-serif';lctx.textAlign='center';lctx.textBaseline='middle';lctx.fillText('認識德威陽',512,82,985);
- const logoSignTexture=new THREE.CanvasTexture(logoSignCanvas);logoSignTexture.colorSpace=THREE.SRGBColorSpace;
- const logoSignText=add(new THREE.PlaneGeometry(5.72,.67),new THREE.MeshBasicMaterial({map:logoSignTexture,side:THREE.DoubleSide,depthWrite:false}),0,7.91,-8.25);
- // v93: replicate the MAIN OFFICE floating "認識德威陽" clickable sign above the medical logo.
- // Light ivory background + dark teal letters stays readable against the dark teal identity wall.
- const medicalAboutCanvas=document.createElement('canvas');medicalAboutCanvas.width=1200;medicalAboutCanvas.height=210;
- const mac=medicalAboutCanvas.getContext('2d');
- mac.fillStyle='#FFF8ED';mac.beginPath();mac.roundRect(8,8,1184,194,34);mac.fill();
- mac.strokeStyle='#D5B477';mac.lineWidth=13;mac.stroke();
- mac.fillStyle='#214A4B';mac.font='bold 73px sans-serif';mac.textAlign='center';mac.textBaseline='middle';
- mac.fillText('認識德威陽',600,106,1110);
- const medicalAboutTexture=new THREE.CanvasTexture(medicalAboutCanvas);medicalAboutTexture.colorSpace=THREE.SRGBColorSpace;
- const medicalAboutSign=new THREE.Sprite(new THREE.SpriteMaterial({map:medicalAboutTexture,transparent:true,depthTest:false,depthWrite:false}));
- medicalAboutSign.position.set(0,8.20,-7.95);medicalAboutSign.scale.set(6.5,1.14,1);medicalAboutSign.renderOrder=100;
- root.add(medicalAboutSign);
-
-
  for(const x of [-5.1,5.1]){
   box(.10,6.9,.18,gold,x,4.58,-8.75);
   for(const y of [2.15,4.6,7.05]){
@@ -338,7 +395,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    const bh=.87+((k*3+row)%5)*.055;
    const bx=bookX-1.95+k*.243;
    const book=box(.225,bh,1.12,palette[(k+row)%palette.length],bx,shelfY+.11+bh/2,-6.93);
-   if(k===8&&row===2){book.userData.book=true;}
+   if(k===8&&row===2){book.userData.medicalAction='books';book.userData.book=true;}
    // Narrow gold spine stamp, visible from the room.
    box(.12,.035,.018,lightGold,bx,shelfY+.24,-6.36);
   }
@@ -365,8 +422,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    box(.16,1.35,.20,gold,x,5.3,-8.40);
    box(.22,.78,.24,lightGold,x,5.3,-8.22);
  }
- // Reuse the existing 3D character generator; keep four named roles visually distinct.
- let guide=null;const otherStaff=[];
+ // Exactly one person: reuse the main island's actual STAFF generator, not the avatar creator.
+ let guide=null;
  if(staffFactory){
   const result=staffFactory({name:'薪水掌門人',kind:'bun',skin:'#f4c9a6',hair:'#503529',top:'#e7a8bf',bottom:'#5b6b85'});
   guide=result.root||result;guide.position.set(7.2,0,3.55);guide.rotation.y=-.35;root.add(guide);
@@ -378,20 +435,6 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),lightGold);pin.position.set(-.18,.15,.04);guide.add(pin);
 
  }
- // v95 non-game nameplate attached to the ONLY medical employee.
- let medicalStaffName=null;
- if(guide){
-  const c=document.createElement('canvas');c.width=560;c.height=124;const ctx=c.getContext('2d');
-  ctx.fillStyle='#FFF9EE';ctx.strokeStyle='#D9BB79';ctx.lineWidth=7;
-  ctx.beginPath();ctx.roundRect(6,6,548,112,26);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#24485A';ctx.font='bold 52px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('薪水掌門人',280,62);
-  const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;
-  medicalStaffName=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthTest:false}));
-  medicalStaffName.scale.set(3.6,.80,1);medicalStaffName.position.set(0,3.75,0);
-  guide.add(medicalStaffName);
- }
- // v89: only 薪水掌門人 is present in the medical island.
- // Other characters may be mentioned in stories, but have no 3D avatars here.
  // Keep the original interactive chibi staff. No GLB replacement.
  // v45: one identifiable left-side case sofa and coffee table, leaving the front-left open.
  box(5.0,.73,2.25,material(0xA9C9C7),-7.7,.66,-.35);
@@ -420,10 +463,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Display zones: gold-edged touch panels at accessible height, not covering the emblem.
  const interactionTargets=[];
  const interactionMap=new Map();
- const fiveActions=new Set(['mediation','records','forensics','ecg','computer','logo']); // five game stations plus original non-game brand information sign
- const register=(object,action)=>{if(!fiveActions.has(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
- // v94: BOTH the actual official logo and the short sign open the same company introduction.
- register(seal,'logo');register(logoSignText,'logo');register(logoSignBase,'logo');register(medicalAboutSign,'logo');
+ const register=(object,action)=>{object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
@@ -467,39 +507,19 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const mint=material(0xA7C6BB),paper=material(0xFFF8E8),teal=material(0x2E6668);
  const exhibit=(x,z,w,d,action)=>{const base=box(w,.86,d,cream,x,.53,z);box(w+.10,.10,d+.10,gold,x,1.01,z);register(base,action);return base;};
  // 1: mediation and medical-dispute scenarios, left-front.
- const round=add(new THREE.CylinderGeometry(1.42,1.42,.17,40),stone,-4.65,1.13,4.45);
- cyl(.20,.30,1.05,gold,-4.65,.57,4.45);register(round,'mediation');
+ const round=add(new THREE.CylinderGeometry(1.05,1.05,.14,32),stone,-4.65,1.13,4.45);
+ cyl(.15,.22,1.05,gold,-4.65,.57,4.45);register(round,'mediation');
  for(const [x,z] of [[-6.2,4.45],[-3.15,4.45]]){box(.70,.40,.74,mint,x,.44,z);box(.72,.90,.18,teal,x,.98,z+.40);}
- const papers=box(.85,.055,.65,paper,-4.65,1.25,4.45);register(papers,'mediation');
+ const papers=box(.62,.045,.50,paper,-4.65,1.23,4.45);register(papers,'mediation');
  // 2: records reader integrated with the original evidence cabinet, right wall.
- const fileReader=box(.19,1.78,1.90,teal,8.25,3.03,-3.80);register(fileReader,'records');
+ const fileReader=box(.16,1.20,1.40,teal,8.25,2.80,-3.80);register(fileReader,'records');
  for(let i=0;i<3;i++)box(.18,.12,.94,paper,8.10,3.19-i*.33,-3.80);
  // 3: standards + radiology in one anatomical/imagery display, left rear.
  exhibit(-9.25,-3.95,1.65,2.05,'forensics');
  const anatomy=cyl(.32,.28,1.30,mint,-9.25,1.80,-3.95);register(anatomy,'forensics');
  add(new THREE.SphereGeometry(.29,16,12),paper,-9.25,2.65,-3.95);
- // High-visibility illuminated diagnostic screen; not fixed to the circular glass perimeter.
- const xrayFrame=box(4.15,3.02,.18,gold,-5.15,3.42,-6.13);register(xrayFrame,'forensics');
- box(3.90,2.78,.20,navy,-5.15,3.42,-6.00);
- const xrayCanvas=document.createElement('canvas');xrayCanvas.width=768;xrayCanvas.height=512;
- const xrayCtx=xrayCanvas.getContext('2d');
- const xrayTex=new THREE.CanvasTexture(xrayCanvas);xrayTex.colorSpace=THREE.SRGBColorSpace;
- const xrayScreen=add(new THREE.PlaneGeometry(3.70,2.57),new THREE.MeshBasicMaterial({map:xrayTex,side:THREE.DoubleSide}),-5.15,3.42,-5.875);
- register(xrayScreen,'forensics');
- // Large recognizable bone silhouettes, rendered directly to the luminous display.
- function drawXray(time){
-  const g=xrayCtx,w=768,h=512;g.fillStyle='#071d30';g.fillRect(0,0,w,h);
-  const halo=g.createRadialGradient(385,256,25,385,256,370);halo.addColorStop(0,'#194766');halo.addColorStop(1,'#061323');g.fillStyle=halo;g.fillRect(0,0,w,h);
-  g.strokeStyle='rgba(95,211,245,.16)';g.lineWidth=2;for(let i=0;i<w;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,h);g.stroke();}
-  g.save();g.shadowBlur=24;g.shadowColor='#8beaff';g.strokeStyle='#c3edff';g.lineCap='round';
-  // Two clearly separated long bones and large joint surfaces, legible from distance.
-  for(const side of [-1,1]){let x=385+side*92;g.lineWidth=52;g.beginPath();g.moveTo(x,82);g.bezierCurveTo(x+side*11,170,x-side*12,230,x,260);g.stroke();g.beginPath();g.moveTo(x,312);g.bezierCurveTo(x-side*8,370,x+side*6,420,x,455);g.stroke();
-   g.lineWidth=36;g.beginPath();g.ellipse(x,284,50,27,0,0,Math.PI*2);g.stroke();}
-  g.restore();g.fillStyle='#d4f4ff';g.font='bold 37px sans-serif';g.fillText('X-RAY  ·  影像鑑定',24,45);
-  const scan=(time*.075)%h;g.fillStyle='rgba(82,231,255,.19)';g.fillRect(0,scan-28,w,56);g.fillStyle='#80f0ff';g.fillRect(0,scan,w,4);
-  g.fillStyle='#9cd6e6';g.font='25px sans-serif';g.fillText('觸碰影像  •  探索醫療法律',24,493);xrayTex.needsUpdate=true;
- }
- drawXray(0);
+ const xray=box(1.72,1.52,.14,navy,-5.0,2.05,-6.12);register(xray,'forensics');
+ for(const dx of [-.41,.41])register(box(.55,.93,.02,glass,-5.0+dx,2.10,-6.02),'forensics');
  // 4: consent document + timeline are a single workbench, left side.
  exhibit(-9.45,5.30,2.75,1.24,'consent');
  const consentPaper=box(.84,.055,.65,paper,-9.4,1.12,5.24);register(consentPaper,'consent');
@@ -527,12 +547,15 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // ECG screen integrated flush against the rear architectural wall, not floating in space.
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=256;const ctx=canvas.getContext('2d');
  const waveTex=new THREE.CanvasTexture(canvas);waveTex.colorSpace=THREE.SRGBColorSpace;
- box(5.50,3.10,.16,gold,8.0,4.3,-8.36);
- box(5.31,2.90,.16,navy,8.0,4.3,-8.24);
- const wavePanel=add(new THREE.PlaneGeometry(5.08,2.72),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-7.80);
+ box(4.78,2.56,.14,gold,8.0,4.3,-8.36);
+ box(4.62,2.40,.15,navy,8.0,4.3,-8.24);
+ const wavePanel=add(new THREE.PlaneGeometry(4.43,2.18),new THREE.MeshBasicMaterial({map:waveTex,side:THREE.DoubleSide}),8,4.3,-7.80);
  register(wavePanel,'ecg');
- // v89: exactly five interactive hotspots. Reception computer is the fifth.
+ // Clickable props and restrained, legible floating hints.
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
+ const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
+ const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
+ if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
@@ -541,12 +564,21 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(4.35,1.02,1);sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);root.add(sprite);labels.push(sprite);
  }
- // Exactly five GAME labels, one per station; separate logo sign is only firm information.
- hint('🤝 協商圓桌',-4.65,2.65,4.45,'mediation');
- hint('🗂️ 病歷證據',8.2,4.0,-3.8,'records');
- hint('🔍 X光影像',-5.15,5.52,-5.75,'forensics');
- hint('❤️ 心電圖',8,6.70,-7.60,'ecg');
- hint('😄 事務所趣事',7.1,2.8,6.5,'computer');
+ hint('💬 跟我聊聊',7.2,3.95,3.6,'staff');
+ hint('📚 點我翻翻',-8.05,7.95,-6.90,'books');
+ hint('❤️ 點我看看',8,6.70,-7.60,'ecg');
+ hint('✨ 接待諮詢',7.1,2.8,6.5,'computer');
+ hint('📋 醫療糾紛案例',-7.7,2.65,1.5,'case');
+ 
+ 
+ hint('認識德威陽',0,8.10,-6.80,'logo');
+ hint('🤝 醫療調解',-4.65,2.25,4.45,'mediation');
+ hint('📝 告知與時間軸',-9.35,2.6,5.3,'consent');
+ hint('🔍 鑑定與影像',-9.3,3.5,-3.95,'forensics');
+ 
+ 
+ hint('🗂️ 病歷閱覽',8.2,4.0,-3.8,'records');
+ hint('⚖️ 責任分析',8.9,4.5,2.05,'liability');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
@@ -588,10 +620,13 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
    // Working gestures: slight body lean/arm movements when organizing, never a teleport.
    if(!moving){guide.rotation.z=Math.sin(time*.003)*.028;}
    else guide.rotation.z=0;
+   // Keep the staff's visible clickable label close as she moves.
+   const staffLabel=labels.find(o=>o.userData.medicalAction==='staff');
+   if(staffLabel){staffLabel.position.x=guide.position.x;staffLabel.position.z=guide.position.z+.1;}
 
   }
   for(let k=0;k<labels.length;k++)labels[k].position.y=labels[k].userData.baseY+Math.sin(time*.0015+k)*.075;
-  if(time-last<55)return;last=time;drawXray(time);
+  if(time-last<55)return;last=time;
   ctx.fillStyle='#071c29';ctx.fillRect(0,0,640,256);
   ctx.strokeStyle='rgba(80,178,151,.16)';ctx.lineWidth=1;
   for(let x=0;x<640;x+=32){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,256);ctx.stroke()}
@@ -626,9 +661,6 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
 }
 export function createMedicalExperience(){
  const scenes={
-  lawyer:{name:'林律師',icon:'⚖️',intro:'歡迎來到醫療法律探索島。每一個醫療爭議都需要先把事實、病歷與時間線釐清。',options:[['醫療結果不好就是醫療疏失嗎？','不一定。必須結合當時醫療常規、注意義務、損害及因果關係評估。','單憑術後結果無法直接判斷醫療責任。'],['如何準備法律諮詢？','整理完整病歷、檢查報告、相關收據與重要時間點。','可透過 LINE｜@wylaw 聯繫德威陽國際法律事務所。']]},
-  keeper:{name:'夢奇奇飼養者',icon:'🌸',intro:'我是夢奇奇飼養者！這裡的設備都會動，但可別讓文件自己長腳跑掉。',options:[['今天最重要的工作？','把病歷整理得比夢奇奇的收藏還整齊！','按日期分類，就不會找不到重要線索。'],['醫療島哪裡最好玩？','X光螢幕會掃描，心電圖會跳動，還有接待桌的趣味故事。','點擊大型設備就可以開始探索。']]},
-  hamuta:{name:'哈姆太',icon:'🐹',intro:'哈姆太報到！這裡不是只有嚴肅的法律，還有辦公室日常趣事。',options:[['你今天在忙什麼？','我在巡視大家有沒有把下午茶藏進病歷櫃。','結果看到薪水掌門人忙著整理卷宗，我先撤退。'],['去哪裡看趣味故事？','點擊接待櫃檯電腦，選一個荒謬的辦公室事件。','不同選項會有不同結局喔！']]},
   staff:{name:'薪水掌門人',icon:'💬',intro:'歡迎來到德威陽！我是薪水掌門人～今天想聊法律，還是偷偷看看辦公室？',options:[
    ['醫療糾紛怎麼辦？','先保存病歷、收據和相關紀錄，別急著下結論。','也可以依日期整理經過，讓律師更容易了解問題。'],
    ['你們律師擅長什麼？','林柏均律師具臺灣及紐約州律師資格，處理商務、訴訟及醫療法律等案件。','想進一步了解？歡迎透過 LINE｜@wylaw 聯繫德威陽。'],
@@ -668,7 +700,7 @@ export function createMedicalExperience(){
   {q:'病患申訴與調解如何應對？',a:'先保持溝通窗口一致、妥善回應疑問，保護病人隱私並依法配合適用的醫療爭議處理程序。',next:[['回覆時要注意什麼？','以可核實的事實與程序資訊說明，避免情緒性指責或未經授權公開病人資料。'],['什麼時候尋求法律協助？','收到正式申訴、調解通知或訴訟文件時，應確認期限，讓德威陽等專業法律團隊協助盤點風險與答辯資料。']]}]}
  };
  const el=document.createElement('section');el.id='wyMedicalExperience';
- el.style.cssText='display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:80;width:min(92vw,440px);background:#FFF9F0;color:#28524D;border:2px solid #C5A875;border-radius:18px;padding:14px;box-shadow:0 14px 36px #14283b66;font:16px/1.6 system-ui,sans-serif;max-height:65dvh;overflow-y:auto';
+ el.style.cssText='display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:80;width:min(92vw,440px);background:#FFF9F0;color:#28524D;border:2px solid #C5A875;border-radius:18px;padding:14px;box-shadow:0 14px 36px #14283b66;font:14px/1.6 system-ui,sans-serif;max-height:65dvh;overflow-y:auto';
  el.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
  document.body.append(el);
  const title=el.querySelector('#wyMedTitle'),body=el.querySelector('#wyMedText'),choices=el.querySelector('#wyMedChoices');
@@ -726,77 +758,11 @@ export function createMedicalExperience(){
  body.textContent='請切換三個條件（已勾選＝有初步資料）：\n\n'+notes.join('\n')+'\n\n以上僅是證據盤點；是否成立責任仍須綜合醫療常規、注意義務、損害與個案證據。';[
  ['notice','告知與同意'],['records','病歷是否完整'],['causation','損害因果關係']].forEach(([key,label])=>button((liabilityState[key]?'☑ ':'□ ')+label,()=>{liabilityState[key]=!liabilityState[key];liabilityHome()}));button('重設條件',()=>{Object.keys(liabilityState).forEach(k=>liabilityState[k]=false);liabilityHome()});button('✕ 繼續探索',()=>el.style.display='none');}
  let current='staff';
- function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:13px 14px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
+ function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:10px 12px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
  function ecgHome(){title.textContent='❤️ 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent='❤️ '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent='❤️ '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
-
- // v86: five distinct case-based experiences; no recycled A/B/C answer templates.
- const topics=[
- ['術後行走障礙','膝關節手術後行走困難','45萬元','後續復健'],['牙科植牙爭議','植牙後持續疼痛','18萬元','修復費用'],['美容手術疤痕','美容手術留下明顯疤痕','35萬元','修疤治療'],['產後神經損傷','產婦產後出現神經症狀','65萬元','長期復健'],['急診延誤診斷','急診返家後病情惡化','80萬元','照護費用'],['麻醉併發症','麻醉後持續不適','55萬元','追蹤治療'],['骨折固定爭議','骨折治療後活動受限','28萬元','物理治療'],['藥物過敏爭議','服藥後發生嚴重過敏','40萬元','醫療費用'],['視力矯正爭議','眼科治療後視力下降','70萬元','後續檢查'],['復健療程爭議','復健後症狀反而加重','22萬元','重新評估'],['癌症追蹤爭議','異常檢查結果未即時追蹤','90萬元','長期照護'],['住院跌倒爭議','住院期間跌倒骨折','32萬元','看護費用'],['手術器械爭議','手術後發現疑似異物','75萬元','再次手術'],['感染控制爭議','住院後出現嚴重感染','60萬元','感染治療'],['拔牙神經受損','拔牙後出現麻木','25萬元','神經評估'],['檢驗報告爭議','檢驗數據遭質疑誤判','38萬元','重新檢驗'],['透析照護爭議','透析後發生併發症','58萬元','長期照護'],['兒童診療爭議','兒童治療後需持續追蹤','68萬元','兒童復健'],['心血管處置爭議','治療後持續胸悶','85萬元','心臟追蹤'],['轉診交接爭議','轉院過程出現病況惡化','48萬元','轉院費用']
- ];
- const branches={mediation:[
-  ['全面解決所有請求','和解書將本次醫療事件所有民事請求一併解決。','若條款有效且涵蓋未來損害，日後再請求賠償可能受限制。'],
-  ['限定範圍並保留權利','僅就已發生的損失和解，明確保留尚未確定的後續損害。','保留條款可界定未和解事項，但仍須個別證明責任、損害與時效。'],
-  ['分期付款並設履約保障','討論付款日期、遲延處理及可執行的書面條款，避免只有口頭承諾。','和解金額之外，付款方式及違約後果同樣重要；應確認條款清楚且可實際履行。']
- ],records:[
-  ['主張醫療處置延誤','調取醫囑、護理通知時間及實際處置紀錄，核對醫療人員何時知悉病況。','必須證明當時應採取何種合理處置，及延誤與損害間的因果關係。'],
-  ['爭執病歷證明力','比對補記時間、電子病歷軌跡、檢驗與用藥紀錄是否一致。','記載差異可能影響證據可信度，但不能單憑補記認定醫療過失。'],
-  ['補齊原始檢查與影像','向院方確認原始影像、檢驗報告及相關調閱方式，保留申請與回覆紀錄。','影像及報告應與臨床紀錄一併比對；資料缺漏須先釐清原因，不能直接推論過失。']
- ],forensics:[
-  ['醫院的鑑定意見','院方認為依當時影像品質及臨床症狀，未必能立即判讀異常。','判斷基準應是當時合理的醫療注意義務，不能只用後來結果倒推。'],
-  ['病患的鑑定意見','病方提出另一位專家的說明，認為當時已有應追蹤的可疑跡象。','若有鑑定歧異，仍需比對原始影像、當時症狀及未追蹤與損害的因果關係。'],
-  ['林律師法律分析','將雙方鑑定逐項比對：注意義務、診斷時機、損害與因果關係。','鑑定是重要證據，但不等於直接決定勝敗；法院仍須綜合證據認定。']
- ]};
- const funny=[
- ['心電圖的加班警報','夢奇奇飼養者看著心電圖：「它怎麼突然跳這麼快？」哈姆太：「林律師剛說今天要整理完卷宗。」','幫機器申請加班費','機器說不用加班費，只求準時關機。','叫林律師走近','律師一靠近，心電圖竟恢復平穩。夢奇奇飼養者：「比我還會裝沒事！」'],
- ['X光機與失蹤蛋糕','薪水掌門人：「冰箱裡的蛋糕不見了，X光機能查嗎？」','檢查冰箱','發現空盒與湯匙。哈姆太：「證據比蛋糕還完整！」','問林律師','林律師：「我只是經過茶水間。」夢奇奇飼養者：「我們還沒問是誰！」'],
- ['病歷櫃的秘密','夢奇奇飼養者打開病歷櫃，發現最上層藏著三包咖啡。','問誰藏的','哈姆太：「那是律師的緊急救援物資。」','貼上警示標籤','標籤寫著「重要卷宗，請勿飲用」。'],
- ['監測器的星期一','週一早上心電圖響不停，大家以為出了什麼事。','看螢幕','顯示「待辦事項 99+」。夢奇奇飼養者：「這不是心電圖吧！」','拔掉電源','哈姆太：「它還有備用電池，逃不掉。」'],
- ['消失的病歷夾','薪水掌門人找不到紅色資料夾，急得四處翻找。','查接待桌','資料夾就在鍵盤底下。夢奇奇飼養者：「最危險的地方最安全。」','問哈姆太','哈姆太：「我剛剛拿來墊午餐了。」'],
- ['醫療島的午休','醫療島突然安靜，大家以為設備故障。','檢查電腦','電腦顯示「午休模式，勿擾」。','叫醒大家','林律師：「我只是閉眼思考案件。」'],
- ['X光螢幕的自拍','夢奇奇飼養者想用X光螢幕當自拍背景。','拍一張','照片裡只有螢幕和一杯咖啡。','請律師入鏡','律師轉身走開：「我比較適合背影。」'],
- ['心跳與咖啡','哈姆太剛喝完第三杯咖啡，盯著監測器。','勸他休息','他說：「我休息了，待辦事項不休息。」','把咖啡收起來','薪水掌門人：「那是我的第四杯！」'],
- ['電腦的神秘訊息','接待電腦跳出「緊急事件」四個字。','立刻查看','內容是「下午茶團購最後五分鐘」。','叫林律師','律師：「這件案子我不接。」'],
- ['病歷櫃的排序','夢奇奇飼養者把資料櫃按顏色排好，哈姆太卻找不到文件。','改按日期','哈姆太：「終於找得到上星期的咖啡單。」','保持顏色排序','薪水掌門人：「至少拍照很好看。」'],
- ['醫療島的開會鐘','監測器一響，所有人都跑向會議桌。','看時間','原來是午餐外送到了。','先開會','夢奇奇飼養者：「飯冷了，案件也不會自己結束。」'],
- ['X光機的新功能','夢奇奇飼養者說X光機可以看穿所有秘密。','測試抽屜','裡面是一整袋零食。','測試公事包','裡面只有卷宗，大家露出失望表情。'],
- ['護理站的便利貼','電腦貼滿便利貼，大家看不清螢幕。','拿掉便利貼','露出一張「請勿移除便利貼」的便利貼。','拍照留念','哈姆太：「這叫現代藝術。」'],
- ['律師的神奇筆','林律師的筆突然不見了。','找病歷櫃','找到六支一模一樣的筆。','問夢奇奇飼養者','夢奇奇飼養者：「那不是筆，是我們的共同財產。」'],
- ['心電圖的假日模式','假日心電圖突然顯示平穩直線，夢奇奇飼養者嚇一跳。','檢查設定','螢幕寫著「週末請勿打擾」。','打電話問人','哈姆太：「連機器都知道休假。」'],
- ['影像報告的封面','夢奇奇飼養者把X光影像報告封面做得像電影海報。','給律師看','林律師：「標題太像恐怖片。」','給哈姆太看','哈姆太：「可以賣爆米花嗎？」'],
- ['接待電腦的密碼','薪水掌門人忘記電腦密碼，試了三次。','請夢奇奇飼養者幫忙','夢奇奇飼養者：「密碼提示是『不要加班』。」','問律師','律師：「那應該永遠猜不到。」'],
- ['醫療島的盆栽','夢奇奇飼養者發現盆栽旁多了一台小型監測器。','看看數值','顯示「今日澆水：0」。','問哈姆太','哈姆太：「我怕它口渴。」'],
- ['會議桌的零食','協商桌上多了一盒餅乾，沒人承認是誰帶的。','先分給大家','五秒後餅乾消失，會議提前結束。','先拍照','林律師：「這是今天最完整的證據。」'],
- ['週五最後一分鐘','接待電腦在下班前一分鐘跳出新通知。','立刻點開','原來是「祝你週末愉快」。全員歡呼。','假裝沒看到','哈姆太：「電腦已讀了！」']
- ];
- let fiveIndex={mediation:0,records:0,forensics:0,ecg:0,computer:0};
- const monitorTimes=[['21:00','病況穩定'],['21:15','出現異常警示'],['21:30','護理師通知醫師'],['22:10','醫師到場評估']];
- function fiveShow(action,index,choice=-1,step=0){
-   fiveIndex[action]=index;const t=topics[index];choices.replaceChildren();
-   const labels={mediation:'🤝 醫療糾紛協商',records:'🗂️ 病歷證據探索',forensics:'🔍 醫療影像鑑定',ecg:'❤️ 心電圖事件回放',computer:'😄 事務所今天又怎麼了？'};
-   title.textContent=labels[action]+'｜'+(index+1)+'/20';
-   if(action==='computer'){
-     const f=funny[index];body.textContent=f[0]+'\n'+f[1]+(choice<0?'':'\n\n結局：'+f[choice===0?3:5]);
-     button(f[2],()=>fiveShow(action,index,0));button(f[4],()=>fiveShow(action,index,1));
-   }else if(action==='ecg'){
-     const ev=monitorTimes[step];body.textContent=t[0]+'：'+t[1]+'。家屬質疑處置時機。\n\n'+ev[0]+'｜'+ev[1]+'\n\n法律觀察：'+[
-       '先確認當時可得的醫療資訊，不能以結果倒推。',
-       '要確認異常是否需要立即處置及醫護人員何時知悉。',
-       '通知紀錄可協助判斷通報是否及時。',
-       '到場時間只是線索，仍須評估合理處置與因果關係。'][step];
-     button('⚖️ 林律師：這段時間如何判斷？',()=>{body.textContent+='\n\n林律師提醒：應核對監測資料、護理紀錄、醫囑與當時病況，判斷是否有合理處置機會及其與損害的關聯，不能只看警報時間。';});
-     if(step>0)button('◀ 上一段',()=>fiveShow(action,index,-1,step-1));
-     if(step<3)button('繼續播放 ▶',()=>fiveShow(action,index,-1,step+1));
-   }else{
-     const desc=action==='mediation'?`病患因${t[1]}，醫院否認過失，但願以${t[2]}協商。雙方現在要確認和解條款。`:action==='records'?`病患因${t[1]}，家屬懷疑醫療處置有問題，準備整理病歷及法律主張。`:`病患因${t[1]}，雙方對當時影像判讀及後續處置有不同意見。`;
-     const opts=branches[action];body.textContent=t[0]+'\n'+desc+(choice<0?'':'\n\n'+opts[choice][1]+'\n\n法律影響：'+opts[choice][2]);
-     opts.forEach((o,j)=>button((choice===j?'✓ ':'')+o[0],()=>fiveShow(action,index,j)));
-   }
-   button('🔄 下一個不同案件',()=>fiveShow(action,(index+1)%20));
-   button('✕ 返回醫療島',()=>el.style.display='none');
- }
- function home(){if(['mediation','records','forensics','ecg','computer'].includes(current)){fiveShow(current,fiveIndex[current]);return;}if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function home(){if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
  return {show(){el.style.display='none'},open(action='staff'){current=(scenes[action]||customMedical[action]||action==='liability')?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
