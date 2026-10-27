@@ -609,7 +609,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  function hint(text,x,y,z,action){
   // Wide high-resolution canvas and measured fit prevent Chinese and emoji clipping.
   const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=176;
-  const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(23,42,62,.98)';
+  const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(29,113,87,.98)';
   c.beginPath();c.roundRect(8,8,1008,160,44);c.fill();
   c.strokeStyle='#d9b779';c.lineWidth=8;c.stroke();
   c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';
@@ -619,13 +619,13 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));
   sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(7.3,1.12,1);
-  sprite.renderOrder=80;sprite.userData.baseY=y;register(sprite,action);labels.push(sprite);return sprite;
+  sprite.renderOrder=80;sprite.userData.baseY=y;root.add(sprite);register(sprite,action);labels.push(sprite);return sprite;
  }
  // Staff identity sign only; not a sixth interaction zone.
  let staffNameLabel=null;
  if(guide){
   const nameCanvas=document.createElement('canvas');nameCanvas.width=480;nameCanvas.height=112;
-  const nc=nameCanvas.getContext('2d');nc.fillStyle='rgba(23,42,62,.98)';nc.beginPath();nc.roundRect(5,5,470,102,36);nc.fill();
+  const nc=nameCanvas.getContext('2d');nc.fillStyle='rgba(29,113,87,.98)';nc.beginPath();nc.roundRect(5,5,470,102,36);nc.fill();
   nc.strokeStyle='#d9b779';nc.lineWidth=6;nc.stroke();nc.fillStyle='#fff9ec';nc.textAlign='center';nc.textBaseline='middle';
   nc.font='900 55px sans-serif';nc.fillText('薪水掌門人',240,56,448);
   const nameTexture=new THREE.CanvasTexture(nameCanvas);nameTexture.colorSpace=THREE.SRGBColorSpace;
