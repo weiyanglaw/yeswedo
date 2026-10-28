@@ -46,7 +46,16 @@
 #wyV151Controls #wyFloorButton{grid-column:1;grid-row:2}#wyV151Controls #wyMainGuideAgain{grid-column:2;grid-row:2}
 #wyContactPanel{top:calc(175px + env(safe-area-inset-top,0px))!important}
 @media(max-width:390px){#officeUI>div:first-child>strong{font-size:18px!important}#wyV151Controls{top:calc(76px + env(safe-area-inset-top,0px))}#wyV151Controls button,#wyV151Controls #wyFloorButton,#wyV151Controls #wyMainGuideAgain{font-size:15px!important}}
-</style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
+</style>
+<style id="wy-v152-compact-mobile">
+/* v152: compact two-by-two action controls; preserve original event handlers. */
+#officeUI>div:first-child>strong{font-size:clamp(11px,3.1vw,14px)!important;padding:6px 8px!important;max-width:calc(100vw - 20px)!important}
+#wyV151Controls{top:calc(49px + env(safe-area-inset-top,0px))!important;right:calc(7px + env(safe-area-inset-right,0px))!important;width:max-content!important;max-width:calc(100vw - 14px)!important;grid-template-columns:max-content max-content!important;gap:6px!important}
+#wyV151Controls button,#wyV151Controls #wyFloorButton,#wyV151Controls #wyMainGuideAgain{width:auto!important;max-width:46vw!important;min-height:34px!important;height:36px!important;padding:5px 8px!important;font-size:clamp(11px,3.3vw,13px)!important;line-height:1.1!important;border-radius:9px!important;white-space:nowrap!important;box-shadow:0 2px 6px #203b4d18!important}
+#wyContactPanel{top:calc(135px + env(safe-area-inset-top,0px))!important}
+@media(max-width:390px){#wyV151Controls{top:calc(46px + env(safe-area-inset-top,0px))!important}}
+</style>
+</head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
 <div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><label for="visitorName">角色名稱</label><input id="visitorName" maxlength="14" placeholder="法律探險家" value="法律探險家"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"><div class="wardrobeHeading">🎀 自由換裝｜每件衣服獨立搭配</div><label for="avatarTopStyle">① 上衣（單獨選擇）</label><select id="avatarTopStyle"><option value="tshirt">短袖 T 恤</option><option value="longsleeve">長袖 T 恤</option><option value="shirt">襯衫</option><option value="polo">Polo 衫</option><option value="hoodie">帽 T</option><option value="knit">針織衫</option></select><div class="wearTip" id="tip_avatarTopStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarBottomStyle">② 下半身（單獨選擇）</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="jeans">牛仔長褲</option><option value="casual">休閒長褲</option><option value="suitpants">西裝褲</option><option value="pleated">百褶短裙</option><option value="longskirt">長裙</option></select><div class="wearTip" id="tip_avatarBottomStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarJacket">③ 外套（可選擇不穿）</label><select id="avatarJacket"><option value="none">不穿外套</option><option value="blazer">西裝外套</option><option value="cardigan">針織外套</option><option value="denim">牛仔外套</option><option value="ziphood">連帽外套</option><option value="trench">風衣</option></select><div class="wearTip" id="tip_avatarJacket">選擇款式後，3D 人物會直接更換造型</div><label for="avatarOnepiece">④ 連身服裝（會取代上衣與下半身）</label><select id="avatarOnepiece"><option value="none">不穿連身服裝</option><option value="casualdress">休閒洋裝</option><option value="princess">公主洋裝</option><option value="shirtdress">襯衫洋裝</option><option value="formaldress">正式洋裝</option><option value="jumpsuit">連身褲</option></select><div class="wearTip" id="tip_avatarOnepiece">選擇款式後，3D 人物會直接更換造型</div><label for="avatarShoes">⑤ 鞋子</label><select id="avatarShoes"><option value="sneakers">白色球鞋</option><option value="casualshoes">休閒鞋</option><option value="leather">皮鞋</option><option value="maryjane">瑪莉珍鞋</option><option value="boots">短靴</option><option value="sandals">涼鞋</option></select><div class="wearTip" id="tip_avatarShoes">選擇款式後，3D 人物會直接更換造型</div><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca" style="width:100%;height:40px;padding:2px"><label for="avatarBottomColor">褲子／裙子顏色</label><input id="avatarBottomColor" type="color" value="#374b75" style="width:100%;height:40px;padding:2px"><label for="avatarJacketColor">外套顏色</label><input id="avatarJacketColor" type="color" value="#8e6580" style="width:100%;height:40px;padding:2px"><label for="avatarDressColor">連身服裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8" style="width:100%;height:40px;padding:2px"><label for="avatarShoeColor">鞋子顏色</label><input id="avatarShoeColor" type="color" value="#f7f2e7" style="width:100%;height:40px;padding:2px"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
 <div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="official-logo.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
@@ -1381,59 +1390,78 @@ function wyLuxuryLogoFrame(x,y,z,side=false){
 }
 wyLuxuryLogoFrame(0,4.03,-9.83,false);
 for(const side of [-1,1])wyLuxuryLogoFrame(side*12.69,4.03,-1.4,true);
-// v124: extended and forward royal diamond reception, forward of the central lounge.
-// Front is +Z, towards the entrance; all upright branding grows from that SAME front face.
+// v152: 1F FUTURE LUXE reception, 150% of v151 cabinet and curved glass width.
+// Strong real geometry and color-block contrast; no fine grooves or simulated material detail.
 const wyReception=new THREE.Group();lobbyRoot.add(wyReception);
 wyReception.position.set(0,0,3.65);
-function wrBox(x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),lbMat(c));m.position.set(x,y,z);wyReception.add(m);return m;}
-const wrNavy='#20334C',wrGold='#D8AF61',wrIvory='#F6EADB';
-wrBox(0,.72,0,7.35,1.44,1.45,wrNavy);
-wrBox(0,1.54,0,7.62,.20,1.70,wrIvory);
-wrBox(0,1.41,.01,7.70,.09,1.76,wrGold);
-wrBox(0,.15,.748,7.38,.18,.09,wrGold);
-for(const x of [-3.55,3.55])wrBox(x,.76,.754,.10,1.23,.08,wrGold);
-// Substantial raised diamond facets on the front face.
-for(let i=-5;i<=5;i++){
- const x=i*.62;
- const shape=new THREE.Shape();shape.moveTo(0,.26);shape.lineTo(.18,0);shape.lineTo(0,-.26);shape.lineTo(-.18,0);shape.closePath();
- const geom=new THREE.ShapeGeometry(shape);const m=new THREE.Mesh(geom,lbMat(i%2===0?'#355473':'#284461'));
- m.position.set(x,.72,.763);wyReception.add(m);
+const wrBaseWidth=7.35,wrWidth=wrBaseWidth*1.5;
+const wrSage=new THREE.MeshStandardMaterial({color:0x68887D,roughness:.85,metalness:0});
+const wrSageLight=new THREE.MeshStandardMaterial({color:0x829F91,roughness:.82,metalness:0});
+const wrWing=new THREE.MeshStandardMaterial({color:0x355650,roughness:.85,metalness:0});
+const wrBase=new THREE.MeshStandardMaterial({color:0x304E49,roughness:.9,metalness:0});
+const wrTopMat=new THREE.MeshStandardMaterial({color:0xE2EAE5,roughness:.68,metalness:0});
+const wrGoldMetal=new THREE.MeshStandardMaterial({color:0xC8A35E,metalness:.48,roughness:.37});
+function wrAdd(geometry,material,x=0,y=0,z=0){
+ const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);wyReception.add(m);return m;
 }
-// Original, unchanged official logo asset on the front cabinet face.
-const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(.96,.96),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-logo-tight-v102.png'),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
-wrLogo.position.set(0,.76,.795);wyReception.add(wrLogo);
-// v150: low, curved, pale-blue transparent glass at the original reception display location.
-// The existing counter, front official logo, and all surrounding furnishings remain unchanged.
-const wrGlassRadius=6.4, wrGlassArc=.98;
+// Curved cabinet front: elliptical cylindrical sector, no patterned lines.
+// The original front plane is at about z=0.8; logo follows the new curved face.
+const wrCabRadius=8.8,wrCabArc=2*Math.asin(wrWidth/(2*wrCabRadius));
+const wrCabCenterZ=.83-wrCabRadius;
+const wrCabStart=-wrCabArc/2;
+const wrCabGeom=new THREE.CylinderGeometry(wrCabRadius,wrCabRadius,1.28,96,1,true,wrCabStart,wrCabArc);
+wrAdd(wrCabGeom,wrSage,0,.82,wrCabCenterZ);
+// A real, slightly wider curved top surface.
+const wrTopRadius=wrCabRadius+.12;
+wrAdd(new THREE.CylinderGeometry(wrTopRadius,wrTopRadius,.16,96,1,true,wrCabStart,wrCabArc),wrTopMat,0,1.52,wrCabCenterZ);
+// Broad dark side wings: actual 3D curved sectors, clearly visible in mobile view.
+for(const side of [-1,1]){
+ const a0=side<0?wrCabStart:wrCabArc*.245;
+ const len=wrCabArc*.255;
+ wrAdd(new THREE.CylinderGeometry(wrCabRadius+.055,wrCabRadius+.055,1.28,30,1,true,a0,len),wrWing,0,.82,wrCabCenterZ);
+}
+// Wide, physically recessed plinth to create a floating profile without lighting tricks.
+wrAdd(new THREE.CylinderGeometry(7.0,7.0,.22,72,1,true,-.53,.53),wrBase,0,.11,wrCabCenterZ-.27);
+// Central panel is smooth, with no ornament or wing crossing the official logo.
+wrAdd(new THREE.CylinderGeometry(wrCabRadius+.08,wrCabRadius+.08,1.12,34,1,true,-.20,.40),wrSageLight,0,.82,wrCabCenterZ);
+// Official original asset, unchanged and not stretched, placed ahead of central face.
+const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(1.06,1.06),
+ new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-logo-tight-v102.png'),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+wrLogo.position.set(0,.79,.955);wrLogo.renderOrder=14;wyReception.add(wrLogo);
+// v152: glass and champagne-gold three-sided half-frame both expand to 150% width.
+// Keep glass height, color and transparency, and never add a bottom border.
+const wrGlassRadius=9.6,wrGlassArc=2*Math.asin((2*6.4*Math.sin(.98/2)*1.5)/(2*wrGlassRadius));
+const wrGlassCenterZ=1.04-wrGlassRadius;
 const wrGlassMaterial=new THREE.MeshPhysicalMaterial({color:0xB8E5F1,metalness:0,roughness:.13,transmission:.68,transparent:true,opacity:.38,thickness:.12,ior:1.45,side:THREE.DoubleSide,depthWrite:false});
-const wrCurvedGlass=new THREE.Mesh(new THREE.CylinderGeometry(wrGlassRadius,wrGlassRadius,1.94,64,1,true,-wrGlassArc/2,wrGlassArc),wrGlassMaterial);
-wrCurvedGlass.position.set(0,2.64,1.04-wrGlassRadius);wyReception.add(wrCurvedGlass);
-// v151: champagne-gold HALF FRAME follows the exact v150 glass arc: top + two vertical sides only.
-const wrGoldMetal=new THREE.MeshStandardMaterial({color:0xC8A35E,metalness:.78,roughness:.22});
-function wrFrameCurve(points,radius=.023){const mesh=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),Math.max(12,points.length*2),radius,7,false),wrGoldMetal);wyReception.add(mesh);return mesh;}
-const wrGlassCenterZ=1.04-wrGlassRadius,wrFrameRadius=wrGlassRadius+.035;
-const wrArcPoint=(angle,y)=>new THREE.Vector3(Math.sin(angle)*wrFrameRadius,y,wrGlassCenterZ+Math.cos(angle)*wrFrameRadius);
-const wrTop=[];for(let i=0;i<=64;i++)wrTop.push(wrArcPoint(-wrGlassArc/2+wrGlassArc*i/64,3.61));wrFrameCurve(wrTop,.026);
-for(const sideAngle of [-wrGlassArc/2,wrGlassArc/2])wrFrameCurve([wrArcPoint(sideAngle,1.67),wrArcPoint(sideAngle,2.64),wrArcPoint(sideAngle,3.61)],.023);
-// Curved, transparent text strips follow the glass cylinder, never a flat sign or a recreated logo.
-function wrCurvedLettering(label,centerY,stripHeight,fontPx){
- const cv=document.createElement('canvas');cv.width=2048;cv.height=256;
- const cx=cv.getContext('2d');cx.clearRect(0,0,cv.width,cv.height);
- cx.font='700 '+fontPx+'px "Noto Sans TC",system-ui,sans-serif';cx.textAlign='center';cx.textBaseline='middle';
- cx.shadowColor='rgba(75,52,19,.28)';cx.shadowBlur=3;cx.fillStyle='#B78D47';
- cx.fillText(label,1024,130,1870);
- const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=8;
- const geom=new THREE.CylinderGeometry(wrGlassRadius+.07,wrGlassRadius+.07,stripHeight,96,1,true,-wrGlassArc/2+.07,wrGlassArc-.14);
- const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:1,side:THREE.DoubleSide,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1});
- const mesh=new THREE.Mesh(geom,mat);mesh.position.set(0,centerY,wrGlassCenterZ);mesh.renderOrder=12;wyReception.add(mesh);
+wrAdd(new THREE.CylinderGeometry(wrGlassRadius,wrGlassRadius,1.94,96,1,true,-wrGlassArc/2,wrGlassArc),wrGlassMaterial,0,2.64,wrGlassCenterZ);
+function wrFrameCurve(points,radius=.029){
+ const mesh=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),Math.max(24,points.length*2),radius,8,false),wrGoldMetal);
+ wyReception.add(mesh);return mesh;
 }
-wrCurvedLettering('德威陽國際法律事務所',3.04,.34,132);
-wrCurvedLettering('WEI & YANG INTERNATIONAL LAW FIRM',2.57,.28,83);
-wrCurvedLettering('YES, WE DO!',2.13,.24,72);
-
-// The old animated panel and its text are deliberately removed; lettering can be added later.
+const wrFrameRadius=wrGlassRadius+.035;
+const wrArcPoint=(angle,y)=>new THREE.Vector3(Math.sin(angle)*wrFrameRadius,y,wrGlassCenterZ+Math.cos(angle)*wrFrameRadius);
+const wrTop=[];for(let i=0;i<=96;i++)wrTop.push(wrArcPoint(-wrGlassArc/2+wrGlassArc*i/96,3.61));
+wrFrameCurve(wrTop,.032);
+for(const sideAngle of [-wrGlassArc/2,wrGlassArc/2])
+ wrFrameCurve([wrArcPoint(sideAngle,1.67),wrArcPoint(sideAngle,2.64),wrArcPoint(sideAngle,3.61)],.027);
+// Three large, fixed warm-white-gold text lines, on the curved glass itself.
+function wrCurvedLettering(label,centerY,stripHeight,fontPx){
+ const cv=document.createElement('canvas');cv.width=3072;cv.height=320;
+ const cx=cv.getContext('2d');cx.clearRect(0,0,cv.width,cv.height);
+ cx.textAlign='center';cx.textBaseline='middle';
+ cx.font='800 '+fontPx+'px "Noto Sans TC",system-ui,sans-serif';
+ cx.shadowColor='rgba(255,225,154,.95)';cx.shadowBlur=19;
+ cx.fillStyle='#FFF4D2';cx.fillText(label,1536,160,2840);
+ cx.shadowBlur=0;cx.fillStyle='#FFF9E8';cx.fillText(label,1536,160,2840);
+ const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=8;
+ const geom=new THREE.CylinderGeometry(wrGlassRadius+.085,wrGlassRadius+.085,stripHeight,128,1,true,-wrGlassArc/2+.055,wrGlassArc-.11);
+ const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:1,side:THREE.DoubleSide,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1});
+ const mesh=wrAdd(geom,mat,0,centerY,wrGlassCenterZ);mesh.renderOrder=12;
+}
+wrCurvedLettering('德威陽國際法律事務所',3.04,.37,160);
+wrCurvedLettering('WEI & YANG INTERNATIONAL LAW FIRM',2.57,.32,112);
+wrCurvedLettering('YES, WE DO!',2.13,.27,95);
 function wyReceptionAnimate(ms){};
-
 // v124: no cabinetry beneath the left-side WEIYANG logo; the rear L leg ends before that logo.
 // v121: true continuous wall-hugging L refreshment bar with a nearby inner-corner island.
 // Back wall is z=-10.55; left wall is x=-13.30. No floating counter segments.
