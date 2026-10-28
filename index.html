@@ -55,80 +55,8 @@
 #wyContactPanel{top:calc(135px + env(safe-area-inset-top,0px))!important}
 @media(max-width:390px){#wyV151Controls{top:calc(46px + env(safe-area-inset-top,0px))!important}}
 </style>
-<style id="wy165ModalSafety">body.wy165-dialog-open #wyWalkUI,body.wy165-dialog-open #wyGestures,body.wy165-dialog-open #wyLiftPrompt,body.wy165-dialog-open #interact{display:none!important;pointer-events:none!important}</style><style id="wy166CreatorCSS">#creatorCard{max-width:750px!important;max-height:96dvh!important;overflow-y:auto!important}#creator .creatorLayout{align-items:start!important}#creator .optionsPane{max-height:none!important;overflow:visible!important;min-width:0!important}#creator .wy166Tabs{display:flex;gap:5px;margin:10px 0}#creator .wy166Tabs button{flex:1;padding:10px 3px;border:1px solid #b8a3ce;background:#f4ecfc;color:#42305c;border-radius:9px;font-size:14px}#creator .wy166Tabs button.selected{background:#4c286d;color:white}#creator .wy166Pane[hidden]{display:none!important}#creator .wy166Pane{padding:7px 0}#creator .wy166Pane label{margin-top:7px}#creator .wy166Pane input[type=color]{height:36px!important;width:100%}#creator .wy166NameRow{display:flex;gap:8px;align-items:stretch}#creator .wy166NameRow input{min-width:0;flex:1}#creator #wy166Balance{width:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff4d8;color:#755024;border:1px solid #c7a465;border-radius:10px;flex-shrink:0;padding:3px}#creator .wy166Scale{font-size:32px;line-height:1.1;display:block;transform-origin:center 35%}#creator #wy166Balance.wy166Shake .wy166Scale{animation:wy166Shake .22s ease-in-out 5 alternate}@keyframes wy166Shake{0%{transform:rotate(-22deg)}100%{transform:rotate(22deg)}}#creator #wy166Balance small{font-size:10px}#creator .wy166Occupation{margin-top:9px;border-top:1px solid #d9c4e5;padding-top:9px}#creator .wy166Occupation select{max-height:42px}@media(max-width:600px){#creator .creatorLayout{display:flex!important;flex-direction:column!important;gap:4px!important}#creator .previewPane{width:100%!important;padding:4px!important}#creator #avatarCanvas{width:115px!important;height:115px!important;margin:2px auto!important}#creator .previewHint{display:none!important}#creator .optionsPane{width:100%!important;padding:5px!important}#creatorCard{padding:12px!important}#creatorCard>p{display:none!important}}</style><style id="wy168Fixes">
-/* v168: preserve the previously approved large floor/location badge */
-#officeUI>div:first-child>strong{font-size:clamp(18px,4.7vw,22px)!important;line-height:1.3!important;padding:11px 15px!important;border:2px solid #d2ad70!important;border-radius:15px!important;max-width:calc(100vw - 16px)!important;white-space:normal!important;box-shadow:0 5px 16px #1b2e4330!important}
-/* No fixed action overlay on top of character controls */
-#creatorCard{position:relative!important;display:flex!important;flex-direction:column!important;max-height:min(92dvh,900px)!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding-bottom:18px!important}
-#creatorCard #startExplore{position:static!important;inset:auto!important;transform:none!important;display:block!important;width:100%!important;flex:0 0 auto!important;margin:18px 0 2px!important;z-index:1!important;min-height:54px!important;border-radius:14px!important;background:linear-gradient(125deg,#a87832,#c99b55)!important;color:#fff!important;font-size:17px!important;font-weight:800!important;box-shadow:0 5px 14px #7c572c40!important}
-#creator .creatorLayout{display:flex!important;flex-direction:column!important;gap:7px!important;flex:0 0 auto!important}
-#creator .previewPane,#creator .optionsPane{width:100%!important;min-width:0!important;flex:0 0 auto!important;overflow:visible!important;max-height:none!important}
-#creator .wy166Tabs{position:relative;display:flex!important;z-index:2}
-#creator .wy166Pane:not([hidden]){display:block!important}
-#creator .wy166Pane[hidden]{display:none!important}
-#creator .wy166Occupation{margin-top:12px!important}
-@media(max-width:600px){#creatorCard{width:96vw!important;padding:13px!important;max-height:calc(100dvh - 36px)!important}#creator .previewPane{padding:4px!important}#creator .previewCaption{font-size:14px!important}#creator .wy166Tabs button{min-height:43px!important;font-size:15px!important}#creatorCard #startExplore{margin-top:18px!important}}
-/* Theme-matched dialog frames, including inner stroke, and matching action buttons */
-#dialog[data-theme="medical"]{border:3px solid #2e9b72!important;box-shadow:0 13px 35px #175f4a4d,inset 0 0 0 2px #bde9d3!important}
-#dialog[data-theme="family"]{border:3px solid #95445f!important;box-shadow:0 13px 35px #65334b4d,inset 0 0 0 2px #e5b0c0!important}
-#dialog[data-theme="business"]{border:3px solid #6744a0!important;box-shadow:0 13px 35px #38245b55,inset 0 0 0 2px #d8c5f0!important}
-#dialog[data-theme="castle"]{border:3px solid #c5a063!important;box-shadow:0 13px 35px #2b394a40,inset 0 0 0 2px #f4e3bd!important}
-#wyMedicalGuide button,#wyFamilyGuide button,#wyMainGuide button{display:block!important;width:100%!important;margin:16px 0 2px!important;padding:13px 18px!important;border-radius:14px!important;font-size:16px!important;font-weight:800!important;color:white!important;box-shadow:0 5px 13px #142e3033!important;min-height:49px!important}
-#wyMedicalGuide button{background:linear-gradient(120deg,#167a59,#39a87c)!important;border:2px solid #b8e9d0!important}
-#wyFamilyGuide button{background:linear-gradient(120deg,#7e304e,#ad6078)!important;border:2px solid #eac1cc!important}
-#wyMainGuide button{background:linear-gradient(120deg,#243e58,#b28c52)!important;border:2px solid #dfc38c!important}
-#wyMedicalGuideAgain{background:#e7fff1!important;border:2px solid #3b9976!important;color:#205d46!important}
-#wyFamilyGuideAgain{background:#fff0f3!important;border:2px solid #984d66!important;color:#77374e!important}
-</style><style id="wy169Corrections">
-/* Royal blue is the main island identity, not medical green. */
-#wyMainGuide{background:#f7f8ff!important;border:4px solid #193c82!important;color:#183766!important;box-shadow:0 13px 38px #112f6540,inset 0 0 0 2px #d8b77d!important}
-#wyMainGuide h3{color:#153c82!important;border-bottom:2px solid #d9bc85;padding-bottom:10px}
-#wyMainGuide button{background:linear-gradient(120deg,#16377b,#254d9a)!important;border:2px solid #d5b16d!important;color:white!important;box-shadow:0 5px 16px #17356844!important}
-#wyMainGuideAgain{background:#f5f7ff!important;border:2px solid #173e85!important;color:#173e85!important}
-/* Main floor label is intentionally large; actions flow beneath it on narrow screens. */
-#officeUI>div:first-child{position:absolute!important;top:12px!important;left:12px!important;right:12px!important;display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;justify-content:flex-start!important;gap:8px!important}
-#officeUI>div:first-child>strong{display:block!important;flex:0 0 100%!important;width:max-content!important;max-width:100%!important;font-size:clamp(19px,4.9vw,24px)!important;line-height:1.25!important;background:#f8f8ff!important;color:#193c82!important;border:2px solid #c9a66d!important;padding:11px 14px!important}
-#officeUI>div:first-child>button{position:static!important;transform:none!important;margin:0!important;flex:0 0 auto!important;max-width:calc(50% - 4px)!important;font-size:clamp(12px,3.3vw,16px)!important;padding:9px 10px!important;white-space:normal!important}
-#wyV151Controls{top:calc(132px + env(safe-area-inset-top,0px))!important;right:10px!important;width:min(342px,calc(100vw - 20px))!important}
-#wyV151Controls button{min-height:43px!important}
-/* Creator: preview first, then category tabs, then form fields, then exactly one submit. */
-#creatorCard{max-height:calc(100dvh - 36px)!important;overflow-y:auto!important;overflow-x:hidden!important;display:flex!important;flex-direction:column!important;scroll-padding-bottom:24px!important}
-#creator .creatorLayout{display:flex!important;flex-direction:column!important;gap:0!important;overflow:visible!important;min-height:auto!important;flex:0 0 auto!important}
-#creator .previewPane{position:static!important;display:flex!important;flex-direction:column!important;min-height:0!important;height:auto!important;padding:7px!important;overflow:hidden!important}
-#creator .previewPane canvas,#creator #avatarCanvas{display:block!important;width:min(56vw,190px)!important;height:min(56vw,190px)!important;max-height:190px!important;aspect-ratio:1!important;flex:none!important;margin:2px auto!important}
-#creator .wy166Tabs{position:static!important;display:flex!important;order:0!important;margin:8px 0 10px!important;width:100%!important;flex:0 0 auto!important;z-index:auto!important}
-#creator .wy166Tabs button{font-size:15px!important;min-height:44px!important}
-#creator .optionsPane{position:static!important;display:block!important;overflow:visible!important;max-height:none!important;min-height:0!important;flex:0 0 auto!important;width:100%!important}
-#creatorCard #startExplore{position:static!important;display:block!important;width:100%!important;min-height:54px!important;margin:17px 0 4px!important;flex:0 0 auto!important;transform:none!important;z-index:1!important}
-#creator .wy166Pane[hidden]{display:none!important}
-#creator .wy166Pane:not([hidden]){display:block!important}
-@media(max-width:600px){#creatorCard{width:96vw!important;padding:12px!important}#creatorCard h2{font-size:17px!important}#creatorCard>p{font-size:12px!important}#officeUI>div:first-child{gap:7px!important}}
-</style><style id="wy170StableLayout">
-/* v170: single scroller, no floating controls or duplicated preview placeholders */
-#creator{align-items:center!important;justify-content:center!important;padding:10px!important}
-#creatorCard{position:relative!important;display:block!important;width:min(96vw,520px)!important;max-height:calc(100dvh - 24px)!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding:14px!important;scroll-padding-bottom:20px!important}
-#creator .creatorLayout{display:flex!important;flex-direction:column!important;gap:8px!important;min-height:0!important;overflow:visible!important}
-#creator .previewPane{display:flex!important;flex-direction:column!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;padding:8px!important;margin:0!important;flex:0 0 auto!important;background:#edf5fb!important;border-radius:15px!important}
-#creator .previewPane canvas:not(#avatarCanvas){display:block!important;position:relative!important;width:min(44vw,164px)!important;height:min(44vw,164px)!important;max-width:164px!important;max-height:164px!important;margin:4px auto!important;aspect-ratio:1!important;object-fit:contain!important;flex:none!important}
-#creator #avatarCanvas{display:none!important}
-#creator .previewCaption{font-size:15px!important;line-height:1.3!important}
-#creator .previewHint{font-size:11px!important;margin:2px 0!important}
-#creator .optionsPane{position:static!important;display:block!important;width:100%!important;min-height:0!important;max-height:none!important;overflow:visible!important;flex:0 0 auto!important}
-#creator .wy166Name{margin:2px 0 8px!important}
-#creator .wy166Tabs{position:static!important;display:flex!important;width:100%!important;z-index:auto!important;margin:8px 0!important;gap:7px!important;transform:none!important;order:initial!important}
-#creator .wy166Tabs button{flex:1 1 0!important;position:static!important;min-width:0!important;min-height:43px!important;margin:0!important}
-#creator .wy166Pane[hidden]{display:none!important}
-#creator .wy166Pane:not([hidden]){display:block!important}
-#creator .wy166Occupation{position:static!important;margin-top:12px!important}
-#creatorCard #startExplore{position:static!important;display:block!important;transform:none!important;inset:auto!important;width:100%!important;margin:16px 0 2px!important;min-height:54px!important;z-index:auto!important}
-/* Office header: prominent floor title and controls below, never overlap the 3D subject. */
-#officeUI>div:first-child{position:fixed!important;top:calc(8px + env(safe-area-inset-top,0px))!important;left:10px!important;right:10px!important;display:block!important;width:auto!important;pointer-events:none!important}
-#officeUI>div:first-child>strong{display:inline-block!important;width:auto!important;max-width:100%!important;font-size:clamp(19px,4.8vw,25px)!important;line-height:1.25!important;white-space:normal!important;pointer-events:none!important;background:#f9f9ff!important;color:#153c82!important;border:2px solid #caa765!important;padding:10px 13px!important}
-#wyV151Controls{position:fixed!important;top:calc(78px + env(safe-area-inset-top,0px))!important;left:auto!important;right:10px!important;width:min(310px,calc(100vw - 20px))!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;pointer-events:auto!important}
-#wyV151Controls button{position:static!important;min-width:0!important;max-width:100%!important;width:100%!important;white-space:normal!important;min-height:42px!important;font-size:clamp(12px,3.2vw,16px)!important;padding:8px 5px!important}
-@media(max-width:420px){#wyV151Controls{top:calc(82px + env(safe-area-inset-top,0px))!important;width:min(290px,calc(100vw - 20px))!important}}
-</style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
-<div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>建立專屬 3D Q 版角色，完成所有設定後再開始探索。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:none"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div><nav class="wy166Tabs" aria-label="角色造型分類"><button type="button" class="selected" data-wy166-tab="appearance">外型</button><button type="button" data-wy166-tab="clothes">服裝</button><button type="button" data-wy166-tab="accessory">配飾</button></nav><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section><section class="wy166Pane" data-wy166-pane="clothes" hidden><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section><section class="wy166Pane" data-wy166-pane="accessory" hidden><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
+<style id="wy165ModalSafety">body.wy165-dialog-open #wyWalkUI,body.wy165-dialog-open #wyGestures,body.wy165-dialog-open #wyLiftPrompt,body.wy165-dialog-open #interact{display:none!important;pointer-events:none!important}</style><style id="wy166CreatorCSS">#creatorCard{max-width:750px!important;max-height:96dvh!important;overflow-y:auto!important}#creator .creatorLayout{align-items:start!important}#creator .optionsPane{max-height:none!important;overflow:visible!important;min-width:0!important}#creator .wy166Tabs{display:flex;gap:5px;margin:10px 0}#creator .wy166Tabs button{flex:1;padding:10px 3px;border:1px solid #b8a3ce;background:#f4ecfc;color:#42305c;border-radius:9px;font-size:14px}#creator .wy166Tabs button.selected{background:#4c286d;color:white}#creator .wy166Pane[hidden]{display:none!important}#creator .wy166Pane{padding:7px 0}#creator .wy166Pane label{margin-top:7px}#creator .wy166Pane input[type=color]{height:36px!important;width:100%}#creator .wy166NameRow{display:flex;gap:8px;align-items:stretch}#creator .wy166NameRow input{min-width:0;flex:1}#creator #wy166Balance{width:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff4d8;color:#755024;border:1px solid #c7a465;border-radius:10px;flex-shrink:0;padding:3px}#creator .wy166Scale{font-size:32px;line-height:1.1;display:block;transform-origin:center 35%}#creator #wy166Balance.wy166Shake .wy166Scale{animation:wy166Shake .22s ease-in-out 5 alternate}@keyframes wy166Shake{0%{transform:rotate(-22deg)}100%{transform:rotate(22deg)}}#creator #wy166Balance small{font-size:10px}#creator .wy166Occupation{margin-top:9px;border-top:1px solid #d9c4e5;padding-top:9px}#creator .wy166Occupation select{max-height:42px}@media(max-width:600px){#creator .creatorLayout{display:flex!important;flex-direction:column!important;gap:4px!important}#creator .previewPane{width:100%!important;padding:4px!important}#creator #avatarCanvas{width:115px!important;height:115px!important;margin:2px auto!important}#creator .previewHint{display:none!important}#creator .optionsPane{width:100%!important;padding:5px!important}#creatorCard{padding:12px!important}#creatorCard>p{display:none!important}}</style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
+<div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div><nav class="wy166Tabs" aria-label="角色造型分類"><button type="button" class="selected" data-wy166-tab="appearance">外型</button><button type="button" data-wy166-tab="clothes">服裝</button><button type="button" data-wy166-tab="accessory">配飾</button></nav><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section><section class="wy166Pane" data-wy166-pane="clothes" hidden><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section><section class="wy166Pane" data-wy166-pane="accessory" hidden><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
 <div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script><script>
@@ -212,7 +140,7 @@ $('startExplore').addEventListener('click',enterIsland);
 </script>
 <script type="module">
 import {createBusinessHeadquarters} from './business-island.js?v=20261028-v166';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
-const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,850);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
+const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
 orbit.enablePan=true;orbit.screenSpacePanning=true;
@@ -250,11 +178,11 @@ function createIslandLabel(i){
  c.font='900 81px sans-serif';
  c.fillText((i===0?'德威陽法律探索島':names[i]),512,188,790);
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
- const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthWrite:false,depthTest:true}));
+ const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthWrite:false,depthTest:false}));
  sprite.scale.set(i===0?18:16.5,i===0?6.33:5.8,1);
  sprite.position.set(0,i===0?37:31,0);sprite.userData.islandIndex=i;
  sprite.userData.baseY=sprite.position.y;sprite.userData.floatPhase=i*.87;
- sprite.renderOrder=0;groups[i].add(sprite);islandLabels.push(sprite);
+ sprite.renderOrder=30;groups[i].add(sprite);islandLabels.push(sprite);
 }
 for(let i=0;i<6;i++)createIslandLabel(i);
 function fit(obj,width){obj.updateMatrixWorld(true);let b=new THREE.Box3().setFromObject(obj);const s=b.getSize(new THREE.Vector3());if(s.x<.001||s.z<.001)return;const scale=width/Math.max(s.x,s.z);obj.scale.multiplyScalar(scale);obj.updateMatrixWorld(true);b=new THREE.Box3().setFromObject(obj);const c=b.getCenter(new THREE.Vector3());obj.position.x-=c.x;obj.position.z-=c.z;obj.position.y-=b.min.y;}
@@ -516,7 +444,7 @@ if(i===0){
    const sealOutline=new THREE.Mesh(new THREE.TorusGeometry(6.27,.085,10,96),gold);
    sealOutline.rotation.x=Math.PI/2;sealOutline.position.y=.014;sealOutline.renderOrder=0;groundSeal.add(sealOutline);
    const sealImage=new THREE.Mesh(new THREE.PlaneGeometry(7.70,9.50),new THREE.MeshBasicMaterial({map:officialGroundTex,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
-   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.085;sealImage.renderOrder=0;sealImage.material.depthTest=true;sealImage.material.depthWrite=false;sealImage.material.polygonOffset=true;sealImage.material.polygonOffsetFactor=-2;sealImage.material.polygonOffsetUnits=-2;groundSeal.add(sealImage);
+   sealImage.rotation.x=-Math.PI/2;sealImage.rotation.z=0;sealImage.position.y=.045;sealImage.renderOrder=0;sealImage.material.depthTest=true;groundSeal.add(sealImage);
    // Existing GLB flags are enlarged and anchored to their actual tower tips above.
    // No free-floating banner objects are added to the scene.
    // Keep existing towers intact: do not globally scale the castle or change its footprint.
@@ -794,7 +722,7 @@ previewScene.add(new THREE.HemisphereLight(0xffffff,0x91b5d6,3));const previewLi
 const originalPreview=document.getElementById('avatarCanvas');
 const previewHost=originalPreview.parentElement;
 previewCanvas.style.display='block';previewCanvas.style.margin='8px auto';previewCanvas.style.maxWidth='100%';previewCanvas.style.borderRadius='18px';
-previewCanvas.style.height='164px';previewCanvas.style.width='164px';previewCanvas.style.aspectRatio='1 / 1';
+previewCanvas.style.height='auto';previewCanvas.style.aspectRatio='1 / 1';
 previewHost.insertBefore(previewCanvas,originalPreview);
 originalPreview.style.display='none';originalPreview.setAttribute('aria-hidden','true');
 const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,2));previewRenderer.setSize(360,360,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
@@ -2071,17 +1999,17 @@ const wy3Style=document.createElement('style');wy3Style.textContent=`
 #wy3WallPrompt{display:none;position:fixed;z-index:70;bottom:148px;left:50%;transform:translateX(-50%);width:min(92vw,330px);padding:12px 16px;border:1px solid #c7a36c;border-radius:13px;background:#30251fea;color:#ffeac4;font:700 14px system-ui;box-shadow:0 5px 25px #0005}
 #wy3DoorPrompt{display:none;position:fixed;z-index:70;bottom:88px;right:12px;padding:12px 15px;border:1px solid #c7a36c;border-radius:13px;background:#fff7e8;color:#463525;font:700 14px system-ui}
 `;document.head.append(wy3Style);
-const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>BEHIND THE DOOR</h2><div style="color:#f0d49d;font-weight:800;font-size:21px">老闆今天在嗎？</div><div style="color:#d6b782">林柏均律師私人辦公室</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">推開門，看看老闆在不在！</button></div>`;document.body.append(wy3Intro);
+const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>IS THE BOSS IN?</h2><div style="color:#d6b782">林柏均律師私人辦公室</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">開門，進入林律師私人辦公室</button></div>`;document.body.append(wy3Intro);
 const wy3WallPrompt=document.createElement('button');wy3WallPrompt.id='wy3WallPrompt';wy3WallPrompt.textContent='老闆今天在嗎？｜重看介紹';document.body.append(wy3WallPrompt);
 const wy3DoorPrompt=document.createElement('button');wy3DoorPrompt.id='wy3DoorPrompt';wy3DoorPrompt.textContent='開門並直走進入辦公室';document.body.append(wy3DoorPrompt);
 function wy3ShowIntro(){wy3Intro.style.display='flex'}
 function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}wy3OpenDoor();wy3UpdatePrompts()}
 wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
-function wy3OpenDoor(){if(wy3ArrivalAnim)return;if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy3CinematicHold=false;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
+function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
 const wy3ArrivalKey='weiyang-3f-arrival-v165';let wy3ArrivalPlayed=localStorage.getItem(wy3ArrivalKey)==='yes';let wy3ArrivalAnim=null;
-function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy3ArrivalAnim={t:0};wy3CinematicHold=false;wy3Reveal=null;wy3Orbit.enabled=false;wyDoorOpen=0;wy3DoorPrompt.style.display='none';wyWalkUI.style.display='none';}
+function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy3ArrivalAnim={t:0};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';}
 const wy166LawyerStops=[{x:0,z:-4.1,d:5},{x:-2.8,z:-3.6,d:4},{x:-3.0,z:-5.6,d:5},{x:0,z:-5.6,d:6},{x:2.5,z:-5.6,d:4},{x:2.7,z:-3.8,d:5}];
 let wy166LawyerIndex=0,wy166LawyerWait=3,wy166LawyerPhase=0;
 function wy166LawyerTick(dt){
@@ -2091,7 +2019,7 @@ function wy166LawyerTick(dt){
  if(dist<.09){wy166LawyerWait=stop.d+Math.random()*2;let next=Math.floor(Math.random()*wy166LawyerStops.length);if(next===wy166LawyerIndex)next=(next+1)%wy166LawyerStops.length;wy166LawyerIndex=next;return;}
  const step=Math.min(dist,dt*.7);actor.position.x+=dx/dist*step;actor.position.z+=dz/dist*step;actor.rotation.y=Math.atan2(dx,dz);actor.position.y=.05+Math.sin(performance.now()*.008)*.015;
 }
-function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3CinematicHold=false;wy3Reveal=null;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
+function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
 function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none'}
 function wy3Interact(action){
  if(action==='wall'){wy3ShowIntro();return}
@@ -2141,7 +2069,7 @@ function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;c
  wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
- officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=false;wy3Orbit.enabled=wyOfficeFloor===3;
+ officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
  else if(wyOfficeFloor===3){wy3Cam.position.set(8.8,8.2,14.5);wy3Orbit.target.set(7.12,2.55,4.48);wy3Orbit.update()}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
@@ -2224,18 +2152,15 @@ floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
  if(wy3ArrivalAnim&&wyOfficeFloor===3){
-  const a=wy3ArrivalAnim;a.t=Math.min(1,a.t+dt/8.2);
+  const a=wy3ArrivalAnim;a.t=Math.min(1,a.t+dt/5.2);
   const t=a.t, smooth=t*t*(3-2*t);
-  wyDoorOpen=Math.min(1,t/.32);
-  // First-person: the curved glass doors and luminous elevator floor appear first.
-  const walk=Math.max(0,(smooth-.31)/.69);
-  const eyeX=8.15-walk*1.03,eyeZ=7.25-walk*1.55;
-  wy3Cam.position.set(eyeX,1.54+(walk>0?Math.sin(walk*17)*.018:0),eyeZ);
-  wy3Cam.lookAt(7.12,2.12,4.48);
-  if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(eyeX,.08,eyeZ);}
-  if(t>=1){wy3ArrivalAnim=null;wy3CinematicHold=true;wyDoorOpen=1;wy3DoorPrompt.style.display='block';wy3DoorPrompt.textContent='🚪 點擊豪華大門｜老闆今天在嗎？';}
+  wyDoorOpen=t<.37?Math.min(1,t/.37):1;
+  const walk=Math.max(0,(smooth-.33)/.67);
+  wy3Cam.position.set(8.15-walk*.75,1.72,7.25-walk*1.6);
+  wy3Cam.lookAt(7.12,2.6,4.48);
+  if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(8.15-walk*.75,.08,7.25-walk*1.6);}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=true;if(wyIndoorActor)wyIndoorActor.visible=true;wy3Cam.position.set(8.8,8.2,14.5);wy3Orbit.target.set(7.12,2.55,4.48);wy3Orbit.update();}
  }
-
 
  if(wyOfficeFloor===3){
   wy166LawyerTick(dt);
@@ -2244,20 +2169,12 @@ function wyElevatorTick(dt){
    const p=wyIndoorActor.position;
    const target=new THREE.Vector3(7.10,.08,2.95);
    const dx=target.x-p.x,dz=target.z-p.z,dist=Math.hypot(dx,dz);
-   if(dist>.10){const step=Math.min(dist,dt*1.3);p.x+=dx/dist*step;p.z+=dz/dist*step;p.y=.08;wyIndoorActor.rotation.y=Math.atan2(dx,dz);wy3Cam.position.set(p.x,1.55,p.z);wy3Cam.lookAt(7.10,1.7,-2.5);wyIndoorActor.visible=false;}
-   else{wy3AutoWalk=false;wy3Reveal={t:0,from:wy3Cam.position.clone()};}
+   if(dist>.10){const step=Math.min(dist,dt*2.0);p.x+=dx/dist*step;p.z+=dz/dist*step;p.y=.08;wyIndoorActor.rotation.y=Math.atan2(dx,dz)}
+   else wy3AutoWalk=false;
   }
-  if(wy3Reveal){
-   const r=wy3Reveal;r.t=Math.min(1,r.t+dt/3.0);
-   const u=r.t*r.t*(3-2*r.t);
-   wy3Cam.position.lerpVectors(r.from,new THREE.Vector3(10.8,11.5,14.2),u);
-   wy3Cam.lookAt(0,1.4,-1.4);
-   if(r.t>=1){wy3Reveal=null;wy3Orbit.target.set(0,1.4,-1.4);wy3Orbit.enabled=true;wy3Orbit.update();if(wyIndoorActor)wyIndoorActor.visible=true;wyWalkUI.style.display='';}
-  }
-
  }
 
- if(wyIndoorActor&&!wyRide&&!wy3AutoWalk&&!wy3ArrivalAnim&&!wy3CinematicHold&&!wy3Reveal){
+ if(wyIndoorActor&&!wyRide&&!wy3AutoWalk){
   let x=0,z=0;const k=wyMoveKeys;
   if(k.has('arrowleft')||k.has('a'))x-=1;
   if(k.has('arrowright')||k.has('d'))x+=1;
@@ -2303,9 +2220,9 @@ function wyElevatorTick(dt){
    if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*17.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{
     wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';
-    if(r.dest===3){wy3ArrivalPlayed=true;try{localStorage.setItem(wy3ArrivalKey,'yes')}catch(e){}wy3PlayArrival();}
+    if(r.dest===3&&!wy3ArrivalPlayed){wy3ArrivalPlayed=true;localStorage.setItem(wy3ArrivalKey,'yes');wy3PlayArrival();}
     // Restore the standard floor overview after the temporary ride follow camera.
-    if(r.dest!==3)wyResetIndoorRideCamera(r.dest);
+    wyResetIndoorRideCamera(r.dest);
    }
   }
  }
@@ -2392,52 +2309,6 @@ for(const eventName of ['pointerup','pointercancel','lostpointercapture']){
   wyTouchPoints.delete(e.pointerId);wyTwistAngle=wyTouchAngle();
  },{passive:true});
 }
-// v171: isolated first-floor camera gestures. OrbitControls for the other rooms
-// share the canvas; this avoids competing handlers when the lobby is active.
-const wy171Pointers=new Map();
-let wy171LastPinch=null;
-function wy171LobbyActive(){return insideOffice&&activeIslandRoom===0&&wyOfficeFloor===1&&!wyRide&&document.getElementById('creator').style.display==='none'&&document.getElementById('wyMainGuide').style.display==='none'&&document.getElementById('wyLobbyDialog').style.display==='none';}
-function wy171LobbyRotate(dx,dy){
- const offset=lobbyCam.position.clone().sub(lobbyOrbit.target);
- const sphere=new THREE.Spherical().setFromVector3(offset);
- sphere.theta-=dx*0.006;
- sphere.phi=Math.max(0.2,Math.min(Math.PI*0.48,sphere.phi-dy*0.004));
- offset.setFromSpherical(sphere);
- lobbyCam.position.copy(lobbyOrbit.target).add(offset);
- lobbyCam.lookAt(lobbyOrbit.target);
-}
-function wy171LobbyZoom(factor){
- const offset=lobbyCam.position.clone().sub(lobbyOrbit.target);
- offset.multiplyScalar(factor);
- const len=offset.length();
- offset.setLength(Math.max(12,Math.min(65,len)));
- lobbyCam.position.copy(lobbyOrbit.target).add(offset);
- lobbyCam.lookAt(lobbyOrbit.target);
-}
-renderer.domElement.addEventListener('pointerdown',e=>{
- if(!wy171LobbyActive())return;
- wy171Pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
- wy171LastPinch=null;
-},{passive:true});
-renderer.domElement.addEventListener('pointermove',e=>{
- if(!wy171LobbyActive()||!wy171Pointers.has(e.pointerId))return;
- const prev=wy171Pointers.get(e.pointerId);
- wy171Pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
- if(wy171Pointers.size===1){wy171LobbyRotate(e.clientX-prev.x,e.clientY-prev.y);}
- else if(wy171Pointers.size===2){
-  const [a,b]=[...wy171Pointers.values()];
-  const distance=Math.hypot(a.x-b.x,a.y-b.y);
-  if(wy171LastPinch!==null&&distance>1)wy171LobbyZoom(wy171LastPinch/distance);
-  wy171LastPinch=distance;
- }
-},{passive:true});
-for(const ev of ['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(ev,e=>{
- wy171Pointers.delete(e.pointerId);wy171LastPinch=null;
-},{passive:true});
-renderer.domElement.addEventListener('wheel',e=>{
- if(!wy171LobbyActive())return;
- e.preventDefault();wy171LobbyZoom(Math.exp(e.deltaY*0.001));
-},{passive:false});
 function wyConfigure3DGestures(control,{minDistance=7,maxDistance=65}={}){
  control.enableRotate=true;control.enableZoom=true;control.enablePan=true;
  control.screenSpacePanning=true;control.enableDamping=true;
@@ -2464,15 +2335,12 @@ function officeTalk(i){
 }
 function enterOffice(){
  if(insideOffice||document.getElementById('creator').style.display!=='none')return;
- wy171Pointers.clear();activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;localStorage.setItem('wy-guide-main-v165','yes');}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
- document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=false;lobbyOrbit.update();
+ activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;localStorage.setItem('wy-guide-main-v165','yes');}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
+ document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
- // v170: commit the indoor frame immediately instead of showing an indoor HUD over the last island overview frame.
- renderer.clear();renderer.render(lobbyScene,lobbyCam);
 }
-document.querySelectorAll('#wyEntryGuide button, #wyEntryGuide [data-enter-office]').forEach(b=>b.addEventListener('click',()=>{if(!insideOffice&&document.getElementById('creator').style.display==='none')enterOffice()}));
 function leaveOffice(){
- wy171Pointers.clear();closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
+ closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
@@ -2512,15 +2380,15 @@ for(let i=1;i<6;i++){
  themeRooms[i]={scene:sc,camera:cam,orbit:control,icon,medicalRoom,familyRoom};
 }
 const medicalExperience=createMedicalExperience();const familyExperience=createFamilyExperience();
-const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#f2fff8;border:3px solid #2e9b72;border-radius:20px;padding:19px;box-shadow:0 12px 40px #064c3545, inset 0 0 0 2px #b8e8d0;color:#174a38;font:14px/1.65 system-ui';medGuide.innerHTML="<h3>歡迎來到德威陽醫療法律島！</h3><p><b>點擊醫療協商區：</b>醫療糾紛、調解與和解條件。</p><p><b>點擊病歷展示櫃：</b>病歷證據核對與整理。</p><p><b>點擊 X 光設備：</b>醫療鑑定與證明問題。</p><p><b>點擊心電圖：</b>事件回放與法律情境問答。</p><p><b>點擊接待區：</b>事務所趣味問答。</p><p><b>點擊薪水掌門人：</b>人物專屬互動。</p><button>開始探索</button>";document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
-const medGuideAgain=document.createElement('button');medGuideAgain.textContent='醫法指南';medGuideAgain.id='wyMedicalGuideAgain';medGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #d7b77b;border-radius:12px;background:#fffaf0;color:#20354c;font-weight:bold';document.body.append(medGuideAgain);medGuideAgain.onclick=()=>medGuide.style.display='block';
+const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fffaf0;border:2px solid #cfa96c;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#20354c;font:14px/1.65 system-ui';medGuide.innerHTML="<h3>歡迎來到德威陽醫療法律島！</h3><p>點擊什麼物件 → 代表什麼主題 → 可以體驗什麼：</p><p><b>點擊醫療協商區：</b>醫療糾紛、調解與和解條件。</p><p><b>點擊病歷展示櫃：</b>病歷證據核對與整理。</p><p><b>點擊 X 光設備：</b>醫療鑑定與證明問題。</p><p><b>點擊心電圖：</b>事件回放與法律情境問答。</p><p><b>點擊接待區：</b>事務所趣味問答。</p><p><b>點擊薪水掌門人：</b>人物專屬互動。</p><button>開始探索</button>";document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
+const medGuideAgain=document.createElement('button');medGuideAgain.textContent='醫法指南';medGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #d7b77b;border-radius:12px;background:#fffaf0;color:#20354c;font-weight:bold';document.body.append(medGuideAgain);medGuideAgain.onclick=()=>medGuide.style.display='block';
 let medGuideSeen=localStorage.getItem('wy-guide-medical-v165')==='yes';
-const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fff4f5;border:3px solid #91465f;border-radius:20px;padding:19px;box-shadow:0 12px 40px #50233745, inset 0 0 0 2px #e8b5c3;color:#713044;font:14px/1.65 system-ui';familyGuide.innerHTML="<h3>歡迎來到德威陽家庭法律島！</h3><p><b>點擊廚房中島：</b>婚姻家事、離婚法律問題。</p><p><b>點擊親子玩具箱：</b>親權、扶養費與照顧安排。</p><p><b>點擊遺囑書櫃及書桌：</b>遺囑、繼承與遺產分配。</p><p><b>點擊復古電話桌：</b>家庭暴力、保護令及安全。</p><p><b>點擊中央沙發：</b>家事法律諮詢互動。</p><button>開始探索</button>";document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
-const familyGuideAgain=document.createElement('button');familyGuideAgain.textContent='家事指南';familyGuideAgain.id='wyFamilyGuideAgain';familyGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #D2AD77;border-radius:12px;background:#F4DFE4;color:#713F4C;font-weight:bold';document.body.append(familyGuideAgain);familyGuideAgain.onclick=()=>familyGuide.style.display='block';let familyGuideSeen=localStorage.getItem('wy-guide-family-v165')==='yes';
+const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML="<h3>歡迎來到德威陽家庭法律島！</h3><p>點擊什麼物件 → 代表什麼主題 → 可以體驗什麼：</p><p><b>點擊廚房中島：</b>婚姻家事、離婚法律問題。</p><p><b>點擊親子玩具箱：</b>親權、扶養費與照顧安排。</p><p><b>點擊遺囑書櫃及書桌：</b>遺囑、繼承與遺產分配。</p><p><b>點擊復古電話桌：</b>家庭暴力、保護令及安全。</p><p><b>點擊中央沙發：</b>家事法律諮詢互動。</p><button>開始探索</button>";document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
+const familyGuideAgain=document.createElement('button');familyGuideAgain.textContent='家事指南';familyGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #D2AD77;border-radius:12px;background:#F4DFE4;color:#713F4C;font-weight:bold';document.body.append(familyGuideAgain);familyGuideAgain.onclick=()=>familyGuide.style.display='block';let familyGuideSeen=localStorage.getItem('wy-guide-family-v165')==='yes';
 // v138: same modal layout and reopening behavior as the medical-island entry guide.
 const wyMainGuide=document.createElement('aside');wyMainGuide.id='wyMainGuide';
-wyMainGuide.style.cssText=medGuide.style.cssText+';background:#f7f7ff;border:3px solid #173e85;box-shadow:0 12px 40px #122c6045,inset 0 0 0 2px #d6b67b;color:#173766';
-wyMainGuide.innerHTML="<h3>歡迎來到德威陽法律探索主島！</h3><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索林律師私人辦公室。</p><button>開始探索</button>";
+wyMainGuide.style.cssText=medGuide.style.cssText;
+wyMainGuide.innerHTML="<h3>歡迎來到德威陽法律探索主島！</h3><p>點擊什麼物件 → 代表什麼主題 → 可以體驗什麼：</p><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索林律師私人辦公室。</p><button>開始探索</button>";
 document.body.append(wyMainGuide);wyMainGuide.querySelector('button').onclick=()=>wyMainGuide.style.display='none';
 const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';wyMainGuideAgain.id='wyMainGuideAgain';
 wyMainGuideAgain.style.cssText=medGuideAgain.style.cssText;document.body.append(wyMainGuideAgain);
@@ -2691,6 +2559,6 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   if((onIsland||onBridge)&&walkAllowed(hitPoint.x,hitPoint.z))scheduleWalk(hitPoint);
  }
 });
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy3CinematicHold&&!wy3AutoWalk&&!wy3Reveal)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>

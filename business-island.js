@@ -77,7 +77,7 @@ export function createBusinessHeadquarters(island, THREE){
 
  // v166 future-fashion corporate headquarters: sculptural elliptical sky ring,
  // translucent purple curves, floating galleries and pearl/champagne trim.
- const purpleGlass=new THREE.MeshPhysicalMaterial({color:0x66439a,metalness:.18,roughness:.13,transparent:false,opacity:1,side:THREE.FrontSide,depthWrite:true,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:2});
+ const purpleGlass=new THREE.MeshPhysicalMaterial({color:0x66439a,metalness:.18,roughness:.13,transparent:true,opacity:.83,side:THREE.DoubleSide,depthWrite:true});
  const luminous=new THREE.MeshBasicMaterial({color:0xe9d6ff,side:THREE.DoubleSide});
  const silver=new THREE.MeshStandardMaterial({color:0xf4ecff,metalness:.5,roughness:.24,side:THREE.DoubleSide});
  const goldLine=new THREE.MeshStandardMaterial({color:0xd5b780,metalness:.75,roughness:.2});
@@ -93,8 +93,8 @@ export function createBusinessHeadquarters(island, THREE){
  // Curved wings read as boutique business campus, not regular rectangular blocks.
  for(const side of [-1,1]){
   const wing=new THREE.Mesh(new THREE.CylinderGeometry(2.95,3.45,12,48,1,false,0,Math.PI*2),purpleGlass);
-  wing.scale.z=.73;wing.position.set(side*9.25,8.0,-4.38);root.add(wing);
-  for(const y of [3.0,6.5,10,13.5]){const ring=new THREE.Mesh(new THREE.TorusGeometry(3.61,.085,8,60),goldLine);ring.rotation.x=Math.PI/2;ring.scale.y=.73;ring.position.set(side*9.25,y,-4.38);root.add(ring)}
+  wing.scale.z=.73;wing.position.set(side*9.25,8.0,-4.2);root.add(wing);
+  for(const y of [3.0,6.5,10,13.5]){const ring=new THREE.Mesh(new THREE.TorusGeometry(3.13,.095,8,60),goldLine);ring.rotation.x=Math.PI/2;ring.scale.y=.73;ring.position.set(side*9.25,y,-4.2);root.add(ring)}
   tube([[side*4.2,11.0,-3.5],[side*5.6,12.5,-3.2],[side*7.5,12.2,-3.1],[side*9.1,10.8,-3.1]],.27,silver);
  }
  // Elevated grand portico and fountain basins flanking an unobstructed central entry.
