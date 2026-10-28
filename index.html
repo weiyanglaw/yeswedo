@@ -1844,7 +1844,7 @@ wyElevDoors1.forEach(d=>d.visible=false);wyElevDoors2.forEach(d=>d.visible=false
 function wyUpdateGlassCabin(f,dt){
  for(const [n,c] of Object.entries(wyGlassCabins)){
   const desired=(Number(n)===wyOfficeFloor?f:0);
-  c.doors[0].pivot.rotation.y=-desired*.73;c.doors[1].pivot.rotation.y=desired*.73;
+  if(c.sliding){for(const d of c.doors)d.pane.position.z=d.sign*(.76+desired*.74)}else{c.doors[0].pivot.rotation.y=-desired*.73;c.doors[1].pivot.rotation.y=desired*.73;}
   const target=.27+desired*.95;
   c.welcome.intensity+=(target-c.welcome.intensity)*Math.min(1,dt*5);
   c.ring.material.opacity=.16+desired*.53;
@@ -1862,7 +1862,23 @@ const wy3Sun=new THREE.DirectionalLight(0xfff2d9,2.1);wy3Sun.position.set(-5,16,
 const wy3Root=new THREE.Group();wy3Scene.add(wy3Root);
 const wy3Targets=[];
 // Shared glass cabin built after the 3F root and hit-target collection exist.
-wyGlassCabins[3]=wyBuildGlassCabin(wy3Root,8.15,6.45,3);wyGlassCabins[3].root.rotation.y=-Math.PI/2;
+// v164: square architectural glass lift, avoids the giant curved gold hoops on iPhone.
+function wyBuild3FGlassLift(){
+ const root=new THREE.Group();root.position.set(8.15,0,6.45);wy3Root.add(root);
+ const metal=new THREE.MeshStandardMaterial({color:0xd8b982,metalness:.86,roughness:.19});
+ const glass=new THREE.MeshPhysicalMaterial({color:0xd7eef0,transparent:true,opacity:.32,roughness:.09,metalness:.08,depthWrite:false,side:THREE.DoubleSide});
+ const frame=(x,y,z,w,h,d,mat)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);o.position.set(x,y,z);root.add(o);return o};
+ frame(0,.09,0,3.05,.18,3.15,new THREE.MeshStandardMaterial({color:0x82654b,roughness:.48}));
+ for(const x of [-1.48,1.48])for(const z of [-1.51,1.51])frame(x,2.75,z,.075,5.4,.075,metal);
+ for(const y of [.13,5.48]){for(const x of [-1.48,1.48])frame(x,y,0,.09,.09,3.1,metal);for(const z of [-1.51,1.51])frame(0,y,z,3.05,.09,.09,metal)}
+ frame(1.49,2.75,0,.045,5.2,3.0,glass);frame(0,2.75,-1.52,2.95,5.2,.04,glass);frame(0,2.75,1.52,2.95,5.2,.04,glass);
+ const doors=[];
+ for(const sign of [-1,1]){const pane=frame(-1.52,2.75,sign*.76,.055,5.1,1.49,glass);doors.push({pane,sign,pivot:{rotation:{y:0}}});frame(-1.56,2.75,sign*1.48,.08,5.2,.065,metal)}
+ const clickable=frame(-1.60,2.7,0,.15,5.1,3.05,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}));clickable.userData.wy3Action='elevator';wy3Targets.push(clickable);
+ const welcome=new THREE.PointLight(0xffdca0,.35,5);welcome.position.set(0,3,0);root.add(welcome);
+ return {root,doors,welcome,ring:{material:{opacity:0}},sliding:true};
+}
+wyGlassCabins[3]=wyBuild3FGlassLift();
 function wy3Mat(c,op=1){return new THREE.MeshStandardMaterial({color:c,roughness:.73,metalness:0,transparent:op<1,opacity:op,side:THREE.DoubleSide,depthWrite:op===1})}
 function wy3Box(x,y,z,w,h,d,c,action){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);if(action){m.userData.wy3Action=action;wy3Targets.push(m)}return m}
 function wy3Cyl(x,y,z,top,bottom,h,c){const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,18),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);return m}
@@ -1887,28 +1903,33 @@ wy3Box(8.78,2.8,4.48,2.05,5.6,.20,'#4b342a');
 wy3Box(7.12,5.08,4.48,1.65,1.04,.20,'#4b342a');
 wy3Box(7.12,5.60,4.39,1.66,.10,.13,'#c9a46a');
 // Theme sign above the entry, visible when exiting the east-wall elevator.
-wy3Label('BEHIND THE DOOR',7.12,5.12,4.30,2.45,.43);
-wy3Label('林柏均律師私人辦公室',7.12,4.66,4.30,2.55,.31);
-const wy3OfficeDoorPivot=new THREE.Group();wy3OfficeDoorPivot.position.set(6.35,0,4.48);wy3Root.add(wy3OfficeDoorPivot);
-const wy3OfficeDoor=wy3Box(7.10,2.08,4.48,1.50,4.12,.13,'#eee7db','officeDoor');
-wy3OfficeDoor.material=new THREE.MeshPhysicalMaterial({color:0xf2e9db,metalness:.18,roughness:.19,clearcoat:1,clearcoatRoughness:.09});
-wy3Root.remove(wy3OfficeDoor);wy3OfficeDoor.position.set(.75,2.08,0);wy3OfficeDoorPivot.add(wy3OfficeDoor);
-const wy3DoorTrim=wy3Box(7.10,2.08,4.37,1.33,3.90,.035,'#c5ad82');
-wy3DoorTrim.material=new THREE.MeshStandardMaterial({color:0xe6c58b,metalness:.9,roughness:.16});
-wy3Root.remove(wy3DoorTrim);wy3DoorTrim.position.set(.75,2.08,-.11);wy3OfficeDoorPivot.add(wy3DoorTrim);
-const wy3DoorHandle=wy3Box(7.60,2.12,4.25,.09,.40,.09,'#d9b77d');
-wy3DoorHandle.material=new THREE.MeshStandardMaterial({color:0xf3d5a1,metalness:.96,roughness:.12});
-wy3Root.remove(wy3DoorHandle);wy3DoorHandle.position.set(1.25,2.12,-.23);wy3OfficeDoorPivot.add(wy3DoorHandle);
-// Door-surface touch target, with a separate permanently available replay plaque.
-const wy3DoorTouch=new THREE.Mesh(new THREE.PlaneGeometry(1.30,1.0),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}));
-wy3DoorTouch.position.set(.75,2.75,-.24);wy3DoorTouch.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorTouch);wy3Targets.push(wy3DoorTouch);
-const wy3ReplayPlaque=wy3Box(8.66,2.70,4.30,.56,.80,.08,'#bd9a64','wall');
-wy3ReplayPlaque.material=new THREE.MeshStandardMaterial({color:0xd8b67e,metalness:.9,roughness:.22});
-wy3Label('重看介紹',8.66,2.70,4.22,.52,.28);
-wy3Label('點我開門',7.12,2.92,4.25,1.25,.32);
-// Warm recessed architectural lighting around the doorway.
-for(const x of [6.24,8.00]){const glow=wy3Box(x,2.72,4.22,.035,4.8,.04,'#f6dca9');glow.material=new THREE.MeshBasicMaterial({color:0xffe3b1});}
 
+
+// v164: wide premium double-leaf entrance; both leaves pivot inward, not one flat panel.
+const wy3OfficeDoorPivot=new THREE.Group();wy3OfficeDoorPivot.position.set(6.35,0,4.48);wy3Root.add(wy3OfficeDoorPivot);
+const wy3OfficeDoorPivotR=new THREE.Group();wy3OfficeDoorPivotR.position.set(7.90,0,4.48);wy3Root.add(wy3OfficeDoorPivotR);
+const wy3Pearl=new THREE.MeshPhysicalMaterial({color:0xf5f0e6,metalness:.25,roughness:.16,clearcoat:1,clearcoatRoughness:.08});
+const wy3Brass=new THREE.MeshStandardMaterial({color:0xe5c38b,metalness:.60,roughness:.16});
+function wy3DoorLeaf(pivot,side){
+ const leaf=new THREE.Mesh(new THREE.BoxGeometry(1.55,4.45,.19),wy3Pearl);leaf.position.set(side*.775,2.23,0);leaf.userData.wy3Action='officeDoor';pivot.add(leaf);wy3Targets.push(leaf);
+ const trim=new THREE.Mesh(new THREE.BoxGeometry(1.35,4.18,.045),wy3Brass);trim.position.set(side*.775,2.23,.12);pivot.add(trim);
+ const inset=new THREE.Mesh(new THREE.BoxGeometry(1.22,4.03,.053),wy3Pearl);inset.position.set(side*.775,2.23,.153);pivot.add(inset);
+ for(const y of [.40,3.99]){const bar=new THREE.Mesh(new THREE.BoxGeometry(1.25,.065,.065),wy3Brass);bar.position.set(side*.775,y,.192);pivot.add(bar)}
+ for(const x of [.17,1.38]){const bar=new THREE.Mesh(new THREE.BoxGeometry(.055,4.05,.065),wy3Brass);bar.position.set(side*x,2.23,.192);pivot.add(bar)}
+ const handle=new THREE.Mesh(new THREE.BoxGeometry(.075,.78,.13),wy3Brass);handle.position.set(side*1.34,2.16,.28);pivot.add(handle);
+}
+wy3DoorLeaf(wy3OfficeDoorPivot,1);wy3DoorLeaf(wy3OfficeDoorPivotR,-1);
+// Decorative polished metal arch around entrance.
+for(const x of [6.24,8.01]){const post=wy3Box(x,2.70,4.35,.11,5.3,.17,'#e4c58e');post.material=wy3Brass;}
+const crown=wy3Box(7.125,5.39,4.35,1.95,.17,.18,'#e4c58e');crown.material=wy3Brass;
+// Door plaque is genuinely on the door surface, not a floating HUD button.
+const wy3DoorPlate=new THREE.Mesh(new THREE.PlaneGeometry(1.08,.49),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=640;c.height=250;const x=c.getContext('2d');x.fillStyle='#4b3a2b';x.fillRect(0,0,640,250);x.strokeStyle='#e4c58e';x.lineWidth=12;x.strokeRect(8,8,624,234);x.fillStyle='#fff2d2';x.textAlign='center';x.font='bold 61px sans-serif';x.fillText('點我開門',320,150);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),side:THREE.DoubleSide}));
+wy3DoorPlate.position.set(.77,2.94,.203);wy3DoorPlate.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorPlate);wy3Targets.push(wy3DoorPlate);
+// Permanent small replay plaque at right side, readable and separately clickable.
+const wy3ReplayPlaque=wy3Box(8.66,2.65,4.30,.70,.95,.10,'#d7b377','wall');wy3ReplayPlaque.material=wy3Brass;
+const wy3ReplayText=wy3Label('重看介紹',8.66,2.65,4.22,.68,.29);wy3ReplayText.userData.wy3Action='wall';wy3Targets.push(wy3ReplayText);
+wy3Label('BEHIND THE DOOR',7.12,5.12,4.24,2.45,.43);
+wy3Label('林柏均律師私人辦公室',7.12,4.66,4.24,2.55,.31);
 // Windows left wall, distinct from the recessed honor wall.
 for(const z of [-5.5,-2.5]){wy3Box(-9.73,3.75,z,.1,3.4,2.4,'#b8dce6');for(const dz of [-1.2,1.2])wy3Box(-9.64,3.75,z+dz,.14,3.5,.11,'#d1ad6c');}
 // True semicircular bookshelf: individually curved bay positions and books facing inward.
@@ -1937,6 +1958,7 @@ for(const x of [-3.1,3.1])wy3Box(x,.72,-1.55,.10,1.26,2.2,wy3Gold);
 wy3Box(0,1.09,-.35,6.25,.085,.13,wy3Gold);
 // Actual unmodified official WY image on front-facing center, not a redraw.
 const wy3LogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png');wy3LogoTexture.colorSpace=THREE.SRGBColorSpace;
+const wy3DoorLogo=new THREE.Mesh(new THREE.PlaneGeometry(.52,.52),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DoorLogo.position.set(.76,3.64,.209);wy3DoorLogo.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorLogo);wy3Targets.push(wy3DoorLogo);
 const wy3DeskLogo=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DeskLogo.position.set(0,.62,-.352);wy3Root.add(wy3DeskLogo);
 // Working desktop: monitor, keyboard, folders, lamp, work pad.
 wy3Box(0,1.272,-1.73,2.4,.018,.92,'#4e6970');wy3Box(.25,1.63,-2.18,1.35,.75,.11,'#304b59');wy3Box(.25,1.66,-2.11,1.21,.62,.025,'#a6c6cf');wy3Box(.25,1.32,-2.14,.12,.20,.12,'#cba665');wy3Box(.1,1.285,-1.65,.85,.025,.28,'#e8e4db');
@@ -2021,7 +2043,7 @@ wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
 function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
-function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3UpdatePrompts()}
+function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3UpdatePrompts()}
 function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none'}
 function wy3Interact(action){
  if(action==='wall'){wy3ShowIntro();return}
@@ -2065,7 +2087,7 @@ function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textConten
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
- else if(wyOfficeFloor===3){wy3Cam.position.set(18,16,20);wy3Orbit.target.set(0,1.4,0);wy3Orbit.update()}
+ else if(wyOfficeFloor===3){wy3Cam.position.set(8.8,8.2,14.5);wy3Orbit.target.set(7.12,2.55,4.48);wy3Orbit.update()}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';if(wyOfficeFloor===3)wy3Enter();else{wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
 function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
@@ -2101,8 +2123,8 @@ function wyFindLiftPath(from,to,floor){
 function wyResetIndoorRideCamera(floor){
  const ctrl=floor===1?lobbyOrbit:floor===2?officeOrbit:wy3Orbit;
  const cam=floor===1?lobbyCam:floor===2?officeCam:wy3Cam;
- ctrl.target.set(0,floor===1?1.2:floor===2?1.3:1.4,floor===1?-1:floor===2?-.5:0);
- cam.position.set(floor===1?20:floor===2?19:17,floor===1?20:floor===2?19:17,floor===1?27:floor===2?25:23);
+ ctrl.target.set(floor===3?7.12:0,floor===1?1.2:floor===2?1.3:2.55,floor===1?-1:floor===2?-.5:4.48);
+ cam.position.set(floor===1?20:floor===2?19:8.8,floor===1?20:floor===2?19:8.2,floor===1?27:floor===2?25:14.5);
  ctrl.update();}
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
@@ -2146,7 +2168,7 @@ floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
  if(wyOfficeFloor===3){
-  if(wy3OfficeDoorOpened&&wy3DoorProgress<1){wy3DoorProgress=Math.min(1,wy3DoorProgress+dt*.85);wy3OfficeDoorPivot.rotation.y=-Math.PI*.54*(wy3DoorProgress*wy3DoorProgress*(3-2*wy3DoorProgress));}
+  if(wy3OfficeDoorOpened&&wy3DoorProgress<1){wy3DoorProgress=Math.min(1,wy3DoorProgress+dt*.85);wy3OfficeDoorPivot.rotation.y=-Math.PI*.52*(wy3DoorProgress*wy3DoorProgress*(3-2*wy3DoorProgress));wy3OfficeDoorPivotR.rotation.y=Math.PI*.52*(wy3DoorProgress*wy3DoorProgress*(3-2*wy3DoorProgress));}
   if(wy3AutoWalk&&wy3DoorProgress>.75&&wyIndoorActor&&!wyRide){
    const p=wyIndoorActor.position;
    const target=new THREE.Vector3(7.10,.08,2.95);
