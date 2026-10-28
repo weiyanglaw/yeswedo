@@ -1852,13 +1852,108 @@ function wyUpdateGlassCabin(f,dt){
 lbText('迎賓茶點區',-8.7,4.15,-4.0,3.3,.68,'tea');
 lbText('三層樓探索',0,2.0,-2.6,3.3,.68,'lounge');
 
+
+// v159: independent walkable 3F private office, with no changes to 1F or 2F geometry.
+const wy3Scene=new THREE.Scene();wy3Scene.background=new THREE.Color('#d9e6e7');
+wy3Scene.add(new THREE.HemisphereLight(0xfff5e6,0x9daeb6,2.25));
+const wy3Sun=new THREE.DirectionalLight(0xfff2d9,2.1);wy3Sun.position.set(-5,16,12);wy3Scene.add(wy3Sun);
+const wy3Root=new THREE.Group();wy3Scene.add(wy3Root);
+const wy3Targets=[];
+function wy3Mat(c,op=1){return new THREE.MeshStandardMaterial({color:c,roughness:.73,metalness:0,transparent:op<1,opacity:op,side:THREE.DoubleSide,depthWrite:op===1})}
+function wy3Box(x,y,z,w,h,d,c,action){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);if(action){m.userData.wy3Action=action;wy3Targets.push(m)}return m}
+function wy3Cyl(x,y,z,top,bottom,h,c){const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,18),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);return m}
+function wy3Label(str,x,y,z,w=3.2,h=.55){const cv=document.createElement('canvas');cv.width=1024;cv.height=160;const c=cv.getContext('2d');c.fillStyle='#f7f0e2';c.fillRect(0,0,1024,160);c.strokeStyle='#c9a361';c.lineWidth=15;c.strokeRect(8,8,1008,144);c.fillStyle='#385363';c.textAlign='center';c.textBaseline='middle';c.font='bold 55px sans-serif';c.fillText(str,512,81,960);const tx=new THREE.CanvasTexture(cv);tx.colorSpace=THREE.SRGBColorSpace;const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tx,side:THREE.DoubleSide}));m.position.set(x,y,z);wy3Root.add(m);return m}
+// 3F is deliberately smaller than the 1F and 2F offices: 20 x 17.5.
+wy3Box(0,-.18,0,20,.36,17.5,'#d7b98f');
+for(let z=-8;z<8.6;z+=1.3)wy3Box(0,.013,z,19.7,.013,.028,'#c6a37b');
+wy3Box(-9.9,3.1,0,.22,6.2,17.5,'#eadfc9');wy3Box(9.9,3.1,0,.22,6.2,17.5,'#eadfc9');
+wy3Box(0,3.1,-8.67,20,6.2,.23,'#eaddc7');
+for(const x of [-8.7,8.7])wy3Box(x,3.0,-8.48,.25,5.8,.16,'#d2ad66');
+wy3Box(0,6.02,-8.48,19.7,.16,.15,'#d2ad66');
+// Warm daylight windows on the left side, broad recognizable glass panes.
+for(const z of [-4.3,.7,5.7]){wy3Box(-9.73,3.75,z,.1,3.4,3.4,'#b8dce6');for(const dz of [-1.68,1.68])wy3Box(-9.64,3.75,z+dz,.14,3.5,.11,'#d1ad6c');wy3Box(-9.64,3.75,z,.14,.09,3.4,'#d1ad6c')}
+// True semicircular bookshelf: individually curved bay positions and books facing inward.
+const shelfGroup=new THREE.Group();wy3Root.add(shelfGroup);
+const wy3Gold='#cba665',wy3Shelf='#c5c0b5';
+for(let j=0;j<19;j++){
+ const a=Math.PI*.13+Math.PI*.74*j/18;
+ const x=Math.cos(a)*7.15,z=-5.65-Math.sin(a)*2.0;
+ const bay=new THREE.Group();bay.position.set(x,0,z);bay.rotation.y=-Math.atan2(x,5.65+z+.0001)*.30;wy3Root.add(bay);
+ const b=(x,y,z,w,h,d,col)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy3Mat(col));m.position.set(x,y,z);bay.add(m);return m};
+ b(0,3.25,0,.73,6.2,.70,wy3Shelf);b(0,6.35,.09,.82,.16,.78,wy3Gold);
+ for(let row=0;row<5;row++){
+  const y=.72+row*1.06;b(0,y-.39,.30,.82,.12,.78,wy3Gold);
+  for(let k=0;k<5;k++){
+   const palette=['#b94e47','#4678a7','#5b8e63','#cba84e','#bd7944','#8469a6','#526d83','#414c58'];
+   const w=.105+(k%2)*.018,h=.69+((j+k+row)%3)*.065;
+   b(-.26+k*.133,y-.02,.52,w,h,.26,palette[(j*3+k+row)%palette.length]);
+  }
+ }
+}
+// Heavy rectangular partner desk, lawyer side is -Z; visitor front (+Z) has no drawers.
+wy3Box(0,1.10,-1.55,6.35,.29,2.18,'#829eaa','desk');
+wy3Box(0,.62,-.44,6.22,1.00,.14,'#718f9d','desk');
+for(const x of [-2.47,2.47]){wy3Box(x,.55,-1.65,1.05,1.03,1.88,'#718f9d');wy3Box(x,.58,-.58,1.12,.91,.12,'#8da7b0')}
+for(const x of [-3.1,3.1])wy3Box(x,.72,-1.55,.10,1.26,2.2,wy3Gold);
+wy3Box(0,1.09,-.35,6.25,.085,.13,wy3Gold);
+// Actual unmodified official WY image on front-facing center, not a redraw.
+const wy3LogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png');wy3LogoTexture.colorSpace=THREE.SRGBColorSpace;
+const wy3DeskLogo=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DeskLogo.position.set(0,.62,-.352);wy3Root.add(wy3DeskLogo);
+// Working desktop: monitor, keyboard, folders, lamp, work pad.
+wy3Box(0,1.272,-1.73,2.4,.018,.92,'#4e6970');wy3Box(.25,1.63,-2.18,1.35,.75,.11,'#304b59');wy3Box(.25,1.66,-2.11,1.21,.62,.025,'#a6c6cf');wy3Box(.25,1.32,-2.14,.12,.20,.12,'#cba665');wy3Box(.1,1.285,-1.65,.85,.025,.28,'#e8e4db');
+for(let i=0;i<3;i++)wy3Box(-2.0+i*.13,1.31,-1.50,.64,.07,.85,['#e7e2d5','#c7a45f','#e7d2aa'][i]);
+wy3Cyl(2.35,1.37,-2.13,.28,.28,.15,'#c9a462');wy3Box(2.35,1.80,-2.13,.09,.76,.09,'#c9a462');wy3Box(2.02,2.18,-2.13,.85,.10,.35,'#f1d69d');
+// Lawyer chair and two upholstered visitor chairs with four grounded legs.
+function wy3Chair(x,z,c,lawyer=false){const h=lawyer?1.15:.94;wy3Box(x,.73,z,lawyer?1.12:.98,.19,lawyer?1.08:.9,c);wy3Box(x,1.27,z+(lawyer?-.48:.38),lawyer?1.12:.98,h,.18,c);for(const dx of [-.36,.36])for(const dz of [-.30,.30])wy3Box(x+dx,.33,z+dz,.09,.64,.09,'#b69a6a');for(const dx of [-.52,.52])wy3Box(x+dx,.98,z,.09,.12,.74,'#c9a665')}
+wy3Chair(0,-4.0,'#7eaa9d',true);wy3Chair(-1.55,1.6,'#e2cba9');wy3Chair(1.55,1.6,'#e2cba9');
+// B-style glass honor cabinet, wide central portrait screen visibly clickable.
+wy3Box(-6.45,2.5,2.25,3.7,4.85,.73,'#c6c1b7','video');
+for(const x of [-8.0,-4.90])wy3Box(x,2.5,2.69,.10,4.9,.14,wy3Gold);
+wy3Box(-6.45,4.87,2.65,3.70,.12,.12,wy3Gold);
+for(const x of [-7.62,-5.26]){
+ wy3Box(x,3.65,2.68,.80,1.12,.07,'#e9e0cf','credentials');wy3Box(x,2.35,2.68,.80,1.08,.07,'#e9e0cf','credentials');
+ for(const y of [1.66,2.98,4.28])wy3Box(x,y,2.75,.70,.04,.06,wy3Gold);
+}
+wy3Box(-6.45,2.75,2.70,1.65,3.7,.13,'#253f4a','video');
+const wy3Vid=document.createElement('video');wy3Vid.src='lin-lawyer.mp4';wy3Vid.preload='metadata';wy3Vid.playsInline=true;wy3Vid.controls=true;
+const wy3Poster=document.createElement('canvas');wy3Poster.width=320;wy3Poster.height=570;const vp=wy3Poster.getContext('2d');vp.fillStyle='#547988';vp.fillRect(0,0,320,570);vp.fillStyle='#e9d7b3';vp.textAlign='center';vp.font='bold 28px sans-serif';vp.fillText('林柏均 律師',160,95);vp.font='bold 18px sans-serif';vp.fillText('LAWYER PROFILE',160,130);vp.fillStyle='#203c49';vp.beginPath();vp.arc(160,310,74,0,Math.PI*2);vp.fill();vp.fillStyle='#f7e5bc';vp.beginPath();vp.moveTo(145,265);vp.lineTo(145,355);vp.lineTo(212,310);vp.fill();vp.font='bold 20px sans-serif';vp.fillText('點擊播放影片',160,480);
+const wy3PosterTex=new THREE.CanvasTexture(wy3Poster);wy3PosterTex.colorSpace=THREE.SRGBColorSpace;
+const wy3Screen=new THREE.Mesh(new THREE.PlaneGeometry(1.52,3.40),new THREE.MeshBasicMaterial({map:wy3PosterTex}));wy3Screen.position.set(-6.45,2.80,2.795);wy3Screen.userData.wy3Action='video';wy3Root.add(wy3Screen);wy3Targets.push(wy3Screen);
+wy3Label('律師資格・影音展示',-6.45,5.22,2.8,3.4,.55);
+// Two realistic exercise machines, kept in separate right-side area.
+wy3Box(6.35,.04,3.25,4.75,.08,4.8,'#b6c9bd');
+function wy3Bar(x1,y1,z1,x2,y2,z2,r,c){const a=new THREE.Vector3(x1,y1,z1),b=new THREE.Vector3(x2,y2,z2),d=b.clone().sub(a);const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,d.length(),10),wy3Mat(c));m.position.copy(a.add(b).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());wy3Root.add(m);return m}
+// Elliptical: long rails, flywheel, linked pedal rails, upright handles.
+wy3Box(5.3,.19,2.9,1.65,.28,2.5,'#647d83','fitness');wy3Cyl(5.3,.82,2.2,.44,.44,.38,'#9db1b5');
+for(const x of [4.85,5.75]){wy3Bar(x,.40,4.0,x,1.15,2.2,.10,'#556c71');wy3Box(x,1.15,3.35,.35,.11,.85,'#323d43');wy3Bar(x,1.0,2.2,x,2.4,1.95,.075,'#657d83');wy3Bar(x,2.4,1.95,x+(x<5.3?-.35:.35),2.8,2.1,.07,'#657d83')}
+wy3Bar(5.3,.55,2.2,5.3,2.45,2.05,.10,'#5c7279');wy3Box(5.3,2.52,2.04,.52,.36,.18,'#344c58');
+// Exercise bike with proper frame, flywheel, seat, pedals, handlebar.
+wy3Box(7.45,.16,4.25,1.3,.25,1.85,'#6c8187','fitness');
+wy3Bar(7.45,.28,4.85,7.45,1.48,4.25,.11,'#667d82');wy3Bar(7.45,.28,3.70,7.45,1.48,4.25,.10,'#667d82');wy3Cyl(7.45,.85,4.25,.46,.46,.24,'#899da2');wy3Bar(7.45,1.42,4.24,7.45,1.88,4.35,.09,'#647b81');wy3Box(7.45,1.92,4.35,.72,.12,.32,'#34444b');wy3Bar(7.45,1.3,3.77,7.45,2.22,3.36,.085,'#647b81');wy3Bar(7.05,2.22,3.36,7.85,2.22,3.36,.07,'#34444b');
+wy3Label('私人運動區',6.45,5.0,6.8,3.0,.56);
+// Elevator on entrance wall, usable with existing floor-selector and animation.
+wy3Box(7.75,3.03,8.53,3.5,6.1,.26,'#e0c48e','elevator');wy3Box(7.75,3.02,8.38,3.2,5.65,.12,'#f6ebd8','elevator');
+const wy3Doors=[wy3Box(7.0,2.78,8.25,1.43,5.0,.13,'#888783','elevator'),wy3Box(8.5,2.78,8.25,1.43,5.0,.13,'#888783','elevator')];
+wy3Box(7.75,5.96,8.24,3.3,.70,.14,'#344d5c','elevator');wy3Label('3F',7.75,5.98,8.35,1.35,.50);
+// Small warm wall molding, no roof hiding the room.
+for(const x of [-9.75,9.75])wy3Box(x,.40,0,.13,.18,17.2,wy3Gold);
+const wy3Cam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,130);wy3Cam.position.set(17,17,23);wy3Cam.lookAt(0,1.4,0);
+const wy3Orbit=new OrbitControls(wy3Cam,renderer.domElement);wy3Orbit.enabled=false;wy3Orbit.enableDamping=true;wy3Orbit.minDistance=6;wy3Orbit.maxDistance=48;wy3Orbit.maxPolarAngle=Math.PI*.49;wy3Orbit.target.set(0,1.4,0);wy3Orbit.update();
+// Seated lawyer, exclusively in the 3F office.
+const wy3Lawyer=makeStaffChibi({name:'林柏均律師',skin:'#e9bf9e',hair:'#282d35',top:'#263b57',bottom:'#283746',kind:'male'});wy3Root.add(wy3Lawyer.root);wy3Lawyer.root.scale.setScalar(.75);wy3Lawyer.root.position.set(0,.05,-4.1);
+wy3Lawyer.root.traverse(o=>{if(o.isMesh){o.userData.wy3Action='lawyer';wy3Targets.push(o)}});
+const wy3MovieModal=document.createElement('div');wy3MovieModal.style.cssText='display:none;position:fixed;inset:0;background:#0c1b28eF;z-index:120;align-items:center;justify-content:center;flex-direction:column;padding:14px;gap:12px';
+const wy3MovieClose=document.createElement('button');wy3MovieClose.textContent='✕ 關閉影片';wy3MovieClose.style.cssText='padding:12px 22px;border-radius:12px;background:#d6b16d;color:#263a46;font-weight:800;border:0;font-size:16px';wy3MovieModal.append(wy3MovieClose);wy3Vid.style.cssText='max-width:min(92vw,500px);max-height:78dvh;object-fit:contain;background:#000;border:3px solid #d4b26f;border-radius:10px';wy3MovieModal.append(wy3Vid);document.body.append(wy3MovieModal);
+wy3MovieClose.onclick=()=>{wy3Vid.pause();wy3MovieModal.style.display='none'};
+function wy3Interact(action){if(action==='video'){wy3MovieModal.style.display='flex';wy3Vid.play().catch(()=>{});return}if(action==='elevator'){wyLobbyOpen('elevator');return}if(action==='lawyer'){openWyInfo('lawyer');return}if(action==='credentials'){openWyInfo('lawyer');return}if(action==='fitness'){wyLobbyDialog.innerHTML='<h3>林律師的私人運動區</h3><p>滑步機與健身腳踏車，工作之餘也要保持活動。</p><button id="wy3Done">關閉</button>';wyLobbyDialog.style.display='block';document.getElementById('wy3Done').onclick=()=>wyLobbyDialog.style.display='none';return}if(action==='desk'){openWyInfo('lawyer');return}}
+
 // Floor-navigation button belongs to the existing office UI, not a separate disconnected site.
 const floorBtn=document.createElement('button');floorBtn.id='wyFloorButton';floorBtn.textContent='電梯｜選擇樓層';
 floorBtn.style.cssText='display:none;position:fixed;z-index:60;top:70px;right:max(12px, env(safe-area-inset-right));bottom:auto;max-width:min(155px,40vw);padding:10px 12px;background:#233f5b;color:#fff;border:1px solid #dce9ef;border-radius:12px;font-weight:700;font-size:13px;white-space:normal';
 document.body.appendChild(floorBtn);
 // v110 elevator ride state: walking, entering, selecting floor, closing, travelling, opening and exiting.
 let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
-const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(9.1,0,-7.45);
+const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(9.1,0,-7.45),wyElev3Pos=new THREE.Vector3(7.75,0,6.45);const wyElevPos=f=>f===1?wyElev1Pos:f===2?wyElev2Pos:wyElev3Pos;
 const wyWalkUI=document.createElement('div');wyWalkUI.id='wyWalkUI';wyWalkUI.style.cssText='display:none;position:fixed;z-index:49;bottom:85px;left:18px;width:116px;height:116px;pointer-events:auto;touch-action:none;user-select:none';
 wyWalkUI.innerHTML='<div id="wyJoyBase" style="position:relative;width:112px;height:112px;border-radius:50%;background:rgba(245,239,255,.24);border:2px solid rgba(255,255,255,.68);box-shadow:0 3px 14px rgba(74,42,117,.18);touch-action:none"><div id="wyJoyKnob" style="position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#a879d8;border:3px solid #c9a7f0;box-sizing:border-box;box-shadow:0 2px 9px rgba(70,30,110,.38);pointer-events:none"></div></div>';
 document.body.append(wyWalkUI);
@@ -1874,13 +1969,14 @@ addEventListener('keyup',e=>wyMoveKeys.delete(e.key.toLowerCase()));
 const wyLiftPrompt=document.createElement('button');wyLiftPrompt.id='wyLiftPrompt';wyLiftPrompt.textContent='開啟電梯門・走進電梯';wyLiftPrompt.style.cssText='display:none;position:fixed;z-index:50;bottom:138px;right:12px;background:#203e5a;color:white;border:2px solid #d5e7f0;border-radius:12px;padding:9px;font-size:12px;font-weight:700';document.body.append(wyLiftPrompt);
 const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyRideShade.style.cssText='display:none;position:fixed;inset:0;z-index:95;background:#172c43ee;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:10px;font:700 21px system-ui;text-align:center';wyRideShade.innerHTML='<div>德威陽｜有法度</div><div id="wyRideProgress">電梯門關閉中…</div><div id="wyRideFloor" style="font-size:46px">1F</div>';document.body.append(wyRideShade);
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,10.85);lobbyRoot.add(wyIndoorActor)}
-function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:roomRoot;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
- const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3));wyIndoorActor.position.copy(p);
+function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:n===2?roomRoot:wy3Root;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
+ const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(n===2?(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3)):(atElevator?new THREE.Vector3(7.75,.08,7.25):new THREE.Vector3(0,.08,6.7))); wyIndoorActor.position.copy(p);
  wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
-function wySetFloor(n){wyOfficeFloor=n===2?2:1;floorBtn.textContent='電梯｜選擇樓層';
- document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':'德威陽｜2F 今天事務所又怎麼了？';
- officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;
+function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
+ document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
+ officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
+ else if(wyOfficeFloor===3){wy3Cam.position.set(17,17,23);wy3Orbit.target.set(0,1.4,0);wy3Orbit.update()}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';}
 function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
@@ -1914,18 +2010,16 @@ function wyFindLiftPath(from,to,floor){
  return null;
 }
 function wyResetIndoorRideCamera(floor){
- const ctrl=floor===1?lobbyOrbit:officeOrbit;
- const cam=floor===1?lobbyCam:officeCam;
- ctrl.target.set(0,floor===1?1.2:1.3,floor===1?-1:-.5);
- cam.position.set(floor===1?20:19,floor===1?20:19,floor===1?27:25);
- ctrl.update();
-}
+ const ctrl=floor===1?lobbyOrbit:floor===2?officeOrbit:wy3Orbit;
+ const cam=floor===1?lobbyCam:floor===2?officeCam:wy3Cam;
+ ctrl.target.set(0,floor===1?1.2:floor===2?1.3:1.4,floor===1?-1:floor===2?-.5:0);
+ cam.position.set(floor===1?20:floor===2?19:17,floor===1?20:floor===2?19:17,floor===1?27:floor===2?25:23);
+ ctrl.update();}
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
- if(dest===3){wyLobbyOpen('floor3');return;}
- if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
+  if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
  wyIndoorMakeActor();
- const source=wyOfficeFloor,approach=(source===1?wyElev1Pos:wyElev2Pos);
+ const source=wyOfficeFloor,approach=wyElevPos(source);
  const current=wyIndoorActor.position;
  // Repeat rides: after exiting the lift the actor is already in its approach lane.
  // The coarse furniture grid can reject this valid short segment; bypass it only
@@ -1935,6 +2029,7 @@ function wyStartRide(dest){
  // 2F: if the coarse A* grid rejects a valid route, keep the elevator button
  // fully automatic. Run through the narrow clear aisle beside the desks,
  // then reach the lift. No manual walking or ride-count restriction.
+ if(!path&&source===3){path=[new THREE.Vector3(7.75,.08,5.8),approach.clone()];}
  if(!path&&source===2){
   const aisleX=5.3, aisleTop=7.2, aisleBottom=-5.9;
   path=[];
@@ -1969,17 +2064,17 @@ function wyElevatorTick(dt){
   if(k.has('arrowdown')||k.has('s'))z+=1;
   x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
    if(wyOfficeFloor===1){if(nx>-12&&nx<12&&nz>-9.5&&nz<10&&!(Math.abs(nx)<7.2&&nz>4.4&&nz<7.6)&&!(Math.abs(nx)<4&&nz>-5.5&&nz<-1.2)){p.x=nx;p.z=nz;}}
-   else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
+   else if(wyOfficeFloor===3){if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -4.1&&nz>.9&&nz<4.9)&&!(nx>3.6&&nz>1.1&&nz<5.6)){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
   }
-  const target=wyOfficeFloor===1?wyElev1Pos:wyElev2Pos;
+  const target=wyElevPos(wyOfficeFloor);
   const dist=Math.hypot(wyIndoorActor.position.x-target.x,wyIndoorActor.position.z-target.z);
   wyLiftPrompt.style.display='none';
  }
  if(wyRide){
   const r=wyRide;r.time+=dt;
   if(r.phase==='walk'){
-   const near=Math.hypot(wyIndoorActor.position.x-(r.source===1?wyElev1Pos.x:wyElev2Pos.x),wyIndoorActor.position.z-(r.source===1?wyElev1Pos.z:wyElev2Pos.z));
+   const near=Math.hypot(wyIndoorActor.position.x-(wyElevPos(r.source).x),wyIndoorActor.position.z-(wyElevPos(r.source).z));
    if(near<4.5)wyDoorOpen=Math.min(1,wyDoorOpen+dt*1.15);
    // v146: Keep the indoor floor overview stable while the avatar runs to the lift.
    // The old per-frame target/position shifts accumulated and could leave the
@@ -1988,7 +2083,7 @@ function wyElevatorTick(dt){
     if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*28.0);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
    }else{r.phase='enter';r.time=0;wyDoorOpen=1;}
   }else if(r.phase==='enter'){
-   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):new THREE.Vector3(9.1,.08,-9.2);
+   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):r.source===2?new THREE.Vector3(9.1,.08,-9.2):new THREE.Vector3(7.75,.08,8.25);
    const diff=center.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
    if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*20.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
@@ -2002,7 +2097,7 @@ function wyElevatorTick(dt){
    wyDoorOpen=Math.min(1,r.time/1.5);
    if(r.time>=1.5){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
-   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):new THREE.Vector3(9.1,.08,-6.85);
+   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):r.dest===2?new THREE.Vector3(9.1,.08,-6.85):new THREE.Vector3(7.75,.08,6.45);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
    if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*17.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{
@@ -2014,10 +2109,10 @@ function wyElevatorTick(dt){
  }
  wyUpdateGlassCabin(wyDoorOpen,dt);
 
- for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2]]){
+ for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2],[3,wy3Doors]]){
   const f=wyOfficeFloor===i?wyDoorOpen:0,sep=i===1?1.6:1.22;
-  doors[0].position.x=(i===1?7.48:-.85)-f*sep;
-  doors[1].position.x=(i===1?9.32:.85)+f*sep;
+  doors[0].position.x=(i===1?7.48:i===2?-.85:7.0)-f*sep;
+  doors[1].position.x=(i===1?9.32:i===2?.85:8.5)+f*sep;
  }
 }
 
@@ -2031,10 +2126,10 @@ function wyLobbyOpen(action){
  if(action==='elevator')html='<p>選擇想前往的樓層：</p><button data-lb="floor1"><b>1F｜法律冒險，從這裡開始！</b><small style="display:block;font-weight:400">先喝杯咖啡，再出發！</small></button><button data-lb="floor2"><b>2F｜小編生存戰！</b><small style="display:block;font-weight:400">辦公室祕密大公開！</small></button><button data-lb="floor3"><b>3F｜最終Boss登場！</b><small style="display:block;font-weight:400">老闆今天在辦公室嗎？</small></button>';
  if(action==='contact')html='<p>法律諮詢與聯絡方式：</p><p><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener">LINE｜@wylaw</a></p><p><a href="https://weiandyang.com" target="_blank" rel="noopener">官網｜weiandyang.com</a></p>';
  if(action==='services')html='<p>跨國商務、企業法務、民刑事訴訟、家事繼承、勞動、醫療與智慧財產等法律服務。</p>';
- if(action==='floor3')html='<p>3F 規劃為林柏均律師專屬辦公室。林律師具台灣與紐約州律師資格，擁有 Emory LL.M. 與 University of La Verne MBA 學位。</p><p>此版本尚未建置獨立3F場景，避免將2F誤當3F。</p>';
+ if(action==='floor3')html='<p>3F 林柏均律師私人辦公室已開放參觀。</p><button data-lb="floor3">搭電梯前往3F</button>'; 
  wyLobbyDialog.innerHTML='<h3 style="margin:0 0 8px">'+head+'</h3>'+html+'<button data-lb="close">關閉</button>';
  wyLobbyDialog.querySelectorAll('button').forEach(b=>{b.style.cssText='display:block;width:100%;margin:9px 0;padding:11px;background:#284967;color:white;border:0;border-radius:10px;font-weight:700';b.onclick=()=>{
- const a=b.dataset.lb;if(a==='close'){wyLobbyDialog.style.display='none';return}if(a==='floor1'||a==='floor2'){wyStartRide(a==='floor2'?2:1);return}
+ const a=b.dataset.lb;if(a==='close'){wyLobbyDialog.style.display='none';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
  if(a==='about'){wyLobbyDialog.style.display='none';openWyInfo('company');return}wyLobbyOpen(a);
  }});wyLobbyDialog.style.display='block';
 }
@@ -2051,7 +2146,7 @@ const wyTouchCanvas=renderer.domElement;
 const wyYAxis=new THREE.Vector3(0,1,0);
 function wyActiveViewControl(){
  if(insideOffice){
-  if(activeIslandRoom===0)return wyOfficeFloor===1?lobbyOrbit:officeOrbit;
+  if(activeIslandRoom===0)return wyOfficeFloor===1?lobbyOrbit:wyOfficeFloor===2?officeOrbit:wy3Orbit;
   const room=themeRooms[activeIslandRoom];
   return room?.orbit?.enabled?room.orbit:null;
  }
@@ -2202,7 +2297,7 @@ const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。
 let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
 function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[i][1]+(i===0?12:12));alignActorToGround();document.getElementById('where').textContent=emoji[i]+' '+names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(0,195,255);orbit.target.set(0,0,0);syncIslandCameraMode()};
 // v42: initial creator completion shows the same six-island overview.
-document.getElementById('startExplore').addEventListener('click',()=>{if(document.getElementById('creator').classList.contains('finished')){follow=false;overview=true;medicalFocusAnim=null;camera.position.set(0,195,255);orbit.target.set(0,0,0);orbit.update();}});document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){if(!activeIslandRoom&&wyOfficeFloor===1)wyLobbyOpen('lounge');else officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};// Direct focus avoids repeated dragging and getting stuck at the map edge.
+document.getElementById('startExplore').addEventListener('click',()=>{if(document.getElementById('creator').classList.contains('finished')){follow=false;overview=true;medicalFocusAnim=null;camera.position.set(0,195,255);orbit.target.set(0,0,0);orbit.update();}});document.getElementById('follow').onclick=()=>{follow=true;overview=false};document.getElementById('help').onclick=()=>talk('德威陽城堡');document.getElementById('interact').onclick=()=>{if(insideOffice){if(!activeIslandRoom&&wyOfficeFloor===1)wyLobbyOpen('lounge');else if(wyOfficeFloor===3)wy3Interact('lawyer');else officeTalk(2);return;}let nearest=0,best=Infinity;for(let i=0;i<6;i++){const d=Math.hypot(actor.position.x-xy[i][0],actor.position.z-xy[i][1]);if(d<best){best=d;nearest=i}}talk(names[nearest])};// Direct focus avoids repeated dragging and getting stuck at the map edge.
 let medicalFocusAnim=null;
 
 const ray=new THREE.Raycaster(),pointer=new THREE.Vector2();
@@ -2333,7 +2428,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){const action=hit[0].object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
  const objects=themeRooms[2].medicalRoom?.interactionTargets||[];
  const hit=ray.intersectObjects(objects,true);if(hit.length){const target=hit[0].object;if(target.userData.medicalAction==='logo'){openWyInfo('company');return;}medicalExperience.open(target.userData.medicalAction||'staff');return;}
- return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}ray.setFromCamera(pointer,officeCam);const wyElev2Hit=ray.intersectObjects(wyElev2ClickTargets,true);if(wyElev2Hit.length){wyElevatorOpen();wyLobbyOpen('elevator');return;}const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);else if(wyIndoorActor&&Math.hypot(wyIndoorActor.position.x-9.1,wyIndoorActor.position.z+8.1)<4){wyElevatorOpen();wyLobbyOpen('elevator')}return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);if(ray.intersectObjects(islandLabels).length)return;if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}for(let idx=1;idx<6;idx++){const target=islandBuildingTargets[idx];if(target&&ray.intersectObject(target,true).length){enterIslandRoom(idx);return;}}const hits=ray.intersectObjects(clickable);if(hits.length){const label=hits[0].object.userData.label;const idx=names.indexOf(label);if(idx>0){enterIslandRoom(idx);return;}talk(label);return}// Cloud nameplates are decorative and NEVER act as entry buttons.
+ return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}if(wyOfficeFloor===3){ray.setFromCamera(pointer,wy3Cam);const h=ray.intersectObjects(wy3Targets,true);if(h.length)wy3Interact(h[0].object.userData.wy3Action||h[0].object.parent?.userData.wy3Action);return;}ray.setFromCamera(pointer,officeCam);const wyElev2Hit=ray.intersectObjects(wyElev2ClickTargets,true);if(wyElev2Hit.length){wyElevatorOpen();wyLobbyOpen('elevator');return;}const hit=ray.intersectObjects(roomClickable);if(hit.length)officeTalk(hit[0].object.userData.officeZone);else if(wyIndoorActor&&Math.hypot(wyIndoorActor.position.x-9.1,wyIndoorActor.position.z+8.1)<4){wyElevatorOpen();wyLobbyOpen('elevator')}return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);if(ray.intersectObjects(islandLabels).length)return;if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}for(let idx=1;idx<6;idx++){const target=islandBuildingTargets[idx];if(target&&ray.intersectObject(target,true).length){enterIslandRoom(idx);return;}}const hits=ray.intersectObjects(clickable);if(hits.length){const label=hits[0].object.userData.label;const idx=names.indexOf(label);if(idx>0){enterIslandRoom(idx);return;}talk(label);return}// Cloud nameplates are decorative and NEVER act as entry buttons.
 
 
  // Ground tap: raycast against the six floating island top surfaces and bridge decks.
@@ -2344,6 +2439,6 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   if((onIsland||onBridge)&&walkAllowed(hitPoint.x,hitPoint.z))scheduleWalk(hitPoint);
  }
 });
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else{officeOrbit.update();renderer.render(officeScene,officeCam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div></body></html>
