@@ -41,7 +41,7 @@ export function createBusinessHeadquarters(island, THREE){
  // Two large forward-facing architectural facets on each side; thick and 3D.
  for(const x of [-9.3,9.2]){
    box(4.2,3.7,.27,x,2.8,-1.36,glassDark);
-   box(3.55,2.9,.29,x,2.8,-1.18,ice);
+   box(3.55,2.9,.29,x,2.8,-.97,ice);
    for(const dx of [-1.93,1.93])box(.35,4.0,.40,x+dx,2.9,-1.06,pearl);
  }
  // Connected campus wings; one front entry and level continuous walking surface.
@@ -62,7 +62,7 @@ export function createBusinessHeadquarters(island, THREE){
  const texture=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261028-v166');
  texture.colorSpace=THREE.SRGBColorSpace;
  const logo=new THREE.Mesh(new THREE.PlaneGeometry(5.05,6.4),new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
- logo.position.set(0,10.7,-1.005);root.add(logo);
+ logo.position.set(0,10.7,-.68);root.add(logo);
  // Broad, recognizable low-poly trees; no obstruction of main approach.
  function broadTree(x,z,scale=1){
   const g=new THREE.Group();g.position.set(x,.35,z);g.scale.setScalar(scale);root.add(g);
@@ -77,7 +77,7 @@ export function createBusinessHeadquarters(island, THREE){
 
  // v166 future-fashion corporate headquarters: sculptural elliptical sky ring,
  // translucent purple curves, floating galleries and pearl/champagne trim.
- const purpleGlass=new THREE.MeshPhysicalMaterial({color:0x66439a,metalness:.18,roughness:.13,transparent:true,opacity:.83,side:THREE.DoubleSide,depthWrite:true});
+ const purpleGlass=new THREE.MeshPhysicalMaterial({color:0x66439a,metalness:.18,roughness:.13,transparent:false,opacity:1,side:THREE.FrontSide,depthWrite:true});
  const luminous=new THREE.MeshBasicMaterial({color:0xe9d6ff,side:THREE.DoubleSide});
  const silver=new THREE.MeshStandardMaterial({color:0xf4ecff,metalness:.5,roughness:.24,side:THREE.DoubleSide});
  const goldLine=new THREE.MeshStandardMaterial({color:0xd5b780,metalness:.75,roughness:.2});
@@ -99,7 +99,7 @@ export function createBusinessHeadquarters(island, THREE){
  }
  // Elevated grand portico and fountain basins flanking an unobstructed central entry.
  const portico=new THREE.Mesh(new THREE.TorusGeometry(5.15,.20,12,80,Math.PI),goldLine);portico.rotation.z=Math.PI;portico.position.set(0,5.4,4.25);root.add(portico);
- const waterMat=new THREE.MeshPhysicalMaterial({color:0x9278ce,metalness:.15,roughness:.09,transparent:true,opacity:.78});
+ const waterMat=new THREE.MeshPhysicalMaterial({color:0x9278ce,metalness:.15,roughness:.09,transparent:false,opacity:1});
  for(const side of [-1,1]){
   const basin=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.05,.18,40),silver);basin.scale.z=.62;basin.position.set(side*7.8,.3,8.3);root.add(basin);
   const water=new THREE.Mesh(new THREE.CylinderGeometry(1.86,1.86,.035,40),waterMat);water.scale.z=.62;water.position.set(side*7.8,.41,8.3);root.add(water);
