@@ -4,6 +4,17 @@
 #wyGestures{position:fixed;z-index:12;right:10px;top:116px;width:min(138px,calc(100vw - 20px));background:#112940f5;color:#fff7e9;border:1.5px solid #d9b778;border-radius:16px;box-shadow:0 10px 30px #11294055;font:11px/1.45 -apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;overflow:hidden}
 #wyGestures[hidden]{display:none!important}#wyGestures summary{cursor:pointer;list-style:none;padding:5px 7px;font-weight:750;color:#f1d6a2;display:flex;align-items:center;justify-content:space-between;gap:8px}#wyGestures summary::-webkit-details-marker{display:none}#wyGestures summary:after{content:'收合 ⌃';font-size:10px;color:#f7ead0}#wyGestures:not([open]) summary:after{content:'展開 ⌄'}#wyGestures[open]{width:min(260px,calc(100vw - 20px))}#wyGestures .wySteps{padding:3px 9px 9px;border-top:1px solid #c6a36988}#wyGestures .wyStep{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #ffffff18}#wyGestures .wyHand{flex:none;width:48px;height:44px;display:grid;place-items:center;font-size:27px;background:#27425d;border-radius:10px}#wyGestures b{color:#f2d5a0}#wyGestures small{color:#e6e9ed}#wyGestures .wyFoot{font-size:11px;color:#d7c5a6;padding-top:8px}
 @media(max-width:600px){#wyGestures[open]{width:min(235px,calc(100vw - 16px))}#wyGestures{top:145px;right:8px;width:min(155px,calc(100vw - 16px));font-size:11px}#wyGestures .wyHand{width:40px;height:40px;font-size:23px}}
+</style><style id="wy-v146-mobile-camera-ui">
+/* v146: Keep every indoor navigation control within the actual mobile viewport. */
+#officeUI{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;overflow:visible!important}
+#officeUI>div:first-child{position:absolute!important;top:calc(8px + env(safe-area-inset-top,0px))!important;left:calc(8px + env(safe-area-inset-left,0px))!important;right:calc(8px + env(safe-area-inset-right,0px))!important;display:flex!important;flex-wrap:wrap!important;gap:5px!important;align-items:flex-start!important;justify-content:flex-end!important;max-width:100%!important}
+#officeUI>div:first-child strong{margin-right:auto!important;min-width:0!important;max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
+#officeUI>div:first-child button{flex:0 0 auto!important;white-space:normal!important}
+#wyFloorButton{position:fixed!important;top:calc(88px + env(safe-area-inset-top,0px))!important;right:calc(8px + env(safe-area-inset-right,0px))!important;left:auto!important;max-width:min(170px,48vw)!important;white-space:normal!important;overflow-wrap:anywhere!important}
+#wyWalkUI{left:calc(12px + env(safe-area-inset-left,0px))!important;bottom:calc(64px + env(safe-area-inset-bottom,0px))!important}
+#wyMainGuideAgain{max-width:min(170px,45vw)!important}
+@media(max-width:600px){#officeUI>div:first-child strong{font-size:11px!important;padding:7px 8px!important}#officeUI>div:first-child button{font-size:11px!important;padding:7px 8px!important}#wyFloorButton{top:calc(104px + env(safe-area-inset-top,0px))!important;padding:8px 9px!important;font-size:12px!important}}
+@media(max-width:390px){#officeUI>div:first-child strong{flex-basis:100%!important}#wyFloorButton{top:calc(114px + env(safe-area-inset-top,0px))!important}}
 </style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
 <div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><label for="visitorName">角色名稱</label><input id="visitorName" maxlength="14" placeholder="法律探險家" value="法律探險家"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"><div class="wardrobeHeading">🎀 自由換裝｜每件衣服獨立搭配</div><label for="avatarTopStyle">① 上衣（單獨選擇）</label><select id="avatarTopStyle"><option value="tshirt">短袖 T 恤</option><option value="longsleeve">長袖 T 恤</option><option value="shirt">襯衫</option><option value="polo">Polo 衫</option><option value="hoodie">帽 T</option><option value="knit">針織衫</option></select><div class="wearTip" id="tip_avatarTopStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarBottomStyle">② 下半身（單獨選擇）</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="jeans">牛仔長褲</option><option value="casual">休閒長褲</option><option value="suitpants">西裝褲</option><option value="pleated">百褶短裙</option><option value="longskirt">長裙</option></select><div class="wearTip" id="tip_avatarBottomStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarJacket">③ 外套（可選擇不穿）</label><select id="avatarJacket"><option value="none">不穿外套</option><option value="blazer">西裝外套</option><option value="cardigan">針織外套</option><option value="denim">牛仔外套</option><option value="ziphood">連帽外套</option><option value="trench">風衣</option></select><div class="wearTip" id="tip_avatarJacket">選擇款式後，3D 人物會直接更換造型</div><label for="avatarOnepiece">④ 連身服裝（會取代上衣與下半身）</label><select id="avatarOnepiece"><option value="none">不穿連身服裝</option><option value="casualdress">休閒洋裝</option><option value="princess">公主洋裝</option><option value="shirtdress">襯衫洋裝</option><option value="formaldress">正式洋裝</option><option value="jumpsuit">連身褲</option></select><div class="wearTip" id="tip_avatarOnepiece">選擇款式後，3D 人物會直接更換造型</div><label for="avatarShoes">⑤ 鞋子</label><select id="avatarShoes"><option value="sneakers">白色球鞋</option><option value="casualshoes">休閒鞋</option><option value="leather">皮鞋</option><option value="maryjane">瑪莉珍鞋</option><option value="boots">短靴</option><option value="sandals">涼鞋</option></select><div class="wearTip" id="tip_avatarShoes">選擇款式後，3D 人物會直接更換造型</div><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca" style="width:100%;height:40px;padding:2px"><label for="avatarBottomColor">褲子／裙子顏色</label><input id="avatarBottomColor" type="color" value="#374b75" style="width:100%;height:40px;padding:2px"><label for="avatarJacketColor">外套顏色</label><input id="avatarJacketColor" type="color" value="#8e6580" style="width:100%;height:40px;padding:2px"><label for="avatarDressColor">連身服裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8" style="width:100%;height:40px;padding:2px"><label for="avatarShoeColor">鞋子顏色</label><input id="avatarShoeColor" type="color" value="#f7f2e7" style="width:100%;height:40px;padding:2px"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
@@ -1479,7 +1490,7 @@ for(const [x,z,c] of [[-7.1,-8.56,'#F28C36'],[-6.78,-8.45,'#D9413D'],[-6.48,-8.5
  const m=new THREE.Mesh(new THREE.SphereGeometry(.17,12,10),lbMat(c));m.position.set(x,1.91,z);lobbyRoot.add(m);m.userData.lobbyAction='tea';lobbyTargets.push(m);
 }
 // Colorful desserts on the left-side return counter.
-for(const [z,c] of [[-7.6,'#F0B7C8'],[-6.9,'#E9D16A'],[-6.2,'#8DBAC8'],[-5.5,'#A77FCE'],[-4.8,'#D99564']]){
+for(const [z,c] of [[-7.6,'#F0B7C8'],[-6.9,'#E9D16A'],[-6.2,'#8DBAC8']]){
  lbCylinder(-11.95,1.79,z,.27,.29,.21,'#F8E4C9','tea',16);
  lbCylinder(-11.95,1.94,z,.22,.24,.13,c,'tea',16);
  lbCylinder(-11.95,2.04,z,.065,.065,.07,'#F9F6E9','tea',12);
@@ -1674,7 +1685,7 @@ lbText('三層樓探索',0,2.0,-2.6,3.3,.68,'lounge');
 
 // Floor-navigation button belongs to the existing office UI, not a separate disconnected site.
 const floorBtn=document.createElement('button');floorBtn.id='wyFloorButton';floorBtn.textContent='電梯｜選擇樓層';
-floorBtn.style.cssText='display:none;position:fixed;z-index:60;top:70px;right:12px;bottom:auto;max-width:155px;padding:10px 12px;background:#233f5b;color:#fff;border:1px solid #dce9ef;border-radius:12px;font-weight:700;font-size:13px;white-space:normal';
+floorBtn.style.cssText='display:none;position:fixed;z-index:60;top:70px;right:max(12px, env(safe-area-inset-right));bottom:auto;max-width:min(155px,40vw);padding:10px 12px;background:#233f5b;color:#fff;border:1px solid #dce9ef;border-radius:12px;font-weight:700;font-size:13px;white-space:normal';
 document.body.appendChild(floorBtn);
 // v110 elevator ride state: walking, entering, selecting floor, closing, travelling, opening and exiting.
 let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
@@ -1733,16 +1744,34 @@ function wyFindLiftPath(from,to,floor){
  }
  return null;
 }
+function wyResetIndoorRideCamera(floor){
+ const ctrl=floor===1?lobbyOrbit:officeOrbit;
+ const cam=floor===1?lobbyCam:officeCam;
+ ctrl.target.set(0,floor===1?1.2:1.3,floor===1?-1:-.5);
+ cam.position.set(floor===1?20:19,floor===1?20:19,floor===1?27:25);
+ ctrl.update();
+}
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
  if(dest===3){wyLobbyOpen('floor3');return;}
  if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
  wyIndoorMakeActor();
  const source=wyOfficeFloor,approach=(source===1?wyElev1Pos:wyElev2Pos);
- const path=wyFindLiftPath(wyIndoorActor.position,approach,source);
- if(!path){wyLobbyDialog.style.display='none';wyLobbyOpen('elevator');return;}
+ const current=wyIndoorActor.position;
+ // Repeat rides: after exiting the lift the actor is already in its approach lane.
+ // The coarse furniture grid can reject this valid short segment; bypass it only
+ // when the actor is physically close and the corridor is unobstructed.
+ const nearLift=Math.hypot(current.x-approach.x,current.z-approach.z)<2.5;
+ const path=nearLift?[approach.clone()]:wyFindLiftPath(current,approach,source);
+ if(!path){
+  wyLobbyDialog.style.display='none';
+  wyLiftPrompt.textContent='目前無法抵達電梯，請移動到通道後再試';
+  wyLiftPrompt.style.display='block';
+  return;
+ }
  wyLobbyDialog.style.display='none';wyLiftPrompt.style.display='none';wyIndoorPath=path;
- wyRide={phase:'walk',time:0,source,dest,openAmount:0};wyDoorOpen=0;
+ wyResetIndoorRideCamera(source);
+ wyRideShade.style.display='none';wyRide={phase:'walk',time:0,source,dest,openAmount:0};wyDoorOpen=0;
 }
 
 wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
@@ -1769,32 +1798,35 @@ function wyElevatorTick(dt){
   if(r.phase==='walk'){
    const near=Math.hypot(wyIndoorActor.position.x-(r.source===1?wyElev1Pos.x:wyElev2Pos.x),wyIndoorActor.position.z-(r.source===1?wyElev1Pos.z:wyElev2Pos.z));
    if(near<4.5)wyDoorOpen=Math.min(1,wyDoorOpen+dt*1.15);
-   const cameraCtrl=r.source===1?lobbyOrbit:officeOrbit,viewCam=r.source===1?lobbyCam:officeCam;
-   const follow=new THREE.Vector3(wyIndoorActor.position.x,1.2,wyIndoorActor.position.z);
-   const shift=follow.sub(cameraCtrl.target).multiplyScalar(Math.min(1,dt*2.2));
-   cameraCtrl.target.add(shift);viewCam.position.add(shift);
+   // v146: Keep the indoor floor overview stable while the avatar runs to the lift.
+   // The old per-frame target/position shifts accumulated and could leave the
+   // room tiny or off-screen after repeat rides. Avatar motion remains unchanged.
    if(wyIndoorPath.length){const target=wyIndoorPath[0],diff=target.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
-    if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*15.5);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
+    if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*28.0);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
    }else{r.phase='enter';r.time=0;wyDoorOpen=1;}
   }else if(r.phase==='enter'){
    const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):new THREE.Vector3(9.1,.08,-9.2);
    const diff=center.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
-   if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*10.5)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
+   if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*20.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
   }else if(r.phase==='close'){
-   wyDoorOpen=Math.max(0,1-r.time/.72);
-   if(r.time>=.72){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
-  }else if(r.phase==='travel'&&r.time>=.48){
-   wySetFloor(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
+   wyDoorOpen=Math.max(0,1-r.time/.6);
+   if(r.time>=.6){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
+  }else if(r.phase==='travel'&&r.time>=.15){
+   wySetFloor(r.dest);wyResetIndoorRideCamera(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
   }else if(r.phase==='arrive'){
-   wyDoorOpen=Math.min(1,r.time/.75);
-   if(r.time>=.75){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
+   wyDoorOpen=Math.min(1,r.time/.5);
+   if(r.time>=.5){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
    const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):new THREE.Vector3(9.1,.08,-6.85);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
-   if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*10.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
-   else{wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';}
+   if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*17.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
+   else{
+    wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';
+    // Restore the standard floor overview after the temporary ride follow camera.
+    wyResetIndoorRideCamera(r.dest);
+   }
   }
  }
  wyUpdateGlassCabin(wyDoorOpen,dt);
