@@ -115,7 +115,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261027-v107';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v137-luxury-green-medical';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261027-v107';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -1213,9 +1213,9 @@ function lbText(text,x,y,z,w=3.0,h=.68,action=null,face='front'){
  g.fillStyle='#203c57';g.beginPath();g.roundRect(9,8,1006,204,37);g.fill();g.strokeStyle='#e2e9ef';g.lineWidth=8;g.stroke();
  g.fillStyle='#fffdf7';g.textAlign='center';g.textBaseline='middle';g.font='bold 90px "Noto Sans TC",sans-serif';g.fillText(text,512,114,935);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;
- const m=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,depthWrite:false}));
+ const m=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:true,depthWrite:false}));
  m.scale.set(w,h,1);m.position.set(x,y,z);
- m.renderOrder=20;lobbyRoot.add(m);if(action){m.userData.lobbyAction=action;lobbyTargets.push(m)}return m;
+ m.renderOrder=0;lobbyRoot.add(m);if(action){m.userData.lobbyAction=action;lobbyTargets.push(m)}return m;
 }
 function lbLogo(x,y,z,w,h,side=false){
  const tex=new THREE.TextureLoader().load('weiyang-logo-tight-v102.png');tex.colorSpace=THREE.SRGBColorSpace;
@@ -1290,6 +1290,7 @@ for(const side of [-1,1]){
 }
 // v124: substantial, symmetrical champagne-gold royal foliage OUTSIDE the original logo image.
 // v137: three cohesive luxury portal frames; no fine foliage or logo-side scribbles.
+const wyLogoAnimations=[];
 function wyLuxuryLogoFrame(x,y,z,side=false){
  const group=new THREE.Group();group.position.set(x,y,z);
  if(side)group.rotation.y=x<0?Math.PI/2:-Math.PI/2;
@@ -1310,6 +1311,26 @@ function wyLuxuryLogoFrame(x,y,z,side=false){
   bar(6.23,.22,.22,0,yy,.10,gold);
   bar(5.90,.065,.25,0,yy+(yy<0?.075:-.075),.23,bright);
  }
+ // v138: two champagne-gold tracers run on the outer frame, never touching the official logo texture.
+ const perimeter=2*(6.05+4.86),points=[];
+ const pointAt=t=>{let d=((t%perimeter)+perimeter)%perimeter;
+  if(d<6.05)return new THREE.Vector3(-3.025+d,-2.43,.405);d-=6.05;
+  if(d<4.86)return new THREE.Vector3(3.025,-2.43+d,.405);d-=4.86;
+  if(d<6.05)return new THREE.Vector3(3.025-d,2.43,.405);d-=6.05;
+  return new THREE.Vector3(-3.025,2.43-d,.405);
+ };
+ const tracerMat=new THREE.MeshBasicMaterial({color:0xffe6a3,transparent:true,opacity:.95,depthTest:true});
+ const tracers=[];
+ for(let j=0;j<2;j++){
+  const segments=[];for(let k=0;k<9;k++){
+   const seg=new THREE.Mesh(new THREE.SphereGeometry(.052,6,5),tracerMat);
+   group.add(seg);segments.push(seg);
+  }tracers.push(segments);
+ }
+ wyLogoAnimations.push(t=>{for(let j=0;j<2;j++)for(let k=0;k<9;k++){
+  const pos=pointAt(t*.0029*perimeter+j*perimeter/2-k*.095);
+  tracers[j][k].position.copy(pos);
+ }});
  // Four bold corner caps remain legible from a distant mobile camera.
  for(const xx of [-3.02,3.02])for(const yy of [-2.43,2.43]){
   bar(.56,.49,.30,xx,yy,.19,gold);
@@ -1599,6 +1620,54 @@ wy2Box(2.14,2.93,.36,.22,.76,.13,'#243D58');
 const wy2Digit=wyLiftNumeral('2',0,5.95,.348,1.30,.54,wyElev2);
 const wyElev2ClickTargets=[...wyElev2.children,wy2Digit];
 
+// v138: curved medical-island-style glass cabins, open roof and curved sliding doors.
+const wyGlassCabins={};
+function wyBuildGlassCabin(parent,cx,cz,one){
+ const root=new THREE.Group();root.position.set(cx,0,cz);parent.add(root);
+ const glass=new THREE.MeshPhysicalMaterial({color:0xD6E9E9,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide,roughness:.18,metalness:0});
+ const gold=new THREE.MeshStandardMaterial({color:0xD7B377,metalness:.55,roughness:.3});
+ const blue=new THREE.MeshStandardMaterial({color:0x193B59,metalness:.15,roughness:.5});
+ const cream=new THREE.MeshStandardMaterial({color:0xF5E9D5,roughness:.75});
+ const glow=new THREE.MeshBasicMaterial({color:0xF4D59B,transparent:true,opacity:.22,depthWrite:false});
+ const add=(geom,mat,x=0,y=0,z=0)=>{const o=new THREE.Mesh(geom,mat);o.position.set(x,y,z);root.add(o);return o};
+ // Local +Z faces the walkable lobby. No roof or ceiling is added.
+ add(new THREE.CylinderGeometry(1.61,1.61,.10,48),blue,0,.10,0);
+ add(new THREE.CylinderGeometry(1.52,1.52,.045,48),gold,0,.19,0);
+ add(new THREE.CylinderGeometry(1.43,1.43,.05,48),blue,0,.24,0);
+ const ring=add(new THREE.TorusGeometry(.98,.095,8,52),glow.clone(),0,.29,0);ring.rotation.x=Math.PI/2;
+ const wall=add(new THREE.BoxGeometry(2.85,5.25,.11),cream,0,2.87,-1.43);
+ const hand=add(new THREE.TorusGeometry(1.42,.045,7,45,Math.PI*1.55),gold,0,2.12,0);hand.rotation.x=Math.PI/2;
+ const sideParts=[];
+ for(const [start,len] of [[.61,.90],[-1.51,.90]]){
+  const mesh=add(new THREE.CylinderGeometry(1.61,1.61,5.5,26,1,true,start,len),glass,0,3.0,0);sideParts.push(mesh);
+ }
+ const doors=[];
+ for(const [start,len,sign] of [[0,.61,1],[-.61,.61,-1]]){
+  const pivot=new THREE.Group();root.add(pivot);
+  const door=new THREE.Mesh(new THREE.CylinderGeometry(1.635,1.635,5.45,20,1,true,start,len),glass);
+  door.position.y=3.0;pivot.add(door);doors.push({pivot,sign});
+ }
+ for(const angle of [-1.51,-.61,0,.61,1.51]){
+  const post=add(new THREE.CylinderGeometry(.065,.065,5.7,8),gold,Math.sin(angle)*1.61,3.0,Math.cos(angle)*1.61);
+ }
+ const top=add(new THREE.TorusGeometry(1.61,.065,8,48,Math.PI),gold,0,5.75,0);top.rotation.x=Math.PI/2;
+ const welcome=new THREE.PointLight(0xffdca0,.26,4.6);welcome.position.set(0,2.5,.25);root.add(welcome);
+ const clickable=add(new THREE.CylinderGeometry(1.69,1.69,5.5,24,1,true,-.65,1.30),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}),0,3.0,0);
+ if(one){clickable.userData.lobbyAction='elevator';lobbyTargets.push(clickable)}else{wyElev2ClickTargets.push(clickable)}
+ return {doors,welcome,ring,root};
+}
+wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
+wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,1.02,false);
+wyElevDoors1.forEach(d=>d.visible=false);wyElevDoors2.forEach(d=>d.visible=false);
+function wyUpdateGlassCabin(f,dt){
+ for(const [n,c] of Object.entries(wyGlassCabins)){
+  const desired=(Number(n)===wyOfficeFloor?f:0);
+  c.doors[0].pivot.rotation.y=-desired*.73;c.doors[1].pivot.rotation.y=desired*.73;
+  const target=.27+desired*.95;
+  c.welcome.intensity+=(target-c.welcome.intensity)*Math.min(1,dt*5);
+  c.ring.material.opacity=.16+desired*.53;
+ }
+}
 // Same small text-only floating interaction labels as 2F, never icons or large explainer boards.
 lbText('迎賓茶點區',-8.7,4.15,-4.0,3.3,.68,'tea');
 lbText('三層樓探索',0,2.0,-2.6,3.3,.68,'lounge');
@@ -1609,7 +1678,7 @@ floorBtn.style.cssText='display:none;position:fixed;z-index:60;top:70px;right:12
 document.body.appendChild(floorBtn);
 // v110 elevator ride state: walking, entering, selecting floor, closing, travelling, opening and exiting.
 let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
-const wyElev1Pos=new THREE.Vector3(8.4,0,-8.8),wyElev2Pos=new THREE.Vector3(9.1,0,-8.1);
+const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(9.1,0,-7.45);
 const wyWalkUI=document.createElement('div');wyWalkUI.id='wyWalkUI';wyWalkUI.style.cssText='display:none;position:fixed;z-index:49;bottom:85px;left:18px;width:116px;height:116px;pointer-events:auto;touch-action:none;user-select:none';
 wyWalkUI.innerHTML='<div id="wyJoyBase" style="position:relative;width:112px;height:112px;border-radius:50%;background:rgba(245,239,255,.24);border:2px solid rgba(255,255,255,.68);box-shadow:0 3px 14px rgba(74,42,117,.18);touch-action:none"><div id="wyJoyKnob" style="position:absolute;left:33px;top:33px;width:46px;height:46px;border-radius:50%;background:#a879d8;border:3px solid #c9a7f0;box-sizing:border-box;box-shadow:0 2px 9px rgba(70,30,110,.38);pointer-events:none"></div></div>';
 document.body.append(wyWalkUI);
@@ -1634,19 +1703,46 @@ function wySetFloor(n){wyOfficeFloor=n===2?2:1;floorBtn.textContent='電梯｜�
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';}
-function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=1;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
+function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
+function wyFindLiftPath(from,to,floor){
+ // 0.6-unit A* grid, with clearance around the existing major furniture islands.
+ const step=.6, x0=-12,z0=-9.2,nx=40,nz=33;
+ const key=(x,z)=>x+','+z;
+ const blocked=(x,z)=>{
+  if(x<-11.7||x>11.65||z<-9.0||z>10)return true;
+  if(floor===1){
+   if(Math.abs(x)<7.35&&z>4.05&&z<7.85)return true; // reception
+   if(Math.abs(x)<4.3&&z>-5.8&&z<-1.0)return true; // central furniture
+   if(x>5.9&&x<10.9&&z>-.5&&z<4.7)return true; // tea / furniture
+  }else{
+   if(Math.abs(x)<5.1&&z>-5.2&&z<5.0)return true; // central office desks
+   if(x>5.5&&z>-.8&&z<6.5)return true;
+  }
+  return false;
+ };
+ const toCell=p=>[Math.max(0,Math.min(nx-1,Math.round((p.x-x0)/step))),Math.max(0,Math.min(nz-1,Math.round((p.z-z0)/step)))];
+ const a=toCell(from),b=toCell(to),goal=key(...b),open=[a],came=new Map(),g=new Map([[key(...a),0]]),closed=new Set();
+ while(open.length){open.sort((u,v)=>(g.get(key(...v))||999)+Math.hypot(v[0]-b[0],v[1]-b[1])-(g.get(key(...u))||999)-Math.hypot(u[0]-b[0],u[1]-b[1]));
+  const c=open.pop(),ck=key(...c);if(closed.has(ck))continue;if(ck===goal){const path=[];let cur=ck;while(cur!==key(...a)){const [ix,iz]=cur.split(',').map(Number);path.unshift(new THREE.Vector3(x0+ix*step,.08,z0+iz*step));cur=came.get(cur);if(!cur)break;}path.push(to.clone());return path;}
+  closed.add(ck);for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){
+   const xx=c[0]+dx,zz=c[1]+dz;if(xx<0||xx>=nx||zz<0||zz>=nz)continue;
+   const wx=x0+xx*step,wz=z0+zz*step,nk=key(xx,zz);if(blocked(wx,wz)&&nk!==goal)continue;
+   if(dx&&dz&&(blocked(x0+(c[0]+dx)*step,z0+c[1]*step)||blocked(x0+c[0]*step,z0+(c[1]+dz)*step)))continue;
+   const ng=(g.get(ck)||0)+Math.hypot(dx,dz);if(ng<(g.get(nk)??Infinity)){g.set(nk,ng);came.set(nk,ck);open.push([xx,zz]);}
+  }
+ }
+ return null;
+}
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
  if(dest===3){wyLobbyOpen('floor3');return;}
  if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
- // Direct elevator access from anywhere in the room: no proximity or pathfinding prerequisite.
- wyLobbyDialog.style.display='none';wyLiftPrompt.style.display='none';
  wyIndoorMakeActor();
- wyRide={phase:'close',time:0,source:wyOfficeFloor,dest};
- wyDoorOpen=0;
- wyRideShade.style.display='flex';
- wyRideShade.querySelector('#wyRideProgress').textContent='電梯門關閉中…';
- wyRideShade.querySelector('#wyRideFloor').textContent=wyOfficeFloor+'F';
+ const source=wyOfficeFloor,approach=(source===1?wyElev1Pos:wyElev2Pos);
+ const path=wyFindLiftPath(wyIndoorActor.position,approach,source);
+ if(!path){wyLobbyDialog.style.display='none';wyLobbyOpen('elevator');return;}
+ wyLobbyDialog.style.display='none';wyLiftPrompt.style.display='none';wyIndoorPath=path;
+ wyRide={phase:'walk',time:0,source,dest,openAmount:0};wyDoorOpen=0;
 }
 
 wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
@@ -1670,27 +1766,39 @@ function wyElevatorTick(dt){
  }
  if(wyRide){
   const r=wyRide;r.time+=dt;
-  if(r.phase==='close'&&r.time>=0.18){
-   r.phase='travel';r.time=0;
-   wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';
-  }else if(r.phase==='travel'){
-   wyRideShade.querySelector('#wyRideFloor').textContent=(r.time<0.12?r.source:r.dest)+'F';
-   if(r.time>=0.28){
-    wySetFloor(r.dest);
-    wyIndoorPlace(r.dest,true);
-    wyDoorOpen=1;
-    r.phase='open';r.time=0;
-    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
-   }
-  }else if(r.phase==='open'&&r.time>=0.18){
-   wyRideShade.style.display='none';r.phase='exit';r.time=0;
+  if(r.phase==='walk'){
+   const near=Math.hypot(wyIndoorActor.position.x-(r.source===1?wyElev1Pos.x:wyElev2Pos.x),wyIndoorActor.position.z-(r.source===1?wyElev1Pos.z:wyElev2Pos.z));
+   if(near<4.5)wyDoorOpen=Math.min(1,wyDoorOpen+dt*1.15);
+   const cameraCtrl=r.source===1?lobbyOrbit:officeOrbit,viewCam=r.source===1?lobbyCam:officeCam;
+   const follow=new THREE.Vector3(wyIndoorActor.position.x,1.2,wyIndoorActor.position.z);
+   const shift=follow.sub(cameraCtrl.target).multiplyScalar(Math.min(1,dt*2.2));
+   cameraCtrl.target.add(shift);viewCam.position.add(shift);
+   if(wyIndoorPath.length){const target=wyIndoorPath[0],diff=target.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
+    if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*7.0);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
+   }else{r.phase='enter';r.time=0;wyDoorOpen=1;}
+  }else if(r.phase==='enter'){
+   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):new THREE.Vector3(9.1,.08,-9.2);
+   const diff=center.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
+   if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*4.6)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
+   else{r.phase='close';r.time=0;}
+  }else if(r.phase==='close'){
+   wyDoorOpen=Math.max(0,1-r.time/1.05);
+   if(r.time>=1.05){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
+  }else if(r.phase==='travel'&&r.time>=1.7){
+   wySetFloor(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
+   wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
+  }else if(r.phase==='arrive'){
+   wyDoorOpen=Math.min(1,r.time/1.1);
+   if(r.time>=1.1){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
-   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.0):new THREE.Vector3(8.8,.08,5.8);
+   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):new THREE.Vector3(9.1,.08,-6.85);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
-   if(len>0.12)wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*2.7)/len);
+   if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*4.8)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';}
   }
  }
+ wyUpdateGlassCabin(wyDoorOpen,dt);
+
  for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2]]){
   const f=wyOfficeFloor===i?wyDoorOpen:0,sep=i===1?1.6:1.22;
   doors[0].position.x=(i===1?7.48:-.85)-f*sep;
@@ -1716,7 +1824,7 @@ function wyLobbyOpen(action){
  }});wyLobbyDialog.style.display='block';
 }
 function wyLobbyAnimate(t){
- // No first-floor reception logo or pulse remains in this version.
+ wyLogoAnimations.forEach(fn=>fn(t));
 }
 
 // v38: one shared, Google-Maps-style touch system for all six islands,
@@ -1797,12 +1905,12 @@ function officeTalk(i){
 }
 function enterOffice(){
  if(insideOffice||document.getElementById('creator').style.display!=='none')return;
- activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
+ activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
- closeWyInfo();medicalExperience.hide();familyExperience.hide();medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
+ closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
@@ -1847,6 +1955,15 @@ const medGuideAgain=document.createElement('button');medGuideAgain.textContent='
 let medGuideSeen=false;
 const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML='<h3 style="margin:0 0 7px;text-align:center">歡迎來到德威陽家庭法律島！</h3><p>點擊家具上方的標示或家具本身，探索家事法律知識。</p><p><b>婚姻家事：</b>點擊廚房中島</p><p><b>親權扶養：</b>點擊親子玩具箱</p><p><b>遺囑繼承：</b>點擊立體遺囑書櫃與書桌</p><p><b>家事保護：</b>點擊復古電話桌</p><p><b>德威陽諮詢：</b>點擊中央沙發</p><p>拖曳旋轉視角，雙指縮放畫面。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#773D49;color:white;font-weight:bold">開始探索</button>';document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
 const familyGuideAgain=document.createElement('button');familyGuideAgain.textContent='家事指南';familyGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #D2AD77;border-radius:12px;background:#F4DFE4;color:#713F4C;font-weight:bold';document.body.append(familyGuideAgain);familyGuideAgain.onclick=()=>familyGuide.style.display='block';let familyGuideSeen=false;
+// v138: same modal layout and reopening behavior as the medical-island entry guide.
+const wyMainGuide=document.createElement('aside');wyMainGuide.id='wyMainGuide';
+wyMainGuide.style.cssText=medGuide.style.cssText;
+wyMainGuide.innerHTML='<h3 style="margin:0 0 7px">歡迎來到德威陽法律探索主島！</h3><p>拖曳旋轉視角、雙指縮放，使用畫面上的方向搖桿移動訪客角色。</p><p><b>一樓迎賓：</b>點擊接待區、茶點區與三層樓探索標示。</p><p><b>觀景電梯：</b>點擊電梯選擇樓層，角色會自動前往電梯。</p><p><b>二樓辦公室：</b>探索員工工作位置及互動設施。</p><p><b>三樓：</b>目前提供律師辦公室介紹，尚未建立獨立場景。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#284d68;color:white;font-weight:bold">開始探索</button>';
+document.body.append(wyMainGuide);wyMainGuide.querySelector('button').onclick=()=>wyMainGuide.style.display='none';
+const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';
+wyMainGuideAgain.style.cssText=medGuideAgain.style.cssText;document.body.append(wyMainGuideAgain);
+wyMainGuideAgain.onclick=()=>wyMainGuide.style.display='block';let wyMainGuideSeen=false;
+
 
 
 function enterIslandRoom(i){

@@ -607,19 +607,20 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
  function hint(text,x,y,z,action){
-  // Wide high-resolution canvas and measured fit prevent Chinese and emoji clipping.
-  const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=176;
-  const c=canvas.getContext('2d');c.fillStyle=action==='logo'?'rgba(255,250,239,.98)':'rgba(29,113,87,.98)';
-  c.beginPath();c.roundRect(8,8,1008,160,44);c.fill();
+  // v138: tightly fitted, Chinese-only green zone signs. No changes to question data.
+  const canvas=document.createElement('canvas');const fontSize=76;
+  const measure=document.createElement('canvas').getContext('2d');measure.font='900 '+fontSize+'px sans-serif';
+  const textWidth=Math.ceil(measure.measureText(text).width);
+  const width=Math.max(180,textWidth+100);canvas.width=width;canvas.height=176;
+  const c=canvas.getContext('2d');c.fillStyle='rgba(29,113,87,.98)';
+  c.beginPath();c.roundRect(8,8,width-16,160,44);c.fill();
   c.strokeStyle='#d9b779';c.lineWidth=8;c.stroke();
-  c.fillStyle=action==='logo'?'#21384f':'#fff9ec';c.textAlign='center';c.textBaseline='middle';
-  let fontSize=75;c.font='900 '+fontSize+'px sans-serif';
-  while(c.measureText(text).width>900 && fontSize>38){fontSize-=2;c.font='900 '+fontSize+'px sans-serif';}
-  c.fillText(text,512,88);
+  c.fillStyle='#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='900 '+fontSize+'px sans-serif';
+  c.fillText(text,width/2,88);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false}));
-  sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(7.3,1.12,1);
-  sprite.renderOrder=80;sprite.userData.baseY=y;root.add(sprite);register(sprite,action);labels.push(sprite);return sprite;
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:true,depthWrite:false}));
+  sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(Math.min(6.1,width/176*1.12),1.12,1);
+  sprite.userData.baseY=y;root.add(sprite);register(sprite,action);labels.push(sprite);return sprite;
  }
  // Staff identity sign only; not a sixth interaction zone.
  let staffNameLabel=null;
@@ -634,11 +635,11 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   staffNameLabel.position.set(guide.position.x,guide.position.y+3.6,guide.position.z);root.add(staffNameLabel);
  }
  // v133: five interaction labels plus one non-interactive staff nameplate.
- hint('🤝 醫療糾紛協商',-4.65,2.35,4.45,'mediation');
- hint('🗂️ 病歷證據探索',5.0,4.0,-3.8,'records');
- hint('🔍 X光醫療鑑定',-5.0,4.55,-6.02,'forensics');
- hint('❤️ 心電圖事件回放',4.8,6.70,-7.60,'ecg');
- hint('💬 接待趣味問答',7.1,2.8,6.5,'computer');
+ hint('醫療糾紛協商',-4.65,2.35,4.45,'mediation');
+ hint('病歷證據探索',5.0,4.0,-3.8,'records');
+ hint('X光醫療鑑定',-5.0,4.55,-6.02,'forensics');
+ hint('心電圖事件回放',4.8,6.70,-7.60,'ecg');
+ hint('接待趣味問答',7.1,2.8,6.5,'computer');
  const spike=phase=>{let p=((phase%1)+1)%1;const points=[[0,0],[.16,0],[.21,.05],[.25,0],[.29,-.14],[.315,.84],[.335,-.33],[.38,0],[.53,0],[.62,.21],[.72,0],[1,0]];for(let j=1;j<points.length;j++)if(p<=points[j][0]){const a=points[j-1],b=points[j],r=(p-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*r}return 0};
  let last=0;
  const animation=(time)=>{
