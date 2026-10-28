@@ -7,8 +7,8 @@ export function createBusinessHeadquarters(island, THREE){
  const box=(w,h,d,x,y,z,m,group=root)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);group.add(o);return o;};
  const poly=(pts,depth,x,y,z,m)=>{const s=new THREE.Shape();s.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)s.lineTo(pts[i][0],pts[i][1]);s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:false,steps:1});const o=new THREE.Mesh(g,m);o.position.set(x,y,z);root.add(o);return o;};
  // Original floating island diameter 34; no modification to bridges or original island.
- box(29,.18,18,0,.10,0,plaza);box(10.8,.10,11.2,0,.25,7.5,pave);
- for(const [w,h,y,m] of [[6,.035,.32,glassDark],[3.6,.038,.36,pearl],[1.7,.042,.40,ice]]){const o=box(w,h,w,0,y,9.5,m);o.rotation.y=Math.PI/4;}
+ box(29,.18,18,0,.28,0,plaza);box(10.8,.10,11.2,0,.43,7.5,pave);
+ for(const [w,h,y,m] of [[6,.035,.51,glassDark],[3.6,.038,.56,pearl],[1.7,.042,.61,ice]]){const o=box(w,h,w,0,y,9.5,m);o.rotation.y=Math.PI/4;}
  // Slender main tower, deliberately lower than v106 (approx 26 vs 35 units).
  box(6.2,20.7,5.7,0,10.65,-4.25,glassDark);
  box(4.7,4.1,5.1,0,22.7,-4.35,glass);
@@ -47,13 +47,13 @@ export function createBusinessHeadquarters(island, THREE){
  // Connected campus wings; one front entry and level continuous walking surface.
  for(const x of [-5.75,5.75]){
    box(5.4,4.3,4.7,x,2.35,.15,pearl);
-   box(4.8,3.2,.24,x,2.10,2.63,glass);
+   box(4.8,3.2,.24,x,2.10,2.78,glass);
    box(5.5,.55,5.0,x,4.60,.15,pearl);
  }
  // Entrance: taller, deeper and visibly layered, but no stairs and no ramp.
  box(10.2,5.15,4.3,0,2.68,1.5,pearl);
- box(8.8,4.12,.22,0,2.17,3.80,glassDark);
- box(7.55,3.5,.26,0,1.99,3.98,ice);
+ box(8.8,4.12,.22,0,2.17,3.91,glassDark);
+ box(7.55,3.5,.26,0,1.99,4.18,ice);
  for(const x of [-4.6,4.6])box(.75,5.3,4.7,x,2.75,1.5,pearl);
  box(10.7,.77,4.9,0,5.65,1.5,pearl);
  box(9.6,.24,5.1,0,6.15,1.5,gold);

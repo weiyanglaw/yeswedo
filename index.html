@@ -122,7 +122,24 @@ body:not(.wy174-theme-room) #wyV151Controls #wyFloorButton{grid-column:1!importa
 body:not(.wy174-theme-room) #wyV151Controls #wyMainGuideAgain{grid-column:2!important;grid-row:2!important}
 @media(max-width:360px){#wyV151Controls button{padding-left:8px!important;padding-right:8px!important;font-size:13px!important}}
 </style>
-</head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
+<style id="wy176FinalNavigation">
+/* Single shared right-aligned navigation area. The guides are actual children of this container. */
+#wyV151Controls{position:fixed!important;top:var(--wy176-controls-top,110px)!important;right:calc(10px + env(safe-area-inset-right,0px))!important;left:auto!important;width:max-content!important;max-width:calc(100vw - 20px)!important;z-index:65!important;gap:7px!important;box-sizing:border-box!important}
+#wyV151Controls>button{position:static!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;transform:none!important;width:max-content!important;max-width:calc(100vw - 20px)!important;min-height:43px!important;box-sizing:border-box!important;margin:0!important;padding:9px 12px!important;white-space:nowrap!important;line-height:1.25!important;font-size:clamp(13px,3.65vw,17px)!important}
+/* Main island: compact two rows. Return always top-right. */
+body:not(.wy174-theme-room) #wyV151Controls{display:grid!important;grid-template-columns:max-content max-content!important;justify-items:end!important;align-items:start!important}
+body:not(.wy174-theme-room) #wyV151Controls #officeContact{grid-column:1!important;grid-row:1!important}
+body:not(.wy174-theme-room) #wyV151Controls #officeExit{grid-column:2!important;grid-row:1!important}
+body:not(.wy174-theme-room) #wyV151Controls #wyFloorButton{grid-column:1!important;grid-row:2!important}
+body:not(.wy174-theme-room) #wyV151Controls #wyMainGuideAgain{grid-column:2!important;grid-row:2!important}
+/* Theme islands: two rows in one flow, no independently positioned elements. */
+body.wy174-theme-room #wyV151Controls{display:flex!important;flex-direction:column!important;align-items:flex-end!important;justify-content:flex-start!important;flex-wrap:nowrap!important}
+body.wy174-theme-room #wyV151Controls #officeExit{order:0!important}
+body.wy174-theme-room #wyV151Controls #wyMedicalGuideAgain,body.wy174-theme-room #wyV151Controls #wyFamilyGuideAgain,body.wy174-theme-room #wyV151Controls .wy175GuideAgain{order:1!important}
+body.wy174-theme-room #wyV151Controls #officeContact,body.wy174-theme-room #wyV151Controls #wyFloorButton,body.wy174-theme-room #wyV151Controls #wyMainGuideAgain{display:none!important}
+#wyContactPanel{top:var(--wy176-contact-top,180px)!important}
+@media(max-width:380px){#wyV151Controls>button{padding:8px 9px!important;font-size:13px!important}}
+</style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
 <div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div><nav class="wy166Tabs" aria-label="角色造型分類"><button type="button" class="selected" data-wy166-tab="appearance">外型</button><button type="button" data-wy166-tab="clothes">服裝</button><button type="button" data-wy166-tab="accessory">配飾</button></nav><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section><section class="wy166Pane" data-wy166-pane="clothes" hidden><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section><section class="wy166Pane" data-wy166-pane="accessory" hidden><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
 <div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
@@ -207,7 +224,7 @@ $('startExplore').addEventListener('click',enterIsland);
 </script>
 <script type="module">
 import {createBusinessHeadquarters} from './business-island.js?v=20261028-v166';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
-const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,1000);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
+const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
 orbit.enablePan=true;orbit.screenSpacePanning=true;
@@ -2465,6 +2482,8 @@ wyMainGuideAgain.onclick=()=>wyMainGuide.style.display='block';let wyMainGuideSe
 const wyV151Controls=document.createElement('div');wyV151Controls.id='wyV151Controls';
 document.getElementById('officeUI').append(wyV151Controls);
 for(const controlId of ['officeContact','officeExit','wyFloorButton','wyMainGuideAgain'])wyV151Controls.append(document.getElementById(controlId));
+// v176: guide buttons share the return button's layout container, never overlap it.
+wyV151Controls.append(medGuideAgain,familyGuideAgain);
 
 
 
@@ -2478,6 +2497,7 @@ for(const [k,data] of Object.entries(wy175GuideMap)){
  g.innerHTML='<h3>'+data[0]+'｜探索指南</h3><p>'+data[1]+'</p><button type="button">開始探索</button>';
  document.body.append(g);g.querySelector('button').onclick=()=>{g.style.display='none'};
  const b=document.createElement('button');b.type='button';b.className='wy175GuideAgain';b.textContent=data[0]+'指南';b.style.display='none';document.body.append(b);b.onclick=()=>{g.style.display='block'};
+ wyV151Controls.append(b);
  wy175ExtraGuides[i]={guide:g,button:b};
 }
 
@@ -2640,69 +2660,32 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   if((onIsland||onBridge)&&walkAllowed(hitPoint.x,hitPoint.z))scheduleWalk(hitPoint);
  }
 });
-// v173: Stabilize translucent window surfaces across ALL six islands and indoor scenes.
-// No camera, touch, collision, geometry or original logo changes.
-function wy173StabilizeGlass(root){
- if(!root||typeof root.traverse!=='function')return;
- root.traverse(obj=>{
-  if(!obj.isMesh||!obj.material)return;
-  const materials=Array.isArray(obj.material)?obj.material:[obj.material];
-  for(const mat of materials){
-   if(!mat||mat.userData?.wy173GlassChecked)continue;
-   // Only translucent architectural surfaces; preserve invisible interaction hitboxes,
-   // logos, decals, sprite labels and ordinary opaque geometry.
-   if(!mat.transparent||!(mat.opacity>0.15&&mat.opacity<1)||mat.map||mat.alphaMap)continue;
-   if(!(mat.isMeshPhysicalMaterial||mat.isMeshStandardMaterial||mat.isMeshBasicMaterial))continue;
-   if(!mat.userData)mat.userData={};
-   mat.userData.wy173GlassChecked=true;
-   mat.depthWrite=false;
-   // Move depth values of co-planar glass very slightly towards the viewer;
-   // does not move the geometry or alter its silhouette.
-   mat.polygonOffset=true;
-   mat.polygonOffsetFactor=-1;
-   mat.polygonOffsetUnits=-1;
-   mat.needsUpdate=true;
-  }
- });
-}
-function wy173StabilizeAllScenes(){
- for(const root of [scene,lobbyScene,officeScene,wy3Scene])wy173StabilizeGlass(root);
- for(const room of Object.values(themeRooms))if(room?.scene)wy173StabilizeGlass(room.scene);
-}
-wy173StabilizeAllScenes();
-let wy173Frame=0;
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if((++wy173Frame%120)===0)wy173StabilizeAllScenes();if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+// v176: no repeated global material mutations; preserve each island's original materials.
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div>
 
-<script id="wy174HeaderAndGuidePosition">
+<script id="wy176HeaderAndGuidePosition">
 (function(){
  const ui=document.getElementById('officeUI'), title=ui?.querySelector('strong'), controls=document.getElementById('wyV151Controls');
  if(!ui||!title||!controls)return;
- const guides=[document.getElementById('wyMedicalGuideAgain'),document.getElementById('wyFamilyGuideAgain')];
  function layout(){
   const active=ui.style.display!=='none'&&getComputedStyle(ui).display!=='none';
-  if(!active)return;
+  if(!active){document.body.classList.remove('wy174-theme-room');return;}
   const themed=/3D 主題館/.test(title.textContent||'');
   document.body.classList.toggle('wy174-theme-room',themed);
   const rect=title.getBoundingClientRect();
-  const y=Math.ceil(rect.bottom+12);
-  const top=y+'px';
-  if(controls.style.getPropertyValue('--wy174-controls-top')!==top)controls.style.setProperty('--wy174-controls-top',top);
-  const exit=document.getElementById('officeExit');
+  // The main-island buttons sit a little higher, leaving the decorated walls visible.
+  const top=Math.ceil(rect.bottom+(themed?10:3))+'px';
+  controls.style.setProperty('--wy176-controls-top',top);
   const c=controls.getBoundingClientRect();
-  const exitRect=exit?.getBoundingClientRect();
-  const guideTop=Math.ceil((themed&&exitRect?exitRect.bottom:c.bottom)+8)+'px';
-  if(document.documentElement.style.getPropertyValue('--wy174-guide-top')!==guideTop)document.documentElement.style.setProperty('--wy174-guide-top',guideTop);
-  const contactTop=Math.ceil(c.bottom+12)+'px';
-  if(document.documentElement.style.getPropertyValue('--wy174-contact-top')!==contactTop)document.documentElement.style.setProperty('--wy174-contact-top',contactTop);
+  document.documentElement.style.setProperty('--wy176-contact-top',Math.ceil(c.bottom+10)+'px');
  }
  if(typeof ResizeObserver!=='undefined')new ResizeObserver(layout).observe(title);
  addEventListener('resize',layout,{passive:true});
  const mo=new MutationObserver(layout);
  mo.observe(title,{childList:true,characterData:true,subtree:true});
  mo.observe(ui,{attributes:true,attributeFilter:['style']});
- /* Guide buttons are positioned from the return button; no style observer loop. */
  layout();
 })();
 </script>
