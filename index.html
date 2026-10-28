@@ -79,6 +79,49 @@
 #wyContactPanel{top:calc(177px + env(safe-area-inset-top,0px))!important;right:10px!important}
 @media(max-width:480px){#officeUI>div:first-child>strong{font-size:clamp(18px,4.7vw,22px)!important}#wyV151Controls{top:calc(66px + env(safe-area-inset-top,0px))!important}}
 </style>
+<style id="wy174UnifiedIslandNavigation">
+/* All islands: content-width controls, no stretched two-column cells. */
+#officeUI>div:first-child{top:calc(23px + env(safe-area-inset-top,0px))!important;left:10px!important;right:10px!important}
+#officeUI>div:first-child>strong{display:inline-block!important;width:max-content!important;max-width:calc(100vw - 20px)!important;box-sizing:border-box!important}
+#wyV151Controls{position:fixed!important;top:var(--wy174-controls-top,115px)!important;right:calc(10px + env(safe-area-inset-right,0px))!important;left:auto!important;width:max-content!important;max-width:calc(100vw - 20px)!important;display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;justify-content:flex-end!important;gap:8px!important;z-index:65!important}
+#wyV151Controls button,#wyV151Controls #wyFloorButton,#wyV151Controls #wyMainGuideAgain{flex:0 0 auto!important;grid-column:auto!important;grid-row:auto!important;width:max-content!important;max-width:calc(100vw - 20px)!important;min-width:0!important;min-height:43px!important;height:auto!important;padding:9px 13px!important;white-space:nowrap!important;overflow-wrap:normal!important;font-size:clamp(14px,3.7vw,17px)!important;line-height:1.3!important}
+/* The return control is immediately above the guide in every themed island. */
+body.wy174-theme-room #wyV151Controls{flex-direction:column!important;flex-wrap:nowrap!important;align-items:flex-end!important}
+body.wy174-theme-room #wyV151Controls #officeExit{order:0!important}
+body.wy174-theme-room #wyMedicalGuideAgain,body.wy174-theme-room #wyFamilyGuideAgain{position:fixed!important;top:var(--wy174-guide-top,180px)!important;right:calc(10px + env(safe-area-inset-right,0px))!important;left:auto!important;width:max-content!important;max-width:calc(100vw - 20px)!important;min-height:43px!important;height:auto!important;margin:0!important;padding:9px 13px!important;font-size:clamp(14px,3.7vw,17px)!important;line-height:1.3!important;white-space:nowrap!important;border-radius:12px!important;z-index:65!important}
+#wyContactPanel{top:var(--wy174-contact-top,190px)!important}
+</style>
+<style id="wy175PremiumGuides">
+/* Premium gradient island guides: static gradients, no flashing animations. */
+#wyMainGuide,#wyMedicalGuide,#wyFamilyGuide,.wy175Guide{--dark:#0a1a36;--mid:#173b70;--gold:#d7b67a;position:fixed!important;box-sizing:border-box!important;width:min(92vw,420px)!important;max-height:78dvh!important;overflow:auto!important;padding:23px 21px 20px!important;border:2px solid var(--gold)!important;border-radius:19px!important;color:#fff8e9!important;background:linear-gradient(145deg,var(--mid) 0%,var(--dark) 72%,#071427 100%)!important;box-shadow:0 0 0 4px #19253a,0 0 0 5px #ae905e,0 18px 46px #0009,inset 0 0 0 1px #f6dfab80!important;font:14px/1.7 system-ui!important;z-index:95!important}
+#wyMainGuide{--dark:#07162e;--mid:#163c77}
+#wyMedicalGuide{--dark:#08251d;--mid:#1b6149}
+#wyFamilyGuide{--dark:#300e1b;--mid:#85304b}
+.wy175Guide[data-island="1"]{--dark:#221637;--mid:#553678}
+.wy175Guide[data-island="4"]{--dark:#241934;--mid:#63428a}
+.wy175Guide[data-island="5"]{--dark:#112b40;--mid:#285b73}
+#wyMainGuide::before,#wyMedicalGuide::before,#wyFamilyGuide::before,.wy175Guide::before{content:"";position:absolute;inset:8px;border:1px solid #e9ce9688;border-radius:12px;pointer-events:none}
+#wyMainGuide h3,#wyMedicalGuide h3,#wyFamilyGuide h3,.wy175Guide h3{color:#ffe4ae!important;font-size:19px!important;line-height:1.4!important;border-bottom:1px solid #d7b67a!important;padding:0 0 11px!important;margin:0 0 14px!important}
+#wyMainGuide p,#wyMedicalGuide p,#wyFamilyGuide p,.wy175Guide p{color:#fff8ee!important;margin:9px 0!important}
+#wyMainGuide b,#wyMedicalGuide b,#wyFamilyGuide b,.wy175Guide b{color:#f7d69b!important}
+#wyMainGuide button,#wyMedicalGuide button,#wyFamilyGuide button,.wy175Guide button{display:block!important;margin:18px auto 0!important;min-height:46px!important;min-width:135px!important;padding:11px 23px!important;border:1px solid #f6dfae!important;border-radius:12px!important;color:#2d2112!important;background:linear-gradient(135deg,#f8e6bb 0%,#c49a53 52%,#f3dca8 100%)!important;font-size:16px!important;font-weight:800!important;box-shadow:inset 0 1px 1px #fff8,0 4px 10px #0005!important}
+#wyMainGuideAgain{background:linear-gradient(135deg,#183e79,#08182f)!important;color:#fff5df!important;border:1px solid #d7b67a!important}
+#wyMedicalGuideAgain{background:linear-gradient(135deg,#22634d,#09261c)!important;color:#fff5df!important;border:1px solid #d7b67a!important}
+#wyFamilyGuideAgain{background:linear-gradient(135deg,#85324b,#320e1b)!important;color:#fff5df!important;border:1px solid #d7b67a!important}
+.wy175GuideAgain{position:fixed!important;right:10px!important;top:var(--wy174-guide-top,180px)!important;z-index:65!important;min-height:43px!important;padding:9px 13px!important;border:1px solid #d7b67a!important;border-radius:12px!important;background:linear-gradient(135deg,#644489,#271a38)!important;color:white!important;font-size:clamp(14px,3.7vw,17px)!important;font-weight:700!important;width:max-content!important;max-width:calc(100vw - 20px)!important}
+/* Theme rooms: return at the same top-right position, guide directly below. */
+body.wy174-theme-room #wyV151Controls{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:0!important}
+body.wy174-theme-room #wyV151Controls #officeContact,body.wy174-theme-room #wyV151Controls #wyFloorButton,body.wy174-theme-room #wyV151Controls #wyMainGuideAgain{display:none!important}
+body.wy174-theme-room #wyV151Controls #officeExit{display:block!important;order:0!important}
+body.wy174-theme-room #wyMedicalGuideAgain,body.wy174-theme-room #wyFamilyGuideAgain,body.wy174-theme-room .wy175GuideAgain{top:var(--wy174-guide-top,180px)!important}
+/* Four main-island controls: return stays top-right; others wrap compactly. */
+body:not(.wy174-theme-room) #wyV151Controls{display:grid!important;grid-template-columns:max-content max-content!important;gap:7px!important;justify-items:end!important}
+body:not(.wy174-theme-room) #wyV151Controls #officeContact{grid-column:1!important;grid-row:1!important}
+body:not(.wy174-theme-room) #wyV151Controls #officeExit{grid-column:2!important;grid-row:1!important}
+body:not(.wy174-theme-room) #wyV151Controls #wyFloorButton{grid-column:1!important;grid-row:2!important}
+body:not(.wy174-theme-room) #wyV151Controls #wyMainGuideAgain{grid-column:2!important;grid-row:2!important}
+@media(max-width:360px){#wyV151Controls button{padding-left:8px!important;padding-right:8px!important;font-size:13px!important}}
+</style>
 </head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
 <div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div><nav class="wy166Tabs" aria-label="角色造型分類"><button type="button" class="selected" data-wy166-tab="appearance">外型</button><button type="button" data-wy166-tab="clothes">服裝</button><button type="button" data-wy166-tab="accessory">配飾</button></nav><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section><section class="wy166Pane" data-wy166-pane="clothes" hidden><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section><section class="wy166Pane" data-wy166-pane="accessory" hidden><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
@@ -2359,11 +2402,12 @@ function officeTalk(i){
 }
 function enterOffice(){
  if(insideOffice||document.getElementById('creator').style.display!=='none')return;
- activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;localStorage.setItem('wy-guide-main-v165','yes');}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
+ for(const item of Object.values(wy175ExtraGuides)){item.button.style.display='none';item.guide.style.display='none';}activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;localStorage.setItem('wy-guide-main-v165','yes');}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
 function leaveOffice(){
+ for(const item of Object.values(wy175ExtraGuides)){item.button.style.display='none';item.guide.style.display='none';}
  closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
@@ -2425,7 +2469,20 @@ for(const controlId of ['officeContact','officeExit','wyFloorButton','wyMainGuid
 
 
 
+
+// v175: Guides for the remaining themed islands, preserving existing island mechanics.
+const wy175GuideMap={1:['訴訟法律島','探索訴訟程序、證據與法律爭點，透過島上的互動空間了解案件處理流程。'],4:['企業商務島','探索企業經營、契約、跨國商務及營業秘密等法律主題。'],5:['法律探索島','探索本島的法律知識與互動主題，依照場景提示進行體驗。']};
+const wy175ExtraGuides={};
+for(const [k,data] of Object.entries(wy175GuideMap)){
+ const i=Number(k),g=document.createElement('aside');g.className='wy175Guide';g.dataset.island=k;g.style.display='none';
+ g.innerHTML='<h3>'+data[0]+'｜探索指南</h3><p>'+data[1]+'</p><button type="button">開始探索</button>';
+ document.body.append(g);g.querySelector('button').onclick=()=>{g.style.display='none'};
+ const b=document.createElement('button');b.type='button';b.className='wy175GuideAgain';b.textContent=data[0]+'指南';b.style.display='none';document.body.append(b);b.onclick=()=>{g.style.display='block'};
+ wy175ExtraGuides[i]={guide:g,button:b};
+}
+
 function enterIslandRoom(i){
+ for(const [key,item] of Object.entries(wy175ExtraGuides)){item.button.style.display=Number(key)===i?'block':'none';item.guide.style.display='none';}
  if(i===0){enterOffice();return;}
  activeIslandRoom=i;insideOffice=true;familyGuideAgain.style.display=i===3?'block':'none';if(i===3&&!familyGuideSeen){familyGuide.style.display='block';familyGuideSeen=true;localStorage.setItem('wy-guide-family-v165','yes');}else familyGuide.style.display='none';medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;localStorage.setItem('wy-guide-medical-v165','yes');}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
  document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent=names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=(i===2||i===3)?'none':'';document.getElementById('wyContactPanel').hidden=true;
@@ -2617,15 +2674,36 @@ let wy173Frame=0;
 previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if((++wy173Frame%120)===0)wy173StabilizeAllScenes();if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div>
-<script id="wy172HeaderFlow">
+
+<script id="wy174HeaderAndGuidePosition">
 (function(){
- const header=document.querySelector('#officeUI>div:first-child');
- const title=header&&header.querySelector('strong');
- const controls=document.getElementById('wyV151Controls');
- if(!header||!title||!controls)return;
- function position(){const height=title.getBoundingClientRect().height;const offset=Math.ceil(height+17);controls.style.setProperty('top',`calc(${offset}px + env(safe-area-inset-top,0px))`,'important');}
- if(typeof ResizeObserver!=='undefined')new ResizeObserver(position).observe(title);
- window.addEventListener('resize',position,{passive:true});position();
+ const ui=document.getElementById('officeUI'), title=ui?.querySelector('strong'), controls=document.getElementById('wyV151Controls');
+ if(!ui||!title||!controls)return;
+ const guides=[document.getElementById('wyMedicalGuideAgain'),document.getElementById('wyFamilyGuideAgain')];
+ function layout(){
+  const active=ui.style.display!=='none'&&getComputedStyle(ui).display!=='none';
+  if(!active)return;
+  const themed=/3D 主題館/.test(title.textContent||'');
+  document.body.classList.toggle('wy174-theme-room',themed);
+  const rect=title.getBoundingClientRect();
+  const y=Math.ceil(rect.bottom+12);
+  const top=y+'px';
+  if(controls.style.getPropertyValue('--wy174-controls-top')!==top)controls.style.setProperty('--wy174-controls-top',top);
+  const exit=document.getElementById('officeExit');
+  const c=controls.getBoundingClientRect();
+  const exitRect=exit?.getBoundingClientRect();
+  const guideTop=Math.ceil((themed&&exitRect?exitRect.bottom:c.bottom)+8)+'px';
+  if(document.documentElement.style.getPropertyValue('--wy174-guide-top')!==guideTop)document.documentElement.style.setProperty('--wy174-guide-top',guideTop);
+  const contactTop=Math.ceil(c.bottom+12)+'px';
+  if(document.documentElement.style.getPropertyValue('--wy174-contact-top')!==contactTop)document.documentElement.style.setProperty('--wy174-contact-top',contactTop);
+ }
+ if(typeof ResizeObserver!=='undefined')new ResizeObserver(layout).observe(title);
+ addEventListener('resize',layout,{passive:true});
+ const mo=new MutationObserver(layout);
+ mo.observe(title,{childList:true,characterData:true,subtree:true});
+ mo.observe(ui,{attributes:true,attributeFilter:['style']});
+ /* Guide buttons are positioned from the return button; no style observer loop. */
+ layout();
 })();
 </script>
 </body></html>
