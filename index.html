@@ -1762,7 +1762,21 @@ function wyStartRide(dest){
  // The coarse furniture grid can reject this valid short segment; bypass it only
  // when the actor is physically close and the corridor is unobstructed.
  const nearLift=Math.hypot(current.x-approach.x,current.z-approach.z)<2.5;
- const path=nearLift?[approach.clone()]:wyFindLiftPath(current,approach,source);
+ let path=nearLift?[approach.clone()]:wyFindLiftPath(current,approach,source);
+ // 2F: if the coarse A* grid rejects a valid route, keep the elevator button
+ // fully automatic. Run through the narrow clear aisle beside the desks,
+ // then reach the lift. No manual walking or ride-count restriction.
+ if(!path&&source===2){
+  const aisleX=5.3, aisleTop=7.2, aisleBottom=-5.9;
+  path=[];
+  if(current.z>aisleTop){path.push(new THREE.Vector3(aisleX,.08,aisleTop));}
+  else if(current.z>aisleBottom&&Math.abs(current.x-aisleX)>1.2){
+   // Move toward the desk-side aisle before continuing down the room.
+   path.push(new THREE.Vector3(aisleX,.08,current.z));
+  }
+  if(current.z>aisleBottom)path.push(new THREE.Vector3(aisleX,.08,aisleBottom));
+  path.push(approach.clone());
+ }
  if(!path){
   wyLobbyDialog.style.display='none';
   wyLiftPrompt.textContent='目前無法抵達電梯，請移動到通道後再試';
@@ -1810,14 +1824,14 @@ function wyElevatorTick(dt){
    if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*20.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
   }else if(r.phase==='close'){
-   wyDoorOpen=Math.max(0,1-r.time/.8);
-   if(r.time>=.8){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
-  }else if(r.phase==='travel'&&r.time>=.15){
+   wyDoorOpen=Math.max(0,1-r.time/1.0);
+   if(r.time>=1.0){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
+  }else if(r.phase==='travel'&&r.time>=.25){
    wySetFloor(r.dest);wyResetIndoorRideCamera(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
   }else if(r.phase==='arrive'){
-   wyDoorOpen=Math.min(1,r.time/.8);
-   if(r.time>=.8){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
+   wyDoorOpen=Math.min(1,r.time/1.0);
+   if(r.time>=1.0){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
    const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):new THREE.Vector3(9.1,.08,-6.85);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
