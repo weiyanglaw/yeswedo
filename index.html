@@ -1833,11 +1833,13 @@ function wyBuildGlassCabin(parent,cx,cz,one){
  const top=add(new THREE.TorusGeometry(1.61,.065,8,48,Math.PI),gold,0,5.75,0);top.rotation.x=Math.PI/2;
  const welcome=new THREE.PointLight(0xffdca0,.26,4.6);welcome.position.set(0,2.5,.25);root.add(welcome);
  const clickable=add(new THREE.CylinderGeometry(1.69,1.69,5.5,24,1,true,-.65,1.30),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}),0,3.0,0);
- if(one){clickable.userData.lobbyAction='elevator';lobbyTargets.push(clickable)}else{wyElev2ClickTargets.push(clickable)}
+ if(one===1){clickable.userData.lobbyAction='elevator';lobbyTargets.push(clickable)}else if(one===3){clickable.userData.wy3Action='elevator';wy3Targets.push(clickable)}else{wyElev2ClickTargets.push(clickable)}
  return {doors,welcome,ring,root};
 }
 wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
-wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,1.02,false);
+wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,1.02,2);
+// 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
+
 wyElevDoors1.forEach(d=>d.visible=false);wyElevDoors2.forEach(d=>d.visible=false);
 function wyUpdateGlassCabin(f,dt){
  for(const [n,c] of Object.entries(wyGlassCabins)){
@@ -1859,6 +1861,8 @@ wy3Scene.add(new THREE.HemisphereLight(0xfff5e6,0x9daeb6,2.25));
 const wy3Sun=new THREE.DirectionalLight(0xfff2d9,2.1);wy3Sun.position.set(-5,16,12);wy3Scene.add(wy3Sun);
 const wy3Root=new THREE.Group();wy3Scene.add(wy3Root);
 const wy3Targets=[];
+// Shared glass cabin built after the 3F root and hit-target collection exist.
+wyGlassCabins[3]=wyBuildGlassCabin(wy3Root,8.15,6.45,3);wyGlassCabins[3].root.rotation.y=-Math.PI/2;
 function wy3Mat(c,op=1){return new THREE.MeshStandardMaterial({color:c,roughness:.73,metalness:0,transparent:op<1,opacity:op,side:THREE.DoubleSide,depthWrite:op===1})}
 function wy3Box(x,y,z,w,h,d,c,action){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);if(action){m.userData.wy3Action=action;wy3Targets.push(m)}return m}
 function wy3Cyl(x,y,z,top,bottom,h,c){const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,18),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);return m}
@@ -1872,23 +1876,39 @@ wy3Box(-9.9,3.1,0,.22,6.2,17.5,'#eadfc9');wy3Box(9.9,3.1,0,.22,6.2,17.5,'#eadfc9
 wy3Box(0,3.1,-8.67,20,6.2,.23,'#eaddc7');
 for(const x of [-8.7,8.7])wy3Box(x,3.0,-8.48,.25,5.8,.16,'#d2ad66');
 wy3Box(0,6.02,-8.48,19.7,.16,.15,'#d2ad66');
-// Compact walnut entry vestibule. No long corridor or waiting lounge.
-wy3Box(7.15,.018,6.55,5.35,.055,4.10,'#77513c');
-for(let x=4.7;x<9.7;x+=.35)wy3Box(x,.049,6.55,.017,.008,3.95,'#60402f');
-// Wall directly opposite elevator, designed to conceal the office.
-wy3Box(7.18,2.75,4.48,5.38,5.5,.20,'#4b342a');
-wy3Box(7.18,5.3,4.37,5.0,.12,.12,'#c9a46a');
-wy3Box(7.15,2.65,4.32,3.65,2.25,.10,'#3b3027','wall');
-wy3Label('BEHIND THE DOOR',7.15,3.45,4.24,3.6,.53);
-wy3Label('林柏均律師私人辦公室',7.15,2.85,4.23,3.5,.42);
-wy3Label('點擊查看入內須知',7.15,2.13,4.22,3.0,.43);
-// Office/vestibule partition. Right turn leads to a closed door at x=4.48.
-wy3Box(4.48,2.8,5.02,.22,5.6,1.20,'#e8dcc7');
-wy3Box(4.48,2.8,7.85,.22,5.6,1.18,'#e8dcc7');
-const wy3OfficeDoor=wy3Box(4.48,2.62,6.44,.16,5.16,1.65,'#584438','officeDoor');
-wy3Box(4.34,2.95,6.44,.055,4.2,1.24,'#c5ad82','officeDoor');
-wy3Box(4.24,2.6,5.95,.13,.45,.12,'#d9b77d','officeDoor');
-wy3Label('PRIVATE OFFICE',4.22,5.68,6.44,1.65,.38);
+// v161: rightmost wall-facing elevator, straight-ahead interactive office entrance.
+// Walnut entry vestibule, with the elevator on the EAST wall, facing WEST.
+wy3Box(7.65,.018,6.55,4.15,.055,4.10,'#77513c');
+for(let x=5.65;x<9.65;x+=.35)wy3Box(x,.049,6.55,.017,.008,3.95,'#60402f');
+// Front wall is also the office threshold: the center is a REAL operable doorway.
+// No old dead-end privacy wall or side-facing door remains.
+wy3Box(5.85,2.8,4.48,1.05,5.6,.20,'#4b342a');
+wy3Box(8.78,2.8,4.48,2.05,5.6,.20,'#4b342a');
+wy3Box(7.12,5.08,4.48,1.65,1.04,.20,'#4b342a');
+wy3Box(7.12,5.60,4.39,1.66,.10,.13,'#c9a46a');
+// Theme sign above the entry, visible when exiting the east-wall elevator.
+wy3Label('BEHIND THE DOOR',7.12,5.12,4.30,2.45,.43);
+wy3Label('林柏均律師私人辦公室',7.12,4.66,4.30,2.55,.31);
+const wy3OfficeDoorPivot=new THREE.Group();wy3OfficeDoorPivot.position.set(6.35,0,4.48);wy3Root.add(wy3OfficeDoorPivot);
+const wy3OfficeDoor=wy3Box(7.10,2.08,4.48,1.50,4.12,.13,'#eee7db','officeDoor');
+wy3OfficeDoor.material=new THREE.MeshPhysicalMaterial({color:0xf2e9db,metalness:.18,roughness:.19,clearcoat:1,clearcoatRoughness:.09});
+wy3Root.remove(wy3OfficeDoor);wy3OfficeDoor.position.set(.75,2.08,0);wy3OfficeDoorPivot.add(wy3OfficeDoor);
+const wy3DoorTrim=wy3Box(7.10,2.08,4.37,1.33,3.90,.035,'#c5ad82');
+wy3DoorTrim.material=new THREE.MeshStandardMaterial({color:0xe6c58b,metalness:.9,roughness:.16});
+wy3Root.remove(wy3DoorTrim);wy3DoorTrim.position.set(.75,2.08,-.11);wy3OfficeDoorPivot.add(wy3DoorTrim);
+const wy3DoorHandle=wy3Box(7.60,2.12,4.25,.09,.40,.09,'#d9b77d');
+wy3DoorHandle.material=new THREE.MeshStandardMaterial({color:0xf3d5a1,metalness:.96,roughness:.12});
+wy3Root.remove(wy3DoorHandle);wy3DoorHandle.position.set(1.25,2.12,-.23);wy3OfficeDoorPivot.add(wy3DoorHandle);
+// Door-surface touch target, with a separate permanently available replay plaque.
+const wy3DoorTouch=new THREE.Mesh(new THREE.PlaneGeometry(1.30,1.0),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}));
+wy3DoorTouch.position.set(.75,2.75,-.24);wy3DoorTouch.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorTouch);wy3Targets.push(wy3DoorTouch);
+const wy3ReplayPlaque=wy3Box(8.66,2.70,4.30,.56,.80,.08,'#bd9a64','wall');
+wy3ReplayPlaque.material=new THREE.MeshStandardMaterial({color:0xd8b67e,metalness:.9,roughness:.22});
+wy3Label('重看介紹',8.66,2.70,4.22,.52,.28);
+wy3Label('點我開門',7.12,2.92,4.25,1.25,.32);
+// Warm recessed architectural lighting around the doorway.
+for(const x of [6.24,8.00]){const glow=wy3Box(x,2.72,4.22,.035,4.8,.04,'#f6dca9');glow.material=new THREE.MeshBasicMaterial({color:0xffe3b1});}
+
 // Windows left wall, distinct from the recessed honor wall.
 for(const z of [-5.5,-2.5]){wy3Box(-9.73,3.75,z,.1,3.4,2.4,'#b8dce6');for(const dz of [-1.2,1.2])wy3Box(-9.64,3.75,z+dz,.14,3.5,.11,'#d1ad6c');}
 // True semicircular bookshelf: individually curved bay positions and books facing inward.
@@ -1965,13 +1985,12 @@ wy3Bar(7.45,.28,4.85,7.45,1.48,4.25,.11,'#667d82');wy3Bar(7.45,.28,3.70,7.45,1.4
 wy3Label('私人運動區',6.45,5.0,6.8,3.0,.56);
 // Translate all newly created gym objects into the north-east nook.
 for(const obj of wy3Root.children.slice(wy3GymStart)){obj.position.z-=3.05;}
-// Elevator on entrance wall, usable with existing floor-selector and animation.
-wy3Box(7.75,3.03,8.53,3.5,6.1,.26,'#e0c48e','elevator');wy3Box(7.75,3.02,8.38,3.2,5.65,.12,'#f6ebd8','elevator');
-const wy3Doors=[wy3Box(7.0,2.78,8.25,1.43,5.0,.13,'#888783','elevator'),wy3Box(8.5,2.78,8.25,1.43,5.0,.13,'#888783','elevator')];
-wy3Box(7.75,5.96,8.24,3.3,.70,.14,'#344d5c','elevator');wy3Label('3F',7.75,5.98,8.35,1.35,.50);
+// v162: 3F shares the same curved glass cabin and champagne-gold details as 1F/2F.
+// The enlarged 3F lift occupies the rightmost exterior bay, with its opening toward -X.
+// Actual glass doors are created by wyBuildGlassCabin and animated by wyUpdateGlassCabin.
 // Small warm wall molding, no roof hiding the room.
 for(const x of [-9.75,9.75])wy3Box(x,.40,0,.13,.18,17.2,wy3Gold);
-const wy3Cam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,130);wy3Cam.position.set(17,17,23);wy3Cam.lookAt(0,1.4,0);
+const wy3Cam=new THREE.PerspectiveCamera(49,innerWidth/innerHeight,.1,130);wy3Cam.position.set(18,16,20);wy3Cam.lookAt(0,1.4,0);
 const wy3Orbit=new OrbitControls(wy3Cam,renderer.domElement);wy3Orbit.enabled=false;wy3Orbit.enableDamping=true;wy3Orbit.minDistance=6;wy3Orbit.maxDistance=48;wy3Orbit.maxPolarAngle=Math.PI*.49;wy3Orbit.target.set(0,1.4,0);wy3Orbit.update();
 // Seated lawyer, exclusively in the 3F office.
 const wy3Lawyer=makeStaffChibi({name:'林柏均律師',skin:'#e9bf9e',hair:'#282d35',top:'#263b57',bottom:'#283746',kind:'male'});wy3Root.add(wy3Lawyer.root);wy3Lawyer.root.scale.setScalar(.75);wy3Lawyer.root.position.set(0,.05,-4.1);wy3Lawyer.root.visible=false;
@@ -1981,7 +2000,7 @@ const wy3MovieClose=document.createElement('button');wy3MovieClose.textContent='
 wy3MovieClose.onclick=()=>{wy3Vid.pause();wy3MovieModal.style.display='none'};
 // First-entry wall prompt: persisted locally; optional replay always available.
 const wy3IntroKey='weiyang-3f-behind-door-v160';
-let wy3IntroSeen=false,wy3OfficeUnlocked=false,wy3OfficeDoorOpened=false;
+let wy3IntroSeen=false,wy3OfficeUnlocked=false,wy3OfficeDoorOpened=false,wy3DoorProgress=0,wy3AutoWalk=false;
 try{wy3IntroSeen=localStorage.getItem(wy3IntroKey)==='yes'}catch(e){}
 const wy3Style=document.createElement('style');wy3Style.textContent=`
 #wy3Intro{position:fixed;inset:0;z-index:115;display:none;align-items:center;justify-content:center;padding:16px;background:#111a20c9;font-family:system-ui,'Noto Sans TC',sans-serif}
@@ -1993,17 +2012,17 @@ const wy3Style=document.createElement('style');wy3Style.textContent=`
 #wy3WallPrompt{display:none;position:fixed;z-index:70;bottom:148px;left:50%;transform:translateX(-50%);width:min(92vw,330px);padding:12px 16px;border:1px solid #c7a36c;border-radius:13px;background:#30251fea;color:#ffeac4;font:700 14px system-ui;box-shadow:0 5px 25px #0005}
 #wy3DoorPrompt{display:none;position:fixed;z-index:70;bottom:88px;right:12px;padding:12px 15px;border:1px solid #c7a36c;border-radius:13px;background:#fff7e8;color:#463525;font:700 14px system-ui}
 `;document.head.append(wy3Style);
-const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>BEHIND THE DOOR</h2><div style="color:#d6b782">林柏均律師私人辦公室</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">歡迎右轉，進入林律師私人辦公室</button></div>`;document.body.append(wy3Intro);
+const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>BEHIND THE DOOR</h2><div style="color:#d6b782">林柏均律師私人辦公室</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">開門，進入林律師私人辦公室</button></div>`;document.body.append(wy3Intro);
 const wy3WallPrompt=document.createElement('button');wy3WallPrompt.id='wy3WallPrompt';wy3WallPrompt.textContent='BEHIND THE DOOR｜點擊查看入內須知';document.body.append(wy3WallPrompt);
-const wy3DoorPrompt=document.createElement('button');wy3DoorPrompt.id='wy3DoorPrompt';wy3DoorPrompt.textContent='開啟林律師私人辦公室門';document.body.append(wy3DoorPrompt);
+const wy3DoorPrompt=document.createElement('button');wy3DoorPrompt.id='wy3DoorPrompt';wy3DoorPrompt.textContent='開門並直走進入辦公室';document.body.append(wy3DoorPrompt);
 function wy3ShowIntro(){wy3Intro.style.display='flex'}
-function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}wy3UpdatePrompts()}
+function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}wy3OpenDoor();wy3UpdatePrompts()}
 wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
-function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3OfficeDoor.visible=false;wy3DoorPrompt.style.display='none';}
+function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
-function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3OfficeDoor.visible=true;wy3Lawyer.root.visible=Math.random()<.15;wy3UpdatePrompts()}
-function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display=active?'block':'none';wy3DoorPrompt.style.display=active&&wy3OfficeUnlocked&&!wy3OfficeDoorOpened?'block':'none'}
+function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3UpdatePrompts()}
+function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none'}
 function wy3Interact(action){
  if(action==='wall'){wy3ShowIntro();return}
  if(action==='officeDoor'){wy3OpenDoor();return}
@@ -2040,13 +2059,13 @@ const wyLiftPrompt=document.createElement('button');wyLiftPrompt.id='wyLiftPromp
 const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyRideShade.style.cssText='display:none;position:fixed;inset:0;z-index:95;background:#172c43ee;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:10px;font:700 21px system-ui;text-align:center';wyRideShade.innerHTML='<div>德威陽｜有法度</div><div id="wyRideProgress">電梯門關閉中…</div><div id="wyRideFloor" style="font-size:46px">1F</div>';document.body.append(wyRideShade);
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,10.85);lobbyRoot.add(wyIndoorActor)}
 function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:n===2?roomRoot:wy3Root;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
- const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(n===2?(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3)):(atElevator?new THREE.Vector3(7.75,.08,7.25):new THREE.Vector3(0,.08,6.7))); wyIndoorActor.position.copy(p);
+ const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(n===2?(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3)):(atElevator?new THREE.Vector3(8.15,.08,6.45):new THREE.Vector3(7.95,.08,6.45))); wyIndoorActor.position.copy(p);
  wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
- else if(wyOfficeFloor===3){wy3Cam.position.set(17,17,23);wy3Orbit.target.set(0,1.4,0);wy3Orbit.update()}
+ else if(wyOfficeFloor===3){wy3Cam.position.set(18,16,20);wy3Orbit.target.set(0,1.4,0);wy3Orbit.update()}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';if(wyOfficeFloor===3)wy3Enter();else{wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
 function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
@@ -2062,7 +2081,7 @@ function wyFindLiftPath(from,to,floor){
    if(x>5.9&&x<10.9&&z>-.5&&z<4.7)return true; // tea / furniture
   }else{
    if(Math.abs(x)<5.1&&z>-5.2&&z<5.0)return true; // central office desks
-   if(x>5.5&&z>-.8&&z<6.5)return true;
+   if(x>5.5&&x<9.9&&z>4.85&&z<8.1)return true;
   }
   return false;
  };
@@ -2099,7 +2118,7 @@ function wyStartRide(dest){
  // 2F: if the coarse A* grid rejects a valid route, keep the elevator button
  // fully automatic. Run through the narrow clear aisle beside the desks,
  // then reach the lift. No manual walking or ride-count restriction.
- if(!path&&source===3){path=[new THREE.Vector3(7.75,.08,5.8),approach.clone()];}
+ if(!path&&source===3){path=[new THREE.Vector3(6.35,.08,6.45),approach.clone()];}
  if(!path&&source===2){
   const aisleX=5.3, aisleTop=7.2, aisleBottom=-5.9;
   path=[];
@@ -2126,7 +2145,18 @@ wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
 floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
- if(wyIndoorActor&&!wyRide){
+ if(wyOfficeFloor===3){
+  if(wy3OfficeDoorOpened&&wy3DoorProgress<1){wy3DoorProgress=Math.min(1,wy3DoorProgress+dt*.85);wy3OfficeDoorPivot.rotation.y=-Math.PI*.54*(wy3DoorProgress*wy3DoorProgress*(3-2*wy3DoorProgress));}
+  if(wy3AutoWalk&&wy3DoorProgress>.75&&wyIndoorActor&&!wyRide){
+   const p=wyIndoorActor.position;
+   const target=new THREE.Vector3(7.10,.08,2.95);
+   const dx=target.x-p.x,dz=target.z-p.z,dist=Math.hypot(dx,dz);
+   if(dist>.10){const step=Math.min(dist,dt*2.0);p.x+=dx/dist*step;p.z+=dz/dist*step;p.y=.08;wyIndoorActor.rotation.y=Math.atan2(dx,dz)}
+   else wy3AutoWalk=false;
+  }
+ }
+
+ if(wyIndoorActor&&!wyRide&&!wy3AutoWalk){
   let x=0,z=0;const k=wyMoveKeys;
   if(k.has('arrowleft')||k.has('a'))x-=1;
   if(k.has('arrowright')||k.has('d'))x+=1;
@@ -2134,7 +2164,7 @@ function wyElevatorTick(dt){
   if(k.has('arrowdown')||k.has('s'))z+=1;
   x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
    if(wyOfficeFloor===1){if(nx>-12&&nx<12&&nz>-9.5&&nz<10&&!(Math.abs(nx)<7.2&&nz>4.4&&nz<7.6)&&!(Math.abs(nx)<4&&nz>-5.5&&nz<-1.2)){p.x=nx;p.z=nz;}}
-   else if(wyOfficeFloor===3){const gate=(p.x>=4.6&&nx<4.6&&nz>4.4);const solidWall=(nz>4.35&&nx>4.5&&nx<9.7&&p.z<=4.35);if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3OfficeDoorOpened))){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
+   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
   }
   const target=wyElevPos(wyOfficeFloor);
@@ -2153,7 +2183,7 @@ function wyElevatorTick(dt){
     if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*28.0);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
    }else{r.phase='enter';r.time=0;wyDoorOpen=1;}
   }else if(r.phase==='enter'){
-   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):r.source===2?new THREE.Vector3(9.1,.08,-9.2):new THREE.Vector3(7.75,.08,8.25);
+   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):r.source===2?new THREE.Vector3(9.1,.08,-9.2):new THREE.Vector3(8.15,.08,6.45);
    const diff=center.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
    if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*20.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
@@ -2165,9 +2195,9 @@ function wyElevatorTick(dt){
    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
   }else if(r.phase==='arrive'){
    wyDoorOpen=Math.min(1,r.time/1.5);
-   if(r.time>=1.5){wyRideShade.style.display='none';r.phase='exit';r.time=0;if(r.dest===3&&!wy3IntroSeen)wy3ShowIntro();}
+   if(r.time>=1.5){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
-   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):r.dest===2?new THREE.Vector3(9.1,.08,-6.85):new THREE.Vector3(7.75,.08,6.45);
+   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):r.dest===2?new THREE.Vector3(9.1,.08,-6.85):new THREE.Vector3(6.35,.08,6.45);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
    if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*17.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{
@@ -2179,7 +2209,7 @@ function wyElevatorTick(dt){
  }
  wyUpdateGlassCabin(wyDoorOpen,dt);
 
- for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2],[3,wy3Doors]]){
+ for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2]]){
   const f=wyOfficeFloor===i?wyDoorOpen:0,sep=i===1?1.6:1.22;
   doors[0].position.x=(i===1?7.48:i===2?-.85:7.0)-f*sep;
   doors[1].position.x=(i===1?9.32:i===2?.85:8.5)+f*sep;
