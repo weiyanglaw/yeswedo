@@ -15,6 +15,24 @@
 #wyMainGuideAgain{max-width:min(170px,45vw)!important}
 @media(max-width:600px){#officeUI>div:first-child strong{font-size:11px!important;padding:7px 8px!important}#officeUI>div:first-child button{font-size:11px!important;padding:7px 8px!important}#wyFloorButton{top:calc(104px + env(safe-area-inset-top,0px))!important;padding:8px 9px!important;font-size:12px!important}}
 @media(max-width:390px){#officeUI>div:first-child strong{flex-basis:100%!important}#wyFloorButton{top:calc(114px + env(safe-area-inset-top,0px))!important}}
+</style><style id="wy-v150-accessible-lobby-controls">
+/* Larger touch targets and legible labels, only while the indoor office controls are shown. */
+#officeUI>div:first-child{gap:8px!important;align-items:center!important}
+#officeUI>div:first-child strong{font-size:clamp(15px,3.6vw,19px)!important;line-height:1.35!important;padding:12px 15px!important;border-radius:15px!important}
+#officeUI>div:first-child button{font-size:clamp(15px,3.5vw,18px)!important;min-height:47px!important;padding:11px 14px!important;border-radius:14px!important}
+#wyFloorButton{font-size:clamp(16px,3.7vw,19px)!important;min-height:51px!important;max-width:min(210px,51vw)!important;padding:12px 15px!important;border-radius:14px!important;top:calc(112px + env(safe-area-inset-top,0px))!important;right:calc(10px + env(safe-area-inset-right,0px))!important;line-height:1.3!important}
+#wyMainGuideAgain{font-size:clamp(17px,4vw,20px)!important;min-height:51px!important;padding:12px 16px!important;border-radius:14px!important;top:calc(179px + env(safe-area-inset-top,0px))!important;right:calc(10px + env(safe-area-inset-right,0px))!important;max-width:min(210px,51vw)!important}
+@media(max-width:600px){
+ #officeUI>div:first-child{display:grid!important;grid-template-columns:1fr auto auto!important;gap:8px!important;align-items:center!important}
+ #officeUI>div:first-child strong{grid-column:1/-1!important;margin:0!important;justify-self:start!important;max-width:100%!important;font-size:16px!important;padding:10px 13px!important}
+ #officeUI>div:first-child #officeContact{grid-column:2!important}
+ #officeUI>div:first-child #officeExit{grid-column:3!important}
+ #officeUI>div:first-child button{font-size:15px!important;padding:10px 12px!important;min-height:45px!important}
+ #wyFloorButton{top:calc(145px + env(safe-area-inset-top,0px))!important;font-size:16px!important}
+ #wyMainGuideAgain{top:calc(214px + env(safe-area-inset-top,0px))!important;font-size:18px!important}
+ #wyContactPanel{top:calc(140px + env(safe-area-inset-top,0px))!important}
+}
+@media(max-width:370px){#officeUI>div:first-child button{font-size:14px!important;padding:9px 10px!important}#wyFloorButton{top:calc(148px + env(safe-area-inset-top,0px))!important}}
 </style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
 <div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><label for="visitorName">角色名稱</label><input id="visitorName" maxlength="14" placeholder="法律探險家" value="法律探險家"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"><div class="wardrobeHeading">🎀 自由換裝｜每件衣服獨立搭配</div><label for="avatarTopStyle">① 上衣（單獨選擇）</label><select id="avatarTopStyle"><option value="tshirt">短袖 T 恤</option><option value="longsleeve">長袖 T 恤</option><option value="shirt">襯衫</option><option value="polo">Polo 衫</option><option value="hoodie">帽 T</option><option value="knit">針織衫</option></select><div class="wearTip" id="tip_avatarTopStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarBottomStyle">② 下半身（單獨選擇）</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="jeans">牛仔長褲</option><option value="casual">休閒長褲</option><option value="suitpants">西裝褲</option><option value="pleated">百褶短裙</option><option value="longskirt">長裙</option></select><div class="wearTip" id="tip_avatarBottomStyle">選擇款式後，3D 人物會直接更換造型</div><label for="avatarJacket">③ 外套（可選擇不穿）</label><select id="avatarJacket"><option value="none">不穿外套</option><option value="blazer">西裝外套</option><option value="cardigan">針織外套</option><option value="denim">牛仔外套</option><option value="ziphood">連帽外套</option><option value="trench">風衣</option></select><div class="wearTip" id="tip_avatarJacket">選擇款式後，3D 人物會直接更換造型</div><label for="avatarOnepiece">④ 連身服裝（會取代上衣與下半身）</label><select id="avatarOnepiece"><option value="none">不穿連身服裝</option><option value="casualdress">休閒洋裝</option><option value="princess">公主洋裝</option><option value="shirtdress">襯衫洋裝</option><option value="formaldress">正式洋裝</option><option value="jumpsuit">連身褲</option></select><div class="wearTip" id="tip_avatarOnepiece">選擇款式後，3D 人物會直接更換造型</div><label for="avatarShoes">⑤ 鞋子</label><select id="avatarShoes"><option value="sneakers">白色球鞋</option><option value="casualshoes">休閒鞋</option><option value="leather">皮鞋</option><option value="maryjane">瑪莉珍鞋</option><option value="boots">短靴</option><option value="sandals">涼鞋</option></select><div class="wearTip" id="tip_avatarShoes">選擇款式後，3D 人物會直接更換造型</div><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca" style="width:100%;height:40px;padding:2px"><label for="avatarBottomColor">褲子／裙子顏色</label><input id="avatarBottomColor" type="color" value="#374b75" style="width:100%;height:40px;padding:2px"><label for="avatarJacketColor">外套顏色</label><input id="avatarJacketColor" type="color" value="#8e6580" style="width:100%;height:40px;padding:2px"><label for="avatarDressColor">連身服裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8" style="width:100%;height:40px;padding:2px"><label for="avatarShoeColor">鞋子顏色</label><input id="avatarShoeColor" type="color" value="#f7f2e7" style="width:100%;height:40px;padding:2px"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div><button id="startExplore" type="button">建立角色・開始探索</button></div></div><div id="top"><div id="brand"><img src="official-logo.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
@@ -1371,61 +1389,14 @@ for(let i=-5;i<=5;i++){
 // Original, unchanged official logo asset on the front cabinet face.
 const wrLogo=new THREE.Mesh(new THREE.PlaneGeometry(.96,.96),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-logo-tight-v102.png'),transparent:true,side:THREE.DoubleSide,depthWrite:false}));
 wrLogo.position.set(0,.76,.795);wyReception.add(wrLogo);
-// OPAQUE architectural display rises directly from the FRONT (+Z) logo face, not from the rear.
-const wrPanel=new THREE.Group();wyReception.add(wrPanel);wrPanel.position.set(0,1.60,.74);
-wrBox(0,2.64,.76,7.02,2.12,.18,wrGold);
-wrBox(0,2.64,.87,6.83,1.94,.11,wrNavy);
-for(const x of [-3.22,3.22]){
- wrBox(x,2.64,.95,.12,1.84,.06,wrGold);
- for(let k=0;k<5;k++){
-  const y=1.88+k*.36;
-  const leaf=new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),lbMat('#E6C47E'));
-  leaf.scale.set(1.6,.58,.3);leaf.position.set(x+(x<0?.14:-.14),y,.97);leaf.rotation.z=(k%2?1:-1)*.48;wyReception.add(leaf);
- }
-}
-// One canvas for exactly three lines, no line wrapping. Golden filigree and slow star dust.
-const wrCanvas=document.createElement('canvas');wrCanvas.width=1024;wrCanvas.height=384;
-const wrCtx=wrCanvas.getContext('2d');const wrTex=new THREE.CanvasTexture(wrCanvas);wrTex.colorSpace=THREE.SRGBColorSpace;
-const wrScreen=new THREE.Mesh(new THREE.PlaneGeometry(6.38,1.78),new THREE.MeshBasicMaterial({map:wrTex,transparent:false,side:THREE.DoubleSide}));
-wrScreen.position.set(0,2.64,.938);wyReception.add(wrScreen);
-function wyReceptionAnimate(ms){
- const t=ms*.001;const c=wrCtx;const glacier=c.createLinearGradient(0,0,1024,384);
- glacier.addColorStop(0,'#103D63');glacier.addColorStop(.45,'#348BAF');glacier.addColorStop(1,'#A4DFEB');
- c.fillStyle=glacier;c.fillRect(0,0,1024,384);
- for(let i=0;i<9;i++){const x=((i*151+t*13)%1180)-80;c.fillStyle='rgba(211,249,255,.09)';c.beginPath();c.moveTo(x,0);c.lineTo(x+80,0);c.lineTo(x-60,384);c.lineTo(x-140,384);c.fill();}
- c.strokeStyle='#C9A15E';c.lineWidth=3;
- for(const side of [-1,1])for(let j=0;j<5;j++){
-  const x=side<0?66:958,y=48+j*66;
-  c.beginPath();c.moveTo(x,y-22);c.bezierCurveTo(x+side*48,y-42,x-side*18,y+16,x,y+27);c.stroke();
-  c.beginPath();c.ellipse(x-side*16,y,17,6,side*.35,0,Math.PI*2);c.stroke();
- }
- for(let i=0;i<25;i++){
-  const x=80+((i*179)%870),y=28+((i*113)%320),a=.18+.42*(.5+.5*Math.sin(t*.7+i*2.7));
-  c.fillStyle='rgba(247,207,127,'+a.toFixed(3)+')';c.beginPath();c.arc(x,y,i%4===0?2.3:1.3,0,Math.PI*2);c.fill();
- }
- // Animated traveling glints along the royal side filigree, visible even on a small phone.
- for(const side of [-1,1]){
-  for(let k=0;k<4;k++){
-   const y=34+((t*43+k*97)%330),x=side<0?62:962;
-   const halo=c.createRadialGradient(x,y,1,x,y,19);
-   halo.addColorStop(0,'rgba(255,239,171,.98)');halo.addColorStop(.3,'rgba(255,206,93,.62)');halo.addColorStop(1,'rgba(255,206,93,0)');
-   c.fillStyle=halo;c.fillRect(x-20,y-20,40,40);
-  }
- }
- for(let i=0;i<13;i++){
-  const x=110+(i*197)%810,y=34+((i*73+t*(8+i%3*4))%314);
-  const a=.25+.7*(.5+.5*Math.sin(t*1.3+i*1.8));
-  c.strokeStyle='rgba(255,219,126,'+a.toFixed(3)+')';c.lineWidth=1.5;
-  c.beginPath();c.moveTo(x-5,y);c.lineTo(x+5,y);c.moveTo(x,y-5);c.lineTo(x,y+5);c.stroke();
- }
- c.textAlign='center';c.textBaseline='middle';c.fillStyle='#F6D898';
- c.shadowColor='#DDB66A';c.shadowBlur=6+3*Math.sin(t*.6);
- c.font='bold 66px sans-serif';c.fillText('德威陽國際法律事務所',512,111,815);
- c.font='bold 43px Georgia,serif';c.fillText('WEI & YANG INTERNATIONAL LAW FIRM',512,205,835);
- c.font='bold 69px Georgia,serif';c.fillText('YES, WE DO!',512,303,700);
- c.shadowBlur=0;wrTex.needsUpdate=true;
-}
-wyReceptionAnimate(0);
+// v150: low, curved, pale-blue transparent glass at the original reception display location.
+// The existing counter, front official logo, and all surrounding furnishings remain unchanged.
+const wrGlassRadius=6.4, wrGlassArc=.98;
+const wrGlassMaterial=new THREE.MeshPhysicalMaterial({color:0xB8E5F1,metalness:0,roughness:.13,transmission:.68,transparent:true,opacity:.38,thickness:.12,ior:1.45,side:THREE.DoubleSide,depthWrite:false});
+const wrCurvedGlass=new THREE.Mesh(new THREE.CylinderGeometry(wrGlassRadius,wrGlassRadius,1.94,64,1,true,-wrGlassArc/2,wrGlassArc),wrGlassMaterial);
+wrCurvedGlass.position.set(0,2.64,1.04-wrGlassRadius);wyReception.add(wrCurvedGlass);
+// The old animated panel and its text are deliberately removed; lettering can be added later.
+function wyReceptionAnimate(ms){};
 
 // v124: no cabinetry beneath the left-side WEIYANG logo; the rear L leg ends before that logo.
 // v121: true continuous wall-hugging L refreshment bar with a nearby inner-corner island.
@@ -1824,14 +1795,14 @@ function wyElevatorTick(dt){
    if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*20.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
   }else if(r.phase==='close'){
-   wyDoorOpen=Math.max(0,1-r.time/1.0);
-   if(r.time>=1.0){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
-  }else if(r.phase==='travel'&&r.time>=.25){
+   wyDoorOpen=Math.max(0,1-r.time/1.5);
+   if(r.time>=1.5){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
+  }else if(r.phase==='travel'&&r.time>=.3){
    wySetFloor(r.dest);wyResetIndoorRideCamera(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
   }else if(r.phase==='arrive'){
-   wyDoorOpen=Math.min(1,r.time/1.0);
-   if(r.time>=1.0){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
+   wyDoorOpen=Math.min(1,r.time/1.5);
+   if(r.time>=1.5){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
    const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):new THREE.Vector3(9.1,.08,-6.85);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
@@ -2006,7 +1977,7 @@ const wyMainGuide=document.createElement('aside');wyMainGuide.id='wyMainGuide';
 wyMainGuide.style.cssText=medGuide.style.cssText;
 wyMainGuide.innerHTML='<h3 style="margin:0 0 7px">歡迎來到德威陽法律探索主島！</h3><p>拖曳旋轉視角、雙指縮放，使用畫面上的方向搖桿移動訪客角色。</p><p><b>一樓迎賓：</b>點擊接待區、茶點區與三層樓探索標示。</p><p><b>觀景電梯：</b>點擊電梯選擇樓層，角色會自動前往電梯。</p><p><b>二樓辦公室：</b>探索員工工作位置及互動設施。</p><p><b>三樓：</b>目前提供律師辦公室介紹，尚未建立獨立場景。</p><button style="width:100%;padding:11px;border:0;border-radius:10px;background:#284d68;color:white;font-weight:bold">開始探索</button>';
 document.body.append(wyMainGuide);wyMainGuide.querySelector('button').onclick=()=>wyMainGuide.style.display='none';
-const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';
+const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';wyMainGuideAgain.id='wyMainGuideAgain';
 wyMainGuideAgain.style.cssText=medGuideAgain.style.cssText;document.body.append(wyMainGuideAgain);
 wyMainGuideAgain.onclick=()=>wyMainGuide.style.display='block';let wyMainGuideSeen=false;
 
