@@ -1,9 +1,9 @@
 // WEIYANG v107: Corporate island, large-scale low-poly architectural detailing.
 // Derived solely from official v106. All existing site interactions remain unchanged.
 export function createBusinessHeadquarters(island, THREE){
- const root=new THREE.Group();root.name='WEIYANG_BUSINESS_V166';island.add(root);
+ const root=new THREE.Group();root.name='WEIYANG_BUSINESS_V107';island.add(root);
  const mat=(hex)=>new THREE.MeshBasicMaterial({color:hex,side:THREE.DoubleSide});
- const pearl=mat('#F9F7F0'),white=mat('#E9F0F0'),ice=mat('#BDA7E8'),glass=mat('#7050B1'),glassDark=mat('#352061'),navy=mat('#27133F'),gold=mat('#DCC18C'),goldDark=mat('#B59562'),plaza=mat('#E8E3F0'),pave=mat('#D7CCE7'),leaf=mat('#6F9F6C'),leafLight=mat('#91B77D'),leafDark=mat('#4F835F'),bark=mat('#766F60');
+ const pearl=mat('#F9F7F0'),white=mat('#E9F0F0'),ice=mat('#83B7D2'),glass=mat('#4788B4'),glassDark=mat('#275A81'),navy=mat('#203F62'),gold=mat('#E9CF92'),goldDark=mat('#C7AC75'),plaza=mat('#E8ECEB'),pave=mat('#D4E3ED'),leaf=mat('#6F9F6C'),leafLight=mat('#91B77D'),leafDark=mat('#4F835F'),bark=mat('#766F60');
  const box=(w,h,d,x,y,z,m,group=root)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);group.add(o);return o;};
  const poly=(pts,depth,x,y,z,m)=>{const s=new THREE.Shape();s.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)s.lineTo(pts[i][0],pts[i][1]);s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:false,steps:1});const o=new THREE.Mesh(g,m);o.position.set(x,y,z);root.add(o);return o;};
  // Original floating island diameter 34; no modification to bridges or original island.
@@ -59,7 +59,7 @@ export function createBusinessHeadquarters(island, THREE){
  box(9.6,.24,5.1,0,6.15,1.5,gold);
  for(const x of [-2.5,0,2.5])box(.34,3.55,.40,x,2.0,4.20,pearl);
  // Actual unchanged official logo image, enlarged on a clear dark facade.
- const texture=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261028-v166');
+ const texture=new THREE.TextureLoader().load('weiyang-logo-tight-v102.png?v=20261027-v107');
  texture.colorSpace=THREE.SRGBColorSpace;
  const logo=new THREE.Mesh(new THREE.PlaneGeometry(5.05,6.4),new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
  logo.position.set(0,10.7,-1.005);root.add(logo);
@@ -74,35 +74,5 @@ export function createBusinessHeadquarters(island, THREE){
  }
  for(const [x,z,s] of [[-12,5.7,.85],[12,5.7,.85],[-12,10.5,.82],[12,10.5,.82],[-13.1,-.5,.72],[13.1,-.5,.72]])broadTree(x,z,s);
  for(const x of [-12,12]){box(4.2,.48,2.1,x,.42,8.0,pearl);box(3.5,.15,1.65,x,.74,8.0,leafDark);}
-
- // v166 future-fashion corporate headquarters: sculptural elliptical sky ring,
- // translucent purple curves, floating galleries and pearl/champagne trim.
- const purpleGlass=new THREE.MeshPhysicalMaterial({color:0x66439a,metalness:.18,roughness:.13,transparent:true,opacity:.83,side:THREE.DoubleSide,depthWrite:true});
- const luminous=new THREE.MeshBasicMaterial({color:0xe9d6ff,side:THREE.DoubleSide});
- const silver=new THREE.MeshStandardMaterial({color:0xf4ecff,metalness:.5,roughness:.24,side:THREE.DoubleSide});
- const goldLine=new THREE.MeshStandardMaterial({color:0xd5b780,metalness:.75,roughness:.2});
- const tube=(pts,r,material)=>{const curve=new THREE.CatmullRomCurve3(pts.map(v=>new THREE.Vector3(...v)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,80,r,9,false),material);root.add(mesh);return mesh};
- // Dramatic sweeping facade fins, two visible curved bands on the front.
- for(const side of [-1,1]){
-  tube([[side*2.9,1,-.9],[side*4.3,6,-.8],[side*4.0,12,-.7],[side*2.9,18,-.6],[side*1.5,25,-2.4]],.22,silver);
-  tube([[side*3.5,1,-.65],[side*5.1,8,-.55],[side*4.6,15,-.65],[side*2.5,23,-1.0]],.07,goldLine);
- }
- // Signature open-air halo over the headquarters, like an elliptical futuristic crown.
- const halo=new THREE.Mesh(new THREE.TorusGeometry(4.8,.31,14,92),silver);halo.rotation.x=Math.PI*.13;halo.scale.set(1,.58,1);halo.position.set(0,26.3,-4.3);root.add(halo);
- const haloLight=new THREE.Mesh(new THREE.TorusGeometry(4.43,.08,10,92),luminous);haloLight.rotation.x=Math.PI*.13;haloLight.scale.set(1,.58,1);haloLight.position.set(0,26.35,-4.25);root.add(haloLight);
- // Curved wings read as boutique business campus, not regular rectangular blocks.
- for(const side of [-1,1]){
-  const wing=new THREE.Mesh(new THREE.CylinderGeometry(2.95,3.45,12,48,1,false,0,Math.PI*2),purpleGlass);
-  wing.scale.z=.73;wing.position.set(side*9.25,8.0,-4.2);root.add(wing);
-  for(const y of [3.0,6.5,10,13.5]){const ring=new THREE.Mesh(new THREE.TorusGeometry(3.13,.095,8,60),goldLine);ring.rotation.x=Math.PI/2;ring.scale.y=.73;ring.position.set(side*9.25,y,-4.2);root.add(ring)}
-  tube([[side*4.2,11.0,-3.5],[side*5.6,12.5,-3.2],[side*7.5,12.2,-3.1],[side*9.1,10.8,-3.1]],.27,silver);
- }
- // Elevated grand portico and fountain basins flanking an unobstructed central entry.
- const portico=new THREE.Mesh(new THREE.TorusGeometry(5.15,.20,12,80,Math.PI),goldLine);portico.rotation.z=Math.PI;portico.position.set(0,5.4,4.25);root.add(portico);
- const waterMat=new THREE.MeshPhysicalMaterial({color:0x9278ce,metalness:.15,roughness:.09,transparent:true,opacity:.78});
- for(const side of [-1,1]){
-  const basin=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.05,.18,40),silver);basin.scale.z=.62;basin.position.set(side*7.8,.3,8.3);root.add(basin);
-  const water=new THREE.Mesh(new THREE.CylinderGeometry(1.86,1.86,.035,40),waterMat);water.scale.z=.62;water.position.set(side*7.8,.41,8.3);root.add(water);
- }
  root.userData.islandType='business';root.userData.entryLabel='企業商務島｜點擊大樓進入主題館';return root;
 }
