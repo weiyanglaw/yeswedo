@@ -2141,7 +2141,7 @@ function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;c
  wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
- officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
+ officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=false;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
  else if(wyOfficeFloor===3){wy3Cam.position.set(8.8,8.2,14.5);wy3Orbit.target.set(7.12,2.55,4.48);wy3Orbit.update()}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
@@ -2392,6 +2392,52 @@ for(const eventName of ['pointerup','pointercancel','lostpointercapture']){
   wyTouchPoints.delete(e.pointerId);wyTwistAngle=wyTouchAngle();
  },{passive:true});
 }
+// v171: isolated first-floor camera gestures. OrbitControls for the other rooms
+// share the canvas; this avoids competing handlers when the lobby is active.
+const wy171Pointers=new Map();
+let wy171LastPinch=null;
+function wy171LobbyActive(){return insideOffice&&activeIslandRoom===0&&wyOfficeFloor===1&&!wyRide&&document.getElementById('creator').style.display==='none'&&document.getElementById('wyMainGuide').style.display==='none'&&document.getElementById('wyLobbyDialog').style.display==='none';}
+function wy171LobbyRotate(dx,dy){
+ const offset=lobbyCam.position.clone().sub(lobbyOrbit.target);
+ const sphere=new THREE.Spherical().setFromVector3(offset);
+ sphere.theta-=dx*0.006;
+ sphere.phi=Math.max(0.2,Math.min(Math.PI*0.48,sphere.phi-dy*0.004));
+ offset.setFromSpherical(sphere);
+ lobbyCam.position.copy(lobbyOrbit.target).add(offset);
+ lobbyCam.lookAt(lobbyOrbit.target);
+}
+function wy171LobbyZoom(factor){
+ const offset=lobbyCam.position.clone().sub(lobbyOrbit.target);
+ offset.multiplyScalar(factor);
+ const len=offset.length();
+ offset.setLength(Math.max(12,Math.min(65,len)));
+ lobbyCam.position.copy(lobbyOrbit.target).add(offset);
+ lobbyCam.lookAt(lobbyOrbit.target);
+}
+renderer.domElement.addEventListener('pointerdown',e=>{
+ if(!wy171LobbyActive())return;
+ wy171Pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ wy171LastPinch=null;
+},{passive:true});
+renderer.domElement.addEventListener('pointermove',e=>{
+ if(!wy171LobbyActive()||!wy171Pointers.has(e.pointerId))return;
+ const prev=wy171Pointers.get(e.pointerId);
+ wy171Pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(wy171Pointers.size===1){wy171LobbyRotate(e.clientX-prev.x,e.clientY-prev.y);}
+ else if(wy171Pointers.size===2){
+  const [a,b]=[...wy171Pointers.values()];
+  const distance=Math.hypot(a.x-b.x,a.y-b.y);
+  if(wy171LastPinch!==null&&distance>1)wy171LobbyZoom(wy171LastPinch/distance);
+  wy171LastPinch=distance;
+ }
+},{passive:true});
+for(const ev of ['pointerup','pointercancel','lostpointercapture'])renderer.domElement.addEventListener(ev,e=>{
+ wy171Pointers.delete(e.pointerId);wy171LastPinch=null;
+},{passive:true});
+renderer.domElement.addEventListener('wheel',e=>{
+ if(!wy171LobbyActive())return;
+ e.preventDefault();wy171LobbyZoom(Math.exp(e.deltaY*0.001));
+},{passive:false});
 function wyConfigure3DGestures(control,{minDistance=7,maxDistance=65}={}){
  control.enableRotate=true;control.enableZoom=true;control.enablePan=true;
  control.screenSpacePanning=true;control.enableDamping=true;
@@ -2418,15 +2464,15 @@ function officeTalk(i){
 }
 function enterOffice(){
  if(insideOffice||document.getElementById('creator').style.display!=='none')return;
- activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;localStorage.setItem('wy-guide-main-v165','yes');}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
- document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
+ wy171Pointers.clear();activeIslandRoom=0;hideDoorPrompt();window.wyEntryGuideVisible?.(false);insideOffice=true;wyMainGuideAgain.style.display='block';if(!wyMainGuideSeen){wyMainGuide.style.display='block';wyMainGuideSeen=true;localStorage.setItem('wy-guide-main-v165','yes');}document.getElementById('wyGestures').hidden=true;document.getElementById('officeUI').style.display='block';document.getElementById('officeContact').style.display='';
+ document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=false;lobbyOrbit.update();
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
  // v170: commit the indoor frame immediately instead of showing an indoor HUD over the last island overview frame.
  renderer.clear();renderer.render(lobbyScene,lobbyCam);
 }
 document.querySelectorAll('#wyEntryGuide button, #wyEntryGuide [data-enter-office]').forEach(b=>b.addEventListener('click',()=>{if(!insideOffice&&document.getElementById('creator').style.display==='none')enterOffice()}));
 function leaveOffice(){
- closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
+ wy171Pointers.clear();closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
  document.getElementById('joy').style.display='';document.getElementById('controls').style.display='';document.getElementById('hud').style.display='';document.getElementById('top').style.display='';document.getElementById('hud').style.display='';
 }
