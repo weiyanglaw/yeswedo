@@ -1444,23 +1444,40 @@ const wrTop=[];for(let i=0;i<=96;i++)wrTop.push(wrArcPoint(-wrGlassArc/2+wrGlass
 wrFrameCurve(wrTop,.032);
 for(const sideAngle of [-wrGlassArc/2,wrGlassArc/2])
  wrFrameCurve([wrArcPoint(sideAngle,1.67),wrArcPoint(sideAngle,2.64),wrArcPoint(sideAngle,3.61)],.027);
-// Three large, fixed warm-white-gold text lines, on the curved glass itself.
+// v156: Two glass lettering rows; the English firm name is the dominant line.
+const wrLightRows=[];
 function wrCurvedLettering(label,centerY,stripHeight,fontPx){
- const cv=document.createElement('canvas');cv.width=3072;cv.height=320;
- const cx=cv.getContext('2d');cx.clearRect(0,0,cv.width,cv.height);
- cx.textAlign='center';cx.textBaseline='middle';
- cx.font='800 '+fontPx+'px "Noto Sans TC",system-ui,sans-serif';
- cx.shadowColor='rgba(255,225,154,.95)';cx.shadowBlur=19;
- cx.fillStyle='#FFF4D2';cx.fillText(label,1536,160,2840);
- cx.shadowBlur=0;cx.fillStyle='#FFF9E8';cx.fillText(label,1536,160,2840);
- const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=8;
- const geom=new THREE.CylinderGeometry(wrGlassRadius+.085,wrGlassRadius+.085,stripHeight,128,1,true,-wrGlassArc/2+.055,wrGlassArc-.11);
- const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:1,side:THREE.DoubleSide,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1});
- const mesh=wrAdd(geom,mat,0,centerY,wrGlassCenterZ);mesh.renderOrder=12;
+ // v155: large readable lettering, with gentle sequential illumination.
+ // The clear letter face is always visible; only the soft gold halo animates.
+ const makeTexture=(halo)=>{
+  const cv=document.createElement('canvas');cv.width=3072;cv.height=512;
+  const cx=cv.getContext('2d');cx.clearRect(0,0,cv.width,cv.height);
+  cx.textAlign='center';cx.textBaseline='middle';
+  cx.font='800 '+fontPx+'px "Noto Sans TC",system-ui,sans-serif';
+  if(halo){
+   cx.shadowColor='rgba(255,194,91,1)';cx.shadowBlur=85;
+   cx.fillStyle='rgba(255,225,151,.9)';cx.fillText(label,1536,256,2840);
+   cx.shadowColor='rgba(255,242,197,1)';cx.shadowBlur=42;
+   cx.fillStyle='rgba(255,245,212,1)';cx.fillText(label,1536,256,2840);
+  }else{
+   cx.shadowColor='rgba(255,213,137,1)';cx.shadowBlur=12;
+   cx.fillStyle='#FFF9EB';cx.fillText(label,1536,256,2840);
+   cx.shadowBlur=0;cx.fillStyle='#FFFFFF';cx.fillText(label,1536,256,2840);
+  }
+  const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;
+  tex.anisotropy=8;return tex;
+ };
+ const start=-wrGlassArc/2+.055,arc=wrGlassArc-.11;
+ const haloGeom=new THREE.CylinderGeometry(wrGlassRadius+.112,wrGlassRadius+.112,stripHeight*1.72,128,1,true,start,arc);
+ const haloMat=new THREE.MeshBasicMaterial({map:makeTexture(true),transparent:true,opacity:.10,side:THREE.DoubleSide,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending,toneMapped:false});
+ const halo=wrAdd(haloGeom,haloMat,0,centerY,wrGlassCenterZ);halo.renderOrder=13;
+ const faceGeom=new THREE.CylinderGeometry(wrGlassRadius+.135,wrGlassRadius+.135,stripHeight,128,1,true,start,arc);
+ const faceMat=new THREE.MeshBasicMaterial({map:makeTexture(false),transparent:true,opacity:1,side:THREE.DoubleSide,depthWrite:false,depthTest:false,toneMapped:false});
+ const face=wrAdd(faceGeom,faceMat,0,centerY,wrGlassCenterZ);face.renderOrder=14;
+ wrLightRows.push(haloMat);
 }
-wrCurvedLettering('德威陽國際法律事務所',3.04,.37,160);
-wrCurvedLettering('WEI & YANG INTERNATIONAL LAW FIRM',2.57,.32,112);
-wrCurvedLettering('YES, WE DO!',2.13,.27,95);
+wrCurvedLettering('德威陽國際法律事務所',3.15,.43,215);
+wrCurvedLettering('WEI & YANG INTERNATIONAL LAW FIRM',2.47,.70,275);
 // v153: full-depth luxury rear reception, designed for mobile isometric visibility.
 // All workstation pieces are actual 3D geometry, deliberately large, few and high contrast.
 const wrDeskIvory=new THREE.MeshStandardMaterial({color:0xF0E7D7,roughness:.66,metalness:0});
@@ -1511,16 +1528,53 @@ for(const x of [-2.35,2.35]){
  wrBox(.16,.45,.16,wrBase,x,.35,cz+.12);
  wrAdd(new THREE.CylinderGeometry(.40,.40,.09,16),wrBase,x,.11,cz+.12);
 }
-// A single large floral accent with bold, distinct shapes; no micro-props.
-wrAdd(new THREE.CylinderGeometry(.30,.22,.56,12),wrDeskEdge,-4.75,1.94,-.15);
-for(const [dx,dz,col] of [[-.27,0,0xF4D455],[.22,.11,0xF38CA8],[0,-.20,0xF9F1E0],[.11,.27,0xF2BE4F]]){
- const petal=new THREE.Mesh(new THREE.SphereGeometry(.23,10,8),new THREE.MeshStandardMaterial({color:col,roughness:.9}));
- petal.position.set(-4.75+dx,2.38,-.15+dz);wyReception.add(petal);
+// v156: Two substantial matching digital welcome displays at the left/right
+// ends of the glass. Their message is ONLY the firm slogan, not the glass text.
+// Place them outside the glass's lettering zone and ahead of the workstation monitors.
+function wrWelcomeScreen(x){
+ const frame=new THREE.MeshStandardMaterial({color:0xC8A35E,metalness:.55,roughness:.3});
+ const bezel=new THREE.MeshStandardMaterial({color:0x15252C,metalness:.22,roughness:.35});
+ const screenCanvas=document.createElement('canvas');screenCanvas.width=1024;screenCanvas.height=1280;
+ const c=screenCanvas.getContext('2d');
+ const gradient=c.createLinearGradient(0,0,1024,1280);
+ gradient.addColorStop(0,'#1E5360');gradient.addColorStop(1,'#102C39');
+ c.fillStyle=gradient;c.fillRect(0,0,1024,1280);
+ c.textAlign='center';c.textBaseline='middle';
+ c.fillStyle='#FBE7B6';c.font='bold 160px system-ui,sans-serif';
+ c.fillText('YES,',512,525,860);
+ c.font='bold 174px system-ui,sans-serif';c.fillText('WE DO!',512,740,880);
+ const texture=new THREE.CanvasTexture(screenCanvas);texture.colorSpace=THREE.SRGBColorSpace;
+ texture.anisotropy=8;
+ // Desk front faces +Z. Two vertical displays, large enough for the mobile view.
+ wrBox(1.40,1.70,.16,frame,x,2.58,.28);
+ wrBox(1.29,1.59,.17,bezel,x,2.58,.39);
+ const face=new THREE.Mesh(new THREE.PlaneGeometry(1.18,1.47),
+  new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide,toneMapped:false}));
+ face.position.set(x,2.58,.483);face.renderOrder=16;wyReception.add(face);
+ wrBox(.20,.21,.18,frame,x,1.64,.24);
+ wrBox(.86,.10,.48,frame,x,1.55,.20);
 }
+for(const side of [-1,1])wrWelcomeScreen(side*5.12);
 // Reception collision envelope for later integration: keep clear rear access, no invisible barrier.
-wyReception.userData.rearWorkArea={width:wrWidth,depth:1.6,chairs:2,displayMonitors:2};
+wyReception.userData.rearWorkArea={width:wrWidth,depth:1.6,chairs:2,displayMonitors:2,welcomeDisplays:2};
 
-function wyReceptionAnimate(ms){};
+function wyReceptionAnimate(ms){
+ // Two rows in order: Chinese then dominant English, with a soft fade.
+ // The lettering itself stays readable even between illuminated moments.
+ const cycle=6900,spacing=1650,active=2100;
+ const t=ms%cycle;
+ for(let i=0;i<wrLightRows.length;i++){
+  const local=t-i*spacing;
+  let intensity=0;
+  if(local>=0&&local<active){
+   const rise=Math.min(1,local/480);
+   const fall=Math.min(1,(active-local)/900);
+   intensity=Math.max(0,Math.min(rise,fall));
+   intensity=intensity*intensity*(3-2*intensity);
+  }
+  wrLightRows[i].opacity=.10+.88*intensity;
+ }
+}
 // v124: no cabinetry beneath the left-side WEIYANG logo; the rear L leg ends before that logo.
 // v121: true continuous wall-hugging L refreshment bar with a nearby inner-corner island.
 // Back wall is z=-10.55; left wall is x=-13.30. No floating counter segments.
