@@ -1390,7 +1390,7 @@ function wyLuxuryLogoFrame(x,y,z,side=false){
 }
 wyLuxuryLogoFrame(0,4.03,-9.83,false);
 for(const side of [-1,1])wyLuxuryLogoFrame(side*12.69,4.03,-1.4,true);
-// v152: 1F FUTURE LUXE reception, 150% of v151 cabinet and curved glass width.
+// v152/v153: 1F FUTURE LUXE reception, 150% of v151 cabinet and curved glass width.
 // Strong real geometry and color-block contrast; no fine grooves or simulated material detail.
 const wyReception=new THREE.Group();lobbyRoot.add(wyReception);
 wyReception.position.set(0,0,3.65);
@@ -1461,6 +1461,65 @@ function wrCurvedLettering(label,centerY,stripHeight,fontPx){
 wrCurvedLettering('德威陽國際法律事務所',3.04,.37,160);
 wrCurvedLettering('WEI & YANG INTERNATIONAL LAW FIRM',2.57,.32,112);
 wrCurvedLettering('YES, WE DO!',2.13,.27,95);
+// v153: full-depth luxury rear reception, designed for mobile isometric visibility.
+// All workstation pieces are actual 3D geometry, deliberately large, few and high contrast.
+const wrDeskIvory=new THREE.MeshStandardMaterial({color:0xF0E7D7,roughness:.66,metalness:0});
+const wrDeskEdge=new THREE.MeshStandardMaterial({color:0xD4AD70,roughness:.46,metalness:.32});
+const wrDrawer=new THREE.MeshStandardMaterial({color:0x496F64,roughness:.8});
+const wrScreen=new THREE.MeshStandardMaterial({color:0x192C39,roughness:.45});
+const wrDisplay=new THREE.MeshBasicMaterial({color:0x57B9D9});
+const wrChair=new THREE.MeshStandardMaterial({color:0xCDAE85,roughness:.88});
+const wrChairDark=new THREE.MeshStandardMaterial({color:0x9B785B,roughness:.88});
+function wrBox(w,h,d,mat,x,y,z){return wrAdd(new THREE.BoxGeometry(w,h,d),mat,x,y,z)}
+// Continuous, solid curved worktop, not a thin vertical screen. Arc follows original front.
+function wrArcWorktop(outer,inner,start,end,depth,mat,y){
+ const shape=new THREE.Shape();const steps=64;
+ for(let i=0;i<=steps;i++){const a=start+(end-start)*i/steps;const x=outer*Math.sin(a),z=outer*Math.cos(a);if(i===0)shape.moveTo(x,z);else shape.lineTo(x,z)}
+ for(let i=steps;i>=0;i--){const a=start+(end-start)*i/steps;shape.lineTo(inner*Math.sin(a),inner*Math.cos(a))}
+ shape.closePath();
+ const geom=new THREE.ExtrudeGeometry(shape,{depth:depth,bevelEnabled:false,curveSegments:8});
+ const mesh=new THREE.Mesh(geom,mat);mesh.rotation.x=Math.PI/2;mesh.position.set(0,y,wrCabCenterZ);wyReception.add(mesh);return mesh;
+}
+// Light stone-like *solid color* slab, gold perimeter is a thick geometry edge, no fine textures.
+wrArcWorktop(8.84,7.48,wrCabStart,wrCabStart+wrCabArc,.16,wrDeskIvory,1.68);
+wrArcWorktop(8.86,8.73,wrCabStart,wrCabStart+wrCabArc,.075,wrDeskEdge,1.73);
+// Rear-facing continuous lower cabinets: visible from overhead and the back.
+// Modules sit directly beneath the inner part of the curved worktop.
+for(const x of [-4.35,-2.65,0,2.65,4.35]){
+ const z=x===0?-.46:-.72;
+ const w=Math.abs(x)>4?1.40:1.52;
+ wrBox(w,1.18,.58,wrWing,x,.76,z);
+ // Oversized, clear cabinet doors/drawers, not tiny knobs.
+ wrBox(w-.18,.44,.07,wrDrawer,x,1.02,z-.33);
+ wrBox(w-.18,.44,.07,wrSageLight,x,.49,z-.33);
+ wrBox(.43,.075,.10,wrDeskEdge,x,1.03,z-.39);
+ wrBox(.43,.075,.10,wrDeskEdge,x,.50,z-.39);
+}
+// Two clearly readable computers: large dark monitors with bright contrasting screens.
+for(const x of [-2.35,2.35]){
+ const z=-.22;
+ wrBox(1.44,.91,.12,wrScreen,x,2.27,z);
+ wrBox(1.24,.70,.018,wrDisplay,x,2.28,z-.071);
+ wrBox(.16,.35,.17,wrScreen,x,1.73,z);
+ wrBox(.67,.055,.37,wrScreen,x,1.64,z);
+ wrBox(.90,.045,.30,wrDeskEdge,x,1.65,z-.65);
+ // Luxury cream/tan chairs behind desk: large back, seat, arms, pedestal.
+ const cz=-1.70;
+ wrBox(.92,.95,.20,wrChair,x,1.13,cz-.22);
+ wrBox(.95,.19,.75,wrChair,x,.69,cz+.12);
+ for(const side of [-1,1])wrBox(.14,.20,.68,wrChairDark,x+side*.51,.91,cz+.10);
+ wrBox(.16,.45,.16,wrBase,x,.35,cz+.12);
+ wrAdd(new THREE.CylinderGeometry(.40,.40,.09,16),wrBase,x,.11,cz+.12);
+}
+// A single large floral accent with bold, distinct shapes; no micro-props.
+wrAdd(new THREE.CylinderGeometry(.30,.22,.56,12),wrDeskEdge,-4.75,1.94,-.15);
+for(const [dx,dz,col] of [[-.27,0,0xF4D455],[.22,.11,0xF38CA8],[0,-.20,0xF9F1E0],[.11,.27,0xF2BE4F]]){
+ const petal=new THREE.Mesh(new THREE.SphereGeometry(.23,10,8),new THREE.MeshStandardMaterial({color:col,roughness:.9}));
+ petal.position.set(-4.75+dx,2.38,-.15+dz);wyReception.add(petal);
+}
+// Reception collision envelope for later integration: keep clear rear access, no invisible barrier.
+wyReception.userData.rearWorkArea={width:wrWidth,depth:1.6,chairs:2,displayMonitors:2};
+
 function wyReceptionAnimate(ms){};
 // v124: no cabinetry beneath the left-side WEIYANG logo; the rear L leg ends before that logo.
 // v121: true continuous wall-hugging L refreshment bar with a nearby inner-corner island.
