@@ -1328,7 +1328,7 @@ function wyLuxuryLogoFrame(x,y,z,side=false){
   }tracers.push(segments);
  }
  wyLogoAnimations.push(t=>{for(let j=0;j<2;j++)for(let k=0;k<9;k++){
-  const pos=pointAt(t*.0029*perimeter+j*perimeter/2-k*.095);
+  const pos=pointAt(t*.00135*perimeter+j*perimeter/2-k*.095);
   tracers[j][k].position.copy(pos);
  }});
  // Four bold corner caps remain legible from a distant mobile camera.
@@ -1635,22 +1635,35 @@ function wyBuildGlassCabin(parent,cx,cz,one){
  add(new THREE.CylinderGeometry(1.52,1.52,.045,48),gold,0,.19,0);
  add(new THREE.CylinderGeometry(1.43,1.43,.05,48),blue,0,.24,0);
  const ring=add(new THREE.TorusGeometry(.98,.095,8,52),glow.clone(),0,.29,0);ring.rotation.x=Math.PI/2;
- const wall=add(new THREE.BoxGeometry(2.85,5.25,.11),cream,0,2.87,-1.43);
+ // v140: full-height cream back panel; the viewing well above remains open.
+ const wall=add(new THREE.BoxGeometry(2.85,6.38,.11),cream,0,3.32,-1.43);
  const hand=add(new THREE.TorusGeometry(1.42,.045,7,45,Math.PI*1.55),gold,0,2.12,0);hand.rotation.x=Math.PI/2;
  const sideParts=[];
  for(const [start,len] of [[.61,.90],[-1.51,.90]]){
-  const mesh=add(new THREE.CylinderGeometry(1.61,1.61,5.5,26,1,true,start,len),glass,0,3.0,0);sideParts.push(mesh);
+  const mesh=add(new THREE.CylinderGeometry(1.61,1.61,6.48,26,1,true,start,len),glass,0,3.38,0);sideParts.push(mesh);
  }
  const doors=[];
  for(const [start,len,sign] of [[0,.61,1],[-.61,.61,-1]]){
   const pivot=new THREE.Group();root.add(pivot);
-  const door=new THREE.Mesh(new THREE.CylinderGeometry(1.635,1.635,5.45,20,1,true,start,len),glass);
-  door.position.y=3.0;pivot.add(door);doors.push({pivot,sign});
+  const door=new THREE.Mesh(new THREE.CylinderGeometry(1.635,1.635,6.43,20,1,true,start,len),glass);
+  door.position.y=3.38;pivot.add(door);doors.push({pivot,sign});
  }
  for(const angle of [-1.51,-.61,0,.61,1.51]){
-  const post=add(new THREE.CylinderGeometry(.065,.065,5.7,8),gold,Math.sin(angle)*1.61,3.0,Math.cos(angle)*1.61);
+  // Posts and the continuous curved upper rail meet at precisely the same height.
+  add(new THREE.CylinderGeometry(.065,.065,6.56,8),gold,Math.sin(angle)*1.61,3.38,Math.cos(angle)*1.61);
  }
- const top=add(new THREE.TorusGeometry(1.61,.065,8,48,Math.PI),gold,0,5.75,0);top.rotation.x=Math.PI/2;
+ // The curved front rail follows the glass, without a lid or any floating struts.
+ // Its ends are joined to the rear straight rail, creating a complete open rim.
+ const topY=6.66;
+ const arcPoints=[];
+ for(let i=0;i<=48;i++){
+  const angle=-Math.PI/2+i*Math.PI/48;
+  arcPoints.push(new THREE.Vector3(Math.sin(angle)*1.61,topY,Math.cos(angle)*1.61));
+ }
+ const arcCurve=new THREE.CatmullRomCurve3(arcPoints);
+ add(new THREE.TubeGeometry(arcCurve,64,.075,8,false),gold);
+ const rearRail=add(new THREE.BoxGeometry(3.22,.15,.15),gold,0,topY,-.02);
+ // No roof or glass ceiling: the entire interior stays visible from above.
  const welcome=new THREE.PointLight(0xffdca0,.26,4.6);welcome.position.set(0,2.5,.25);root.add(welcome);
  const clickable=add(new THREE.CylinderGeometry(1.69,1.69,5.5,24,1,true,-.65,1.30),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}),0,3.0,0);
  if(one){clickable.userData.lobbyAction='elevator';lobbyTargets.push(clickable)}else{wyElev2ClickTargets.push(clickable)}
@@ -1774,26 +1787,26 @@ function wyElevatorTick(dt){
    const shift=follow.sub(cameraCtrl.target).multiplyScalar(Math.min(1,dt*2.2));
    cameraCtrl.target.add(shift);viewCam.position.add(shift);
    if(wyIndoorPath.length){const target=wyIndoorPath[0],diff=target.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
-    if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*7.0);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
+    if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*11.5);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
    }else{r.phase='enter';r.time=0;wyDoorOpen=1;}
   }else if(r.phase==='enter'){
    const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):new THREE.Vector3(9.1,.08,-9.2);
    const diff=center.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
-   if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*4.6)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
+   if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*8.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
   }else if(r.phase==='close'){
-   wyDoorOpen=Math.max(0,1-r.time/1.05);
-   if(r.time>=1.05){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
-  }else if(r.phase==='travel'&&r.time>=1.7){
+   wyDoorOpen=Math.max(0,1-r.time/.72);
+   if(r.time>=.72){wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
+  }else if(r.phase==='travel'&&r.time>=.9){
    wySetFloor(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';
   }else if(r.phase==='arrive'){
-   wyDoorOpen=Math.min(1,r.time/1.1);
-   if(r.time>=1.1){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
+   wyDoorOpen=Math.min(1,r.time/.75);
+   if(r.time>=.75){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
    const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):new THREE.Vector3(9.1,.08,-6.85);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
-   if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*4.8)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
+   if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*7.5)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';}
   }
  }
