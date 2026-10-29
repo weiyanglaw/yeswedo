@@ -1145,7 +1145,20 @@ const logoLight=new THREE.PointLight(0xffe6b8,1.1,9);logoLight.position.set(0,6.
 // Office-only transparent-background version of the official logo: same original gold emblem, no white square.
 const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261026-v44'),transparent:true,side:THREE.DoubleSide})),0);
 logoOffice.position.set(0,4.32,-9.995);roomRoot.add(logoOffice);
-officeSign('認識德威陽｜點擊查看事務所介紹',4.5,6.65,-9.80,4.4,'#fff8ed',0);
+// v214: a fixed wall-mounted 3D sign, not a camera-facing Sprite.
+// Reuse the exact existing sign texture and its officeZone=0 click action.
+const wy214AboutSprite=officeSign('認識德威陽｜點擊查看事務所介紹',4.5,6.65,-9.80,4.4,'#fff8ed',0);
+const wy214AboutSign=new THREE.Mesh(
+ new THREE.PlaneGeometry(wy214AboutSprite.scale.x,wy214AboutSprite.scale.y),
+ new THREE.MeshBasicMaterial({map:wy214AboutSprite.material.map,transparent:true,depthTest:true,depthWrite:false,side:THREE.DoubleSide})
+);
+wy214AboutSign.position.copy(wy214AboutSprite.position);
+wy214AboutSign.rotation.set(0,0,0); // Front faces into the room (+Z).
+wy214AboutSign.userData.officeZone=0;
+roomRoot.remove(wy214AboutSprite);
+const wy214SignIndex=roomClickable.indexOf(wy214AboutSprite);
+if(wy214SignIndex>=0)roomClickable.splice(wy214SignIndex,1,wy214AboutSign);
+roomRoot.add(wy214AboutSign);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
 roomBox(-8.45,.035,-5.8,8.9,.055,8.0,'#D5E2ED');
@@ -2372,7 +2385,7 @@ function wy209LookAtWall(which){if(!wy180AtOffice||wy180ExitAnim||wyRide)return;
 function wy209CameraTick(dt){if(!wy209CameraTween||wyOfficeFloor!==3||!wy180AtOffice)return;
  const a=wy209CameraTween;a.time=Math.min(a.duration,a.time+dt);const p=a.time/a.duration,e=p*p*(3-2*p);
  wy3Cam.position.lerpVectors(a.fromPos,a.toPos,e);wy3Orbit.target.lerpVectors(a.fromTarget,a.toTarget,e);wy3Cam.lookAt(wy3Orbit.target);
- if(p>=1){wy209CameraTween=null;wy3Orbit.enabled=true;wy3Orbit.update();}
+ if(p>=1){wy209CameraTween=null;wy3Orbit.enabled=true;wy3Orbit.enablePan=(wy209ViewMode==='overview');wy3Orbit.update();}
 }
 // v210: keep orbit camera on the INSIDE of all four walls during manual exploration.
 // Recalculate every frame, not only at the end of a wall-focus tween.
@@ -2381,12 +2394,12 @@ function wy210ProtectCamera(){
  const p=wy3Cam.position, t=wy3Orbit.target;
  const old=p.clone();
  const soften=(v,lo,hi)=>v<lo?THREE.MathUtils.lerp(v,lo,.38):v>hi?THREE.MathUtils.lerp(v,hi,.38):v;
- p.x=soften(p.x,-8.45,8.45);
- p.z=soften(p.z,-6.15,6.15);
+ p.x=soften(p.x,-9.30,9.30);
+ p.z=soften(p.z,-8.20,8.20);
  p.y=soften(p.y,2.2,10.5);
  // Preserve the user's viewing direction by translating the target along with the camera.
  const shift=p.clone().sub(old);
- if(shift.lengthSq()>0.000001){t.add(shift);t.x=THREE.MathUtils.clamp(t.x,-8.9,8.9);t.z=THREE.MathUtils.clamp(t.z,-6.85,6.85);wy3Cam.lookAt(t);}
+ if(shift.lengthSq()>0.000001){t.add(shift);t.x=THREE.MathUtils.clamp(t.x,-9.6,9.6);t.z=THREE.MathUtils.clamp(t.z,-8.3,8.3);wy3Cam.lookAt(t);}
 }
 // Invisible raycast-only surfaces on the interior walls; no visual geometry and no collision.
 const wy209WallTargets=[];
@@ -2702,7 +2715,7 @@ function wyTouchAngle(){
 }
 wyTouchCanvas.addEventListener('pointerdown',e=>{
  // On 3F, a new manual gesture cancels the wall-focus tween cleanly.
- if(insideOffice&&activeIslandRoom===0&&wyOfficeFloor===3&&wy180AtOffice&&wy209CameraTween){wy209CameraTween=null;wy3Orbit.enabled=true;}
+ if(insideOffice&&activeIslandRoom===0&&wyOfficeFloor===3&&wy180AtOffice&&wy209CameraTween){wy209CameraTween=null;wy3Orbit.enabled=true;wy3Orbit.enablePan=(wy209ViewMode==='overview');}
  // Manual camera gestures must not fight automatic follow / scripted focus.
  if(e.pointerType==='touch' || e.pointerType==='mouse' || e.pointerType==='pen'){
   if(!insideOffice){follow=false;medicalFocusAnim=null;}
@@ -2713,6 +2726,37 @@ wyTouchCanvas.addEventListener('pointerdown',e=>{
 },{passive:true});
 wyTouchCanvas.addEventListener('pointermove',e=>{
  if(!wyTouchPoints.has(e.pointerId))return;
+ // v214: two-finger drag translates along the currently selected 3F wall.
+ // The existing OrbitControls still handles pinch zoom; its pan is disabled only in 3F wall mode.
+ if(insideOffice&&activeIslandRoom===0&&wyOfficeFloor===3&&wy180AtOffice&&
+    wy209ViewMode!=='overview'&&!wy209CameraTween&&wyTouchPoints.size===2){
+  const previous=[...wyTouchPoints.entries()];
+  const before=previous.map(([id,p])=>p);
+  const after=previous.map(([id,p])=>id===e.pointerId?{x:e.clientX,y:e.clientY}:p);
+  const dx=((after[0].x+after[1].x)-(before[0].x+before[1].x))*.5;
+  const dy=((after[0].y+after[1].y)-(before[0].y+before[1].y))*.5;
+  const previousGap=Math.hypot(before[0].x-before[1].x,before[0].y-before[1].y);
+  const newGap=Math.hypot(after[0].x-after[1].x,after[0].y-after[1].y);
+  // Avoid treating a deliberate pinch as sideways panning.
+  if(Math.abs(newGap-previousGap)<Math.max(5,Math.hypot(dx,dy)*1.2)){
+   const distance=wy3Cam.position.distanceTo(wy3Orbit.target);
+   const unitsPerPixel=2*distance*Math.tan(THREE.MathUtils.degToRad(wy3Cam.fov)*.5)/Math.max(320,renderer.domElement.clientHeight);
+   const moveX=-dx*unitsPerPixel*1.45, moveY=dy*unitsPerPixel*1.25;
+   const p=wy3Cam.position,t=wy3Orbit.target;
+   if(wy209ViewMode==='north'||wy209ViewMode==='south'){
+    const sign=wy209ViewMode==='north'?1:-1;
+    const shift=THREE.MathUtils.clamp(t.x+moveX*sign,-9.6,9.6)-t.x;
+    p.x+=shift;t.x+=shift;
+   }else if(wy209ViewMode==='east'||wy209ViewMode==='west'){
+    const sign=wy209ViewMode==='east'?-1:1;
+    const shift=THREE.MathUtils.clamp(t.z+moveX*sign,-8.3,8.3)-t.z;
+    p.z+=shift;t.z+=shift;
+   }
+   const heightShift=THREE.MathUtils.clamp(t.y+moveY,.6,6.8)-t.y;
+   p.y+=heightShift;t.y+=heightShift;
+   wy3Cam.lookAt(t);
+  }
+ }
  wyTouchPoints.set(e.pointerId,{x:e.clientX,y:e.clientY});
  const angle=wyTouchAngle(),control=wyActiveViewControl();
  if(angle!==null&&wyTwistAngle!==null&&control&&!(insideOffice&&wyOfficeFloor===3&&!wy180AtOffice)){
