@@ -139,13 +139,15 @@ body.wy174-theme-room #wyV151Controls #wyMedicalGuideAgain,body.wy174-theme-room
 body.wy174-theme-room #wyV151Controls #officeContact,body.wy174-theme-room #wyV151Controls #wyFloorButton,body.wy174-theme-room #wyV151Controls #wyMainGuideAgain{display:none!important}
 #wyContactPanel{top:var(--wy176-contact-top,180px)!important}
 @media(max-width:380px){#wyV151Controls>button{padding:8px 9px!important;font-size:13px!important}}
+</style><style id="wy179HeaderLift">
+body:not(.wy174-theme-room) #officeUI strong{transform:translateY(-11px)!important;}
 </style><style id="wy178CreatorAndControls">
 #creator{align-items:center!important;justify-content:center!important;padding:calc(8px + env(safe-area-inset-top,0px)) 8px calc(8px + env(safe-area-inset-bottom,0px))!important;box-sizing:border-box!important;overflow:hidden!important}
 #creatorCard{height:min(96dvh,850px)!important;max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 16px)!important;width:min(720px,100%)!important;max-width:720px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;min-height:0!important;padding:14px!important;box-sizing:border-box!important}
 #creatorCard>h2{flex:0 0 auto!important;margin:0 0 8px!important;font-size:clamp(18px,4.5vw,23px)!important}
 #creatorCard>.creatorLayout{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;gap:0!important;overflow:hidden!important}
-#creator .previewPane{flex:0 0 auto!important;width:100%!important;min-height:0!important;max-height:185px!important;padding:4px!important;box-sizing:border-box!important;overflow:hidden!important;background:linear-gradient(140deg,#f7f0e6,#e8f0f3)!important;border:1px solid #d7bd91!important;border-radius:13px 13px 0 0!important}
-#creator #avatarCanvas{width:125px!important;height:125px!important;margin:3px auto!important;display:block!important;flex-shrink:0!important}
+#creator .previewPane{flex:0 0 auto!important;width:100%!important;min-height:0!important;height:200px!important;max-height:200px!important;padding:8px 4px 4px!important;box-sizing:border-box!important;overflow:hidden!important;background:linear-gradient(140deg,#f7f0e6,#e8f0f3)!important;border:1px solid #d7bd91!important;border-radius:13px 13px 0 0!important}
+#creator .previewPane canvas:not(#avatarCanvas){width:155px!important;height:155px!important;max-width:100%!important;aspect-ratio:1/1!important;margin:0 auto!important;display:block!important;flex-shrink:0!important}#creator #avatarCanvas{display:none!important}
 #creator .previewCaption{font-size:12px!important;margin:0!important}
 #creator .previewHint{display:none!important}
 #creator .optionsPane{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;width:100%!important;padding:12px 10px 20px!important;box-sizing:border-box!important;background:#fffdf8!important;border:1px solid #e1d0b3!important;border-top:0!important;border-radius:0 0 13px 13px!important}
@@ -158,8 +160,8 @@ body.wy174-theme-room #wyV151Controls #officeContact,body.wy174-theme-room #wyV1
 #creator .optionsPane label{display:block!important;margin:9px 0 4px!important;font-size:13px!important;font-weight:700!important;color:#39485b!important}
 #creator .optionsPane select,#creator .optionsPane input:not([type=hidden]){max-width:100%!important;box-sizing:border-box!important;min-height:38px!important}
 #creator #startExplore{position:relative!important;flex:0 0 auto!important;inset:auto!important;transform:none!important;display:block!important;width:100%!important;margin:10px 0 0!important;min-height:48px!important;border-radius:12px!important;background:#233d65!important;color:#fff!important;z-index:2!important}
-@media(min-width:680px){#creator .previewPane{max-height:205px!important}#creator #avatarCanvas{width:150px!important;height:150px!important}}
-@media(max-height:690px){#creator .previewPane{max-height:136px!important}#creator #avatarCanvas{width:92px!important;height:92px!important}#creatorCard{padding:9px!important}#creatorCard>h2{margin-bottom:4px!important}}
+@media(min-width:680px){#creator .previewPane{height:218px!important;max-height:218px!important}#creator .previewPane canvas:not(#avatarCanvas){width:175px!important;height:175px!important}}
+@media(max-height:690px){#creator .previewPane{height:145px!important;max-height:145px!important}#creator .previewPane canvas:not(#avatarCanvas){width:112px!important;height:112px!important}#creatorCard{padding:9px!important}#creatorCard>h2{margin-bottom:4px!important}}
 /* Maintain a measured, non-overlapping two-by-two main-island button group. */
 body:not(.wy174-theme-room) #wyV151Controls{row-gap:7px!important;column-gap:8px!important}
 body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;transform:none!important}
@@ -825,7 +827,7 @@ function getAvatarSettings(){const val=id=>document.getElementById(id).value;ret
 let avatarBody=null,previewBody=null;
 const previewCanvas=document.createElement('canvas');previewCanvas.width=360;previewCanvas.height=360;previewCanvas.style.height='auto';previewCanvas.style.width='100%';previewCanvas.style.aspectRatio='1 / 1';
 const previewScene=new THREE.Scene();previewScene.background=new THREE.Color('#f4e9e3');
-const previewCamera=new THREE.PerspectiveCamera(36,1,.1,100);previewCamera.position.set(2.0,2.3,6.4);previewCamera.lookAt(0,1.23,0);
+const previewCamera=new THREE.PerspectiveCamera(36,1,.1,100);previewCamera.position.set(2.0,2.55,8.0);previewCamera.lookAt(0,1.43,0);
 previewScene.add(new THREE.HemisphereLight(0xffffff,0x91b5d6,3));const previewLight=new THREE.DirectionalLight(0xffffff,3);previewLight.position.set(3,6,5);previewScene.add(previewLight);
 const originalPreview=document.getElementById('avatarCanvas');
 const previewHost=originalPreview.parentElement;
@@ -2015,20 +2017,7 @@ function wy3DoorLeaf(pivot,side){
  const handle=new THREE.Mesh(new THREE.BoxGeometry(.075,.78,.13),wy3Brass);handle.position.set(side*1.34,2.16,.28);pivot.add(handle);
 }
 wy3DoorLeaf(wy3OfficeDoorPivot,1);wy3DoorLeaf(wy3OfficeDoorPivotR,-1);
-// Decorative polished metal arch around entrance.
-for(const x of [6.24,8.01]){const post=wy3Box(x,2.70,4.35,.11,5.3,.17,'#e4c58e');post.material=wy3Brass;}
-const crown=wy3Box(7.125,5.39,4.35,1.95,.17,.18,'#e4c58e');crown.material=wy3Brass;
-// v177 Manhattan-inspired entrance: pearl-white surround, brass linear reveals,
-// inset navy transom and elegant warm vertical sconces; all noninteractive accents
-// stay off the opening plane to avoid depth fighting.
-wy3Box(7.12,5.79,4.27,3.42,.12,.15,'#d9b675');
-wy3Box(7.12,5.97,4.27,3.42,.26,.12,'#172b45');
-for(const sx of [5.36,8.90]){
- wy3Box(sx,2.75,4.24,.16,5.5,.15,'#e4c58e');
- wy3Box(sx,3.07,4.12,.075,1.32,.065,'#e7cf9c');
- wy3Box(sx,3.07,4.075,.032,.91,.028,'#fff1c8');
-}
-for(const sx of [6.0,8.25])wy3Box(sx,5.52,4.19,.05,.30,.06,'#d4ae72');
+// v179: removed the obsolete z-facing entrance arch and sconces: they blocked the real west-facing hallway door.
 // Door plaque is genuinely on the door surface, not a floating HUD button.
 const wy3DoorPlate=new THREE.Mesh(new THREE.PlaneGeometry(1.08,.49),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=640;c.height=250;const x=c.getContext('2d');x.fillStyle='#4b3a2b';x.fillRect(0,0,640,250);x.strokeStyle='#e4c58e';x.lineWidth=12;x.strokeRect(8,8,624,234);x.fillStyle='#fff2d2';x.textAlign='center';x.font='bold 61px sans-serif';x.fillText('WEIYANG',320,150);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),side:THREE.DoubleSide}));
 wy3DoorPlate.position.set(.77,2.94,.203);wy3DoorPlate.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorPlate);wy3Targets.push(wy3DoorPlate);
@@ -2152,7 +2141,7 @@ wy3WallPrompt.onclick=wy3ShowIntro;
 function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
 const wy3ArrivalKey='weiyang-3f-arrival-v165';let wy3ArrivalPlayed=localStorage.getItem(wy3ArrivalKey)==='yes';let wy3ArrivalAnim=null;
-function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy3ArrivalAnim={t:0};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=61;wy3Cam.updateProjectionMatrix();}
+function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy3ArrivalAnim={t:0};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=68;wy3Cam.updateProjectionMatrix();}
 const wy166LawyerStops=[{x:0,z:-4.1,d:5},{x:-2.8,z:-3.6,d:4},{x:-3.0,z:-5.6,d:5},{x:0,z:-5.6,d:6},{x:2.5,z:-5.6,d:4},{x:2.7,z:-3.8,d:5}];
 let wy166LawyerIndex=0,wy166LawyerWait=3,wy166LawyerPhase=0;
 function wy166LawyerTick(dt){
@@ -2162,7 +2151,7 @@ function wy166LawyerTick(dt){
  if(dist<.09){wy166LawyerWait=stop.d+Math.random()*2;let next=Math.floor(Math.random()*wy166LawyerStops.length);if(next===wy166LawyerIndex)next=(next+1)%wy166LawyerStops.length;wy166LawyerIndex=next;return;}
  const step=Math.min(dist,dt*.7);actor.position.x+=dx/dist*step;actor.position.z+=dz/dist*step;actor.rotation.y=Math.atan2(dx,dz);actor.position.y=.05+Math.sin(performance.now()*.008)*.015;
 }
-function wy3Enter(){wy3Cam.fov=61;wy3Cam.updateProjectionMatrix();wy177Reveal=null;wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
+function wy3Enter(){wy3Cam.fov=68;wy3Cam.updateProjectionMatrix();wy177Reveal=null;wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
 function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display=(active&&!wy3OfficeDoorOpened&&!wy3ArrivalAnim&&!wyRide)?'block':'none'}
 function wy3Interact(action){
  if(action==='wall'){wy3ShowIntro();return}
@@ -2214,7 +2203,7 @@ function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textConten
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
- else if(wyOfficeFloor===3){wy3Cam.position.set(8.05,2.4,6.7);wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.lookAt(wy3Orbit.target)}
+ else if(wyOfficeFloor===3){wy3Cam.position.set(7.15,2.4,6.7);wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.lookAt(wy3Orbit.target)}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';if(wyOfficeFloor===3){wy3Enter();}else{wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
 function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
@@ -2300,10 +2289,10 @@ function wyElevatorTick(dt){
   wyDoorOpen=t<.37?Math.min(1,t/.37):1;
   const walk=Math.max(0,(smooth-.33)/.67);
   // First-person eye-level camera travels through the real hallway toward the framed door.
-  wy3Cam.position.set(9.30-walk*1.25,2.40,6.70);
+  wy3Cam.position.set(9.30-walk*2.15,2.40,6.70);
   wy3Cam.lookAt(wy178DoorX,2.55,wy178DoorZ);
-  if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(9.30-walk*1.25,.08,6.70);}
-  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.position.set(8.05,2.40,6.70);wy3Cam.lookAt(wy3Orbit.target);wy3UpdatePrompts();}
+  if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(9.30-walk*2.15,.08,6.70);}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.position.set(7.15,2.40,6.70);wy3Cam.lookAt(wy3Orbit.target);wy3UpdatePrompts();}
  }
 
  if(wyOfficeFloor===3){
@@ -2747,7 +2736,7 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
   document.body.classList.toggle('wy174-theme-room',themed);
   const rect=title.getBoundingClientRect();
   // The main-island buttons sit a little higher, leaving the decorated walls visible.
-  const top=Math.ceil(rect.bottom+(themed?8:2))+'px';
+  const top=Math.ceil(rect.bottom+(themed?8:-3))+'px';
   controls.style.setProperty('--wy176-controls-top',top);
   const c=controls.getBoundingClientRect();
   document.documentElement.style.setProperty('--wy176-contact-top',Math.ceil(c.bottom+10)+'px');
