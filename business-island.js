@@ -1,13 +1,13 @@
-// WEIYANG v187 — corporate geometry safety rebuild, isolated to business island.
+// WEIYANG v188 — brighter architectural material zones on v187 stable geometry, isolated to business island.
 // Clean non-coplanar geometry, no nested overlapping facade shells.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V187_REBUILT';
+  root.name = 'WEIYANG_BUSINESS_V188_FACADE';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
   const basic = (c) => new THREE.MeshStandardMaterial({color:c,roughness:.42,metalness:.14,side:THREE.FrontSide});
-  const ivory=basic(0xf5f0fb), lavender=basic(0xc4a9ef), violet=basic(0x5a3296), deep=basic(0x25133e), gold=new THREE.MeshStandardMaterial({color:0xe1ba75,metalness:.68,roughness:.24});
+  const ivory=basic(0xf5f0fb), lavender=basic(0xcfc1e8), violet=basic(0x8066ad), deep=basic(0x544477), silver=basic(0xdadce7), pearl=basic(0xeeeaf5), mist=basic(0xaaa2c5), gold=new THREE.MeshStandardMaterial({color:0xe1ba75,metalness:.68,roughness:.24});
   const glow=new THREE.MeshBasicMaterial({color:0xc9a3ff});
   const green=basic(0x638b76), trunk=basic(0x786451);
   const add=(geom,material,x,y,z,parent=root)=>{const mesh=new THREE.Mesh(geom,material);mesh.position.set(x,y,z);parent.add(mesh);return mesh;};
@@ -20,13 +20,13 @@ export function createBusinessHeadquarters(island, THREE) {
   // Single ground plane, no stacked plaza slabs or coplanar surfaces.
   cube(28.6,.20,22.0,0,.20,0,ivory);
   // Landmark central tower: a single structural body, with facade pieces placed outside its envelope.
-  cube(7.6,20.8,6.0,0,10.7,-4.8,deep);
+  cube(7.6,20.8,6.0,0,10.7,-4.8,silver);
   // Vertical window panels are proud of the front surface by 0.13 units; no shared planes.
   for(const x of [-2.55,-.85,.85,2.55]){
-    cube(1.25,17.9,.12,x,11.15,-1.66,violet);
+    cube(1.25,17.9,.12,x,11.15,-1.66,x<0?violet:mist);
     cube(.12,18.7,.22,x+.69,11.15,-1.51,gold);
   }
-  for(const y of [5.0,10.2,15.4,20.5])cube(7.8,.13,.28,0,y,-1.46,lavender);
+  for(const y of [5.0,10.2,15.4,20.5])cube(7.8,.13,.28,0,y,-1.46,gold);
   // Crown has clear vertical separation from tower roof.
   cube(8.6,.62,7.0,0,21.43,-4.8,ivory);
   cube(7.5,.26,6.3,0,21.91,-4.8,gold);
@@ -38,14 +38,14 @@ export function createBusinessHeadquarters(island, THREE) {
   // Two freestanding curved towers: no underlying rectangular towers occupying the same space.
   for(const side of [-1,1]){
     const x=side*9.4;
-    const body=cyl(2.75,3.10,12.6,40,x,7.1,-5.0,violet);
+    const body=cyl(2.75,3.10,12.6,40,x,7.1,-5.0,side<0?pearl:lavender);
     body.scale.z=.82;
     // Gold accents stay entirely in front of the opaque tower, not intersecting the curved shell.
     for(const y of [3.2,6.8,10.4]){
       cube(4.2,.10,.10,x,y,-7.78,gold);
     }
     // No overlapping rib shells: purple and ivory material contrast is built into independent facade fins.
-    for(const dx of [-1.55,1.55])cube(.13,10.0,.13,x+dx,7.2,-7.81,ivory);
+    for(const dx of [-1.55,1.55])cube(.13,10.0,.13,x+dx,7.2,-7.81,side<0?violet:silver);
     const roof=cyl(3.10,3.10,.35,40,x,13.65,-5.0,ivory);roof.scale.z=.85;
   }
   // Skybridges: slim separate elements with no embedded coplanar facades.
@@ -55,7 +55,7 @@ export function createBusinessHeadquarters(island, THREE) {
   }
   // Distinct low-rise entrance podium, entirely in front of tower footprint.
   cube(10.8,4.6,4.5,0,2.6,1.0,ivory);
-  cube(8.4,3.6,.14,0,2.55,3.35,deep);
+  cube(8.4,3.6,.14,0,2.55,3.35,mist);
   // Purple entry portal, with separate door panels and no overlaid parallel planes.
   for(const side of [-1,1]){
     cube(2.15,3.05,.15,side*1.17,2.35,3.50,violet);
