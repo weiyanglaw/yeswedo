@@ -1947,10 +1947,10 @@ wy3Box(7.65,.018,6.55,4.15,.055,4.10,'#77513c');
 for(let x=5.65;x<9.65;x+=.35)wy3Box(x,.049,6.55,.017,.008,3.95,'#60402f');
 // Front wall is also the office threshold: the center is a REAL operable doorway.
 // No old dead-end privacy wall or side-facing door remains.
-wy3Box(5.85,2.8,4.48,1.05,5.6,.20,'#4b342a');
-wy3Box(8.78,2.8,4.48,2.05,5.6,.20,'#4b342a');
-wy3Box(7.12,5.08,4.48,1.65,1.04,.20,'#4b342a');
-wy3Box(7.12,5.60,4.39,1.66,.10,.13,'#c9a46a');
+wy3Box(5.85,2.8,4.48,1.05,5.6,.20,'#eee9e0');
+wy3Box(8.78,2.8,4.48,2.05,5.6,.20,'#eee9e0');
+wy3Box(7.12,5.08,4.48,1.65,1.04,.20,'#eee9e0');
+wy3Box(7.12,5.60,4.39,1.66,.10,.13,'#d6b477');
 // Theme sign above the entry, visible when exiting the east-wall elevator.
 
 
@@ -1971,8 +1971,19 @@ wy3DoorLeaf(wy3OfficeDoorPivot,1);wy3DoorLeaf(wy3OfficeDoorPivotR,-1);
 // Decorative polished metal arch around entrance.
 for(const x of [6.24,8.01]){const post=wy3Box(x,2.70,4.35,.11,5.3,.17,'#e4c58e');post.material=wy3Brass;}
 const crown=wy3Box(7.125,5.39,4.35,1.95,.17,.18,'#e4c58e');crown.material=wy3Brass;
+// v177 Manhattan-inspired entrance: pearl-white surround, brass linear reveals,
+// inset navy transom and elegant warm vertical sconces; all noninteractive accents
+// stay off the opening plane to avoid depth fighting.
+wy3Box(7.12,5.79,4.27,3.42,.12,.15,'#d9b675');
+wy3Box(7.12,5.97,4.27,3.42,.26,.12,'#172b45');
+for(const sx of [5.36,8.90]){
+ wy3Box(sx,2.75,4.24,.16,5.5,.15,'#e4c58e');
+ wy3Box(sx,3.07,4.12,.075,1.32,.065,'#e7cf9c');
+ wy3Box(sx,3.07,4.075,.032,.91,.028,'#fff1c8');
+}
+for(const sx of [6.0,8.25])wy3Box(sx,5.52,4.19,.05,.30,.06,'#d4ae72');
 // Door plaque is genuinely on the door surface, not a floating HUD button.
-const wy3DoorPlate=new THREE.Mesh(new THREE.PlaneGeometry(1.08,.49),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=640;c.height=250;const x=c.getContext('2d');x.fillStyle='#4b3a2b';x.fillRect(0,0,640,250);x.strokeStyle='#e4c58e';x.lineWidth=12;x.strokeRect(8,8,624,234);x.fillStyle='#fff2d2';x.textAlign='center';x.font='bold 61px sans-serif';x.fillText('點我開門',320,150);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),side:THREE.DoubleSide}));
+const wy3DoorPlate=new THREE.Mesh(new THREE.PlaneGeometry(1.08,.49),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=640;c.height=250;const x=c.getContext('2d');x.fillStyle='#4b3a2b';x.fillRect(0,0,640,250);x.strokeStyle='#e4c58e';x.lineWidth=12;x.strokeRect(8,8,624,234);x.fillStyle='#fff2d2';x.textAlign='center';x.font='bold 61px sans-serif';x.fillText('WEIYANG',320,150);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),side:THREE.DoubleSide}));
 wy3DoorPlate.position.set(.77,2.94,.203);wy3DoorPlate.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorPlate);wy3Targets.push(wy3DoorPlate);
 // Permanent small replay plaque at right side, readable and separately clickable.
 const wy3ReplayPlaque=wy3Box(8.66,2.65,4.30,.70,.95,.10,'#d7b377','wall');wy3ReplayPlaque.material=wy3Brass;
@@ -2072,6 +2083,7 @@ wy3MovieClose.onclick=()=>{wy3Vid.pause();wy3MovieModal.style.display='none'};
 // First-entry wall prompt: persisted locally; optional replay always available.
 const wy3IntroKey='weiyang-3f-behind-door-v160';
 let wy3IntroSeen=false,wy3OfficeUnlocked=false,wy3OfficeDoorOpened=false,wy3DoorProgress=0,wy3AutoWalk=false;
+let wy177Reveal=null;
 try{wy3IntroSeen=localStorage.getItem(wy3IntroKey)==='yes'}catch(e){}
 const wy3Style=document.createElement('style');wy3Style.textContent=`
 #wy3Intro{position:fixed;inset:0;z-index:115;display:none;align-items:center;justify-content:center;padding:16px;background:#111a20c9;font-family:system-ui,'Noto Sans TC',sans-serif}
@@ -2090,10 +2102,10 @@ function wy3ShowIntro(){wy3Intro.style.display='flex'}
 function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}wy3OpenDoor();wy3UpdatePrompts()}
 wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
-function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
+function wy3OpenDoor(){if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
 const wy3ArrivalKey='weiyang-3f-arrival-v165';let wy3ArrivalPlayed=localStorage.getItem(wy3ArrivalKey)==='yes';let wy3ArrivalAnim=null;
-function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy3ArrivalAnim={t:0};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';}
+function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy3ArrivalAnim={t:0};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';}
 const wy166LawyerStops=[{x:0,z:-4.1,d:5},{x:-2.8,z:-3.6,d:4},{x:-3.0,z:-5.6,d:5},{x:0,z:-5.6,d:6},{x:2.5,z:-5.6,d:4},{x:2.7,z:-3.8,d:5}];
 let wy166LawyerIndex=0,wy166LawyerWait=3,wy166LawyerPhase=0;
 function wy166LawyerTick(dt){
@@ -2103,8 +2115,8 @@ function wy166LawyerTick(dt){
  if(dist<.09){wy166LawyerWait=stop.d+Math.random()*2;let next=Math.floor(Math.random()*wy166LawyerStops.length);if(next===wy166LawyerIndex)next=(next+1)%wy166LawyerStops.length;wy166LawyerIndex=next;return;}
  const step=Math.min(dist,dt*.7);actor.position.x+=dx/dist*step;actor.position.z+=dz/dist*step;actor.rotation.y=Math.atan2(dx,dz);actor.position.y=.05+Math.sin(performance.now()*.008)*.015;
 }
-function wy3Enter(){wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
-function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none'}
+function wy3Enter(){wy177Reveal=null;wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
+function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display=(active&&!wy3OfficeDoorOpened&&!wy3ArrivalAnim&&!wyRide)?'block':'none'}
 function wy3Interact(action){
  if(action==='wall'){wy3ShowIntro();return}
  if(action==='arrivalReplay'){wy3PlayArrival();return}
@@ -2243,22 +2255,33 @@ function wyElevatorTick(dt){
   wy3Cam.position.set(8.15-walk*.75,1.72,7.25-walk*1.6);
   wy3Cam.lookAt(7.12,2.6,4.48);
   if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(8.15-walk*.75,.08,7.25-walk*1.6);}
-  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=true;if(wyIndoorActor)wyIndoorActor.visible=true;wy3Cam.position.set(8.8,8.2,14.5);wy3Orbit.target.set(7.12,2.55,4.48);wy3Orbit.update();}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=true;if(wyIndoorActor)wyIndoorActor.visible=true;wy3Orbit.target.set(7.12,2.55,4.48);wy3Cam.position.set(7.40,2.55,9.05);wy3Orbit.update();wy3UpdatePrompts();}
  }
 
  if(wyOfficeFloor===3){
   wy166LawyerTick(dt);
   if(wy3OfficeDoorOpened&&wy3DoorProgress<1){wy3DoorProgress=Math.min(1,wy3DoorProgress+dt*.85);wy3OfficeDoorPivot.rotation.y=-Math.PI*.52*(wy3DoorProgress*wy3DoorProgress*(3-2*wy3DoorProgress));wy3OfficeDoorPivotR.rotation.y=Math.PI*.52*(wy3DoorProgress*wy3DoorProgress*(3-2*wy3DoorProgress));}
+  // v177: first appreciate the professional display wall, then reveal the full office.
+  if(wy177Reveal){
+   const a=wy177Reveal;a.t=Math.min(1,a.t+dt/5.5);
+   const t=a.t, e=t*t*(3-2*t);
+   const displayPos=new THREE.Vector3(4.15,2.55,1.25),displayTarget=new THREE.Vector3(-7.9,2.75,1.75);
+   const overviewPos=new THREE.Vector3(12.6,13.5,17.0),overviewTarget=new THREE.Vector3(0,1.4,0);
+   if(t<.46){const u=t/.46, q=u*u*(3-2*u);wy3Cam.position.copy(a.startPos).lerp(displayPos,q);wy3Orbit.target.copy(a.startTarget).lerp(displayTarget,q);}
+   else{const u=(t-.46)/.54,q=u*u*(3-2*u);wy3Cam.position.copy(displayPos).lerp(overviewPos,q);wy3Orbit.target.copy(displayTarget).lerp(overviewTarget,q);}
+   wy3Cam.lookAt(wy3Orbit.target);
+   if(t>=1){wy177Reveal=null;wy3Orbit.enabled=true;wy3Orbit.update();wyWalkUI.style.display='';}
+  }
   if(wy3AutoWalk&&wy3DoorProgress>.75&&wyIndoorActor&&!wyRide){
    const p=wyIndoorActor.position;
    const target=new THREE.Vector3(7.10,.08,2.95);
    const dx=target.x-p.x,dz=target.z-p.z,dist=Math.hypot(dx,dz);
    if(dist>.10){const step=Math.min(dist,dt*2.0);p.x+=dx/dist*step;p.z+=dz/dist*step;p.y=.08;wyIndoorActor.rotation.y=Math.atan2(dx,dz)}
-   else wy3AutoWalk=false;
+   else {wy3AutoWalk=false;wy177Reveal={t:0,startPos:wy3Cam.position.clone(),startTarget:wy3Orbit.target.clone()};wy3Orbit.enabled=false;}
   }
  }
 
- if(wyIndoorActor&&!wyRide&&!wy3AutoWalk){
+ if(wyIndoorActor&&!wyRide&&!wy3AutoWalk&&!wy3ArrivalAnim&&!wy177Reveal){
   let x=0,z=0;const k=wyMoveKeys;
   if(k.has('arrowleft')||k.has('a'))x-=1;
   if(k.has('arrowright')||k.has('d'))x+=1;
@@ -2304,9 +2327,9 @@ function wyElevatorTick(dt){
    if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*17.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{
     wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';
-    if(r.dest===3&&!wy3ArrivalPlayed){wy3ArrivalPlayed=true;localStorage.setItem(wy3ArrivalKey,'yes');wy3PlayArrival();}
+    if(r.dest===3){wy3ArrivalPlayed=true;try{localStorage.setItem(wy3ArrivalKey,'yes')}catch(e){}wy3PlayArrival();}
     // Restore the standard floor overview after the temporary ride follow camera.
-    wyResetIndoorRideCamera(r.dest);
+    if(r.dest!==3)wyResetIndoorRideCamera(r.dest);
    }
   }
  }
@@ -2661,7 +2684,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));tryWalk(v.x*dt*10,v.z*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal)wy3Orbit.update();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div>
 
