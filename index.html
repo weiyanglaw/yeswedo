@@ -165,9 +165,9 @@ body:not(.wy174-theme-room) #officeUI strong{transform:none!important;}
 /* Maintain a measured, non-overlapping two-by-two main-island button group. */
 body:not(.wy174-theme-room) #wyV151Controls{row-gap:7px!important;column-gap:8px!important}
 body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;transform:none!important}
-</style><style id="wy189ExactFourPixelNav">
+</style><style id="wy190ExactTwoPixelNav">
 /* v189: top is set as a pixel value by the measured layout function; override every legacy fixed top. */
-#wyV151Controls{top:var(--wy189-controls-top,110px)!important;margin-top:0!important;padding-top:0!important;transform:none!important;}
+#wyV151Controls{top:var(--wy190-controls-top,0px)!important;margin-top:0!important;padding-top:0!important;transform:none!important;}
 #officeUI>div:first-child>strong{transform:none!important;margin-bottom:0!important;}
 body:not(.wy174-theme-room) #wyV151Controls{grid-template-columns:max-content max-content!important;grid-template-rows:auto auto!important;row-gap:7px!important;column-gap:7px!important;}
 </style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
@@ -254,7 +254,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261029-v189-facade';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261029-v190-spire';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -2232,8 +2232,8 @@ const wy3Style=document.createElement('style');wy3Style.textContent=`
 const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>IS THE BOSS IN?</h2><div style="color:#d6b782">林柏均律師私人辦公室</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">辦公室突襲！</button></div>`;document.body.append(wy3Intro);
 const wy3WallPrompt=document.createElement('button');wy3WallPrompt.id='wy3WallPrompt';wy3WallPrompt.style.display='none';
 const wy3DoorPrompt=document.createElement('button');wy3DoorPrompt.id='wy3DoorPrompt';wy3DoorPrompt.textContent='開門不開庭！';document.body.append(wy3DoorPrompt);
-function wy3ShowIntro(){if(wy3ArrivalAnim||wyRide)return;wy3Intro.style.display='flex';wy3DoorPrompt.style.display='none'}
-function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}wy3UpdatePrompts()}
+function wy3ShowIntro(){if(wyRide)return;wy3Intro.style.display='flex';wy3DoorPrompt.style.display='none'}
+function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}if(wy3ArrivalAnim?.waiting){wy3ArrivalAnim.waiting=false;wy3ArrivalAnim.t=.38;}wy3UpdatePrompts()}
 wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
 function wy3OpenDoor(){if(wy3ArrivalAnim||wyRide||wyDoorOpen<.98)return;if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
@@ -2396,7 +2396,8 @@ function wyElevatorTick(dt){
   if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=true;wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
  }
  if(wy3ArrivalAnim&&wyOfficeFloor===3){
-  const a=wy3ArrivalAnim;a.t=Math.min(1,a.t+dt/1.8);
+  const a=wy3ArrivalAnim;if(a.waiting){wyUpdateGlassCabin(1,dt);return;} a.t=Math.min(1,a.t+dt/1.8);
+  if(a.t>=.38&&!a.introChecked){a.introChecked=true;if(!wy3IntroSeen){a.waiting=true;wyDoorOpen=1;wyUpdateGlassCabin(1,dt);wy3ShowIntro();return;}}
   const t=a.t, smooth=t*t*(3-2*t);
   wyDoorOpen=t<.36?Math.min(1,t/.36):1;
   // 3F front posts and handrail were omitted at construction; do not toggle other floors.
@@ -2406,7 +2407,7 @@ function wyElevatorTick(dt){
   wy3Cam.position.set(8.65-walk*1.50,2.40,6.70);
   wy3Cam.lookAt(wy178DoorX,2.55,wy178DoorZ);
   if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(9.30-walk*2.15,.08,6.70);}
-  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.position.set(7.15,2.40,6.70);wy3Cam.lookAt(wy3Orbit.target);if(!wy3IntroSeen)wy3ShowIntro();wy3UpdatePrompts();}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.position.set(7.15,2.40,6.70);wy3Cam.lookAt(wy3Orbit.target);wy3UpdatePrompts();}
  }
 
  if(wyOfficeFloor===3){
@@ -2849,10 +2850,12 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
   const themed=/3D 主題館/.test(title.textContent||'');
   document.body.classList.toggle('wy174-theme-room',themed);
   const rect=title.getBoundingClientRect();
-  // v188: Exactly 4 CSS px from the actual rendered title border to the navigation cluster.
-  const top=(rect.bottom+4).toFixed(2)+'px';
-  controls.style.setProperty('--wy189-controls-top',top);
+  // v188: Exactly 2 CSS px from the actual rendered title border to the navigation cluster.
+  const top=(rect.bottom+2).toFixed(2)+'px';
+  controls.style.setProperty('--wy190-controls-top',top);
   controls.style.setProperty('top',top,'important');
+  controls.style.setProperty('margin','0','important');
+  controls.style.setProperty('padding','0','important');
   const c=controls.getBoundingClientRect();
   document.documentElement.style.setProperty('--wy176-contact-top',Math.ceil(c.bottom+10)+'px');
  }
@@ -2862,7 +2865,8 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
  mo.observe(title,{childList:true,characterData:true,subtree:true});
  mo.observe(ui,{attributes:true,attributeFilter:['style']});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(layout)});
- requestAnimationFrame(layout);
+ requestAnimationFrame(()=>requestAnimationFrame(layout));
+ if(document.fonts?.ready)document.fonts.ready.then(layout);
 })();
 </script>
 </body></html>

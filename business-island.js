@@ -1,8 +1,8 @@
-// WEIYANG v189 — brighter architectural material zones on v187 stable geometry, isolated to business island.
+// WEIYANG v190 — pointed crystal crown, refined side towers and flush entry; isolated to business island.
 // Clean non-coplanar geometry, no nested overlapping facade shells.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V189_FACADE';
+  root.name = 'WEIYANG_BUSINESS_V190_SPIRE';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
@@ -30,16 +30,24 @@ export function createBusinessHeadquarters(island, THREE) {
   // Crown has clear vertical separation from tower roof.
   cube(8.6,.62,7.0,0,21.43,-4.8,ivory);
   cube(7.5,.26,6.3,0,21.91,-4.8,gold);
-  // Architectural luminous crown rings: concentric but NOT coincident.
-  const halo=add(new THREE.TorusGeometry(4.8,.26,12,72),ivory,0,25.9,-4.8);
-  halo.rotation.x=.33;
-  const inner=add(new THREE.TorusGeometry(3.94,.10,10,72),glow,0,26.18,-4.8);
-  inner.rotation.x=.33;
+  // Mobile-readable pointed crown. No thin circular rings, coplanar layers or rooftop stairs.
+  const crystal=new THREE.MeshStandardMaterial({color:0xa98ce6,metalness:.18,roughness:.24,emissive:0x35215b,emissiveIntensity:.25});
+  const crownGroup=new THREE.Group();root.add(crownGroup);
+  crownGroup.position.set(0,22.12,-4.8);
+  // A broad central tapered silhouette and two gold flanking blades are legible at phone scale.
+  const spire=cyl(0,1.85,5.1,4,0,2.55,0,crystal,crownGroup);spire.rotation.y=Math.PI/4;
+  for(const side of [-1,1]){
+    const blade=cube(.40,3.35,.48,side*2.25,1.65,.08,gold,crownGroup);
+    blade.rotation.z=side*.22;
+  }
+  cube(5.8,.46,2.4,0,.2,.1,gold,crownGroup);
   // Two freestanding curved towers: no underlying rectangular towers occupying the same space.
   for(const side of [-1,1]){
     const x=side*9.4;
     const body=cyl(2.75,3.10,12.6,40,x,7.1,-5.0,side<0?pearl:lavender);
     body.scale.z=.82;
+    // Vertical front glazing provides visible purple glass architecture without overlapping transparent shells.
+    for(const dx of [-1.3,0,1.3])cube(.9,9.7,.12,x+dx,7.3,-7.69,dx===0?violet:mist);
     // Gold accents stay entirely in front of the opaque tower, not intersecting the curved shell.
     // No repetitive horizontal bands on side towers.
     // No overlapping rib shells: purple and ivory material contrast is built into independent facade fins.
