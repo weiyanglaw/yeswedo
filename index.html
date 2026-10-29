@@ -2741,7 +2741,7 @@ wyTouchCanvas.addEventListener('pointermove',e=>{
   if(Math.abs(newGap-previousGap)<Math.max(5,Math.hypot(dx,dy)*1.2)){
    const distance=wy3Cam.position.distanceTo(wy3Orbit.target);
    const unitsPerPixel=2*distance*Math.tan(THREE.MathUtils.degToRad(wy3Cam.fov)*.5)/Math.max(320,renderer.domElement.clientHeight);
-   const moveX=-dx*unitsPerPixel*1.45, moveY=dy*unitsPerPixel*1.25;
+   const moveX=dx*unitsPerPixel*1.45, moveY=-dy*unitsPerPixel*1.25; // v215: swipe toward the wall area you want to reveal
    const p=wy3Cam.position,t=wy3Orbit.target;
    if(wy209ViewMode==='north'||wy209ViewMode==='south'){
     const sign=wy209ViewMode==='north'?1:-1;
@@ -3096,6 +3096,56 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
   const observer=new MutationObserver(()=>{if(install())observer.disconnect()});
   observer.observe(document.body,{childList:true,subtree:true});
  }
+})();
+</script>
+
+<!-- v215: premium exhibition-style SMALL interaction questions only. Large profile pages untouched. -->
+<style id="wy215ExhibitDialog">
+:root{--wy215-navy:#203852;--wy215-gold:#c7a36d}
+#wyLobbyDialog,#dialog,#wyMainGuide,#wyMedicalGuide,#wyFamilyGuide{
+ --wy215-dark:#203852;--wy215-metal:#c7a36d;--wy215-light:#f8f1e5;
+ background:linear-gradient(155deg,var(--wy215-dark),color-mix(in srgb,var(--wy215-dark),#071421 26%))!important;
+ border:2px solid var(--wy215-metal)!important;border-radius:18px!important;
+ box-shadow:0 0 0 4px #172b3c55,0 18px 50px #061a2d8c,inset 0 0 0 1px #e7d1a166!important;
+ color:#f8f1e5!important;padding:19px!important;line-height:1.65!important;
+ overscroll-behavior:contain;
+}
+#dialog{padding:7px!important}
+#dialog .wy-inner{background:transparent!important;border:1px solid var(--wy215-metal)!important;border-radius:12px!important;padding:14px!important}
+#dialog .wy-heading{border-bottom:1px solid var(--wy215-metal)!important}
+#dialog .wy-eyebrow,#dialog .wy-signature{color:#e4c995!important;letter-spacing:.12em!important}
+#dialog h3,#dialog p,#wyLobbyDialog h3,#wyLobbyDialog p,#wyMainGuide h3,#wyMedicalGuide h3,#wyFamilyGuide h3{color:#f8f1e5!important}
+#wyLobbyDialog h3,#wyMainGuide h3,#wyMedicalGuide h3,#wyFamilyGuide h3{margin:0 0 13px!important;padding:0 0 12px!important;border-bottom:1px solid var(--wy215-metal)!important;font-size:clamp(18px,4.5vw,23px)!important;letter-spacing:.025em!important}
+#wyLobbyDialog:before,#wyMainGuide:before,#wyMedicalGuide:before,#wyFamilyGuide:before{content:'WEIYANG  ·  PRIVATE EXHIBITION';display:block;color:#e6ca97;font-size:10px;font-weight:800;letter-spacing:.18em;margin:0 0 10px}
+#wyLobbyDialog p,#wyMainGuide p,#wyMedicalGuide p,#wyFamilyGuide p{line-height:1.8!important}
+#wyLobbyDialog button,#dialog button,#wyMainGuide button,#wyMedicalGuide button,#wyFamilyGuide button{
+ background:var(--wy215-metal)!important;color:#172c42!important;border:1px solid #f0d5a0!important;
+ border-radius:10px!important;min-height:41px!important;padding:9px 14px!important;font-weight:750!important;
+ box-shadow:0 2px 0 #0002!important;margin:4px 5px 4px 0!important;
+}
+#wyLobbyDialog a{color:#f2d69e!important}
+#dialog[data-theme="medical"],#wyMedicalGuide{--wy215-dark:#174f39;--wy215-metal:#d3b985}
+#dialog[data-theme="family"],#wyFamilyGuide{--wy215-dark:#76283e;--wy215-metal:#d6b28c}
+#dialog[data-theme="litigation"],#wyMainGuide{--wy215-dark:#193b81;--wy215-metal:#d4b57b}
+#dialog[data-theme="business"]{--wy215-dark:#29476d;--wy215-metal:#d6bb8d}
+#dialog[data-theme="knowledge"]{--wy215-dark:#35604a;--wy215-metal:#d4c48c}
+@media(max-width:430px){#wyLobbyDialog,#wyMainGuide,#wyMedicalGuide,#wyFamilyGuide{width:min(92vw,420px)!important;max-height:76dvh!important;padding:17px!important}}
+</style>
+<script id="wy215DialogTransitions">
+(()=>{
+ const smallIds=['wyLobbyDialog','dialog','wyMainGuide','wyMedicalGuide','wyFamilyGuide'];
+ const closeSmall=()=>{for(const id of smallIds){const el=document.getElementById(id);if(el)el.style.display='none';}};
+ // Whenever a full detail/profile page opens, dismiss the preceding question dialog.
+ const full=document.getElementById('wyInfo');
+ if(full){const observer=new MutationObserver(()=>{if(full.classList.contains('open'))closeSmall();});observer.observe(full,{attributes:true,attributeFilter:['class']});}
+ // Preserve all existing button actions; close only after a button requests a detailed page.
+ document.addEventListener('click',e=>{
+  const b=e.target.closest?.('button');if(!b)return;
+  if(!smallIds.some(id=>b.closest('#'+id)))return;
+  if(/查看專業履歷|查看詳細|完整介紹|了解更多|查看事務所/.test(b.textContent||'')){
+   queueMicrotask(()=>{if(document.querySelector('#wyInfo.open'))closeSmall();});
+  }
+ },true);
 })();
 </script>
 </body></html>
