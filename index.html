@@ -2070,20 +2070,18 @@ wy3DoorLeaf(wy3OfficeDoorPivot,1);wy3DoorLeaf(wy3OfficeDoorPivotR,-1);
 // Door plaque is genuinely on the door surface, not a floating HUD button.
 const wy3DoorPlate=new THREE.Mesh(new THREE.PlaneGeometry(1.08,.49),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=640;c.height=250;const x=c.getContext('2d');x.fillStyle='#4b3a2b';x.fillRect(0,0,640,250);x.strokeStyle='#e4c58e';x.lineWidth=12;x.strokeRect(8,8,624,234);x.fillStyle='#fff2d2';x.textAlign='center';x.font='bold 61px sans-serif';x.fillText('WEIYANG',320,150);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),side:THREE.DoubleSide}));
 wy3DoorPlate.scale.set(.60,1,1);wy3DoorPlate.position.set(.775,2.94,.203);wy3DoorPlate.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorPlate);wy3Targets.push(wy3DoorPlate);
-// v198: two-piece sculpted royal crown, fixed to the two original French door leaves.
-function wy198CrownHalf(parent,sign){
- const g=new THREE.Group();g.position.set(sign===1?1.50:-1.50,3.05,.30);parent.add(g);
- const gold=new THREE.MeshStandardMaterial({color:0xf4c65d,metalness:.83,roughness:.20});
- const dark=new THREE.MeshStandardMaterial({color:0x9c6327,metalness:.72,roughness:.29});
- const jewel=new THREE.MeshPhysicalMaterial({color:0x173e76,metalness:.24,roughness:.12,clearcoat:1});
- function bar(w,h,d,x,y,z,mat=gold){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);g.add(m);return m}
- // Crown spans 1.30m across the center seam, in raised gold relief.
- bar(.63,.17,.15,sign*.31,-.25,.04,dark);bar(.63,.13,.18,sign*.31,-.14,.07);
- for(let i=0;i<3;i++){const x=sign*(.10+i*.22);const tip=new THREE.Mesh(new THREE.ConeGeometry(.14,i===0?.62:.43,8),gold);tip.position.set(x,.18+(i===0?.09:0),.08);g.add(tip);const orb=new THREE.Mesh(new THREE.SphereGeometry(.095,12,10),gold);orb.position.set(x,.47+(i===0?.09:0),.09);g.add(orb)}
- const gem=new THREE.Mesh(new THREE.SphereGeometry(.10,12,10),jewel);gem.scale.z=.46;gem.position.set(sign*.30,-.18,.17);g.add(gem);
- g.traverse(o=>{if(o.isMesh){o.userData.wy3Action='officeDoor';wy3Targets.push(o)}});
+// v200: refined French door: small architectural crown at the lintel, not across the opening.
+// It is attached to the fixed frame so both original leaves open independently.
+const wy200Crown=new THREE.Group();wy200Crown.position.set(wy178DoorX+.23,4.94,wy178DoorZ);wy200Crown.rotation.y=Math.PI/2;wy3Root.add(wy200Crown);
+const wy200Gold=new THREE.MeshStandardMaterial({color:0xd6ac61,metalness:.74,roughness:.28});
+const wy200Dark=new THREE.MeshStandardMaterial({color:0x8e6b37,metalness:.57,roughness:.37});
+function wy200CrownPart(w,h,d,x,y,z,material=wy200Gold){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);wy200Crown.add(m);return m}
+// Five slim curved-looking fleur-de-lis points; small and centered above the doors.
+wy200CrownPart(.83,.10,.12,0,-.18,.08,wy200Dark);
+for(const [x,h] of [[-.32,.18],[-.16,.26],[0,.36],[.16,.26],[.32,.18]]){
+ const tip=new THREE.Mesh(new THREE.SphereGeometry(.075,12,10),wy200Gold);tip.scale.set(.55,h/.15,.45);tip.position.set(x,-.04+h*.22,.10);wy200Crown.add(tip);
 }
-wy198CrownHalf(wy3OfficeDoorPivot,1);wy198CrownHalf(wy3OfficeDoorPivotR,-1);
+const wy200CrownArch=new THREE.Mesh(new THREE.TorusGeometry(.43,.038,8,36,Math.PI),wy200Gold);wy200CrownArch.position.set(0,-.11,.085);wy200CrownArch.rotation.z=Math.PI;wy200Crown.add(wy200CrownArch);
 // Permanent small replay plaque at right side, readable and separately clickable.
 // Old annex replay board retired; the office door plaque below replaces it.
 const wy3ReplayPlaque=wy3Box(8.66,2.65,4.30,.70,.95,.10,'#d7b377','wall');wy3ReplayPlaque.visible=false;wy3ReplayPlaque.material=wy3Brass;
@@ -2092,15 +2090,10 @@ const wy3ReplayText=wy3Label('WELCOME｜辦公室介紹',8.66,2.65,4.22,1.45,.35
 wy3Label('老闆今天在嗎？',7.12,5.12,4.24,2.45,.43);
 wy3Label('德威陽｜3F 老闆今天在嗎？',7.12,4.66,4.24,2.55,.31);
 // The arrival hallway is a separate visual stage, never a permanent office annex.
-// v186: visible high-relief champagne-gold neoclassical corridor details.
-for(const zz of [4.65,5.55,6.45,7.35]){
- for(const xx of [5.05,9.15]){
-  const medallion=new THREE.Mesh(new THREE.TorusGeometry(.19,.047,8,24),new THREE.MeshStandardMaterial({color:0xe3b45e,metalness:.6,roughness:.32}));
-  medallion.position.set(xx,4.25,zz);wy3Root.add(medallion);
- }
-}
+// v200: remove the corridor's floating torus medallions: their unrotated planes
+// appeared as stray gold ovals when viewed from the elevator.
 // v198: large accessible wall-mounted introduction sign, not in doorway or visitor path.
-const wy198SignGroup=new THREE.Group();wy198SignGroup.position.set(3.40,2.65,8.16);wy198SignGroup.rotation.y=-Math.PI/2;wy3Root.add(wy198SignGroup);
+const wy198SignGroup=new THREE.Group();wy198SignGroup.position.set(2.90,2.65,8.93);wy198SignGroup.rotation.y=Math.PI/2;wy3Root.add(wy198SignGroup);
 const wy198SignCanvas=document.createElement('canvas');wy198SignCanvas.width=768;wy198SignCanvas.height=960;
 const wy198Ctx=wy198SignCanvas.getContext('2d');wy198Ctx.fillStyle='#112b4d';wy198Ctx.fillRect(0,0,768,960);
 wy198Ctx.strokeStyle='#e9c57b';wy198Ctx.lineWidth=42;wy198Ctx.strokeRect(24,24,720,912);wy198Ctx.strokeStyle='#b38b4b';wy198Ctx.lineWidth=7;wy198Ctx.strokeRect(63,64,642,832);
@@ -2119,7 +2112,7 @@ for(const side of [-1,1]){
  const edge=new THREE.Mesh(new THREE.BoxGeometry(.09,3.85,.045),new THREE.MeshStandardMaterial({color:0xd9b779,metalness:.76,roughness:.22}));edge.position.set(0,2.03,-side*.65);group.add(edge);
  wy198SlideDoors.push({group,side});
 }
-function wy198Slide(open){for(const d of wy198SlideDoors){d.group.position.z=6.70+d.side*(.68+1.38*Math.max(0,Math.min(1,open)));d.group.visible=!wy180AtOffice;}}
+function wy198Slide(open){const amount=Math.max(0,Math.min(1,open));for(const d of wy198SlideDoors){d.group.position.z=6.70+d.side*(.68+1.38*amount);d.group.visible=!wy180AtOffice&&amount<.995;}}
 // Hide only the old 3F swinging glass panels; preserve the original 1F/2F lifts.
 for(const d of wyGlassCabins[3].doors){d.pivot.visible=false;}
 
@@ -2128,11 +2121,13 @@ let wy180AtOffice=false;
 function wy180SetOfficeView(inOffice){
  wy180AtOffice=!!inOffice;
  for(const o of wy180HallObjects)o.visible=!inOffice;
- wy180ElevatorRoot.visible=!inOffice;wy198SlideDoors.forEach(d=>d.group.visible=!inOffice);
+ wy180ElevatorRoot.visible=!inOffice;wy198SlideDoors.forEach(d=>d.group.visible=false);
  wy180OfficePortal.visible=!!inOffice;
  wy180Welcome.visible=!!inOffice;
  if(inOffice)wy181ExitHinge.rotation.y=0;
  for(const o of wy180OfficeContents)o.visible=!!inOffice;
+ // Lift glass is only visible during the elevator/approach stage, never in the office overview.
+ for(const d of wy198SlideDoors)d.group.visible=false;
 }
 // Windows left wall, distinct from the recessed honor wall.
 for(const z of [-5.5,-2.5]){wy3Box(-9.73,3.75,z,.1,3.4,2.4,'#b8dce6');for(const dz of [-1.2,1.2])wy3Box(-9.64,3.75,z+dz,.14,3.5,.11,'#d1ad6c');}
@@ -2264,7 +2259,7 @@ wy186Relief(wy180OfficePortal,0,4.48,.23,1.32);
 const wy181Handle=wy180PortalPart(.08,.65,.13,.59,2.0,.16,wy3Brass,'exit3f');wy180OfficePortal.remove(wy181Handle);wy181ExitHinge.add(wy181Handle);
 const wy180Welcome=wy3Label('WELCOME｜辦公室介紹',8.95,2.55,4.16,1.75,.32);
 wy180Welcome.userData.wy3Action='wall';wy3Targets.push(wy180Welcome);wy180Welcome.visible=false;
-const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal);
+const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal&&!wy198SlideDoors.some(d=>d.group===o));
 wy180SetOfficeView(false);
 const wy3IntroKey='weiyang-3f-office-raid-ack-v198';
 let wy3IntroSeen=false,wy3OfficeUnlocked=false,wy3OfficeDoorOpened=false,wy3DoorProgress=0,wy3AutoWalk=false;
@@ -2287,7 +2282,7 @@ function wy3ShowIntro(){if(wyRide)return;wy3Intro.style.display='flex';wy3DoorPr
 function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}if(wy3ArrivalAnim?.waiting){wy3ArrivalAnim.waiting=false;wy3ArrivalAnim.t=.36;}wy3UpdatePrompts()}
 wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
-function wy3OpenDoor(){if(wy3ArrivalAnim||wyRide)return;if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
+function wy3OpenDoor(){if(wy3ArrivalAnim||wyRide)return;if(!wy3OfficeUnlocked){wy3ShowIntro();return}if(wyIndoorActor){wyIndoorActor.position.set(6.35,.08,6.70);wyIndoorActor.visible=false;}wy3Orbit.enabled=false;wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
 const wy3ArrivalKey='weiyang-3f-arrival-v165';let wy3ArrivalPlayed=localStorage.getItem(wy3ArrivalKey)==='yes';let wy3ArrivalAnim=null;
 function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy180SetOfficeView(false);wy3ArrivalAnim={t:0};wy198Slide(0);wy3Cam.position.set(9.15,2.42,6.70);wy3Cam.lookAt(4.15,2.50,6.70);if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=68;wy3Cam.updateProjectionMatrix();}
@@ -2444,7 +2439,7 @@ function wyElevatorTick(dt){
   wy3Cam.position.copy(a.start).lerp(new THREE.Vector3(8.4,2.35,5.55),q);
   wy3Orbit.target.copy(a.look).lerp(new THREE.Vector3(9.9,2.35,5.55),q);
   wy3Cam.lookAt(wy3Orbit.target);
-  if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=true;wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
+  if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=true;wy198SlideDoors.forEach(d=>d.group.visible=false);wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
  }
  if(wy3ArrivalAnim&&wyOfficeFloor===3){
   const a=wy3ArrivalAnim;
@@ -2457,11 +2452,11 @@ function wyElevatorTick(dt){
   // to the distant French door across a several-meter continuous palace corridor.
   const walking=Math.max(0,Math.min(1,(t-.36)/.64));
   const easeWalk=walking*walking*(3-2*walking);
-  const x=9.15-(9.15-3.85)*easeWalk;
+  const x=9.15-(9.15-6.35)*easeWalk;
   wy3Cam.position.set(x,2.42,6.70+.024*Math.sin(walking*24)*Math.sin(Math.PI*walking));
-  wy3Cam.lookAt(x-5,2.50,6.70);
+  wy3Cam.lookAt(x-5,2.50,7.10);
   if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(x,.08,6.70);}
-  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;wy3Cam.position.set(3.85,2.42,6.70);wy3Cam.lookAt(2.0,2.48,6.70);wy3UpdatePrompts();}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;wy3Cam.position.set(6.35,2.42,6.70);wy3Cam.lookAt(2.25,2.48,7.10);wy3Orbit.target.set(2.25,2.48,7.10);wy3Orbit.minDistance=2.2;wy3Orbit.maxPolarAngle=Math.PI*.80;wy3Orbit.enabled=true;wy3UpdatePrompts();}
  }
 
  if(wyOfficeFloor===3){
@@ -2483,7 +2478,7 @@ function wyElevatorTick(dt){
    const target=new THREE.Vector3(.75,.08,6.70);
    const dx=target.x-p.x,dz=target.z-p.z,dist=Math.hypot(dx,dz);
    if(dist>.10){const step=Math.min(dist,dt*4.8);p.x+=dx/dist*step;p.z+=dz/dist*step;p.y=.08;wyIndoorActor.rotation.y=Math.atan2(dx,dz);wy3Cam.position.set(p.x,2.42,p.z);wy3Orbit.target.set(p.x-5,2.48,p.z);wy3Cam.lookAt(wy3Orbit.target)}
-   else {wy3AutoWalk=false;wy180SetOfficeView(true);wy177Reveal={t:0,startPos:wy3Cam.position.clone(),startTarget:wy3Orbit.target.clone()};wy3Orbit.enabled=false;}
+   else {wy3AutoWalk=false;wy180SetOfficeView(true);wy198SlideDoors.forEach(d=>d.group.visible=false);wy177Reveal={t:0,startPos:wy3Cam.position.clone(),startTarget:wy3Orbit.target.clone()};wy3Orbit.enabled=false;}
   }
  }
 
