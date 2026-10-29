@@ -2,10 +2,13 @@
 // Derived solely from official v106. All existing site interactions remain unchanged.
 export function createBusinessHeadquarters(island, THREE){
  const root=new THREE.Group();root.name='WEIYANG_BUSINESS_V166';island.add(root);
- const mat=(hex)=>new THREE.MeshBasicMaterial({color:hex,side:THREE.DoubleSide});
+ const mat=(hex)=>new THREE.MeshBasicMaterial({color:hex,side:THREE.FrontSide});
  const pearl=mat('#F9F7F0'),white=mat('#E9F0F0'),ice=mat('#BDA7E8'),glass=mat('#7050B1'),glassDark=mat('#352061'),navy=mat('#27133F'),gold=mat('#DCC18C'),goldDark=mat('#B59562'),plaza=mat('#E8E3F0'),pave=mat('#D7CCE7'),leaf=mat('#6F9F6C'),leafLight=mat('#91B77D'),leafDark=mat('#4F835F'),bark=mat('#766F60');
  const box=(w,h,d,x,y,z,m,group=root)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);group.add(o);return o;};
  const poly=(pts,depth,x,y,z,m)=>{const s=new THREE.Shape();s.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)s.lineTo(pts[i][0],pts[i][1]);s.closePath();const g=new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:false,steps:1});const o=new THREE.Mesh(g,m);o.position.set(x,y,z);root.add(o);return o;};
+ // v184 corporate-only depth stabilization: keep other islands and renderer unchanged.
+ // Bias trim and thin overlay faces toward camera at intersecting facade layers.
+ for(const m of [ice,gold,goldDark,pave]){m.polygonOffset=true;m.polygonOffsetFactor=-1;m.polygonOffsetUnits=-1;}
  // Original floating island diameter 34; no modification to bridges or original island.
  box(29,.18,18,0,.28,0,plaza);box(10.8,.10,11.2,0,.43,7.5,pave);
  for(const [w,h,y,m] of [[6,.035,.51,glassDark],[3.6,.038,.56,pearl],[1.7,.042,.61,ice]]){const o=box(w,h,w,0,y,9.5,m);o.rotation.y=Math.PI/4;}
@@ -40,20 +43,20 @@ export function createBusinessHeadquarters(island, THREE){
  box(4.3,.35,5.7,9.2,6.5,-4.0,goldDark);
  // Two large forward-facing architectural facets on each side; thick and 3D.
  for(const x of [-9.3,9.2]){
-   box(4.2,3.7,.27,x,2.8,-1.36,glassDark);
-   box(3.55,2.9,.29,x,2.8,-.97,ice);
+   box(4.2,3.7,.20,x,2.8,-1.31,glassDark);
+   box(3.55,2.9,.20,x,2.8,-.98,ice);
    for(const dx of [-1.93,1.93])box(.35,4.0,.40,x+dx,2.9,-1.06,pearl);
  }
  // Connected campus wings; one front entry and level continuous walking surface.
  for(const x of [-5.75,5.75]){
    box(5.4,4.3,4.7,x,2.35,.15,pearl);
-   box(4.8,3.2,.24,x,2.10,2.78,glass);
+   box(4.8,3.2,.18,x,2.10,2.82,glass);
    box(5.5,.55,5.0,x,4.60,.15,pearl);
  }
  // Entrance: taller, deeper and visibly layered, but no stairs and no ramp.
  box(10.2,5.15,4.3,0,2.68,1.5,pearl);
- box(8.8,4.12,.22,0,2.17,3.91,glassDark);
- box(7.55,3.5,.26,0,1.99,4.18,ice);
+ box(8.8,4.12,.16,0,2.17,3.94,glassDark);
+ box(7.55,3.5,.16,0,1.99,4.17,ice);
  for(const x of [-4.6,4.6])box(.75,5.3,4.7,x,2.75,1.5,pearl);
  box(10.7,.77,4.9,0,5.65,1.5,pearl);
  box(9.6,.24,5.1,0,6.15,1.5,gold);
@@ -62,7 +65,7 @@ export function createBusinessHeadquarters(island, THREE){
  const texture=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261028-v166');
  texture.colorSpace=THREE.SRGBColorSpace;
  const logo=new THREE.Mesh(new THREE.PlaneGeometry(5.05,6.4),new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide}));
- logo.position.set(0,10.7,-.68);root.add(logo);
+ logo.position.set(0,10.7,-.48);root.add(logo);
  // Broad, recognizable low-poly trees; no obstruction of main approach.
  function broadTree(x,z,scale=1){
   const g=new THREE.Group();g.position.set(x,.35,z);g.scale.setScalar(scale);root.add(g);
@@ -80,7 +83,7 @@ export function createBusinessHeadquarters(island, THREE){
  const purpleGlass=new THREE.MeshPhysicalMaterial({color:0x66439a,metalness:.18,roughness:.13,transparent:false,opacity:1,side:THREE.FrontSide,depthWrite:true});
  const luminous=new THREE.MeshBasicMaterial({color:0xe9d6ff,side:THREE.DoubleSide});
  const silver=new THREE.MeshStandardMaterial({color:0xf4ecff,metalness:.5,roughness:.24,side:THREE.DoubleSide});
- const goldLine=new THREE.MeshStandardMaterial({color:0xd5b780,metalness:.75,roughness:.2});
+ const goldLine=new THREE.MeshStandardMaterial({color:0xd5b780,metalness:.75,roughness:.2,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
  const tube=(pts,r,material)=>{const curve=new THREE.CatmullRomCurve3(pts.map(v=>new THREE.Vector3(...v)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,80,r,9,false),material);root.add(mesh);return mesh};
  // Dramatic sweeping facade fins, two visible curved bands on the front.
  for(const side of [-1,1]){
