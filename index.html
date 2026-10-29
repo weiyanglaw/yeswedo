@@ -2116,9 +2116,9 @@ function wy180SetOfficeView(inOffice){
  for(const o of wy180HallObjects)o.visible=!inOffice;
  wy180ElevatorRoot.visible=false; // v203: never render legacy glass cabin on 3F
  for(const d of wy198SlideDoors)d.group.visible=false;
- wy180OfficePortal.visible=false; // v206: remove duplicate indoor door/portal
+ wy180OfficePortal.visible=!!inOffice; // v207: independent office-side B-style double door
  wy180Welcome.visible=false; // v206: remove duplicate indoor WELCOME protrusion
- if(inOffice)wy181ExitHinge.rotation.y=0;
+ if(inOffice){for(const d of wy207ExitPivots)d.pivot.rotation.y=0;}
  for(const o of wy180OfficeContents)o.visible=!!inOffice;
 }
 // Windows left wall, distinct from the recessed honor wall.
@@ -2253,6 +2253,32 @@ for(const xx of [-1.12,1.12]){
 wy180PortalPart(2.32,.20,.32,0,4.30,.04,wy186Gold);
 wy186Relief(wy180OfficePortal,0,4.48,.23,1.32);
 const wy181Handle=wy180PortalPart(.08,.65,.13,.59,2.0,.16,wy3Brass,'exit3f');wy180OfficePortal.remove(wy181Handle);wy181ExitHinge.add(wy181Handle);wy3Targets.splice(wy3Targets.indexOf(wy181Handle),1);
+// v207: replace the previously hidden duplicate single-leaf portal with an independent
+// symmetrical champagne-gold / ivory office-side double door. No EXIT signage.
+wy180OfficePortal.clear();
+const wy207Ivory=new THREE.MeshStandardMaterial({color:0xf4eee1,roughness:.48,metalness:.06});
+const wy207IvoryInset=new THREE.MeshStandardMaterial({color:0xe4d9c5,roughness:.62});
+const wy207Gold=new THREE.MeshStandardMaterial({color:0xc6a56e,metalness:.66,roughness:.29});
+const wy207GoldDark=new THREE.MeshStandardMaterial({color:0x846944,metalness:.55,roughness:.35});
+function wy207Part(parent,w,h,d,x,y,z,material){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);o.position.set(x,y,z);parent.add(o);return o;}
+// The doorway is 3.5 wide, 4.25 high. Both leaves have real thickness and rotate at their jambs.
+for(const x of [-1.82,1.82])wy207Part(wy180OfficePortal,.19,4.36,.32,x,2.18,0,wy207Gold);
+wy207Part(wy180OfficePortal,3.83,.20,.34,0,4.30,0,wy207Gold);
+wy207Part(wy180OfficePortal,3.61,.10,.35,0,4.13,0,wy207GoldDark);
+const wy207ExitPivots=[];const wy207ExitHits=[];
+for(const side of [-1,1]){
+ const pivot=new THREE.Group();pivot.position.set(side*1.75,0,0);wy180OfficePortal.add(pivot);wy207ExitPivots.push({pivot,side});
+ const leaf=wy207Part(pivot,1.735,4.05,.13,-side*.8675,2.07,0,wy207Ivory);
+ leaf.userData.wy3Action='exit3f';wy3Targets.push(leaf);wy207ExitHits.push(leaf);
+ // Wide inset panels and restrained gilded borders: coherent silhouette, low draw calls.
+ for(const [cy,ch] of [[1.16,1.40],[3.05,1.36]]){
+  wy207Part(pivot,1.47,ch,.018,-side*.8675,cy,.079,wy207Gold);
+  wy207Part(pivot,1.37,ch-.10,.021,-side*.8675,cy,.094,wy207IvoryInset);
+  wy207Part(pivot,1.24,ch-.23,.023,-side*.8675,cy,.109,wy207Ivory);
+ }
+ wy207Part(pivot,.065,.55,.12,-side*.17,2.04,.16,wy207Gold);
+}
+// Keep obsolete geometry references harmless; the new leaves are the only active office exit.
 const wy180Welcome=wy3Label('WELCOME｜辦公室介紹',8.95,2.55,4.16,1.75,.32);
 wy180Welcome.visible=false; // v206: no interior sign or replay click target
 const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal&&!wy198SlideDoors.some(d=>d.group===o));
@@ -2311,9 +2337,15 @@ function wy3Interact(action){
 }
 let wy180ExitAnim=null;
 function wy180ExitOffice(){
- if(!wy180AtOffice||wy180ExitAnim)return;
- wy3Orbit.enabled=false;wyWalkUI.style.display='none';
- wy180ExitAnim={t:0,start:wy3Cam.position.clone(),look:wy3Orbit.target.clone()};wy181ExitHinge.rotation.y=0;
+ if(!wy180AtOffice||wy180ExitAnim||wyRide||wy3ArrivalAnim)return;
+ wy3Orbit.enabled=false;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';
+ // Start from the visitor's CURRENT 3D camera, then approach a clear lane near the side wall.
+ const start=wy3Cam.position.clone();
+ const waypoints=[new THREE.Vector3(7.25,2.35,5.50),new THREE.Vector3(8.70,2.35,5.55),new THREE.Vector3(9.85,2.35,5.55)];
+ // Avoid a sudden backward excursion when already close to the door.
+ if(start.distanceTo(waypoints[0])<1.5)waypoints.shift();
+ wy180ExitAnim={phase:'approach',t:0,from:start,points:waypoints,index:0};
+ for(const d of wy207ExitPivots)d.pivot.rotation.y=0;
 }
 // Floor-navigation button belongs to the existing office UI, not a separate disconnected site.
 const floorBtn=document.createElement('button');floorBtn.id='wyFloorButton';floorBtn.textContent='電梯｜選擇樓層';
@@ -2431,11 +2463,25 @@ floorBtn.onclick=()=>wyLobbyOpen('elevator');
 function wyElevatorTick(dt){
  if(!insideOffice||activeIslandRoom)return;
  if(wy180ExitAnim&&wyOfficeFloor===3){
-  const a=wy180ExitAnim;a.t=Math.min(1,a.t+dt/1.1);const q=a.t*a.t*(3-2*a.t);wy181ExitHinge.rotation.y=-Math.PI*.56*q;
-  wy3Cam.position.copy(a.start).lerp(new THREE.Vector3(8.4,2.35,5.55),q);
-  wy3Orbit.target.copy(a.look).lerp(new THREE.Vector3(9.9,2.35,5.55),q);
-  wy3Cam.lookAt(wy3Orbit.target);
-  if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=false;wy198SlideDoors.forEach(d=>d.group.visible=false);wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
+  const a=wy180ExitAnim;
+  if(a.phase==='approach'){
+   const goal=a.points[a.index],delta=goal.clone().sub(wy3Cam.position),dist=delta.length();
+   const step=Math.min(dist,dt*3.0);
+   if(dist>.015)wy3Cam.position.addScaledVector(delta,step/dist);
+   const look=new THREE.Vector3(10.2,2.3,5.55);
+   wy3Cam.lookAt(look);wy3Orbit.target.copy(look);
+   if(dist<.06){a.index++;if(a.index>=a.points.length){a.phase='close';a.t=0;}}
+   const opening=a.index>=Math.max(0,a.points.length-1)?Math.min(1,Math.max(0,(9.85-wy3Cam.position.x)/1.3)):0;
+   for(const d of wy207ExitPivots)d.pivot.rotation.y=-d.side*Math.PI*.49*opening;
+  }else if(a.phase==='close'){
+   a.t=Math.min(1,a.t+dt/1.0);const q=a.t*a.t*(3-2*a.t);
+   for(const d of wy207ExitPivots)d.pivot.rotation.y=-d.side*Math.PI*.49*(1-q);
+   wy3Cam.position.set(9.85,2.35,5.55);wy3Cam.lookAt(9.2,2.35,5.55);
+   if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=false;
+    wy198SlideDoors.forEach(d=>d.group.visible=false);
+    wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);
+    wyLobbyOpen('elevator');}
+  }
  }
  if(wy3ArrivalAnim&&wyOfficeFloor===3){
   const a=wy3ArrivalAnim;
