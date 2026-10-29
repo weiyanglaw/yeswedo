@@ -165,9 +165,9 @@ body:not(.wy174-theme-room) #officeUI strong{transform:none!important;}
 /* Maintain a measured, non-overlapping two-by-two main-island button group. */
 body:not(.wy174-theme-room) #wyV151Controls{row-gap:7px!important;column-gap:8px!important}
 body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;transform:none!important}
-</style><style id="wy188ExactFourPixelNav">
-/* Exactly four CSS pixels below the rendered floor-title border; no extra offset. */
-#wyV151Controls{top:var(--wy176-controls-top,110px)!important;margin-top:0!important;padding-top:0!important;transform:none!important;}
+</style><style id="wy189ExactFourPixelNav">
+/* v189: top is set as a pixel value by the measured layout function; override every legacy fixed top. */
+#wyV151Controls{top:var(--wy189-controls-top,110px)!important;margin-top:0!important;padding-top:0!important;transform:none!important;}
 #officeUI>div:first-child>strong{transform:none!important;margin-bottom:0!important;}
 body:not(.wy174-theme-room) #wyV151Controls{grid-template-columns:max-content max-content!important;grid-template-rows:auto auto!important;row-gap:7px!important;column-gap:7px!important;}
 </style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
@@ -254,7 +254,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261029-v188-facade';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261029-v189-facade';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -2850,8 +2850,9 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
   document.body.classList.toggle('wy174-theme-room',themed);
   const rect=title.getBoundingClientRect();
   // v188: Exactly 4 CSS px from the actual rendered title border to the navigation cluster.
-  const top=Math.ceil(rect.bottom+4)+'px';
-  controls.style.setProperty('--wy176-controls-top',top);
+  const top=(rect.bottom+4).toFixed(2)+'px';
+  controls.style.setProperty('--wy189-controls-top',top);
+  controls.style.setProperty('top',top,'important');
   const c=controls.getBoundingClientRect();
   document.documentElement.style.setProperty('--wy176-contact-top',Math.ceil(c.bottom+10)+'px');
  }
@@ -2860,7 +2861,8 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
  const mo=new MutationObserver(layout);
  mo.observe(title,{childList:true,characterData:true,subtree:true});
  mo.observe(ui,{attributes:true,attributeFilter:['style']});
- layout();
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(layout)});
+ requestAnimationFrame(layout);
 })();
 </script>
 </body></html>

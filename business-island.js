@@ -1,8 +1,8 @@
-// WEIYANG v188 — brighter architectural material zones on v187 stable geometry, isolated to business island.
+// WEIYANG v189 — brighter architectural material zones on v187 stable geometry, isolated to business island.
 // Clean non-coplanar geometry, no nested overlapping facade shells.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V188_FACADE';
+  root.name = 'WEIYANG_BUSINESS_V189_FACADE';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
@@ -26,7 +26,7 @@ export function createBusinessHeadquarters(island, THREE) {
     cube(1.25,17.9,.12,x,11.15,-1.66,x<0?violet:mist);
     cube(.12,18.7,.22,x+.69,11.15,-1.51,gold);
   }
-  for(const y of [5.0,10.2,15.4,20.5])cube(7.8,.13,.28,0,y,-1.46,gold);
+  // No repeated floor-by-floor horizontal facade strips: preserve vertical zoning.
   // Crown has clear vertical separation from tower roof.
   cube(8.6,.62,7.0,0,21.43,-4.8,ivory);
   cube(7.5,.26,6.3,0,21.91,-4.8,gold);
@@ -41,9 +41,7 @@ export function createBusinessHeadquarters(island, THREE) {
     const body=cyl(2.75,3.10,12.6,40,x,7.1,-5.0,side<0?pearl:lavender);
     body.scale.z=.82;
     // Gold accents stay entirely in front of the opaque tower, not intersecting the curved shell.
-    for(const y of [3.2,6.8,10.4]){
-      cube(4.2,.10,.10,x,y,-7.78,gold);
-    }
+    // No repetitive horizontal bands on side towers.
     // No overlapping rib shells: purple and ivory material contrast is built into independent facade fins.
     for(const dx of [-1.55,1.55])cube(.13,10.0,.13,x+dx,7.2,-7.81,side<0?violet:silver);
     const roof=cyl(3.10,3.10,.35,40,x,13.65,-5.0,ivory);roof.scale.z=.85;
