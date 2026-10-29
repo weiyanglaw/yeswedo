@@ -254,7 +254,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261029-v192-crown';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261029-v190-spire';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261028-v138-label-width';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261027-v95-family';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -295,7 +295,7 @@ function createIslandLabel(i){
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthWrite:false,depthTest:false}));
  sprite.scale.set(i===0?18:16.5,i===0?6.33:5.8,1);
- sprite.position.set(0,i===0?37:(i===4?43:31),0);sprite.userData.islandIndex=i;
+ sprite.position.set(0,i===0?37:31,0);sprite.userData.islandIndex=i;
  sprite.userData.baseY=sprite.position.y;sprite.userData.floatPhase=i*.87;
  sprite.renderOrder=30;groups[i].add(sprite);islandLabels.push(sprite);
 }
@@ -2867,45 +2867,6 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(layout)});
  requestAnimationFrame(()=>requestAnimationFrame(layout));
  if(document.fonts?.ready)document.fonts.ready.then(layout);
-})();
-</script>
-
-<!-- v191: Outdoor main-island guide, independent of 1F and 3F welcome flags. -->
-<style id="wy191OutdoorGuideStyle">
-#wy191OutdoorGuide{display:none;position:fixed;inset:0;z-index:160;background:rgba(16,29,48,.72);align-items:center;justify-content:center;padding:18px;font-family:system-ui,'Noto Sans TC',sans-serif}
-#wy191OutdoorGuide.open{display:flex}
-#wy191OutdoorGuide article{width:min(92vw,430px);max-height:80dvh;overflow-y:auto;border:2px solid #d5b47b;border-radius:18px;padding:20px;background:#fffaf2;color:#263d59;box-shadow:0 18px 60px #1118}
-#wy191OutdoorGuide h2{font-size:21px;margin:0 0 12px;color:#263d59}
-#wy191OutdoorGuide p{line-height:1.7;margin:9px 0}
-#wy191OutdoorGuide button{width:100%;margin-top:12px;padding:12px;background:#253f66;color:white;border:1px solid #d5b47b;border-radius:12px;font-size:17px;font-weight:bold}
-#wy191OutdoorGuideAgain{position:fixed;top:clamp(180px,24vh,260px);right:12px;z-index:30;display:none;padding:9px 13px;background:#fff9ed;border:1px solid #d5b47b;border-radius:12px;color:#243d64;font-weight:bold}
-</style>
-<script id="wy191OutdoorGuideLogic">
-(()=>{
-const KEY='weiyang-outdoor-main-guide-v191';
-const modal=document.createElement('div');modal.id='wy191OutdoorGuide';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','德威陽法律探索島主島指南');
-modal.innerHTML=`<article><h2>🏰 德威陽｜有法度・主島探索指南</h2><p>歡迎來到德威陽 3D 法律探索島！先認識五座法律主題島嶼，再開始自由探索。</p><p><b>五座島嶼：</b>訴訟法律島、醫療法律島、家庭生活島、企業商務島及法律知識島；主城堡則是德威陽事務所的 3D 探索入口。</p><p><b>如何移動：</b>使用左下角方向控制移動角色，拖曳畫面轉動視角，雙指縮放；點擊建築或互動標示進入館內。</p><p><b>進入城堡：</b>點擊德威陽城堡，參觀迎賓大廳、員工辦公室及林律師私人辦公室。</p><p>隨時可使用「主島指南」重新閱讀。準備好了嗎？</p><button type="button" id="wy191StartExplore">開始探索</button></article>`;
-document.body.append(modal);
-const again=document.createElement('button');again.id='wy191OutdoorGuideAgain';again.textContent='主島指南';again.type='button';document.body.append(again);
-let acknowledged=false;try{acknowledged=localStorage.getItem(KEY)==='yes'}catch(e){}
-function show(){if(document.getElementById('creator')?.style.display!=='none')return;modal.classList.add('open');again.style.display='none'}
-function close(){modal.classList.remove('open');acknowledged=true;try{localStorage.setItem(KEY,'yes')}catch(e){};again.style.display='block'}
-modal.querySelector('#wy191StartExplore').addEventListener('click',close);
-again.addEventListener('click',show);
-const start=document.getElementById('startExplore');
-if(start)start.addEventListener('click',()=>{
- const creator=document.getElementById('creator');
- // Earlier avatar validation/creation handlers run before this handler.
- if(creator?.classList.contains('finished')&&creator.style.display==='none'){
-   again.style.display='block';if(!acknowledged)show();
- }
-});
-// When leaving an indoor scene, restore the manual outdoor-guide trigger.
-const observer=new MutationObserver(()=>{
- const creator=document.getElementById('creator');const office=document.getElementById('officeUI');
- const outside=creator?.classList.contains('finished')&&creator.style.display==='none'&&(!office||getComputedStyle(office).display==='none');
- again.style.display=outside&&!modal.classList.contains('open')?'block':'none';
-});observer.observe(document.getElementById('officeUI')||document.body,{attributes:true,attributeFilter:['style']});
 })();
 </script>
 </body></html>
