@@ -2020,8 +2020,9 @@ const wy180HallStart=wy3Root.children.length;
 const wy178DoorX=2.55,wy178DoorZ=6.70;
 const wy201Arrival=new THREE.Group();wy3Root.add(wy201Arrival);
 const wy201Ivory=new THREE.MeshStandardMaterial({color:0xf4eee3,roughness:.62});
-const wy201Gold=new THREE.MeshStandardMaterial({color:0xc5a063,metalness:.62,roughness:.28});
-const wy201Warm=new THREE.MeshBasicMaterial({color:0xffe5b1});
+const wy201Gold=new THREE.MeshStandardMaterial({color:0xc4ab83,metalness:.16,roughness:.75});
+// Neutral ivory wall finishes; no yellow emissive fixtures in the entry corridor.
+const wy201Warm=new THREE.MeshBasicMaterial({color:0xf4f4f0});
 function wy201Box(parent,x,y,z,w,h,d,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);parent.add(m);return m;}
 // Corridor axis is east-to-west. Side walls run along z=4.80 and z=8.60.
 wy201Box(wy201Arrival,6.17,.04,6.70,7.48,.08,3.82,new THREE.MeshStandardMaterial({color:0xd8c6ab,roughness:.78}));
@@ -2030,15 +2031,17 @@ for(const z of [4.80,8.60]){
  const inside=z===4.80?4.89:8.51;
  wy201Box(wy201Arrival,6.17,.35,inside,7.42,.11,.065,wy201Gold);
  wy201Box(wy201Arrival,6.17,4.78,inside,7.42,.10,.065,wy201Gold);
+ // Three framed French wall panels, without crossing center bars or religious silhouettes.
  for(const x of [4.12,5.98,7.84]){
-  wy201Box(wy201Arrival,x,2.63,inside,.065,3.50,.055,wy201Gold);
-  wy201Box(wy201Arrival,x,3.78,inside,.78,.065,.055,wy201Gold);
-  wy201Box(wy201Arrival,x,1.26,inside,.78,.065,.055,wy201Gold);
-  wy201Box(wy201Arrival,x,3.10,inside,.23,.47,.09,wy201Warm);
+  for(const dx of [-.49,.49])wy201Box(wy201Arrival,x+dx,2.55,inside,.045,3.00,.045,wy201Gold);
+  for(const y of [1.05,4.05])wy201Box(wy201Arrival,x,y,inside,1.03,.045,.045,wy201Gold);
  }
+
 }
 wy201Box(wy201Arrival,6.17,5.39,6.70,7.48,.12,3.82,wy201Ivory);
+// Soft neutral ceiling panels, not yellow-glowing bars.
 for(const x of [4.2,6.1,8.0])wy201Box(wy201Arrival,x,5.31,6.70,.72,.035,.30,wy201Warm);
+
 // Solid west wall around a real 3.12m opening; no glass anywhere in the office doorway.
 for(const z of [5.10,8.30])wy201Box(wy201Arrival,wy178DoorX,2.70,z,.20,5.40,.60,wy201Ivory);
 wy201Box(wy201Arrival,wy178DoorX,5.08,6.70,.20,.65,3.24,wy201Ivory);
@@ -2061,14 +2064,20 @@ function wy201Leaf(pivot,side){
  const h=wy201Box(pivot,side*1.38,2.19,.20,.07,.65,.11,wy3Brass);h.userData.wy3Action='officeDoor';wy3Targets.push(h);
 }
 wy201Leaf(wy3OfficeDoorPivot,1);wy201Leaf(wy3OfficeDoorPivotR,-1);
-// Crown is architectural relief at the lintel, not a floating torus or a door-sized emblem.
-const wy201Crown=new THREE.Group();wy201Crown.position.set(wy178DoorX+.23,5.02,wy178DoorZ);wy201Crown.rotation.y=Math.PI/2;wy201Arrival.add(wy201Crown);
-const crownShape=new THREE.Shape();crownShape.moveTo(-.54,-.15);crownShape.lineTo(-.48,.25);crownShape.lineTo(-.24,.04);crownShape.lineTo(0,.44);crownShape.lineTo(.24,.04);crownShape.lineTo(.48,.25);crownShape.lineTo(.54,-.15);crownShape.closePath();
-const crownMesh=new THREE.Mesh(new THREE.ExtrudeGeometry(crownShape,{depth:.085,bevelEnabled:true,bevelThickness:.035,bevelSize:.035,bevelSegments:3,steps:1}),wy201Gold);crownMesh.position.z=.07;wy201Crown.add(crownMesh);
-wy201Box(wy201Crown,0,-.22,.12,1.17,.11,.14,wy201Gold);
-for(const x of [-.48,0,.48]){const gem=new THREE.Mesh(new THREE.SphereGeometry(.065,12,10),new THREE.MeshStandardMaterial({color:0xffe6a5,metalness:.28,roughness:.25}));gem.position.set(x,x===0?.44:.25,.18);wy201Crown.add(gem)}
+// v202: a clean oval champagne-gold WY medallion replaces the old crown completely.
+// A single texture-backed face avoids tiny overlapping primitives and brown metallic shading.
+const wy202Medallion=new THREE.Group();wy202Medallion.position.set(wy178DoorX+.23,5.02,wy178DoorZ);wy202Medallion.rotation.y=Math.PI/2;wy201Arrival.add(wy202Medallion);
+const wy202Oval=new THREE.Shape();wy202Oval.absellipse(0,0,.76,.34,0,Math.PI*2,false,0);
+const wy202Back=new THREE.Mesh(new THREE.ExtrudeGeometry(wy202Oval,{depth:.045,bevelEnabled:true,bevelThickness:.014,bevelSize:.014,bevelSegments:2,curveSegments:48}),new THREE.MeshBasicMaterial({color:0xb79b73}));wy202Back.position.z=.025;wy202Medallion.add(wy202Back);
+const wy202Canvas=document.createElement('canvas');wy202Canvas.width=1024;wy202Canvas.height=512;
+const wy202Ctx=wy202Canvas.getContext('2d');wy202Ctx.clearRect(0,0,1024,512);
+wy202Ctx.beginPath();wy202Ctx.ellipse(512,256,486,219,0,0,Math.PI*2);wy202Ctx.fillStyle='#faf8f3';wy202Ctx.fill();wy202Ctx.lineWidth=27;wy202Ctx.strokeStyle='#b79b73';wy202Ctx.stroke();
+wy202Ctx.beginPath();wy202Ctx.ellipse(512,256,447,183,0,0,Math.PI*2);wy202Ctx.lineWidth=7;wy202Ctx.strokeStyle='#d3c2a7';wy202Ctx.stroke();
+wy202Ctx.font='bold 228px Georgia, serif';wy202Ctx.textAlign='center';wy202Ctx.textBaseline='middle';wy202Ctx.fillStyle='#887252';wy202Ctx.fillText('WY',512,270);
+const wy202Texture=new THREE.CanvasTexture(wy202Canvas);wy202Texture.colorSpace=THREE.SRGBColorSpace;
+const wy202Face=new THREE.Mesh(new THREE.PlaneGeometry(1.51,.69),new THREE.MeshBasicMaterial({map:wy202Texture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy202Face.position.z=.105;wy202Face.renderOrder=5;wy202Medallion.add(wy202Face);
 // Door-side plaque: on the viewer's RIGHT (north wall, positive Z), not left.
-const wy198SignGroup=new THREE.Group();wy198SignGroup.position.set(3.05,2.57,8.40);wy198SignGroup.rotation.y=Math.PI/2;wy201Arrival.add(wy198SignGroup);
+const wy198SignGroup=new THREE.Group();wy198SignGroup.position.set(4.20,2.57,8.43);wy198SignGroup.rotation.y=Math.PI;wy201Arrival.add(wy198SignGroup);
 const wy198SignCanvas=document.createElement('canvas');wy198SignCanvas.width=768;wy198SignCanvas.height=960;
 const wy198Ctx=wy198SignCanvas.getContext('2d');wy198Ctx.fillStyle='#112b4d';wy198Ctx.fillRect(0,0,768,960);
 wy198Ctx.strokeStyle='#e9c57b';wy198Ctx.lineWidth=42;wy198Ctx.strokeRect(24,24,720,912);wy198Ctx.strokeStyle='#b38b4b';wy198Ctx.lineWidth=7;wy198Ctx.strokeRect(63,64,642,832);
