@@ -2066,27 +2066,17 @@ function wy3DoorLeaf(pivot,side){
  const handle=new THREE.Mesh(new THREE.BoxGeometry(.055,.78,.13),wy3Brass);handle.position.set(side*1.39,2.16,.28);pivot.add(handle);
 }
 wy3DoorLeaf(wy3OfficeDoorPivot,1);wy3DoorLeaf(wy3OfficeDoorPivotR,-1);
-// v197: bold central three-dimensional crown above the double-door split.
-const wy197Crown=new THREE.Group();wy197Crown.position.set(0,3.57,.32);wy178DoorAssembly.add(wy197Crown);
-const wy197Gold=new THREE.MeshStandardMaterial({color:0xe5ad43,metalness:.68,roughness:.24});
-const wy197CrownShape=new THREE.Shape();wy197CrownShape.moveTo(-.62,-.22);wy197CrownShape.lineTo(-.68,.27);wy197CrownShape.lineTo(-.36,.04);wy197CrownShape.lineTo(-.22,.48);wy197CrownShape.lineTo(0,.13);wy197CrownShape.lineTo(.22,.48);wy197CrownShape.lineTo(.36,.04);wy197CrownShape.lineTo(.68,.27);wy197CrownShape.lineTo(.62,-.22);wy197CrownShape.closePath();
-const wy197CrownMesh=new THREE.Mesh(new THREE.ExtrudeGeometry(wy197CrownShape,{depth:.12,bevelEnabled:true,bevelThickness:.045,bevelSize:.045,bevelSegments:2}),wy197Gold);wy197Crown.add(wy197CrownMesh);
-const wy197CrownBase=new THREE.Mesh(new THREE.BoxGeometry(1.28,.14,.22),wy197Gold);wy197CrownBase.position.set(0,-.27,.11);wy197Crown.add(wy197CrownBase);
-
 // v179: removed the obsolete z-facing entrance arch and sconces: they blocked the real west-facing hallway door.
 // Door plaque is genuinely on the door surface, not a floating HUD button.
 const wy3DoorPlate=new THREE.Mesh(new THREE.PlaneGeometry(1.08,.49),new THREE.MeshBasicMaterial({map:(()=>{const c=document.createElement('canvas');c.width=640;c.height=250;const x=c.getContext('2d');x.fillStyle='#4b3a2b';x.fillRect(0,0,640,250);x.strokeStyle='#e4c58e';x.lineWidth=12;x.strokeRect(8,8,624,234);x.fillStyle='#fff2d2';x.textAlign='center';x.font='bold 61px sans-serif';x.fillText('WEIYANG',320,150);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t})(),side:THREE.DoubleSide}));
 wy3DoorPlate.scale.set(.60,1,1);wy3DoorPlate.position.set(.775,2.94,.203);wy3DoorPlate.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorPlate);wy3Targets.push(wy3DoorPlate);
 // Permanent small replay plaque at right side, readable and separately clickable.
 // Old annex replay board retired; the office door plaque below replaces it.
-const wy3ReplayPlaque=wy3Box(8.66,2.50,4.30,1.50,1.42,.13,'#173657','wall');
-const wy3ReplayFrame=wy3Box(8.66,2.50,4.205,1.64,1.56,.065,wy3Brass,'wall');
-const wy3ReplayFace=wy3Box(8.66,2.50,4.155,1.48,1.39,.035,'#173657','wall');
-const wy3ReplayText=wy3Label('WELCOME｜辦公室介紹',8.66,2.56,4.10,1.50,.42);wy3ReplayText.userData.wy3Action='wall';wy3Targets.push(wy3ReplayText);
-const wy3ReplayHint=wy3Label('點擊重新觀看',8.66,2.12,4.09,1.36,.24);wy3ReplayHint.userData.wy3Action='wall';wy3Targets.push(wy3ReplayHint);
+const wy3ReplayPlaque=wy3Box(8.66,2.65,4.30,.70,.95,.10,'#d7b377','wall');wy3ReplayPlaque.material=wy3Brass;
+const wy3ReplayText=wy3Label('WELCOME｜辦公室介紹',8.66,2.65,4.22,1.45,.35);wy3ReplayText.userData.wy3Action='wall';wy3Targets.push(wy3ReplayText);
 // Legacy annex sign omitted from the compact office view.
-wy3Label('老闆今天在嗎？',7.12,5.12,4.24,2.45,.43);
-wy3Label('老闆今天在嗎？',7.12,4.66,4.24,2.55,.31);
+wy3Label('林律師私人辦公室',7.12,5.12,4.24,2.45,.43);
+wy3Label('林柏均律師私人辦公室',7.12,4.66,4.24,2.55,.31);
 // The arrival hallway is a separate visual stage, never a permanent office annex.
 // v186: visible high-relief champagne-gold neoclassical corridor details.
 for(const zz of [4.65,5.55,6.45,7.35]){
@@ -2254,19 +2244,17 @@ const wy3Style=document.createElement('style');wy3Style.textContent=`
 #wy3WallPrompt{display:none;position:fixed;z-index:70;bottom:148px;left:50%;transform:translateX(-50%);width:min(92vw,330px);padding:12px 16px;border:1px solid #c7a36c;border-radius:13px;background:#30251fea;color:#ffeac4;font:700 14px system-ui;box-shadow:0 5px 25px #0005}
 #wy3DoorPrompt{display:none;position:fixed;z-index:70;bottom:calc(94px + env(safe-area-inset-bottom,0px));left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);padding:13px 21px;border:1px solid #d8b77b;border-radius:13px;background:#203a60;color:#fff8e9;font:700 15px system-ui;box-shadow:0 8px 25px #091d3970}
 `;document.head.append(wy3Style);
-const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>IS THE BOSS IN?</h2><div style="color:#d6b782">老闆今天在嗎？</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">辦公室突襲！</button></div>`;document.body.append(wy3Intro);
+const wy3Intro=document.createElement('div');wy3Intro.id='wy3Intro';wy3Intro.innerHTML=`<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 3F</small><h2>IS THE BOSS IN?</h2><div style="color:#d6b782">林柏均律師私人辦公室</div><p>門後，是林柏均律師的私人辦公室。<br>至於本人在不在，這又是另一回事。</p><p>恭喜您抵達德威陽三樓。<br>據說林律師不是在法院，就是在開會、演講，或正在趕往下一個行程的路上。<br>至於今天能不能遇到本人……就看您的運氣了！</p><button id="wy3IntroContinue">辦公室突襲！</button></div>`;document.body.append(wy3Intro);
 const wy3WallPrompt=document.createElement('button');wy3WallPrompt.id='wy3WallPrompt';wy3WallPrompt.style.display='none';
 const wy3DoorPrompt=document.createElement('button');wy3DoorPrompt.id='wy3DoorPrompt';wy3DoorPrompt.textContent='開門不開庭！';document.body.append(wy3DoorPrompt);
-function wy3ShowIntro(){if(wyRide)return;wy3Intro.style.display='flex';wy3Intro.querySelector('#wy3IntroContinue').textContent=wy3ArrivalAnim?.waiting?'辦公室突襲！':(wy3IntroSeen?'繼續探索':'辦公室突襲！');wy3DoorPrompt.style.display='none';wy197ReplayButton.style.display='none'}
+function wy3ShowIntro(){if(wyRide)return;wy3Intro.style.display='flex';wy3DoorPrompt.style.display='none'}
 function wy3FinishIntro(){wy3Intro.style.display='none';wy3IntroSeen=true;wy3OfficeUnlocked=true;try{localStorage.setItem(wy3IntroKey,'yes')}catch(e){}if(wy3ArrivalAnim?.waiting){wy3ArrivalAnim.waiting=false;wy3ArrivalAnim.t=.38;}wy3UpdatePrompts()}
 wy3Intro.querySelector('#wy3IntroContinue').onclick=wy3FinishIntro;
 wy3WallPrompt.onclick=wy3ShowIntro;
-const wy197ReplayButton=document.createElement('button');wy197ReplayButton.id='wy197ReplayButton';wy197ReplayButton.textContent='WELCOME｜辦公室介紹';wy197ReplayButton.style.cssText='display:none;position:fixed;z-index:68;bottom:calc(148px + env(safe-area-inset-bottom,0px));right:12px;max-width:48vw;padding:11px 13px;border:2px solid #caa35b;border-radius:12px;background:#183b60;color:#fff3d7;font:700 13px system-ui;box-shadow:0 6px 18px #0005';document.body.append(wy197ReplayButton);wy197ReplayButton.onclick=wy3ShowIntro;
-
 function wy3OpenDoor(){if(wy3ArrivalAnim||wyRide||wyDoorOpen<.98)return;if(!wy3OfficeUnlocked){wy3ShowIntro();return}wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
 const wy3ArrivalKey='weiyang-3f-arrival-v165';let wy3ArrivalPlayed=localStorage.getItem(wy3ArrivalKey)==='yes';let wy3ArrivalAnim=null;
-function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy180SetOfficeView(false);wy3ArrivalAnim={t:0,introChecked:false};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=68;wy3Cam.updateProjectionMatrix();}
+function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy180SetOfficeView(false);wy3ArrivalAnim={t:0};wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=68;wy3Cam.updateProjectionMatrix();}
 const wy166LawyerStops=[{x:0,z:-4.1,d:5},{x:-2.8,z:-3.6,d:4},{x:-3.0,z:-5.6,d:5},{x:0,z:-5.6,d:6},{x:2.5,z:-5.6,d:4},{x:2.7,z:-3.8,d:5}];
 let wy166LawyerIndex=0,wy166LawyerWait=3,wy166LawyerPhase=0;
 function wy166LawyerTick(dt){
@@ -2277,7 +2265,7 @@ function wy166LawyerTick(dt){
  const step=Math.min(dist,dt*.7);actor.position.x+=dx/dist*step;actor.position.z+=dz/dist*step;actor.rotation.y=Math.atan2(dx,dz);actor.position.y=.05+Math.sin(performance.now()*.008)*.015;
 }
 function wy3Enter(){wy180SetOfficeView(false);wy3Cam.fov=68;wy3Cam.updateProjectionMatrix();wy177Reveal=null;wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
-function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy197ReplayButton.style.display=(active&&!wy3ArrivalAnim&&!wyRide&&wy180AtOffice)?'block':'none';wy3DoorPrompt.style.display=(active&&!wy180AtOffice&&!wy3OfficeDoorOpened&&!wy3ArrivalAnim&&!wyRide&&wyDoorOpen>=.98&&wy3Intro.style.display!=='flex')?'block':'none'}
+function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display=(active&&!wy180AtOffice&&!wy3OfficeDoorOpened&&!wy3ArrivalAnim&&!wyRide&&wyDoorOpen>=.98&&wy3Intro.style.display!=='flex')?'block':'none'}
 function wy3Interact(action){
  if(action==='wall'){wy3ShowIntro();return}
  if(action==='exit3f'){wy180ExitOffice();return}
@@ -2288,7 +2276,7 @@ function wy3Interact(action){
  if(action==='elevator'){wyLobbyOpen('elevator');return}
  if(action==='lawyer'||action==='desk'){
   const lines=wy3Lawyer.root.visible?['今天運氣不錯，林律師本人竟然在辦公室！','跨國商務、企業法務與訴訟爭議，都需要從事實與證據開始分析。']:['辦公室在，林律師本人不一定在。','可能正在開庭、開會或演講，歡迎觀看律師專業介紹。'];
-  wyLobbyDialog.innerHTML='<h3>老闆今天在嗎？</h3>'+lines.map(t=>'<p>'+t+'</p>').join('')+'<button id="wy3LawyerProfile">查看專業履歷</button><button id="wy3LawyerClose">關閉</button>';
+  wyLobbyDialog.innerHTML='<h3>林柏均律師私人辦公室</h3>'+lines.map(t=>'<p>'+t+'</p>').join('')+'<button id="wy3LawyerProfile">查看專業履歷</button><button id="wy3LawyerClose">關閉</button>';
   wyLobbyDialog.style.display='block';document.getElementById('wy3LawyerProfile').onclick=()=>openWyInfo('lawyer');document.getElementById('wy3LawyerClose').onclick=()=>wyLobbyDialog.style.display='none';return;
  }
  if(action==='credentials'){openWyInfo('lawyer');return}
@@ -2332,12 +2320,12 @@ function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;c
  const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,10.85)):(n===2?(atElevator?new THREE.Vector3(9.1,.08,-8.1):new THREE.Vector3(8.9,.08,9.3)):(atElevator?new THREE.Vector3(8.15,.08,7.25):new THREE.Vector3(7.95,.08,7.25))); wyIndoorActor.position.copy(p);wyIndoorActor.visible=!(n===3&&wy3ArrivalAnim);
  wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
- document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
+ document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 林柏均律師私人辦公室';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
  else if(wyOfficeFloor===3){wy3Cam.position.set(7.15,2.4,6.7);wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.lookAt(wy3Orbit.target)}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
- wyLobbyDialog.style.display='none';if(wyOfficeFloor===3){wy3Enter();}else{wy3WallPrompt.style.display='none';wy197ReplayButton.style.display=(active&&!wy3ArrivalAnim&&!wyRide&&wy180AtOffice)?'block':'none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
+ wyLobbyDialog.style.display='none';if(wyOfficeFloor===3){wy3Enter();}else{wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
 function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
 function wyFindLiftPath(from,to,floor){
  // 0.6-unit A* grid, with clearance around the existing major furniture islands.
@@ -2423,7 +2411,7 @@ function wyElevatorTick(dt){
   if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=true;wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
  }
  if(wy3ArrivalAnim&&wyOfficeFloor===3){
-  const a=wy3ArrivalAnim;if(a.waiting){wyUpdateGlassCabin(1,dt);return;} a.t=Math.min(1,a.t+dt/4.2);
+  const a=wy3ArrivalAnim;if(a.waiting){wyUpdateGlassCabin(1,dt);return;} a.t=Math.min(1,a.t+dt/1.8);
   if(a.t>=.38&&!a.introChecked){a.introChecked=true;if(!wy3IntroSeen){a.waiting=true;wyDoorOpen=1;wyUpdateGlassCabin(1,dt);wy3ShowIntro();return;}}
   const t=a.t, smooth=t*t*(3-2*t);
   wyDoorOpen=t<.36?Math.min(1,t/.36):1;
@@ -2431,7 +2419,7 @@ function wyElevatorTick(dt){
   wy180ElevatorRoot.visible=true;
   const walk=Math.max(0,(smooth-.33)/.67);
   // First-person eye-level camera travels through the real hallway toward the framed door.
-  wy3Cam.position.set(9.25-walk*2.10,2.40,6.70);
+  wy3Cam.position.set(8.65-walk*1.50,2.40,6.70);
   wy3Cam.lookAt(wy178DoorX,2.55,wy178DoorZ);
   if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(9.30-walk*2.15,.08,6.70);}
   if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.position.set(7.15,2.40,6.70);wy3Cam.lookAt(wy3Orbit.target);wy3UpdatePrompts();}
@@ -2451,7 +2439,7 @@ function wyElevatorTick(dt){
    wy3Cam.lookAt(wy3Orbit.target);
    if(t>=1){wy177Reveal=null;wy3Cam.fov=49;wy3Cam.updateProjectionMatrix();wy3Orbit.enabled=true;wy3Orbit.update();wyWalkUI.style.display='';if(wyIndoorActor)wyIndoorActor.visible=true;}
   }
-  if(wy3AutoWalk&&wy3DoorProgress>.90&&wyIndoorActor&&!wyRide){
+  if(wy3AutoWalk&&wy3DoorProgress>.75&&wyIndoorActor&&!wyRide){
    const p=wyIndoorActor.position;
    const target=new THREE.Vector3(.75,.08,6.30);
    const dx=target.x-p.x,dz=target.z-p.z,dist=Math.hypot(dx,dz);
@@ -2531,7 +2519,7 @@ function wyLobbyOpen(action){
  if(action==='elevator')html='<p>選擇想前往的樓層：</p><button data-lb="floor1"><b>1F｜法律冒險，從這裡開始！</b><small style="display:block;font-weight:400">先喝杯咖啡，再出發！</small></button><button data-lb="floor2"><b>2F｜小編生存戰！</b><small style="display:block;font-weight:400">辦公室祕密大公開！</small></button><button data-lb="floor3"><b>3F｜最終Boss登場！</b><small style="display:block;font-weight:400">老闆今天在辦公室嗎？</small></button><button data-lb="return3f">↩ 返回辦公室</button>';
  if(action==='contact')html='<p>法律諮詢與聯絡方式：</p><p><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener">LINE｜@wylaw</a></p><p><a href="https://weiandyang.com" target="_blank" rel="noopener">官網｜weiandyang.com</a></p>';
  if(action==='services')html='<p>跨國商務、企業法務、民刑事訴訟、家事繼承、勞動、醫療與智慧財產等法律服務。</p>';
- if(action==='floor3')html='<p>3F 老闆今天在嗎？已開放參觀。</p><button data-lb="floor3">搭電梯前往3F</button>'; 
+ if(action==='floor3')html='<p>3F 林柏均律師私人辦公室已開放參觀。</p><button data-lb="floor3">搭電梯前往3F</button>'; 
  wyLobbyDialog.innerHTML='<h3 style="margin:0 0 8px">'+head+'</h3>'+html+'<button data-lb="close">關閉</button>';
  wyLobbyDialog.querySelectorAll('button').forEach(b=>{b.style.cssText='display:block;width:100%;margin:9px 0;padding:11px;background:#284967;color:white;border:0;border-radius:10px;font-weight:700';b.onclick=()=>{
  const a=b.dataset.lb;if(a==='close'){if(wyOfficeFloor===3&&wy180AtOffice===false&&!wy3ArrivalAnim&&!wyRide){wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.enabled=true;wyWalkUI.style.display='';}wyLobbyDialog.style.display='none';return}if(a==='return3f'){wyLobbyDialog.style.display='none';wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.enabled=true;wyWalkUI.style.display='';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
@@ -2675,7 +2663,7 @@ const familyGuideAgain=document.createElement('button');familyGuideAgain.textCon
 // v138: same modal layout and reopening behavior as the medical-island entry guide.
 const wyMainGuide=document.createElement('aside');wyMainGuide.id='wyMainGuide';
 wyMainGuide.style.cssText=medGuide.style.cssText+';background:#f8f5eb;border-color:#c6a365;color:#203858';
-wyMainGuide.innerHTML="<h3>歡迎來到德威陽城堡｜探索指南！</h3><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索老闆今天在嗎？。</p><button>開始探索</button>";
+wyMainGuide.innerHTML="<h3>歡迎來到德威陽城堡｜探索指南！</h3><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索林律師私人辦公室。</p><button>開始探索</button>";
 document.body.append(wyMainGuide);wyMainGuide.querySelector('button').onclick=()=>{wyMainGuide.style.display='none';wyMainGuideSeen=true;try{localStorage.setItem('wy-guide-castle-v196','yes')}catch(e){}};
 const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';wyMainGuideAgain.id='wyMainGuideAgain';
 wyMainGuideAgain.style.cssText=medGuideAgain.style.cssText;document.body.append(wyMainGuideAgain);
