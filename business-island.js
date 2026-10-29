@@ -1,8 +1,8 @@
-// WEIYANG v190 — pointed crystal crown, refined side towers and flush entry; isolated to business island.
+// WEIYANG v192 — enterprise island facade, crystal crown, curved side towers, flat entrance.
 // Clean non-coplanar geometry, no nested overlapping facade shells.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V190_SPIRE';
+  root.name = 'WEIYANG_BUSINESS_V192_CROWN';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
@@ -30,29 +30,48 @@ export function createBusinessHeadquarters(island, THREE) {
   // Crown has clear vertical separation from tower roof.
   cube(8.6,.62,7.0,0,21.43,-4.8,ivory);
   cube(7.5,.26,6.3,0,21.91,-4.8,gold);
-  // Mobile-readable pointed crown. No thin circular rings, coplanar layers or rooftop stairs.
-  const crystal=new THREE.MeshStandardMaterial({color:0xa98ce6,metalness:.18,roughness:.24,emissive:0x35215b,emissiveIntensity:.25});
-  const crownGroup=new THREE.Group();root.add(crownGroup);
-  crownGroup.position.set(0,22.12,-4.8);
-  // A broad central tapered silhouette and two gold flanking blades are legible at phone scale.
-  const spire=cyl(0,1.85,5.1,4,0,2.55,0,crystal,crownGroup);spire.rotation.y=Math.PI/4;
-  for(const side of [-1,1]){
-    const blade=cube(.40,3.35,.48,side*2.25,1.65,.08,gold,crownGroup);
-    blade.rotation.z=side*.22;
+  // Faceted violet crystal spire and substantial sculptural golden crown.
+  // Distinct surfaces avoid coincident faces and the spire reads clearly on phones.
+  const spire=cyl(0,1.95,5.65,6,0,2.86,0,crystal,crownGroup);
+  spire.rotation.y=Math.PI/6;
+  const crownGold=new THREE.MeshStandardMaterial({color:0xf0c780,metalness:.73,roughness:.22});
+  for(let k=0;k<8;k++){
+    const a=k*Math.PI/4, r=2.8;
+    const fin=new THREE.Group();fin.position.set(Math.sin(a)*r,.28,Math.cos(a)*r);fin.rotation.y=a;crownGroup.add(fin);
+    const blade=cube(.72,4.05,.54,0,2.04,0,crownGold,fin);
+    blade.rotation.z=-.23;
+    const tip=cyl(0,.53,1.45,4,-.39,4.63,0,crownGold,fin);
+    tip.rotation.y=Math.PI/4;
   }
-  cube(5.8,.46,2.4,0,.2,.1,gold,crownGroup);
-  // Two freestanding curved towers: no underlying rectangular towers occupying the same space.
+  cyl(3.2,3.2,.56,8,0,.29,0,crownGold,crownGroup);
+  cyl(2.55,2.95,.34,8,0,.67,0,ivory,crownGroup);
+  // Twin elliptic curved wings: real rounded glass facades, framed vertically in gold.
+  // Front glazing and gold fins stand ahead of the solid side tower to prevent flicker.
   for(const side of [-1,1]){
-    const x=side*9.4;
-    const body=cyl(2.75,3.10,12.6,40,x,7.1,-5.0,side<0?pearl:lavender);
-    body.scale.z=.82;
-    // Vertical front glazing provides visible purple glass architecture without overlapping transparent shells.
-    for(const dx of [-1.3,0,1.3])cube(.9,9.7,.12,x+dx,7.3,-7.69,dx===0?violet:mist);
-    // Gold accents stay entirely in front of the opaque tower, not intersecting the curved shell.
-    // No repetitive horizontal bands on side towers.
-    // No overlapping rib shells: purple and ivory material contrast is built into independent facade fins.
-    for(const dx of [-1.55,1.55])cube(.13,10.0,.13,x+dx,7.2,-7.81,side<0?violet:silver);
-    const roof=cyl(3.10,3.10,.35,40,x,13.65,-5.0,ivory);roof.scale.z=.85;
+    const x=side*9.55, z=-4.9;
+    const body=cyl(2.65,3.05,13.3,48,x,7.4,z,deep);
+    body.scale.z=.87;
+    // Translucent-tinted vertical facade bays around the outward-facing curved wall.
+    for(let k=0;k<=12;k++){
+      const theta=(-.84+k*1.68/12);
+      const px=x+3.12*Math.sin(theta), pz=z+2.75*Math.cos(theta);
+      const bay=cube(.69,10.9,.13,px,7.4,pz,k%3===0?violet:lavender);
+      bay.rotation.y=theta;
+      if(k%2===0){
+        const rib=cube(.115,11.25,.18,px+.38*Math.cos(theta),7.4,pz-.38*Math.sin(theta),gold);
+        rib.rotation.y=theta;
+      }
+    }
+    const crownRoof=cyl(3.22,3.22,.40,48,x,14.35,z,ivory);crownRoof.scale.z=.90;
+    const terrace=cyl(2.88,2.88,.17,48,x,14.66,z,green);terrace.scale.z=.86;
+    const rail=cyl(3.12,3.12,.13,48,x,14.90,z,gold);rail.scale.z=.88;
+    // Roof gardens and planted terraces, with distinct silhouettes.
+    for(const dx of [-1.35,1.35]){
+      cyl(.20,.27,.62,8,x+dx,15.18,z,trunk);
+      add(new THREE.IcosahedronGeometry(.66,1),green,x+dx,15.76,z);
+    }
+    // Gold side cornice makes the wings read as architecturally connected.
+    const edge=cube(.25,12.5,.25,x+side*2.90,7.35,z,gold);
   }
   // Skybridges: slim separate elements with no embedded coplanar facades.
   for(const side of [-1,1]){
@@ -74,8 +93,9 @@ export function createBusinessHeadquarters(island, THREE) {
   // High-contrast luxury violet promenade, no overlapping floor layers.
   for(const x of [-5.7,5.7]){
     cube(2.9,.26,3.5,x,.44,8.5,lavender);
-    cyl(1.05,1.05,.32,28,x,.65,8.5,gold);
-    cyl(.82,.82,.10,28,x,.88,8.5,violet);
+    cyl(1.05,1.05,.20,28,x,.58,8.5,gold);
+    cyl(.82,.82,.08,28,x,.72,8.5,green);
+    for(const dx of [-.42,.42])add(new THREE.IcosahedronGeometry(.37,1),green,x+dx,1.08,8.5);
   }
   // No intersecting ribbon meshes on the tower corners: keep a clean futuristic silhouette.
   // Official supplied logo, untouched original texture, mounted on its own freestanding sign.
