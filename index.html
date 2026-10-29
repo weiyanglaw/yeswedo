@@ -2023,6 +2023,7 @@ const wy201Ivory=new THREE.MeshStandardMaterial({color:0xf4eee3,roughness:.62});
 const wy201Gold=new THREE.MeshStandardMaterial({color:0xc4ab83,metalness:.16,roughness:.75});
 // Neutral ivory wall finishes; no yellow emissive fixtures in the entry corridor.
 const wy201Warm=new THREE.MeshBasicMaterial({color:0xf4f4f0});
+const wy204LintelNavy=new THREE.MeshStandardMaterial({color:0x193454,roughness:.65,metalness:.02});
 function wy201Box(parent,x,y,z,w,h,d,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);parent.add(m);return m;}
 // Corridor axis is east-to-west. Side walls run along z=4.80 and z=8.60.
 wy201Box(wy201Arrival,6.17,.04,6.70,7.48,.08,3.82,new THREE.MeshStandardMaterial({color:0xd8c6ab,roughness:.78}));
@@ -2047,21 +2048,41 @@ for(const z of [5.10,8.30])wy201Box(wy201Arrival,wy178DoorX,2.70,z,.20,5.40,.60,
 wy201Box(wy201Arrival,wy178DoorX,5.08,6.70,.20,.65,3.24,wy201Ivory);
 for(const z of [5.10,8.30])wy201Box(wy201Arrival,wy178DoorX+.13,2.45,z,.12,4.90,.11,wy201Gold);
 wy201Box(wy201Arrival,wy178DoorX+.14,4.78,6.70,.13,.14,3.25,wy201Gold);
+// v204: solid, non-transparent navy lintel backing; hides the pale-blue seam above the door.
+wy201Box(wy201Arrival,wy178DoorX+.225,4.99,6.70,.055,.38,3.22,wy204LintelNavy);
 // Rebuilt French suite double leaves, hinged at outer edges and opening inward.
 const wy178DoorAssembly=new THREE.Group();wy178DoorAssembly.position.set(wy178DoorX,0,wy178DoorZ);wy178DoorAssembly.rotation.y=Math.PI/2;wy201Arrival.add(wy178DoorAssembly);
 const wy3OfficeDoorPivot=new THREE.Group();wy3OfficeDoorPivot.position.x=-1.55;wy178DoorAssembly.add(wy3OfficeDoorPivot);
 const wy3OfficeDoorPivotR=new THREE.Group();wy3OfficeDoorPivotR.position.x=1.55;wy178DoorAssembly.add(wy3OfficeDoorPivotR);
-const wy3Pearl=new THREE.MeshStandardMaterial({color:0xf9f3e9,roughness:.40,metalness:.08});
-const wy3Brass=wy201Gold;
+// v204: royal navy presidential-suite leaves. Low-poly raised trim for iPhone performance;
+// all geometry is parented to the existing hinged leaves, preserving the original animation.
+const wy3Pearl=new THREE.MeshStandardMaterial({color:0x193454,roughness:.53,metalness:.06});
+const wy3Brass=new THREE.MeshStandardMaterial({color:0xd9b978,roughness:.36,metalness:.48});
+const wy204NavyInset=new THREE.MeshStandardMaterial({color:0x25496c,roughness:.57,metalness:.04});
+const wy204DeepNavy=new THREE.MeshStandardMaterial({color:0x102740,roughness:.57,metalness:.04});
+function wy204Frame(parent,cx,cy,z,w,h,thick,mat){
+ // Four independent solid raised rails; no coplanar layered panels or glass materials.
+ wy201Box(parent,cx-w/2,cy,z,thick,h,thick,mat);
+ wy201Box(parent,cx+w/2,cy,z,thick,h,thick,mat);
+ wy201Box(parent,cx,cy-h/2,z,w,thick,thick,mat);
+ wy201Box(parent,cx,cy+h/2,z,w,thick,thick,mat);
+}
 function wy201Leaf(pivot,side){
  const x=side*.775;
- const panel=wy201Box(pivot,x,2.23,0,1.54,4.46,.14,wy3Pearl);panel.userData.wy3Action='officeDoor';wy3Targets.push(panel);
- for(const yy of [1.13,3.30]){
-  wy201Box(pivot,x,yy,.085,1.30,1.65,.035,wy3Brass);
-  wy201Box(pivot,x,yy,.112,1.18,1.51,.036,wy3Pearl);
-  wy201Box(pivot,x,yy,.139,1.03,1.35,.018,new THREE.MeshStandardMaterial({color:0xf1e6d3,roughness:.62}));
+ const panel=wy201Box(pivot,x,2.23,0,1.54,4.46,.18,wy3Pearl);
+ panel.userData.wy3Action='officeDoor';wy3Targets.push(panel);
+ // Thick navy door slab, perimeter brass trim, and two recessed relief fields.
+ wy204Frame(pivot,x,2.23,.116,1.39,4.26,.075,wy3Brass);
+ wy204Frame(pivot,x,2.23,.155,1.22,4.08,.032,wy204DeepNavy);
+ for(const [yy,hh] of [[3.33,1.78],[1.19,1.63]]){
+  wy201Box(pivot,x,yy,.111,1.11,hh,.022,wy204NavyInset);
+  wy204Frame(pivot,x,yy,.156,1.11,hh,.052,wy3Brass);
+  wy204Frame(pivot,x,yy,.192,.95,hh-.16,.024,wy204DeepNavy);
  }
- const h=wy201Box(pivot,side*1.38,2.19,.20,.07,.65,.11,wy3Brass);h.userData.wy3Action='officeDoor';wy3Targets.push(h);
+ // Distinct metal handles near the meeting edge, no crossing rails or decorative rings.
+ const h=wy201Box(pivot,side*1.38,2.17,.252,.075,.62,.10,wy3Brass);
+ h.userData.wy3Action='officeDoor';wy3Targets.push(h);
+ wy201Box(pivot,side*1.38,2.17,.199,.16,.77,.035,wy204DeepNavy);
 }
 wy201Leaf(wy3OfficeDoorPivot,1);wy201Leaf(wy3OfficeDoorPivotR,-1);
 // v203: Door lintel intentionally clear; no crest, medallion or crown.
@@ -2075,6 +2096,8 @@ wy198Ctx.fillStyle='#fff4db';wy198Ctx.font='bold 83px sans-serif';wy198Ctx.fillT
 wy198Ctx.fillStyle='#e4c589';wy198Ctx.font='bold 49px sans-serif';wy198Ctx.fillText('點擊重新觀看',384,710);
 const wy198SignTex=new THREE.CanvasTexture(wy198SignCanvas);wy198SignTex.colorSpace=THREE.SRGBColorSpace;
 const wy198Sign=new THREE.Mesh(new THREE.BoxGeometry(1.26,1.60,.12),new THREE.MeshStandardMaterial({map:wy198SignTex,roughness:.38}));wy198SignGroup.add(wy198Sign);wy198Sign.userData.wy3Action='wall';wy3Targets.push(wy198Sign);
+// v205: generous invisible hit area; the plaque's visible dimensions and finish are unchanged.
+const wy205SignHit=new THREE.Mesh(new THREE.BoxGeometry(1.82,2.12,.14),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}));wy205SignHit.position.z=.025;wy205SignHit.userData.wy3Action='wall';wy198SignGroup.add(wy205SignHit);wy3Targets.push(wy205SignHit);
 const wy180HallObjects=wy3Root.children.slice(wy180HallStart);
 const wy180ElevatorRoot=wyGlassCabins[3].root;
 // Independent sliding lift panels: fully hidden after opening and in office overview.
@@ -2129,7 +2152,7 @@ const wy3LogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png
 // v203: same original artwork on both door leaves; each moves with its own hinge.
 for(const [pivot,side] of [[wy3OfficeDoorPivot,1],[wy3OfficeDoorPivotR,-1]]){
  const logo=new THREE.Mesh(new THREE.PlaneGeometry(1.02,1.02),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));
- logo.position.set(side*.775,3.35,.173);logo.userData.wy3Action='officeDoor';pivot.add(logo);wy3Targets.push(logo);
+ logo.position.set(side*.775,3.35,.224);logo.userData.wy3Action='officeDoor';pivot.add(logo);wy3Targets.push(logo);
 }
 const wy3DeskLogo=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DeskLogo.position.set(0,.62,-.352);wy3Root.add(wy3DeskLogo);
 // Working desktop: monitor, keyboard, folders, lamp, work pad.
@@ -2429,7 +2452,15 @@ function wyElevatorTick(dt){
   wy3Cam.position.set(x,2.42,6.70+.024*Math.sin(walking*24)*Math.sin(Math.PI*walking));
   wy3Cam.lookAt(2.55,2.55,6.84);
   if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(x,.08,6.70);}
-  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;wy3Cam.position.set(7.72,2.42,6.70);wy3Cam.lookAt(2.55,2.55,6.84);wy3Orbit.target.set(2.55,2.55,6.84);wy3Orbit.minDistance=5.15;wy3Orbit.maxDistance=5.25;wy3Orbit.enablePan=false;wy3Orbit.minAzimuthAngle=Math.PI/2-.82;wy3Orbit.maxAzimuthAngle=Math.PI/2+.82;wy3Orbit.minPolarAngle=Math.PI*.36;wy3Orbit.maxPolarAngle=Math.PI*.64;wy3Orbit.enabled=true;wy3UpdatePrompts();}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;wy3Cam.position.set(7.72,2.42,6.70);wy3Cam.lookAt(2.55,2.55,6.84);// v205: stationary first-person look-around, not an orbit around the distant office door.
+   // The small camera-to-target radius keeps the eye inside the finished vestibule.
+   wy3Orbit.target.set(7.56,2.42,6.70);wy3Orbit.minDistance=.16;wy3Orbit.maxDistance=.16;
+   wy3Orbit.enablePan=false;wy3Orbit.enableZoom=false;wy3Orbit.enableRotate=true;
+   wy3Orbit.rotateSpeed=.58;wy3Orbit.enableDamping=true;wy3Orbit.dampingFactor=.11;
+   // Allow looking at both side walls / WELCOME plaque, but not turning behind the lift.
+   wy3Orbit.minAzimuthAngle=Math.PI/2-1.18;wy3Orbit.maxAzimuthAngle=Math.PI/2+1.18;
+   wy3Orbit.minPolarAngle=Math.PI*.27;wy3Orbit.maxPolarAngle=Math.PI*.73;
+   wy3Orbit.enabled=true;wy3Orbit.update();wy3UpdatePrompts();}
  }
 
  if(wyOfficeFloor===3){
@@ -2444,7 +2475,7 @@ function wyElevatorTick(dt){
    wy3Cam.position.copy(a.startPos).lerp(overviewPos,e);
    wy3Orbit.target.copy(a.startTarget).lerp(overviewTarget,e);
    wy3Cam.lookAt(wy3Orbit.target);
-   if(t>=1){wy177Reveal=null;wy3Cam.fov=49;wy3Cam.updateProjectionMatrix();wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minPolarAngle=0;wy3Orbit.maxPolarAngle=Math.PI*.80;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enabled=true;wy3Orbit.update();wyWalkUI.style.display='';if(wyIndoorActor)wyIndoorActor.visible=true;}
+   if(t>=1){wy177Reveal=null;wy3Cam.fov=49;wy3Cam.updateProjectionMatrix();wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minPolarAngle=0;wy3Orbit.maxPolarAngle=Math.PI*.80;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enableZoom=true;wy3Orbit.rotateSpeed=1;wy3Orbit.enabled=true;wy3Orbit.update();wyWalkUI.style.display='';if(wyIndoorActor)wyIndoorActor.visible=true;}
   }
   if(wy3AutoWalk&&wy3DoorProgress>.92&&wyIndoorActor&&!wyRide){
    const p=wyIndoorActor.position;
@@ -2529,7 +2560,7 @@ function wyLobbyOpen(action){
  if(action==='floor3')html='<p>3F 老闆今天在嗎？已開放參觀。</p><button data-lb="floor3">搭電梯前往3F</button>'; 
  wyLobbyDialog.innerHTML='<h3 style="margin:0 0 8px">'+head+'</h3>'+html+'<button data-lb="close">關閉</button>';
  wyLobbyDialog.querySelectorAll('button').forEach(b=>{b.style.cssText='display:block;width:100%;margin:9px 0;padding:11px;background:#284967;color:white;border:0;border-radius:10px;font-weight:700';b.onclick=()=>{
- const a=b.dataset.lb;if(a==='close'){if(wyOfficeFloor===3&&wy180AtOffice===false&&!wy3ArrivalAnim&&!wyRide){wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enabled=true;wyWalkUI.style.display='';}wyLobbyDialog.style.display='none';return}if(a==='return3f'){wyLobbyDialog.style.display='none';wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enabled=true;wyWalkUI.style.display='';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
+ const a=b.dataset.lb;if(a==='close'){if(wyOfficeFloor===3&&wy180AtOffice===false&&!wy3ArrivalAnim&&!wyRide){wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enableZoom=true;wy3Orbit.rotateSpeed=1;wy3Orbit.enabled=true;wyWalkUI.style.display='';}wyLobbyDialog.style.display='none';return}if(a==='return3f'){wyLobbyDialog.style.display='none';wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enableZoom=true;wy3Orbit.rotateSpeed=1;wy3Orbit.enabled=true;wyWalkUI.style.display='';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
  if(a==='about'){wyLobbyDialog.style.display='none';openWyInfo('company');return}wyLobbyOpen(a);
  }});wyLobbyDialog.style.display='block';
 }
@@ -2570,7 +2601,7 @@ wyTouchCanvas.addEventListener('pointermove',e=>{
  if(!wyTouchPoints.has(e.pointerId))return;
  wyTouchPoints.set(e.pointerId,{x:e.clientX,y:e.clientY});
  const angle=wyTouchAngle(),control=wyActiveViewControl();
- if(angle!==null&&wyTwistAngle!==null&&control){
+ if(angle!==null&&wyTwistAngle!==null&&control&&!(insideOffice&&wyOfficeFloor===3&&!wy180AtOffice)){
   let delta=angle-wyTwistAngle;
   while(delta>Math.PI)delta-=2*Math.PI;
   while(delta< -Math.PI)delta+=2*Math.PI;
