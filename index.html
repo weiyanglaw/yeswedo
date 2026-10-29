@@ -2064,20 +2064,9 @@ function wy201Leaf(pivot,side){
  const h=wy201Box(pivot,side*1.38,2.19,.20,.07,.65,.11,wy3Brass);h.userData.wy3Action='officeDoor';wy3Targets.push(h);
 }
 wy201Leaf(wy3OfficeDoorPivot,1);wy201Leaf(wy3OfficeDoorPivotR,-1);
-// v202: a clean oval champagne-gold WY medallion replaces the old crown completely.
-// A single texture-backed face avoids tiny overlapping primitives and brown metallic shading.
-const wy202Medallion=new THREE.Group();wy202Medallion.position.set(wy178DoorX+.23,5.02,wy178DoorZ);wy202Medallion.rotation.y=Math.PI/2;wy201Arrival.add(wy202Medallion);
-const wy202Oval=new THREE.Shape();wy202Oval.absellipse(0,0,.76,.34,0,Math.PI*2,false,0);
-const wy202Back=new THREE.Mesh(new THREE.ExtrudeGeometry(wy202Oval,{depth:.045,bevelEnabled:true,bevelThickness:.014,bevelSize:.014,bevelSegments:2,curveSegments:48}),new THREE.MeshBasicMaterial({color:0xb79b73}));wy202Back.position.z=.025;wy202Medallion.add(wy202Back);
-const wy202Canvas=document.createElement('canvas');wy202Canvas.width=1024;wy202Canvas.height=512;
-const wy202Ctx=wy202Canvas.getContext('2d');wy202Ctx.clearRect(0,0,1024,512);
-wy202Ctx.beginPath();wy202Ctx.ellipse(512,256,486,219,0,0,Math.PI*2);wy202Ctx.fillStyle='#faf8f3';wy202Ctx.fill();wy202Ctx.lineWidth=27;wy202Ctx.strokeStyle='#b79b73';wy202Ctx.stroke();
-wy202Ctx.beginPath();wy202Ctx.ellipse(512,256,447,183,0,0,Math.PI*2);wy202Ctx.lineWidth=7;wy202Ctx.strokeStyle='#d3c2a7';wy202Ctx.stroke();
-wy202Ctx.font='bold 228px Georgia, serif';wy202Ctx.textAlign='center';wy202Ctx.textBaseline='middle';wy202Ctx.fillStyle='#887252';wy202Ctx.fillText('WY',512,270);
-const wy202Texture=new THREE.CanvasTexture(wy202Canvas);wy202Texture.colorSpace=THREE.SRGBColorSpace;
-const wy202Face=new THREE.Mesh(new THREE.PlaneGeometry(1.51,.69),new THREE.MeshBasicMaterial({map:wy202Texture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy202Face.position.z=.105;wy202Face.renderOrder=5;wy202Medallion.add(wy202Face);
+// v203: Door lintel intentionally clear; no crest, medallion or crown.
 // Door-side plaque: on the viewer's RIGHT (north wall, positive Z), not left.
-const wy198SignGroup=new THREE.Group();wy198SignGroup.position.set(4.20,2.57,8.43);wy198SignGroup.rotation.y=Math.PI;wy201Arrival.add(wy198SignGroup);
+const wy198SignGroup=new THREE.Group();wy198SignGroup.position.set(5.15,2.57,4.96);wy198SignGroup.rotation.y=0;wy201Arrival.add(wy198SignGroup);
 const wy198SignCanvas=document.createElement('canvas');wy198SignCanvas.width=768;wy198SignCanvas.height=960;
 const wy198Ctx=wy198SignCanvas.getContext('2d');wy198Ctx.fillStyle='#112b4d';wy198Ctx.fillRect(0,0,768,960);
 wy198Ctx.strokeStyle='#e9c57b';wy198Ctx.lineWidth=42;wy198Ctx.strokeRect(24,24,720,912);wy198Ctx.strokeStyle='#b38b4b';wy198Ctx.lineWidth=7;wy198Ctx.strokeRect(63,64,642,832);
@@ -2102,7 +2091,7 @@ for(const d of wyGlassCabins[3].doors)d.pivot.visible=false;
 function wy180SetOfficeView(inOffice){
  wy180AtOffice=!!inOffice;
  for(const o of wy180HallObjects)o.visible=!inOffice;
- wy180ElevatorRoot.visible=!inOffice;
+ wy180ElevatorRoot.visible=false; // v203: never render legacy glass cabin on 3F
  for(const d of wy198SlideDoors)d.group.visible=false;
  wy180OfficePortal.visible=!!inOffice;
  wy180Welcome.visible=!!inOffice;
@@ -2137,7 +2126,11 @@ for(const x of [-3.1,3.1])wy3Box(x,.72,-1.55,.10,1.26,2.2,wy3Gold);
 wy3Box(0,1.09,-.35,6.25,.085,.13,wy3Gold);
 // Actual unmodified official WY image on front-facing center, not a redraw.
 const wy3LogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png');wy3LogoTexture.colorSpace=THREE.SRGBColorSpace;
-const wy3DoorLogo=new THREE.Mesh(new THREE.PlaneGeometry(.52,.52),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DoorLogo.position.set(.775,3.64,.209);wy3DoorLogo.userData.wy3Action='officeDoor';wy3OfficeDoorPivot.add(wy3DoorLogo);wy3Targets.push(wy3DoorLogo);
+// v203: same original artwork on both door leaves; each moves with its own hinge.
+for(const [pivot,side] of [[wy3OfficeDoorPivot,1],[wy3OfficeDoorPivotR,-1]]){
+ const logo=new THREE.Mesh(new THREE.PlaneGeometry(1.02,1.02),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+ logo.position.set(side*.775,3.35,.173);logo.userData.wy3Action='officeDoor';pivot.add(logo);wy3Targets.push(logo);
+}
 const wy3DeskLogo=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DeskLogo.position.set(0,.62,-.352);wy3Root.add(wy3DeskLogo);
 // Working desktop: monitor, keyboard, folders, lamp, work pad.
 wy3Box(0,1.272,-1.73,2.4,.018,.92,'#4e6970');wy3Box(.25,1.63,-2.18,1.35,.75,.11,'#304b59');wy3Box(.25,1.66,-2.11,1.21,.62,.025,'#a6c6cf');wy3Box(.25,1.32,-2.14,.12,.20,.12,'#cba665');wy3Box(.1,1.285,-1.65,.85,.025,.28,'#e8e4db');
@@ -2241,7 +2234,7 @@ const wy180Welcome=wy3Label('WELCOME｜辦公室介紹',8.95,2.55,4.16,1.75,.32)
 wy180Welcome.userData.wy3Action='wall';wy3Targets.push(wy180Welcome);wy180Welcome.visible=false;
 const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal&&!wy198SlideDoors.some(d=>d.group===o));
 wy180SetOfficeView(false);
-const wy3IntroKey='weiyang-3f-office-raid-ack-v198';
+const wy3IntroKey='weiyang-3f-office-raid-ack-v203';
 let wy3IntroSeen=false,wy3OfficeUnlocked=false,wy3OfficeDoorOpened=false,wy3DoorProgress=0,wy3AutoWalk=false;
 let wy177Reveal=null;
 try{wy3IntroSeen=localStorage.getItem(wy3IntroKey)==='yes'}catch(e){}
@@ -2265,7 +2258,7 @@ wy3WallPrompt.onclick=wy3ShowIntro;
 function wy3OpenDoor(){if(wy3ArrivalAnim||wyRide)return;if(!wy3OfficeUnlocked){wy3ShowIntro();return}if(wyIndoorActor){wyIndoorActor.position.set(7.72,.08,6.70);wyIndoorActor.visible=false;}wy3Orbit.enabled=false;wy3OfficeDoorOpened=true;wy3AutoWalk=true;wy177Reveal=null;wy3DoorProgress=0;wy3DoorPrompt.style.display='none';}
 wy3DoorPrompt.onclick=wy3OpenDoor;
 const wy3ArrivalKey='weiyang-3f-arrival-v165';let wy3ArrivalPlayed=localStorage.getItem(wy3ArrivalKey)==='yes';let wy3ArrivalAnim=null;
-function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy180SetOfficeView(false);wy3ArrivalAnim={t:0};wy180ElevatorRoot.visible=true;wy198Slide(0);wy3Cam.position.set(9.15,2.42,6.70);wy3Cam.lookAt(2.55,2.55,6.70);if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=82;wy3Cam.updateProjectionMatrix();}
+function wy3PlayArrival(){if(!insideOffice||wyOfficeFloor!==3)return;wy180SetOfficeView(false);wy3ArrivalAnim={t:0};wy180ElevatorRoot.visible=false;wy198Slide(0);wy3Cam.position.set(9.15,2.42,6.70);wy3Cam.lookAt(2.55,2.55,6.70);if(wyIndoorActor)wyIndoorActor.visible=false;wy3Orbit.enabled=false;wyDoorOpen=0;wyWalkUI.style.display='none';wy3DoorPrompt.style.display='none';wy3Cam.fov=82;wy3Cam.updateProjectionMatrix();}
 const wy166LawyerStops=[{x:0,z:-4.1,d:5},{x:-2.8,z:-3.6,d:4},{x:-3.0,z:-5.6,d:5},{x:0,z:-5.6,d:6},{x:2.5,z:-5.6,d:4},{x:2.7,z:-3.8,d:5}];
 let wy166LawyerIndex=0,wy166LawyerWait=3,wy166LawyerPhase=0;
 function wy166LawyerTick(dt){
@@ -2419,14 +2412,14 @@ function wyElevatorTick(dt){
   wy3Cam.position.copy(a.start).lerp(new THREE.Vector3(8.4,2.35,5.55),q);
   wy3Orbit.target.copy(a.look).lerp(new THREE.Vector3(9.9,2.35,5.55),q);
   wy3Cam.lookAt(wy3Orbit.target);
-  if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=true;wy198SlideDoors.forEach(d=>d.group.visible=false);wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
+  if(a.t>=1){wy180ExitAnim=null;wy180SetOfficeView(false);wy180ElevatorRoot.visible=false;wy198SlideDoors.forEach(d=>d.group.visible=false);wy3Cam.position.set(7.2,2.4,6.7);wy3Cam.lookAt(9.1,2.45,6.7);wyLobbyOpen('elevator');}
  }
  if(wy3ArrivalAnim&&wyOfficeFloor===3){
   const a=wy3ArrivalAnim;
   if(!a.waiting)a.t=Math.min(1,a.t+dt/5.6);
   const t=a.t;
   const slide=Math.min(1,Math.max(0,(t-.06)/.25));const easeSlide=slide*slide*(3-2*slide);
-  wy198Slide(easeSlide);if(easeSlide>=.995)wy180ElevatorRoot.visible=false;wyDoorOpen=0;
+  wy198Slide(easeSlide);wy180ElevatorRoot.visible=false;wyDoorOpen=0;
   if(t>=.36&&!a.introChecked){a.introChecked=true;if(!wy3IntroSeen){a.waiting=true;wy3ShowIntro();}}
   // Fixed eye-height, straight sightline; physically advance from inside the cabin
   // to the distant French door across a several-meter continuous palace corridor.
@@ -2436,7 +2429,7 @@ function wyElevatorTick(dt){
   wy3Cam.position.set(x,2.42,6.70+.024*Math.sin(walking*24)*Math.sin(Math.PI*walking));
   wy3Cam.lookAt(2.55,2.55,6.84);
   if(wyIndoorActor){wyIndoorActor.visible=false;wyIndoorActor.position.set(x,.08,6.70);}
-  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;wy3Cam.position.set(7.72,2.42,6.70);wy3Cam.lookAt(2.55,2.55,6.84);wy3Orbit.target.set(2.55,2.55,6.84);wy3Orbit.minDistance=4.7;wy3Orbit.maxPolarAngle=Math.PI*.80;wy3Orbit.enabled=true;wy3UpdatePrompts();}
+  if(t>=1){wy3ArrivalAnim=null;wy3Orbit.enabled=false;wy3Cam.position.set(7.72,2.42,6.70);wy3Cam.lookAt(2.55,2.55,6.84);wy3Orbit.target.set(2.55,2.55,6.84);wy3Orbit.minDistance=5.15;wy3Orbit.maxDistance=5.25;wy3Orbit.enablePan=false;wy3Orbit.minAzimuthAngle=Math.PI/2-.82;wy3Orbit.maxAzimuthAngle=Math.PI/2+.82;wy3Orbit.minPolarAngle=Math.PI*.36;wy3Orbit.maxPolarAngle=Math.PI*.64;wy3Orbit.enabled=true;wy3UpdatePrompts();}
  }
 
  if(wyOfficeFloor===3){
@@ -2451,7 +2444,7 @@ function wyElevatorTick(dt){
    wy3Cam.position.copy(a.startPos).lerp(overviewPos,e);
    wy3Orbit.target.copy(a.startTarget).lerp(overviewTarget,e);
    wy3Cam.lookAt(wy3Orbit.target);
-   if(t>=1){wy177Reveal=null;wy3Cam.fov=49;wy3Cam.updateProjectionMatrix();wy3Orbit.enabled=true;wy3Orbit.update();wyWalkUI.style.display='';if(wyIndoorActor)wyIndoorActor.visible=true;}
+   if(t>=1){wy177Reveal=null;wy3Cam.fov=49;wy3Cam.updateProjectionMatrix();wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minPolarAngle=0;wy3Orbit.maxPolarAngle=Math.PI*.80;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enabled=true;wy3Orbit.update();wyWalkUI.style.display='';if(wyIndoorActor)wyIndoorActor.visible=true;}
   }
   if(wy3AutoWalk&&wy3DoorProgress>.92&&wyIndoorActor&&!wyRide){
    const p=wyIndoorActor.position;
@@ -2536,7 +2529,7 @@ function wyLobbyOpen(action){
  if(action==='floor3')html='<p>3F 老闆今天在嗎？已開放參觀。</p><button data-lb="floor3">搭電梯前往3F</button>'; 
  wyLobbyDialog.innerHTML='<h3 style="margin:0 0 8px">'+head+'</h3>'+html+'<button data-lb="close">關閉</button>';
  wyLobbyDialog.querySelectorAll('button').forEach(b=>{b.style.cssText='display:block;width:100%;margin:9px 0;padding:11px;background:#284967;color:white;border:0;border-radius:10px;font-weight:700';b.onclick=()=>{
- const a=b.dataset.lb;if(a==='close'){if(wyOfficeFloor===3&&wy180AtOffice===false&&!wy3ArrivalAnim&&!wyRide){wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.enabled=true;wyWalkUI.style.display='';}wyLobbyDialog.style.display='none';return}if(a==='return3f'){wyLobbyDialog.style.display='none';wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.enabled=true;wyWalkUI.style.display='';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
+ const a=b.dataset.lb;if(a==='close'){if(wyOfficeFloor===3&&wy180AtOffice===false&&!wy3ArrivalAnim&&!wyRide){wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enabled=true;wyWalkUI.style.display='';}wyLobbyDialog.style.display='none';return}if(a==='return3f'){wyLobbyDialog.style.display='none';wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enabled=true;wyWalkUI.style.display='';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
  if(a==='about'){wyLobbyDialog.style.display='none';openWyInfo('company');return}wyLobbyOpen(a);
  }});wyLobbyDialog.style.display='block';
 }
