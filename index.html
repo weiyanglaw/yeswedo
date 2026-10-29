@@ -2003,7 +2003,7 @@ const wy3ArrivalPlaque=wy3Box(9.72,1.65,5.75,.12,.72,1.05,'#d6b16d','arrivalRepl
 
 function wy3Cyl(x,y,z,top,bottom,h,c){const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,18),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);return m}
 function wy3Label(str,x,y,z,w=3.2,h=.55){const cv=document.createElement('canvas');cv.width=1024;cv.height=160;const c=cv.getContext('2d');c.fillStyle='#f7f0e2';c.fillRect(0,0,1024,160);c.strokeStyle='#c9a361';c.lineWidth=15;c.strokeRect(8,8,1008,144);c.fillStyle='#385363';c.textAlign='center';c.textBaseline='middle';c.font='bold 55px sans-serif';c.fillText(str,512,81,960);const tx=new THREE.CanvasTexture(cv);tx.colorSpace=THREE.SRGBColorSpace;const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tx,side:THREE.DoubleSide}));m.position.set(x,y,z);wy3Root.add(m);return m}
-const wy3ArrivalLabel=wy3Label('再來一次華麗出場',9.61,2.15,5.75,1.35,.36);wy3ArrivalLabel.userData.wy3Action='arrivalReplay';wy3Targets.push(wy3ArrivalLabel);
+const wy3ArrivalLabel=wy3Label('再來一次華麗出場',9.61,2.15,5.75,1.35,.36);wy3ArrivalLabel.visible=false; // v206: remove floating white replay marker
 // v160: 3F privacy vestibule at south-east, actual partition and independent office door.
 // Elevator stays on the far right; a privacy wall faces the visitor on arrival.
 wy3Box(0,-.18,0,20,.36,17.5,'#d9d1c4'); // warm grey-beige stone
@@ -2049,7 +2049,7 @@ wy201Box(wy201Arrival,wy178DoorX,5.08,6.70,.20,.65,3.24,wy201Ivory);
 for(const z of [5.10,8.30])wy201Box(wy201Arrival,wy178DoorX+.13,2.45,z,.12,4.90,.11,wy201Gold);
 wy201Box(wy201Arrival,wy178DoorX+.14,4.78,6.70,.13,.14,3.25,wy201Gold);
 // v204: solid, non-transparent navy lintel backing; hides the pale-blue seam above the door.
-wy201Box(wy201Arrival,wy178DoorX+.225,4.99,6.70,.055,.38,3.22,wy204LintelNavy);
+// v206: no added cover plate; doorway proportions are resolved by full-height door leaves.
 // Rebuilt French suite double leaves, hinged at outer edges and opening inward.
 const wy178DoorAssembly=new THREE.Group();wy178DoorAssembly.position.set(wy178DoorX,0,wy178DoorZ);wy178DoorAssembly.rotation.y=Math.PI/2;wy201Arrival.add(wy178DoorAssembly);
 const wy3OfficeDoorPivot=new THREE.Group();wy3OfficeDoorPivot.position.x=-1.55;wy178DoorAssembly.add(wy3OfficeDoorPivot);
@@ -2069,11 +2069,11 @@ function wy204Frame(parent,cx,cy,z,w,h,thick,mat){
 }
 function wy201Leaf(pivot,side){
  const x=side*.775;
- const panel=wy201Box(pivot,x,2.23,0,1.54,4.46,.18,wy3Pearl);
+ const panel=wy201Box(pivot,x,2.35,0,1.54,4.70,.18,wy3Pearl);
  panel.userData.wy3Action='officeDoor';wy3Targets.push(panel);
  // Thick navy door slab, perimeter brass trim, and two recessed relief fields.
- wy204Frame(pivot,x,2.23,.116,1.39,4.26,.075,wy3Brass);
- wy204Frame(pivot,x,2.23,.155,1.22,4.08,.032,wy204DeepNavy);
+ wy204Frame(pivot,x,2.35,.116,1.39,4.49,.075,wy3Brass);
+ wy204Frame(pivot,x,2.35,.155,1.22,4.31,.032,wy204DeepNavy);
  for(const [yy,hh] of [[3.33,1.78],[1.19,1.63]]){
   wy201Box(pivot,x,yy,.111,1.11,hh,.022,wy204NavyInset);
   wy204Frame(pivot,x,yy,.156,1.11,hh,.052,wy3Brass);
@@ -2116,8 +2116,8 @@ function wy180SetOfficeView(inOffice){
  for(const o of wy180HallObjects)o.visible=!inOffice;
  wy180ElevatorRoot.visible=false; // v203: never render legacy glass cabin on 3F
  for(const d of wy198SlideDoors)d.group.visible=false;
- wy180OfficePortal.visible=!!inOffice;
- wy180Welcome.visible=!!inOffice;
+ wy180OfficePortal.visible=false; // v206: remove duplicate indoor door/portal
+ wy180Welcome.visible=false; // v206: remove duplicate indoor WELCOME protrusion
  if(inOffice)wy181ExitHinge.rotation.y=0;
  for(const o of wy180OfficeContents)o.visible=!!inOffice;
 }
@@ -2222,7 +2222,7 @@ const wy180PortalMat=new THREE.MeshPhysicalMaterial({color:0xf2eee5,roughness:.2
 function wy180PortalPart(w,h,d,x,y,z,mat,action){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);wy180OfficePortal.add(m);if(action){m.userData.wy3Action=action;wy3Targets.push(m)}return m}
 const wy181ExitHinge=new THREE.Group();wy181ExitHinge.position.set(-.91,0,0);wy180OfficePortal.add(wy181ExitHinge);
 const wy181ExitLeaf=new THREE.Mesh(new THREE.BoxGeometry(1.82,3.85,.13),wy180PortalMat);
-wy181ExitLeaf.position.set(.91,2,0);wy181ExitLeaf.userData.wy3Action='exit3f';wy181ExitHinge.add(wy181ExitLeaf);wy3Targets.push(wy181ExitLeaf);
+wy181ExitLeaf.position.set(.91,2,0);wy181ExitLeaf.userData.wy3Action='exit3f';wy181ExitHinge.add(wy181ExitLeaf);// v206: indoor duplicate exit leaf is not a click target
 const wy181Inset=new THREE.Mesh(new THREE.BoxGeometry(1.55,3.55,.035),wy3Brass);wy181Inset.position.set(.91,2,.085);wy181ExitHinge.add(wy181Inset);
 const wy181Inner=new THREE.Mesh(new THREE.BoxGeometry(1.44,3.44,.04),wy180PortalMat);wy181Inner.position.set(.91,2,.109);wy181ExitHinge.add(wy181Inner);
 for(const x of [-.99,.99])wy180PortalPart(.065,4.1,.22,x,2.05,.04,wy3Brass);
@@ -2252,9 +2252,9 @@ for(const xx of [-1.12,1.12]){
 }
 wy180PortalPart(2.32,.20,.32,0,4.30,.04,wy186Gold);
 wy186Relief(wy180OfficePortal,0,4.48,.23,1.32);
-const wy181Handle=wy180PortalPart(.08,.65,.13,.59,2.0,.16,wy3Brass,'exit3f');wy180OfficePortal.remove(wy181Handle);wy181ExitHinge.add(wy181Handle);
+const wy181Handle=wy180PortalPart(.08,.65,.13,.59,2.0,.16,wy3Brass,'exit3f');wy180OfficePortal.remove(wy181Handle);wy181ExitHinge.add(wy181Handle);wy3Targets.splice(wy3Targets.indexOf(wy181Handle),1);
 const wy180Welcome=wy3Label('WELCOME｜辦公室介紹',8.95,2.55,4.16,1.75,.32);
-wy180Welcome.userData.wy3Action='wall';wy3Targets.push(wy180Welcome);wy180Welcome.visible=false;
+wy180Welcome.visible=false; // v206: no interior sign or replay click target
 const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal&&!wy198SlideDoors.some(d=>d.group===o));
 wy180SetOfficeView(false);
 const wy3IntroKey='weiyang-3f-office-raid-ack-v203';
@@ -2294,7 +2294,7 @@ function wy166LawyerTick(dt){
 function wy3Enter(){wy180SetOfficeView(false);wy3Cam.fov=82;wy3Cam.updateProjectionMatrix();wy177Reveal=null;wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
 function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display=(active&&!wy180AtOffice&&!wy3OfficeDoorOpened&&!wy3ArrivalAnim&&!wyRide&&wy3Intro.style.display!=='flex')?'block':'none'}
 function wy3Interact(action){
- if(action==='wall'){wy3ShowIntro();return}
+ if(action==='wall'){if(!wy180AtOffice)wy3ShowIntro();return}
  if(action==='exit3f'){wy180ExitOffice();return}
  if(action==='arrivalReplay'){wy3PlayArrival();return}
  if(action==='elevator'){wyLobbyOpen('elevator');return}
