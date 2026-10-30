@@ -2345,15 +2345,22 @@ wy3Cyl(7.75,1.98,-1.37,.13,.13,.18,'#d6dedb');wy3Box(7.75,1.82,-1.37,.14,.27,.12
 const wy223TeaObjects=wy3Root.children.slice(wy223TeaStart);
 const wy223TeaStation=new THREE.Group();wy223TeaStation.position.set(8.55,0,-1.70);wy223TeaStation.rotation.y=-Math.PI/2;wy3Root.add(wy223TeaStation);
 for(const o of wy223TeaObjects){wy3Root.remove(o);o.position.x-=7.75;o.position.z+=1.95;wy223TeaStation.add(o);}
-// v249: fill the height difference between the existing coffee and tea counters.
-// Keep all original machines, cups, shelves, positions, and interactive objects unchanged.
-// The tea station is rotated -90 degrees; its countertop has a 0.04-unit height difference.
-const wy249CounterTop = new THREE.Mesh(
- new THREE.BoxGeometry(3.10,.08,1.72),
+// v250: extend the *actual tea cabinet body* to the same front depth as the coffee cabinet.
+// The existing tea cabinet is 1.62 deep (front edge local z=+.81), whereas the coffee
+ // cabinet is 2.35 deep. Fill the missing front .73 units, rather than just adding a lid.
+const wy250TeaFrontBody = new THREE.Mesh(
+ new THREE.BoxGeometry(3.0,1.50,.73),
+ new THREE.MeshStandardMaterial({color:'#493023',roughness:.67})
+);
+wy250TeaFrontBody.position.set(0,.76,1.175);
+wy223TeaStation.add(wy250TeaFrontBody);
+// Single uninterrupted, full-depth tea countertop, level with coffee countertop (top=1.64).
+const wy250TeaTop = new THREE.Mesh(
+ new THREE.BoxGeometry(3.10,.12,2.45),
  new THREE.MeshStandardMaterial({color:'#c6a46b',metalness:.24,roughness:.42})
 );
-wy249CounterTop.position.set(0,1.62,0);
-wy223TeaStation.add(wy249CounterTop);
+wy250TeaTop.position.set(0,1.58,.365);
+wy223TeaStation.add(wy250TeaTop);
 // Detailed, colorful accessories are attached to the tea-station group only.
 const wy249Wood=new THREE.MeshStandardMaterial({color:'#9b623e',roughness:.55});
 const wy249Gold=new THREE.MeshStandardMaterial({color:'#d5b579',metalness:.48,roughness:.32});
@@ -2368,7 +2375,7 @@ function wy249RoundedBox(parent,x,y,z,w,h,d,mat,r=.035){
  geo.rotateX(-Math.PI/2);
  const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y-h/2,z);parent.add(mesh);return mesh;
 }
-const wy249TeaDisplay=new THREE.Group();wy249TeaDisplay.position.set(-.67,1.77,.26);wy223TeaStation.add(wy249TeaDisplay);
+const wy249TeaDisplay=new THREE.Group();wy249TeaDisplay.position.set(-.69,1.77,1.13);wy223TeaStation.add(wy249TeaDisplay);
 wy249RoundedBox(wy249TeaDisplay,0,.01,0,.92,.12,.49,wy249Wood);
 for(let i=0;i<6;i++){
  const pack=new THREE.Group();pack.position.set(-.36+i*.145,.20,-.025);pack.rotation.x=-.18;wy249TeaDisplay.add(pack);
@@ -2376,7 +2383,7 @@ for(let i=0;i<6;i++){
  const band=new THREE.Mesh(new THREE.BoxGeometry(.10,.022,.079),new THREE.MeshStandardMaterial({color:'#fff4db'}));band.position.set(0,.04,.005);pack.add(band);
  const emblem=new THREE.Mesh(new THREE.SphereGeometry(.021,10,8),wy249Gold);emblem.position.set(0,.11,.047);pack.add(emblem);
 }
-const wy249SugarDisplay=new THREE.Group();wy249SugarDisplay.position.set(.70,1.76,.25);wy223TeaStation.add(wy249SugarDisplay);
+const wy249SugarDisplay=new THREE.Group();wy249SugarDisplay.position.set(.71,1.76,1.13);wy223TeaStation.add(wy249SugarDisplay);
 wy249RoundedBox(wy249SugarDisplay,0,.01,0,.65,.11,.38,wy249Gold);
 for(let i=0;i<4;i++){
  const pack=new THREE.Group();pack.position.set(-.225+i*.15,.17,0);pack.rotation.z=(i-1.5)*.045;wy249SugarDisplay.add(pack);
@@ -2417,7 +2424,46 @@ wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 // v246: lounge placement only. The short chaise shares the +X wall with the coffee/tea station,
 // farther down that wall; long section runs perpendicular, both seats face the inside tables.
 // No changes to the existing coffee/tea station, door or other furnishings.
-wy3Box(6.33,.035,3.72,4.40,.055,3.55,'#c8b5a0');
+// v251: the original lounge rug moves with the v249 sofa, preserving its footprint.
+// All decorative colors are baked into ONE opaque CanvasTexture on ONE mesh;
+// no overlapping coplanar decals, transparency, animated layers or z-fighting.
+const wy251RugCanvas=document.createElement('canvas');
+wy251RugCanvas.width=1024;wy251RugCanvas.height=832;
+const wy251Ctx=wy251RugCanvas.getContext('2d');
+const rc=wy251Ctx,W=1024,H=832;
+rc.fillStyle='#eee3d2';rc.fillRect(0,0,W,H);
+function wy251Frame(pad,line,width){rc.strokeStyle=line;rc.lineWidth=width;rc.strokeRect(pad,pad,W-pad*2,H-pad*2);}
+wy251Frame(19,'#b58b51',18);wy251Frame(40,'#e4bc75',7);wy251Frame(62,'#927348',4);
+// Oversized jewel-tone motifs are placed around the exposed rug perimeter.
+function wy251Motif(x,y,scale,turn){
+ rc.save();rc.translate(x,y);rc.rotate(turn);rc.scale(scale,scale);
+ const colors=['#14675e','#315889','#8b465e','#d6a253'];
+ for(let i=0;i<4;i++){
+  rc.save();rc.rotate(i*Math.PI/2);rc.fillStyle=colors[i];rc.strokeStyle='#b58b51';rc.lineWidth=5;
+  rc.beginPath();rc.moveTo(0,-9);rc.bezierCurveTo(-49,-48,-48,-91,0,-113);rc.bezierCurveTo(48,-91,49,-48,0,-9);rc.closePath();rc.fill();rc.stroke();rc.restore();
+ }
+ rc.fillStyle='#e4bd77';rc.beginPath();rc.arc(0,0,23,0,Math.PI*2);rc.fill();
+ rc.strokeStyle='#f8edd6';rc.lineWidth=5;rc.beginPath();rc.arc(0,0,13,0,Math.PI*2);rc.stroke();
+ rc.restore();
+}
+wy251Motif(220,160,.66,0);wy251Motif(804,160,.66,0);
+wy251Motif(220,670,.66,Math.PI);wy251Motif(804,670,.66,Math.PI);
+wy251Motif(512,119,.60,Math.PI/4);wy251Motif(512,712,.60,Math.PI/4);
+// Wide colored border panels remain visible beside and in front of the sofa.
+for(const [x,y,c] of [[105,416,'#176c63'],[919,416,'#365d8a'],[512,210,'#86485e'],[512,625,'#176c63']]){
+ rc.save();rc.translate(x,y);rc.fillStyle=c;rc.strokeStyle='#c79e61';rc.lineWidth=7;
+ rc.beginPath();rc.moveTo(0,-51);rc.lineTo(40,0);rc.lineTo(0,51);rc.lineTo(-40,0);rc.closePath();rc.fill();rc.stroke();rc.restore();
+}
+const wy251RugTex=new THREE.CanvasTexture(wy251RugCanvas);
+wy251RugTex.colorSpace=THREE.SRGBColorSpace;
+wy251RugTex.anisotropy=8;
+const wy251RugMat=new THREE.MeshStandardMaterial({map:wy251RugTex,color:'#ffffff',roughness:.96,metalness:0,transparent:false,depthWrite:true,side:THREE.FrontSide});
+const wy251Rug=new THREE.Mesh(new THREE.BoxGeometry(4.40,.055,3.55),[
+ new THREE.MeshStandardMaterial({color:'#c3aa8b',roughness:1}),new THREE.MeshStandardMaterial({color:'#c3aa8b',roughness:1}),
+ wy251RugMat,new THREE.MeshStandardMaterial({color:'#c3aa8b',roughness:1}),
+ new THREE.MeshStandardMaterial({color:'#c3aa8b',roughness:1}),new THREE.MeshStandardMaterial({color:'#c3aa8b',roughness:1})
+]);
+wy251Rug.position.set(6.33,.035,3.72-2.55);wy3Root.add(wy251Rug);
 const wy241Sofa=new THREE.Group();wy241Sofa.position.set(0,0,0);wy3Root.add(wy241Sofa);
 const wy248LongSofa=new THREE.Group();wy241Sofa.add(wy248LongSofa);
 function wy241SofaPart(x,y,z,w,h,d,color){return wy241Part(wy241Sofa,x,y,z,w,h,d,color,.04)}
