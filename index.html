@@ -2368,7 +2368,7 @@ wy225Rainbow.forEach((color,i)=>wy225Cup(wy223CoffeeStation,(i-3)*.48,4.34,.40,c
 // It is separate from the coffee outlet and tray, so no cups block the machine's details.
 wy225Shelf(wy223CoffeeStation,1.59,1.86,3.48);
 // v247: restore the six unaffected lower mugs; omit only the bookcase-side end mug.
-wy225Rainbow.forEach((color,i)=>{if(i!==6)wy225Cup(wy223CoffeeStation,(i-3)*.48,1.83,1.86,color);});
+wy225Rainbow.forEach((color,i)=>{if(i!==0)wy225Cup(wy223CoffeeStation,(i-3)*.48,1.83,1.86,color);});
 // Tea-side tins are a single evenly spaced row, not scattered around the counter.
 wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 ['#d87956','#4e9c93','#e5b64b','#677ab6'].forEach((color,i)=>{
@@ -2381,15 +2381,17 @@ wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 // No changes to the existing coffee/tea station, door or other furnishings.
 wy3Box(6.33,.035,3.72,4.40,.055,3.55,'#c8b5a0');
 const wy241Sofa=new THREE.Group();wy241Sofa.position.set(0,0,0);wy3Root.add(wy241Sofa);
+const wy248LongSofa=new THREE.Group();wy241Sofa.add(wy248LongSofa);
 function wy241SofaPart(x,y,z,w,h,d,color){return wy241Part(wy241Sofa,x,y,z,w,h,d,color,.04)}
+function wy248LongPart(x,y,z,w,h,d,color){return wy241Part(wy248LongSofa,x,y,z,w,h,d,color,.04)}
 // v247: long sofa seats face +Z toward the office entrance; short chaise is unchanged.
-wy241SofaPart(6.32,.29,4.50,3.14,.23,1.12,'#143e36');
-wy241SofaPart(6.32,.51,4.50,3.04,.23,1.05,'#246354');
-wy241SofaPart(6.32,.91,3.94,3.12,.80,.19,'#164c41');
+wy248LongPart(6.32,.29,4.50,3.14,.23,1.12,'#143e36');
+wy248LongPart(6.32,.51,4.50,3.04,.23,1.05,'#246354');
+wy248LongPart(6.32,.91,3.94,3.12,.80,.19,'#164c41');
 for(let i=0;i<3;i++){
  const x=5.31+i*1.00;
- wy241SofaPart(x,.655,4.48,.93,.085,.94,'#2d705f');
- wy241SofaPart(x,.93,4.00,.91,.49,.11,'#286758');
+ wy248LongPart(x,.655,4.48,.93,.085,.94,'#2d705f');
+ wy248LongPart(x,.93,4.00,.91,.49,.11,'#286758');
 }
 // Short chaise against the SAME +X wall as the coffee and tea machines,
 // but below them in plan. Its back is on +X, and its seats face -X.
@@ -2400,9 +2402,11 @@ for(const z of [3.13,4.08]){
  wy241SofaPart(8.45,.655,z,.90,.085,.85,'#2d705f');
  wy241SofaPart(8.94,.94,z,.10,.50,.82,'#286758');
 }
-wy241SofaPart(4.72,.72,4.50,.19,.52,1.05,'#164c41');
-wy241SofaPart(6.32,.125,4.50,3.14,.065,1.14,'#c8a66d');
+wy248LongPart(4.72,.72,4.50,.19,.52,1.05,'#164c41');
+wy248LongPart(6.32,.125,4.50,3.14,.065,1.14,'#c8a66d');
 wy241SofaPart(8.47,.125,3.64,1.13,.065,2.07,'#c8a66d');
+// v248: only the long three-seat section trades front/back positions with the two round tables.
+wy248LongSofa.position.z=-1.27;
 // C-style luxury nested coffee tables, visibly separate from sofa front edge.
 // Table centers x=4.10/5.15, z=4.55/4.67; max radius .68/.47;
 // sofa long-run front z=3.37-.62+.56=3.31; gap >=.56.
@@ -2417,8 +2421,8 @@ function wy242Table(x,z,r,y,color){
  const ring=new THREE.Mesh(new THREE.TorusGeometry(r*.94,.025,7,48),brass);ring.rotation.x=Math.PI/2;ring.position.y=y+.096;group.add(ring);
  return group;
 }
-wy242Table(5.72,3.24,.65,.56,'#f0e8da');
-wy242Table(6.84,3.21,.45,.79,'#235c4e');
+wy242Table(5.72,4.51,.65,.56,'#f0e8da');
+wy242Table(6.84,4.48,.45,.79,'#235c4e');
 // v220: A sculpted hanging black/white lawyer robe modeled after the supplied garment photo.
 // Curved custom fabric meshes, not a box/cylinder substitute for the gown.
 const wy220Robe=new THREE.Group();wy220Robe.position.set(2.35,0,-5.95);wy3Root.add(wy220Robe);
@@ -2457,9 +2461,9 @@ wy3MovieClose.onclick=()=>{wy3Vid.pause();wy3MovieModal.style.display='none'};
 // First-entry wall prompt: persisted locally; optional replay always available.
 // Compact office-side exit portal: no physical hallway or elevator in the office.
 const wy180OfficePortal=new THREE.Group();wy180OfficePortal.position.set(9.74,0,5.55);wy180OfficePortal.rotation.y=-Math.PI/2;wy3Root.add(wy180OfficePortal);
-const wy208Navy=new THREE.MeshStandardMaterial({color:0x122b49,roughness:.46,metalness:.10});
+const wy208Navy=new THREE.MeshStandardMaterial({color:0x122b49,roughness:.46,metalness:.10,side:THREE.DoubleSide});
 const wy208Gold=new THREE.MeshStandardMaterial({color:0xd6b77b,roughness:.32,metalness:.52});
-const wy212Inset=new THREE.MeshStandardMaterial({color:0x244363,roughness:.62,metalness:.04});
+const wy212Inset=new THREE.MeshStandardMaterial({color:0x244363,roughness:.62,metalness:.04,side:THREE.DoubleSide});
 const wy208DoorLeaves=[];
 function wy208Part(parent,w,h,d,x,y,z,material){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);parent.add(m);return m;}
 // A single opaque navy transom; no pale wall visible behind the original logo.
@@ -2514,7 +2518,7 @@ wy223Arrow.position.set(0,6.83,.90);wy223Arrow.renderOrder=999;wy223Arrow.userDa
 // Restore the original wording and height exactly; arrow is an addition, not a replacement.
 const wy208OfficeSign=wy208MakeSign(wy180OfficePortal,new THREE.Vector3(0,8.65,.90),1,'exit3f');wy3Targets.push(wy208OfficeSign);
 
-const wy180Welcome=wy3Label('WELCOME｜辦公室介紹',8.95,2.55,4.16,1.75,.32);
+const wy180Welcome=new THREE.Group(); // v248: remove ONLY duplicate interior floating white sign; exterior entrance plaque remains interactive.
 wy180Welcome.visible=false; // v206: no interior sign or replay click target
 // v208: same clickable label only on 1F and 2F elevator (NOT 3F elevator).
 const wy208LiftSign1=wy208MakeSign(lobbyRoot,new THREE.Vector3(8.4,9.15,-7.75),.78,'elevator');
@@ -2779,6 +2783,8 @@ function wy245RideFollow(dt){
  const objects=[];
  v.root.traverse(o=>{
   if(!o.isMesh||!o.visible||!o.material)return;
+  // v248: never fade any part of the 3F office door, hinges, frame, transom, or logo.
+  if(v.floor===3){for(let q=o;q;q=q.parent){if(q===wy180OfficePortal)return;}}
   for(let q=o;q;q=q.parent)if(q===wyIndoorActor)return;
   objects.push(o);
  });
