@@ -2250,23 +2250,54 @@ function wy240Chair(x,z,lawyer){
  }else for(const dx of [-.35,.35])for(const dz of [-.30,.30])wy3Box(x+dx,.32,z+dz,.07,.62,.07,gold);
 }
 wy240Chair(0,-4.0,true);wy240Chair(-1.55,1.6,false);wy240Chair(1.55,1.6,false);
-// v228: move the entire honor-display assembly together 0.65m toward the retained bookshelf-side window.
-const wy228CabinetStart=wy3Root.children.length;
-// B-style glass honor cabinet, wide central portrait screen visibly clickable.
-wy3Box(-9.52,2.6,1.75,.28,4.85,4.3,'#c6c1b7','video');
-for(const z of [-.25,3.75])wy3Box(-9.34,2.5,z,.10,4.9,.12,wy3Gold);
-wy3Box(-9.34,4.87,1.75,.12,.12,4.15,wy3Gold);
-for(const z of [.12,3.38]){
- wy3Box(-9.30,3.65,z,.07,1.12,.80,'#e9e0cf','credentials');wy3Box(-9.30,2.35,z,.07,1.08,.80,'#e9e0cf','credentials');
- for(const y of [1.66,2.98,4.28])wy3Box(-9.25,y,z,.05,.04,.70,wy3Gold);
+// v243: E-style premium dossier cabinet between retained window and existing video display.
+// All new objects are fully opaque, physically separated and anchored to the -X wall.
+const wy243Cabinet=new THREE.Group();wy243Cabinet.position.set(-9.13,0,-3.14);wy3Root.add(wy243Cabinet);
+const wy243Brass=new THREE.MeshStandardMaterial({color:'#c2a173',metalness:.45,roughness:.42});
+const wy243Emerald=new THREE.MeshStandardMaterial({color:'#204b42',metalness:.06,roughness:.64});
+function wy243Box(parent,x,y,z,w,h,d,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);parent.add(m);return m;}
+// Cabinet spans z=-3.99..-2.29, leaving a gap to the window ending at -4.30.
+wy243Box(wy243Cabinet,0,2.27,0,.43,4.40,1.72,wy243Brass);
+wy243Box(wy243Cabinet,.235,2.35,0,.08,4.08,1.57,wy243Emerald);
+const wy243Dark=new THREE.MeshStandardMaterial({color:'#173b36',roughness:.68});
+for(let r=0;r<3;r++){
+ const yy=1.75+r*1.05;
+ wy243Box(wy243Cabinet,.296,yy-.47,0,.07,.065,1.47,wy243Brass);
+ wy243Box(wy243Cabinet,.300,yy+.02,0,.075,.93,1.47,wy243Dark);
+ for(let i=0;i<9;i++){
+  const zz=-.63+i*.155,hh=.69+(i%3)*.055;
+  const colors=['#d6c7a9','#738d86','#a78f75','#c3b6a1'];
+  const mat=new THREE.MeshStandardMaterial({color:colors[i%4],roughness:.79});
+  wy243Box(wy243Cabinet,.354,yy-.34+hh/2,zz,.055,hh,.105,mat);
+  wy243Box(wy243Cabinet,.388,yy-.24,zz,.009,.025,.065,wy243Brass);
+ }
 }
-wy3Box(-9.28,2.75,1.75,.12,3.7,1.65,'#253f4a','video');
+// Full-width closed lower drawer; no central vertical gold divider.
+wy243Box(wy243Cabinet,.30,.43,0,.12,.72,1.51,wy243Emerald);
+wy243Box(wy243Cabinet,.38,.48,0,.025,.05,.32,wy243Brass);
+// V1 cinema-style VIDEO wall: restyle the existing video display in place, retaining video action.
+// Do not create a second video element or remove the existing movie modal.
+const wy243VideoWall=new THREE.Group();wy243VideoWall.position.set(-9.30,0,.72);wy3Root.add(wy243VideoWall);
+const wy243Navy=new THREE.MeshStandardMaterial({color:'#20354b',roughness:.68});
+wy243Box(wy243VideoWall,0,2.65,0,.22,4.95,3.50,wy243Navy);
+for(const zz of [-1.68,1.68])wy243Box(wy243VideoWall,.14,2.65,zz,.075,4.78,.045,wy243Brass);
+for(const yy of [.30,5.00])wy243Box(wy243VideoWall,.14,yy,0,.075,.055,3.40,wy243Brass);
+wy243Box(wy243VideoWall,.17,2.79,0,.075,1.92,3.25,wy243Brass);
+wy243Box(wy243VideoWall,.216,2.79,0,.035,1.79,3.11,new THREE.MeshBasicMaterial({color:'#101c2a'}));
+// Original movie filename, user interaction and iOS inline playback retained.
 const wy3Vid=document.createElement('video');wy3Vid.src='lin-lawyer.mp4';wy3Vid.preload='metadata';wy3Vid.playsInline=true;wy3Vid.controls=true;
-const wy3Poster=document.createElement('canvas');wy3Poster.width=320;wy3Poster.height=570;const vp=wy3Poster.getContext('2d');vp.fillStyle='#547988';vp.fillRect(0,0,320,570);vp.fillStyle='#e9d7b3';vp.textAlign='center';vp.font='bold 28px sans-serif';vp.fillText('林柏均 律師',160,95);vp.font='bold 18px sans-serif';vp.fillText('LAWYER PROFILE',160,130);vp.fillStyle='#203c49';vp.beginPath();vp.arc(160,310,74,0,Math.PI*2);vp.fill();vp.fillStyle='#f7e5bc';vp.beginPath();vp.moveTo(145,265);vp.lineTo(145,355);vp.lineTo(212,310);vp.fill();vp.font='bold 20px sans-serif';vp.fillText('點擊播放影片',160,480);
+const wy3Poster=document.createElement('canvas');wy3Poster.width=640;wy3Poster.height=360;
+const vp=wy3Poster.getContext('2d');vp.fillStyle='#162e40';vp.fillRect(0,0,640,360);
+vp.fillStyle='#c8a66d';vp.fillRect(18,18,604,3);vp.fillRect(18,338,604,3);
+vp.fillStyle='#f3e7d3';vp.textAlign='center';vp.font='bold 38px sans-serif';vp.fillText('林柏均 律師',320,105);
+vp.fillStyle='#d4b987';vp.font='23px sans-serif';vp.fillText('WEI & YANG  |  LAWYER PROFILE',320,148);
+vp.beginPath();vp.arc(320,230,38,0,Math.PI*2);vp.fillStyle='#c8a66d';vp.fill();
+vp.beginPath();vp.moveTo(308,207);vp.lineTo(308,253);vp.lineTo(342,230);vp.closePath();vp.fillStyle='#1b3545';vp.fill();
+vp.fillStyle='#e5d5bb';vp.font='19px sans-serif';vp.fillText('點擊播放影片',320,306);
 const wy3PosterTex=new THREE.CanvasTexture(wy3Poster);wy3PosterTex.colorSpace=THREE.SRGBColorSpace;
-const wy3Screen=new THREE.Mesh(new THREE.PlaneGeometry(1.52,3.40),new THREE.MeshBasicMaterial({map:wy3PosterTex}));wy3Screen.rotation.y=Math.PI/2;wy3Screen.position.set(-9.19,2.80,1.75);wy3Screen.userData.wy3Action='video';wy3Root.add(wy3Screen);wy3Targets.push(wy3Screen);
-wy3Label('律師資格・影音展示',-8.55,5.22,1.75,2.4,.42);
-for(const obj of wy3Root.children.slice(wy228CabinetStart))obj.position.z-=.65;
+const wy3Screen=new THREE.Mesh(new THREE.PlaneGeometry(3.05,1.72),new THREE.MeshBasicMaterial({map:wy3PosterTex,side:THREE.DoubleSide}));
+wy3Screen.rotation.y=Math.PI/2;wy3Screen.position.set(.245,2.79,0);wy3Screen.userData.wy3Action='video';wy243VideoWall.add(wy3Screen);wy3Targets.push(wy3Screen);
+// Distinct side-facing selection surface keeps the established click-to-open movie workflow.
 // v240: Removed entire front-of-gym litigation file cabinet, all books and label.
 // v221 hotfix: 3D rods used by gym and robe hanger; must exist before scene initialization.
 function wy3Bar(x1,y1,z1,x2,y2,z2,r,color){
@@ -2347,8 +2378,8 @@ wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 // v242: Only the approved 3F lounge arrangement: emerald L sofa and paired designer tables.
 // Room entry is on +X at z=5.55. Preserve a wide uninterrupted entrance corridor.
 // Lounge moved slightly toward the coffee wall (-Z); all components share one offset.
-wy3Box(5.6,.035,3.80,4.25,.055,4.15,'#c8b5a0'); // existing rug unchanged
-const wy241Sofa=new THREE.Group();wy241Sofa.position.set(-.48,0,-.62);wy3Root.add(wy241Sofa);
+wy3Box(5.6,.035,3.45,4.25,.055,4.15,'#c8b5a0'); // v243 rug follows lounge rearward
+const wy241Sofa=new THREE.Group();wy241Sofa.position.set(-.48,0,-.97);wy3Root.add(wy241Sofa);
 function wy241SofaPart(x,y,z,w,h,d,color){return wy241Part(wy241Sofa,x,y,z,w,h,d,color,.04)}
 // Long run: main seats face +Z, i.e. toward the office entrance, not away from it.
 wy241SofaPart(6.13,.29,3.37,3.10,.23,1.12,'#143e36');
@@ -2384,8 +2415,8 @@ function wy242Table(x,z,r,y,color){
  const ring=new THREE.Mesh(new THREE.TorusGeometry(r*.94,.025,7,48),brass);ring.rotation.x=Math.PI/2;ring.position.y=y+.096;group.add(ring);
  return group;
 }
-wy242Table(4.13,4.65,.65,.56,'#f0e8da');
-wy242Table(5.32,4.78,.45,.79,'#235c4e');
+wy242Table(4.13,4.30,.65,.56,'#f0e8da');
+wy242Table(5.32,4.43,.45,.79,'#235c4e');
 // v220: A sculpted hanging black/white lawyer robe modeled after the supplied garment photo.
 // Curved custom fabric meshes, not a box/cylinder substitute for the gown.
 const wy220Robe=new THREE.Group();wy220Robe.position.set(2.35,0,-5.95);wy3Root.add(wy220Robe);
