@@ -2345,6 +2345,44 @@ wy3Cyl(7.75,1.98,-1.37,.13,.13,.18,'#d6dedb');wy3Box(7.75,1.82,-1.37,.14,.27,.12
 const wy223TeaObjects=wy3Root.children.slice(wy223TeaStart);
 const wy223TeaStation=new THREE.Group();wy223TeaStation.position.set(8.55,0,-1.70);wy223TeaStation.rotation.y=-Math.PI/2;wy3Root.add(wy223TeaStation);
 for(const o of wy223TeaObjects){wy3Root.remove(o);o.position.x-=7.75;o.position.z+=1.95;wy223TeaStation.add(o);}
+// v249: fill the height difference between the existing coffee and tea counters.
+// Keep all original machines, cups, shelves, positions, and interactive objects unchanged.
+// The tea station is rotated -90 degrees; its countertop has a 0.04-unit height difference.
+const wy249CounterTop = new THREE.Mesh(
+ new THREE.BoxGeometry(3.10,.08,1.72),
+ new THREE.MeshStandardMaterial({color:'#c6a46b',metalness:.24,roughness:.42})
+);
+wy249CounterTop.position.set(0,1.62,0);
+wy223TeaStation.add(wy249CounterTop);
+// Detailed, colorful accessories are attached to the tea-station group only.
+const wy249Wood=new THREE.MeshStandardMaterial({color:'#9b623e',roughness:.55});
+const wy249Gold=new THREE.MeshStandardMaterial({color:'#d5b579',metalness:.48,roughness:.32});
+const wy249Palette=['#f27b95','#f7c353','#70d7ad','#73b8f4','#b49be8','#f19b66'];
+function wy249RoundedBox(parent,x,y,z,w,h,d,mat,r=.035){
+ const shape=new THREE.Shape();const a=-w/2,b=-d/2;
+ shape.moveTo(a+r,b);shape.lineTo(-a-r,b);shape.quadraticCurveTo(-a,b,-a,b+r);
+ shape.lineTo(-a,-b-r);shape.quadraticCurveTo(-a,-b,-a-r,-b);
+ shape.lineTo(a+r,-b);shape.quadraticCurveTo(a,-b,a,-b-r);
+ shape.lineTo(a,b+r);shape.quadraticCurveTo(a,b,a+r,b);
+ const geo=new THREE.ExtrudeGeometry(shape,{depth:h,bevelEnabled:true,bevelThickness:.012,bevelSize:.012,bevelSegments:2,curveSegments:4});
+ geo.rotateX(-Math.PI/2);
+ const mesh=new THREE.Mesh(geo,mat);mesh.position.set(x,y-h/2,z);parent.add(mesh);return mesh;
+}
+const wy249TeaDisplay=new THREE.Group();wy249TeaDisplay.position.set(-.67,1.77,.26);wy223TeaStation.add(wy249TeaDisplay);
+wy249RoundedBox(wy249TeaDisplay,0,.01,0,.92,.12,.49,wy249Wood);
+for(let i=0;i<6;i++){
+ const pack=new THREE.Group();pack.position.set(-.36+i*.145,.20,-.025);pack.rotation.x=-.18;wy249TeaDisplay.add(pack);
+ wy249RoundedBox(pack,0,0,0,.125,.33,.075,new THREE.MeshStandardMaterial({color:wy249Palette[i],roughness:.49}),.016);
+ const band=new THREE.Mesh(new THREE.BoxGeometry(.10,.022,.079),new THREE.MeshStandardMaterial({color:'#fff4db'}));band.position.set(0,.04,.005);pack.add(band);
+ const emblem=new THREE.Mesh(new THREE.SphereGeometry(.021,10,8),wy249Gold);emblem.position.set(0,.11,.047);pack.add(emblem);
+}
+const wy249SugarDisplay=new THREE.Group();wy249SugarDisplay.position.set(.70,1.76,.25);wy223TeaStation.add(wy249SugarDisplay);
+wy249RoundedBox(wy249SugarDisplay,0,.01,0,.65,.11,.38,wy249Gold);
+for(let i=0;i<4;i++){
+ const pack=new THREE.Group();pack.position.set(-.225+i*.15,.17,0);pack.rotation.z=(i-1.5)*.045;wy249SugarDisplay.add(pack);
+ wy249RoundedBox(pack,0,0,0,.13,.27,.06,new THREE.MeshStandardMaterial({color:wy249Palette[i],roughness:.5}),.014);
+ const stripe=new THREE.Mesh(new THREE.BoxGeometry(.10,.025,.065),new THREE.MeshStandardMaterial({color:'#fff6e8'}));stripe.position.set(0,.02,.005);pack.add(stripe);
+}
 // v225: two deliberate, straight, evenly spaced display rows on the coffee wall.
 // Both shelves belong to the existing coffee-station group and do not move the machine.
 function wy225Shelf(parent,y,z,w){
@@ -2423,6 +2461,19 @@ function wy242Table(x,z,r,y,color){
 }
 wy242Table(5.72,4.51,.65,.56,'#f0e8da');
 wy242Table(6.84,4.48,.45,.79,'#235c4e');
+// v249: translate the EXISTING L sofa and nested tables toward the bookshelf/tea area.
+// Do not alter any cushion geometry, orientation, material or relative layout.
+// Short chaise forward edge before move is z=2.61; tea station's nearest edge is approximately z=-0.1.
+const wy249LoungeShiftZ=-2.55;
+wy241Sofa.position.z+=wy249LoungeShiftZ;
+// Preserve the two tables' original arrangement relative to the L sofa.
+// The only newly created root-level groups after the sofa were these two tables.
+// Find them by their original exact positions, avoiding changes to any other furniture.
+for(const obj of wy3Root.children){
+ if(obj.type==='Group' && obj!==wy241Sofa &&
+   ((Math.abs(obj.position.x-5.72)<.001&&Math.abs(obj.position.z-4.51)<.001)||
+    (Math.abs(obj.position.x-6.84)<.001&&Math.abs(obj.position.z-4.48)<.001)))obj.position.z+=wy249LoungeShiftZ;
+}
 // v220: A sculpted hanging black/white lawyer robe modeled after the supplied garment photo.
 // Curved custom fabric meshes, not a box/cylinder substitute for the gown.
 const wy220Robe=new THREE.Group();wy220Robe.position.set(2.35,0,-5.95);wy3Root.add(wy220Robe);
