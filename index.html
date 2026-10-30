@@ -2214,6 +2214,14 @@ for(let i=0;i<31;i++){
  wy3Box(-8.60+i*.196,.68,7.56,.145,.75,.24,colors[i%colors.length]);
 }
 wy3Label('訴訟卷宗',-5.65,1.55,7.65,2.2,.35);
+// v221 hotfix: 3D rods used by gym and robe hanger; must exist before scene initialization.
+function wy3Bar(x1,y1,z1,x2,y2,z2,r,color){
+ const a=new THREE.Vector3(x1,y1,z1),b=new THREE.Vector3(x2,y2,z2),d=new THREE.Vector3().subVectors(b,a);
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,d.length(),12),wy3Mat(color));
+ m.position.copy(a).add(b).multiplyScalar(.5);
+ m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());
+ wy3Root.add(m);return m;
+}
 // v220: Photo-matched independent SOUTH-WEST glass gym; the original doors/elevator are untouched.
 // Existing file-storage cabinet stays outside the gym against the rear wall.
 const wy220Navy='#20364b',wy220Gold='#c9a466',wy220Metal='#3d454b';
