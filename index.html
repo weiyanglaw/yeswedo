@@ -2394,19 +2394,6 @@ for(const side of [-1,1]){
  wy208DoorLeaves.push({hinge,side});
 }
 const wy181ExitHinge=wy208DoorLeaves[0].hinge;
-// v226: Remove only the redundant office-side SECOND doorway's visual facade.
-// Keep original corridor blue doors, hinges, exit raycast targets and action handlers intact.
-// All redundant portal facade parts remain in memory for existing interaction logic,
-// but their rendering is suppressed; the flat wall below is purely decorative.
-for(const part of wy180OfficePortal.children){
- if(part===wy208DoorLeaves[0].hinge||part===wy208DoorLeaves[1].hinge){
-  part.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.visible=false;}});
- }else if(part.isMesh){part.material=part.material.clone();part.material.visible=false;}
-}
-// One flush wall surface instead of the protruding secondary doorway, no new collision body.
-const wy226PlainWall=new THREE.Mesh(new THREE.PlaneGeometry(2.75,5.65),new THREE.MeshStandardMaterial({color:0xb6b0a0,roughness:.9,side:THREE.DoubleSide}));
-wy226PlainWall.position.set(0,2.82,-.09);wy180OfficePortal.add(wy226PlainWall);
-// The office exit is still reachable via the existing interaction triggers.
 // v224: Original main office door meshes and appearance are preserved unchanged.
 
 // Official source asset, unchanged, centered on the opaque navy lintel.
