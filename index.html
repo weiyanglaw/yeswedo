@@ -2367,7 +2367,8 @@ wy225Rainbow.forEach((color,i)=>wy225Cup(wy223CoffeeStation,(i-3)*.48,4.34,.40,c
 // Lower row: seven mugs in exactly the same order and alignment, on a dedicated front shelf.
 // It is separate from the coffee outlet and tray, so no cups block the machine's details.
 wy225Shelf(wy223CoffeeStation,1.59,1.86,3.48);
-// v246: remove only the lower row of mugs overlapping the adjacent bookcase; keep shelf and upper row.
+// v247: restore the six unaffected lower mugs; omit only the bookcase-side end mug.
+wy225Rainbow.forEach((color,i)=>{if(i!==6)wy225Cup(wy223CoffeeStation,(i-3)*.48,1.83,1.86,color);});
 // Tea-side tins are a single evenly spaced row, not scattered around the counter.
 wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 ['#d87956','#4e9c93','#e5b64b','#677ab6'].forEach((color,i)=>{
@@ -2381,14 +2382,14 @@ wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 wy3Box(6.33,.035,3.72,4.40,.055,3.55,'#c8b5a0');
 const wy241Sofa=new THREE.Group();wy241Sofa.position.set(0,0,0);wy3Root.add(wy241Sofa);
 function wy241SofaPart(x,y,z,w,h,d,color){return wy241Part(wy241Sofa,x,y,z,w,h,d,color,.04)}
-// Long run along the lower wall side: back at +Z, seats face -Z (toward the tables).
+// v247: long sofa seats face +Z toward the office entrance; short chaise is unchanged.
 wy241SofaPart(6.32,.29,4.50,3.14,.23,1.12,'#143e36');
 wy241SofaPart(6.32,.51,4.50,3.04,.23,1.05,'#246354');
-wy241SofaPart(6.32,.91,5.06,3.12,.80,.19,'#164c41');
+wy241SofaPart(6.32,.91,3.94,3.12,.80,.19,'#164c41');
 for(let i=0;i<3;i++){
  const x=5.31+i*1.00;
  wy241SofaPart(x,.655,4.48,.93,.085,.94,'#2d705f');
- wy241SofaPart(x,.93,4.99,.91,.49,.11,'#286758');
+ wy241SofaPart(x,.93,4.00,.91,.49,.11,'#286758');
 }
 // Short chaise against the SAME +X wall as the coffee and tea machines,
 // but below them in plan. Its back is on +X, and its seats face -X.
@@ -2730,23 +2731,69 @@ const wy245ViewDirections=[
  [0,8.5,10],[8,9,8],[-8,9,8],[10,10,0],[-10,10,0],
  [8,10,-8],[-8,10,-8],[0,11,-10],[0,12,5],[0,13,0]
 ];
-// v246: elevator-ride-only high overhead observer. Actor speed and navigation unchanged.
-// Fixed camera height and steady horizontal tracking avoid the previous vertical bounce.
+// v247: one stationary, oblique, room-context camera per ride. No actor tracking.
+// Only meshes directly occluding the actor or elevator doorway are faded temporarily.
+let wy247RideView=null;
+const wy247Occluded=new Map();
+const wy247Ray=new THREE.Raycaster();
+function wy247RestoreOcclusion(){
+ for(const [mesh,material] of wy247Occluded){mesh.material=material;}
+ wy247Occluded.clear();
+}
+function wy247SetRideView(floor){
+ wy247RestoreOcclusion();
+ const cam=floor===1?lobbyCam:floor===2?officeCam:wy3Cam;
+ const ctrl=floor===1?lobbyOrbit:floor===2?officeOrbit:wy3Orbit;
+ const actor=wyIndoorActor;
+ if(!actor)return;
+ actor.updateWorldMatrix(true,false);
+ const start=actor.localToWorld(new THREE.Vector3(0,1,0));
+ const endLocal=floor===1?new THREE.Vector3(8.4,1.5,-9.1):floor===2?new THREE.Vector3(9.1,1.5,-9.2):new THREE.Vector3(10.45,1.5,5.55);
+ const root=floor===1?lobbyScene:floor===2?officeScene:wy3Scene;
+ const end=endLocal.clone();
+ const center=start.clone().add(end).multiplyScalar(.5);
+ const span=start.distanceTo(end);
+ // The elevator facade is viewed from its front, not from the roof.
+ // Fixed angle 35-45 degrees downward, distance scaled to fit actor + lift.
+ const d=Math.max(13,Math.min(30,span*1.45+8));
+ const eye=center.clone().add(new THREE.Vector3(-d*.30,d*.72,d*.78));
+ cam.position.copy(eye);ctrl.target.copy(center);cam.lookAt(center);cam.updateMatrixWorld(true);
+ wy247RideView={floor,eye,center,root,end};
+}
 function wy245RideFollow(dt){
- if(!wyRide||!wyIndoorActor||!(wyRide.phase==='walk'||wyRide.phase==='enter'))return;
- const f=wyRide.source,cam=f===1?lobbyCam:f===2?officeCam:wy3Cam;
+ if(!wyRide||!wyIndoorActor||!(wyRide.phase==='walk'||wyRide.phase==='enter'||wyRide.phase==='close')){
+  if(wy247RideView){wy247RestoreOcclusion();wy247RideView=null;}
+  return;
+ }
+ const f=wyRide.source;
+ if(!wy247RideView||wy247RideView.floor!==f)wy247SetRideView(f);
+ if(!wy247RideView)return;
+ const v=wy247RideView;
+ const cam=f===1?lobbyCam:f===2?officeCam:wy3Cam;
  const ctrl=f===1?lobbyOrbit:f===2?officeOrbit:wy3Orbit;
+ // Keep camera exactly stationary during the run; no vertical bob or chase.
+ cam.position.copy(v.eye);ctrl.target.copy(v.center);cam.lookAt(v.center);cam.updateMatrixWorld(true);
+ wy247RestoreOcclusion();
  wyIndoorActor.updateWorldMatrix(true,false);
- const focus=wyIndoorActor.localToWorld(new THREE.Vector3(0,0,0));
- // Near-vertical overview prevents walls, shelves, and furniture from blocking the actor.
- // Camera Y stays fixed, irrespective of running animation and elevator approach.
- const desired=new THREE.Vector3(focus.x,20,focus.z+2.0);
- const k=1-Math.exp(-Math.min(dt,.06)*6);
- cam.position.x=THREE.MathUtils.lerp(cam.position.x,desired.x,k);
- cam.position.z=THREE.MathUtils.lerp(cam.position.z,desired.z,k);
- cam.position.y=THREE.MathUtils.lerp(cam.position.y,20,1-Math.exp(-Math.min(dt,.06)*4));
- ctrl.target.lerp(new THREE.Vector3(focus.x,0.6,focus.z),k);
- cam.lookAt(ctrl.target);
+ const actorPoint=wyIndoorActor.localToWorld(new THREE.Vector3(0,1.2,0));
+ const objects=[];
+ v.root.traverse(o=>{
+  if(!o.isMesh||!o.visible||!o.material)return;
+  for(let q=o;q;q=q.parent)if(q===wyIndoorActor)return;
+  objects.push(o);
+ });
+ for(const point of [actorPoint,v.end]){
+  const delta=point.clone().sub(v.eye),dist=delta.length();
+  wy247Ray.set(v.eye,delta.normalize());wy247Ray.far=Math.max(.1,dist-(point===v.end?2.4:.45));
+  for(const hit of wy247Ray.intersectObjects(objects,false)){
+   const o=hit.object;
+   if(wy247Occluded.has(o))continue;
+   const original=o.material;
+   const fade=m=>{const c=m.clone();c.transparent=true;c.opacity=Math.min(c.opacity,.12);c.depthWrite=false;return c;};
+   o.material=Array.isArray(original)?original.map(fade):fade(original);
+   wy247Occluded.set(o,original);
+  }
+ }
 }
 
 function wyStartRide(dest){
@@ -2791,6 +2838,7 @@ function wyStartRide(dest){
   for(const d of wy208DoorLeaves)d.hinge.rotation.y=0;
  }
  wyRideShade.style.display='none';wyRide={phase:'walk',time:0,source,dest,openAmount:0};wyDoorOpen=0;
+ wy247SetRideView(source);
 }
 
 wyLiftPrompt.onclick=()=>wyLobbyOpen('elevator');
@@ -2887,7 +2935,7 @@ function wyElevatorTick(dt){
    wy244FollowOffset=null;wyDoorOpen=Math.max(0,1-r.time/1.5);
    if(r.time>=1.5){wy213RideCamera=null;if(r.source===3&&wy180AtOffice)wy180SetOfficeView(false);wyDoorOpen=0;r.phase='travel';r.time=0;wyRideShade.style.display='flex';wyRideShade.querySelector('#wyRideProgress').textContent=r.dest>r.source?'電梯上升中…':'電梯下降中…';wyRideShade.querySelector('#wyRideFloor').textContent=r.source+'F → '+r.dest+'F';}
   }else if(r.phase==='travel'&&r.time>=.3){
-   wySetFloor(r.dest);wyResetIndoorRideCamera(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
+   wy247RestoreOcclusion();wy247RideView=null;wySetFloor(r.dest);wyResetIndoorRideCamera(r.dest);wyIndoorPlace(r.dest,true);wyDoorOpen=0;r.phase='arrive';r.time=0;
    wyRideShade.querySelector('#wyRideProgress').textContent='已抵達 '+r.dest+'F，電梯門開啟';if(r.dest===3){wyRide=null;wyRideShade.style.display='none';wy3PlayArrival();}
   }else if(r.phase==='arrive'){
    wyDoorOpen=Math.min(1,r.time/1.5);
