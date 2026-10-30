@@ -2206,10 +2206,31 @@ for(const [pivot,side] of [[wy3OfficeDoorPivot,1],[wy3OfficeDoorPivotR,-1]]){
  logo.position.set(side*.775,3.35,.224);logo.userData.wy3Action='officeDoor';pivot.add(logo);wy3Targets.push(logo);
 }
 const wy3DeskLogo=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy3DeskLogo.position.set(0,.62,-.352);wy3Root.add(wy3DeskLogo);
-// Working desktop: monitor, keyboard, folders, lamp, work pad.
-wy3Box(0,1.272,-1.73,2.4,.018,.92,'#4e6970');wy3Box(.25,1.63,-2.18,1.35,.75,.11,'#304b59');wy3Box(.25,1.66,-2.11,1.21,.62,.025,'#a6c6cf');wy3Box(.25,1.32,-2.14,.12,.20,.12,'#cba665');wy3Box(.1,1.285,-1.65,.85,.025,.28,'#e8e4db');
-for(let i=0;i<3;i++)wy3Box(-2.0+i*.13,1.31,-1.50,.64,.07,.85,['#e7e2d5','#c7a45f','#e7d2aa'][i]);
-wy3Cyl(2.35,1.37,-2.13,.28,.28,.15,'#c9a462');wy3Box(2.35,1.80,-2.13,.09,.76,.09,'#c9a462');wy3Box(2.02,2.18,-2.13,.85,.10,.35,'#f1d69d');
+// v241: Desktop contents replaced in full: one silver laptop and ONE legal document.
+// All parts have physical thickness and deliberately separated surface planes.
+const wy241Laptop=new THREE.Group();wy241Laptop.position.set(.28,0,-1.60);wy3Root.add(wy241Laptop);
+function wy241Part(parent,x,y,z,w,h,d,color,metalness=0){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color,metalness,roughness:metalness?.38:.72}));
+ m.position.set(x,y,z);parent.add(m);return m;
+}
+// Base rests above the existing desk surface, with no coplanar desk mat.
+wy241Part(wy241Laptop,0,1.365,.10,1.44,.075,.93,'#c5cbd0',.52);
+wy241Part(wy241Laptop,0,1.407,.07,1.23,.008,.59,'#737d86',.18);
+// Single inset keyboard with individual keys visibly raised above its recess.
+for(let row=0;row<4;row++)for(let col=0;col<11;col++){
+ wy241Part(wy241Laptop,-.55+col*.11,1.417,-.15+row*.105,.078,.012,.066,'#dce0e2',.25);
+}
+wy241Part(wy241Laptop,0,1.417,.35,.43,.012,.19,'#a9b1b7',.32);
+// Upright silver display and inset dark screen, separated by 0.02m to avoid Z-fighting.
+wy241Part(wy241Laptop,0,1.79,-.405,1.46,.83,.055,'#bdc5cb',.53);
+wy241Part(wy241Laptop,0,1.79,-.370,1.33,.70,.012,'#263b4d',.08);
+wy241Part(wy241Laptop,0,1.38,-.41,.30,.055,.09,'#9ca6ad',.45);
+// One complete document (not multiple nearly overlapping loose paper planes).
+const wy241Document=new THREE.Group();wy241Document.position.set(-1.65,0,-1.43);wy3Root.add(wy241Document);
+wy241Part(wy241Document,0,1.355,0,.78,.055,1.02,'#f4f0e6');
+// Printed lines sit on a distinct raised plane; no overlapping sheets.
+for(let i=0;i<6;i++)wy241Part(wy241Document,-.06,1.389,-.32+i*.105,.49,.008,.014,'#8e9594');
+
 // v240: detailed leather executive chair and two ivory upholstered guest chairs, original positions.
 function wy240Chair(x,z,lawyer){
  const leather=lawyer?'#233d59':'#eee4d4',leatherDark=lawyer?'#182e46':'#d5c7b4',gold='#c8a76f';
@@ -2323,11 +2344,35 @@ wy225Shelf(wy223TeaStation,4.10,.46,2.60);
  const jar=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,.40,16),wy3Mat(color));jar.position.set(x,4.37,.46);wy223TeaStation.add(jar);
  const lid=new THREE.Mesh(new THREE.CylinderGeometry(.17,.17,.07,16),wy3Mat('#c9a466'));lid.position.set(x,4.60,.46);wy223TeaStation.add(lid);
 });
-// Lounge, on right, turned toward the room with separate cushions and curved table.
+// v241: B-style emerald and brass luxury L sofa; short arm RIGHT, primary seats face +Z.
+// The actual office entrance is on the +X/+Z side. The old back-to-door orientation is removed.
+// Keep the original rug and coffee table untouched; no change to the room or collision code.
 wy3Box(5.6,.035,3.80,4.25,.055,4.15,'#c8b5a0');
-wy3Box(7.38,.50,3.30,1.18,.72,3.25,'#eee1cc');wy3Box(7.92,1.10,3.30,.26,.93,3.30,'#e7d7c0');
-wy3Box(6.10,.50,4.40,2.95,.72,1.10,'#eee1cc');wy3Box(6.10,1.10,4.87,3.00,.90,.22,'#e7d7c0');
-for(const [x,z] of [[7.3,2.3],[7.3,3.6],[6.0,4.4]])wy3Box(x,1.04,z,.70,.48,.18,'#304c62');
+const wy241Sofa=new THREE.Group();wy3Root.add(wy241Sofa);
+function wy241SofaPart(x,y,z,w,h,d,color){return wy241Part(wy241Sofa,x,y,z,w,h,d,color,.04)}
+// Long main run, rear back at z=2.78; faces the door side (+Z).
+wy241SofaPart(6.13,.29,3.37,3.10,.23,1.12,'#143e36');
+wy241SofaPart(6.13,.51,3.37,3.00,.23,1.05,'#246354');
+wy241SofaPart(6.13,.91,2.79,3.12,.80,.19,'#164c41');
+for(let i=0;i<3;i++){
+ const x=5.13+i*1.00;
+ wy241SofaPart(x,.655,3.39,.93,.085,.94,'#2d705f');
+ wy241SofaPart(x,.93,2.94,.91,.49,.11,'#286758');
+}
+// Right return projects toward +Z; its back is on the inner (-X) side,
+// allowing seated visitors to look toward the entrance on +X.
+wy241SofaPart(7.62,.29,4.24,1.09,.23,2.05,'#143e36');
+wy241SofaPart(7.62,.51,4.24,1.04,.23,1.95,'#246354');
+wy241SofaPart(7.07,.92,4.25,.18,.81,2.02,'#164c41');
+for(const z of [3.82,4.74]){
+ wy241SofaPart(7.66,.655,z,.89,.085,.85,'#2d705f');
+ wy241SofaPart(7.22,.94,z,.10,.50,.82,'#286758');
+}
+// Proper raised armrest at the open left end; right end kept low to avoid blocking doorway sightline.
+wy241SofaPart(4.56,.72,3.39,.19,.52,1.05,'#164c41');
+// Gold base rail is an actual volume below the seat, with no coplanar overlays.
+wy241SofaPart(6.13,.125,3.38,3.13,.065,1.14,'#c8a66d');
+wy241SofaPart(7.62,.125,4.24,1.12,.065,2.06,'#c8a66d');
 wy3Cyl(5.0,.40,3.12,.83,.83,.12,'#c9a466');wy3Cyl(5.0,.49,3.12,.76,.76,.10,'#493023');
 wy3Cyl(5.0,.65,3.12,.16,.16,.22,'#6a865d');
 // v220: A sculpted hanging black/white lawyer robe modeled after the supplied garment photo.
