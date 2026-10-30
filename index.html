@@ -2029,7 +2029,7 @@ wy3Box(9.9,3.1,(-8.75+4.18)/2,.22,6.2,4.18+8.75,'#eadfc9');
 wy3Box(9.9,3.1,(6.92+8.75)/2,.22,6.2,8.75-6.92,'#eadfc9');
 wy3Box(9.9,5.15,5.55,.22,2.1,2.74,'#eadfc9');
 // Recessed, short, open-ended passage: no wall across the center.
-const wy213Passage=new THREE.Group();wy3Root.add(wy213Passage);
+const wy213Passage=new THREE.Group();wy3Root.add(wy213Passage);wy213Passage.visible=false; // v228: hide only exterior projecting vestibule geometry
 function wy213Box(x,y,z,w,h,d,material){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);m.position.set(x,y,z);wy213Passage.add(m);return m;}
 const wy213Beige=new THREE.MeshStandardMaterial({color:0xeadfc9,roughness:.79});
 const wy213Gold=new THREE.MeshStandardMaterial({color:0xc9a66c,metalness:.32,roughness:.48});
@@ -2152,7 +2152,7 @@ function wy180SetOfficeView(inOffice){
  for(const o of wy180OfficeContents)o.visible=!!inOffice;
 }
 // Windows left wall, distinct from the recessed honor wall.
-for(const z of [-5.5,-2.5]){wy3Box(-9.73,3.75,z,.1,3.4,2.4,'#b8dce6');for(const dz of [-1.2,1.2])wy3Box(-9.64,3.75,z+dz,.14,3.5,.11,'#d1ad6c');}
+for(const z of [-5.5]){wy3Box(-9.73,3.75,z,.1,3.4,2.4,'#b8dce6');for(const dz of [-1.2,1.2])wy3Box(-9.64,3.75,z+dz,.14,3.5,.11,'#d1ad6c');}
 // True semicircular bookshelf: individually curved bay positions and books facing inward.
 const shelfGroup=new THREE.Group();wy3Root.add(shelfGroup);
 const wy3Gold='#cba665',wy3Shelf='#493023';
@@ -2192,6 +2192,8 @@ wy3Cyl(2.35,1.37,-2.13,.28,.28,.15,'#c9a462');wy3Box(2.35,1.80,-2.13,.09,.76,.09
 // Lawyer chair and two upholstered visitor chairs with four grounded legs.
 function wy3Chair(x,z,c,lawyer=false){const h=lawyer?1.15:.94;wy3Box(x,.73,z,lawyer?1.12:.98,.19,lawyer?1.08:.9,c);wy3Box(x,1.27,z+(lawyer?-.48:.38),lawyer?1.12:.98,h,.18,c);for(const dx of [-.36,.36])for(const dz of [-.30,.30])wy3Box(x+dx,.33,z+dz,.09,.64,.09,'#b69a6a');for(const dx of [-.52,.52])wy3Box(x+dx,.98,z,.09,.12,.74,'#c9a665')}
 wy3Chair(0,-4.0,'#7eaa9d',true);wy3Chair(-1.55,1.6,'#e2cba9');wy3Chair(1.55,1.6,'#e2cba9');
+// v228: move the entire honor-display assembly together 0.65m toward the retained bookshelf-side window.
+const wy228CabinetStart=wy3Root.children.length;
 // B-style glass honor cabinet, wide central portrait screen visibly clickable.
 wy3Box(-9.52,2.6,1.75,.28,4.85,4.3,'#c6c1b7','video');
 for(const z of [-.25,3.75])wy3Box(-9.34,2.5,z,.10,4.9,.12,wy3Gold);
@@ -2206,6 +2208,7 @@ const wy3Poster=document.createElement('canvas');wy3Poster.width=320;wy3Poster.h
 const wy3PosterTex=new THREE.CanvasTexture(wy3Poster);wy3PosterTex.colorSpace=THREE.SRGBColorSpace;
 const wy3Screen=new THREE.Mesh(new THREE.PlaneGeometry(1.52,3.40),new THREE.MeshBasicMaterial({map:wy3PosterTex}));wy3Screen.rotation.y=Math.PI/2;wy3Screen.position.set(-9.19,2.80,1.75);wy3Screen.userData.wy3Action='video';wy3Root.add(wy3Screen);wy3Targets.push(wy3Screen);
 wy3Label('律師資格・影音展示',-8.55,5.22,1.75,2.4,.42);
+for(const obj of wy3Root.children.slice(wy228CabinetStart))obj.position.z-=.65;
 // Recessed low litigation-file storage along the south-west wall, no tall blocking unit.
 wy3Box(-5.65,.57,7.98,6.55,1.10,.64,'#6d4c39');
 wy3Box(-5.65,1.16,7.98,6.65,.10,.73,'#c3a06d');
@@ -2816,6 +2819,7 @@ function wyLobbyOpen(action){
  if(action==='contact')html='<p>法律諮詢與聯絡方式：</p><p><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener">LINE｜@wylaw</a></p><p><a href="https://weiandyang.com" target="_blank" rel="noopener">官網｜weiandyang.com</a></p>';
  if(action==='services')html='<p>跨國商務、企業法務、民刑事訴訟、家事繼承、勞動、醫療與智慧財產等法律服務。</p>';
  if(action==='floor3')html='<p>3F 老闆今天在嗎？已開放參觀。</p><button data-lb="floor3">搭電梯前往3F</button>'; 
+ wyLobbyDialog.classList.toggle('wy228Elevator',action==='elevator');
  wyLobbyDialog.innerHTML='<h3 style="margin:0 0 8px">'+head+'</h3>'+html+'<button data-lb="close">關閉</button>';
  wyLobbyDialog.querySelectorAll('button').forEach(b=>{b.style.cssText='display:block;width:100%;margin:9px 0;padding:11px;background:#284967;color:white;border:0;border-radius:10px;font-weight:700';b.onclick=()=>{
  const a=b.dataset.lb;if(a==='close'){wyLobbyDialog.style.display='none';return}if(a==='return3f'){wyLobbyDialog.style.display='none';wy180SetOfficeView(true);wy3Cam.position.set(12.6,13.5,17);wy3Orbit.target.set(0,1.4,0);wy3Cam.lookAt(wy3Orbit.target);wy3Orbit.minAzimuthAngle=-Infinity;wy3Orbit.maxAzimuthAngle=Infinity;wy3Orbit.minDistance=4.7;wy3Orbit.maxDistance=48;wy3Orbit.enablePan=true;wy3Orbit.enableZoom=true;wy3Orbit.rotateSpeed=1;wy3Orbit.enabled=true;wyWalkUI.style.display='';return}if(a==='floor1'||a==='floor2'||a==='floor3'){wyStartRide(Number(a.slice(-1)));return}
@@ -3281,4 +3285,18 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
  },true);
 })();
 </script>
+
+<!-- v228: Elevator selector only. Glass-style presentation; original content/actions unchanged. -->
+<style id="wy228ElevatorTheme">
+#wyLobbyDialog.wy228Elevator{background:linear-gradient(145deg,rgba(234,246,250,.97),rgba(201,222,234,.96))!important;border:1.5px solid #91b3c6!important;border-radius:22px!important;color:#23465d!important;box-shadow:0 22px 65px #17354d60, inset 0 1px 0 #fff!important;padding:22px!important;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+#wyLobbyDialog.wy228Elevator:before{content:'WEIYANG · FLOOR DIRECTORY'!important;color:#35769b!important;font-size:10px!important;letter-spacing:.18em!important;display:block;margin:0 0 10px!important}
+#wyLobbyDialog.wy228Elevator h3{color:#23465d!important;border-bottom:1px solid #a7c3d0!important;padding-bottom:12px!important;margin-bottom:12px!important}
+#wyLobbyDialog.wy228Elevator p{color:#496a7d!important}
+#wyLobbyDialog.wy228Elevator button{display:block!important;width:100%!important;background:rgba(255,255,255,.91)!important;color:#23465d!important;border:1px solid #a7c3d0!important;border-radius:13px!important;text-align:left!important;padding:12px 15px!important;min-height:58px!important;box-shadow:0 4px 13px #36586b16!important;margin:8px 0!important}
+#wyLobbyDialog.wy228Elevator button b{font-size:15px!important;color:#23465d!important}
+#wyLobbyDialog.wy228Elevator button small{font-size:12px!important;color:#607b8c!important}
+#wyLobbyDialog.wy228Elevator button[data-lb^="floor"]:before{content:'›';float:right;font-size:24px;line-height:30px;color:#35769b}
+#wyLobbyDialog.wy228Elevator button[data-lb="return3f"],#wyLobbyDialog.wy228Elevator button[data-lb="close"]{display:inline-block!important;width:calc(50% - 6px)!important;text-align:center!important;min-height:46px!important;font-size:13px!important}
+#wyLobbyDialog.wy228Elevator button[data-lb="return3f"]{margin-right:12px!important}
+</style>
 </body></html>
