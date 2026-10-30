@@ -2378,8 +2378,8 @@ wy225Shelf(wy223TeaStation,4.10,.46,2.60);
 // v242: Only the approved 3F lounge arrangement: emerald L sofa and paired designer tables.
 // Room entry is on +X at z=5.55. Preserve a wide uninterrupted entrance corridor.
 // Lounge moved slightly toward the coffee wall (-Z); all components share one offset.
-wy3Box(5.25,.035,2.85,4.25,.055,4.15,'#c8b5a0'); // v243 rug follows lounge rearward
-const wy241Sofa=new THREE.Group();wy241Sofa.position.set(11.15,0,6.05);wy241Sofa.rotation.y=Math.PI;wy3Root.add(wy241Sofa);
+wy3Box(5.05,.035,2.55,4.25,.055,4.15,'#c8b5a0'); // v243 rug follows lounge rearward
+const wy241Sofa=new THREE.Group();wy241Sofa.position.set(-.65,0,-1.55);wy3Root.add(wy241Sofa);
 function wy241SofaPart(x,y,z,w,h,d,color){return wy241Part(wy241Sofa,x,y,z,w,h,d,color,.04)}
 // Long run: main seats face +Z, i.e. toward the office entrance, not away from it.
 wy241SofaPart(6.13,.29,3.37,3.10,.23,1.12,'#143e36');
@@ -2391,16 +2391,16 @@ for(let i=0;i<3;i++){
  wy241SofaPart(x,.93,2.94,.91,.49,.11,'#286758');
 }
 // The RIGHT chaise continues toward the visitor-facing side; it does not cross the entrance corridor.
-wy241SofaPart(7.62,.29,4.24,1.09,.23,2.05,'#143e36');
-wy241SofaPart(7.62,.51,4.24,1.04,.23,1.95,'#246354');
-wy241SofaPart(7.07,.92,4.25,.18,.81,2.02,'#164c41');
+wy241SofaPart(4.64,.29,4.24,1.09,.23,2.05,'#143e36');
+wy241SofaPart(4.64,.51,4.24,1.04,.23,1.95,'#246354');
+wy241SofaPart(5.18,.92,4.25,.18,.81,2.02,'#164c41');
 for(const z of [3.82,4.74]){
- wy241SofaPart(7.66,.655,z,.89,.085,.85,'#2d705f');
- wy241SofaPart(7.22,.94,z,.10,.50,.82,'#286758');
+ wy241SofaPart(4.60,.655,z,.89,.085,.85,'#2d705f');
+ wy241SofaPart(5.09,.94,z,.10,.50,.82,'#286758');
 }
-wy241SofaPart(4.56,.72,3.39,.19,.52,1.05,'#164c41');
+wy241SofaPart(7.72,.72,3.39,.19,.52,1.05,'#164c41');
 wy241SofaPart(6.13,.125,3.38,3.13,.065,1.14,'#c8a66d');
-wy241SofaPart(7.62,.125,4.24,1.12,.065,2.06,'#c8a66d');
+wy241SofaPart(4.64,.125,4.24,1.12,.065,2.06,'#c8a66d');
 // C-style luxury nested coffee tables, visibly separate from sofa front edge.
 // Table centers x=4.10/5.15, z=4.55/4.67; max radius .68/.47;
 // sofa long-run front z=3.37-.62+.56=3.31; gap >=.56.
@@ -2415,8 +2415,8 @@ function wy242Table(x,z,r,y,color){
  const ring=new THREE.Mesh(new THREE.TorusGeometry(r*.94,.025,7,48),brass);ring.rotation.x=Math.PI/2;ring.position.y=y+.096;group.add(ring);
  return group;
 }
-wy242Table(4.05,4.18,.65,.56,'#f0e8da');
-wy242Table(5.27,4.25,.45,.79,'#235c4e');
+wy242Table(5.18,3.70,.65,.56,'#f0e8da');
+wy242Table(6.28,3.74,.45,.79,'#235c4e');
 // v220: A sculpted hanging black/white lawyer robe modeled after the supplied garment photo.
 // Curved custom fabric meshes, not a box/cylinder substitute for the gown.
 const wy220Robe=new THREE.Group();wy220Robe.position.set(2.35,0,-5.95);wy3Root.add(wy220Robe);
@@ -2724,19 +2724,53 @@ function wyResetIndoorRideCamera(floor){
 let wy213RideCamera=null;
 // v244: camera follow state is scoped to a confirmed cross-floor elevator ride.
 let wy244FollowOffset=null;
-function wy244RideFollow(dt){
+const wy245CameraRay=new THREE.Raycaster();
+const wy245ViewDirections=[
+ [0,8.5,10],[8,9,8],[-8,9,8],[10,10,0],[-10,10,0],
+ [8,10,-8],[-8,10,-8],[0,11,-10],[0,12,5],[0,13,0]
+];
+function wy245RideFollow(dt){
  if(!wyRide||!wyIndoorActor||!(wyRide.phase==='walk'||wyRide.phase==='enter'))return;
  const f=wyRide.source,cam=f===1?lobbyCam:f===2?officeCam:wy3Cam;
  const ctrl=f===1?lobbyOrbit:f===2?officeOrbit:wy3Orbit;
- if(!wy244FollowOffset){
-  // Elevated trailing view keeps the walking visitor and nearby path visible.
-  wy244FollowOffset=new THREE.Vector3(7.5,8.4,10.2);
+ const root=f===1?lobbyScene:f===2?officeScene:wy3Scene;
+ const p=wyIndoorActor.position;
+ const focus=new THREE.Vector3(p.x,1.30,p.z);
+ // The actor's local position is in its floor root, which may be transformed.
+ wyIndoorActor.updateWorldMatrix(true,false);
+ const worldFocus=wyIndoorActor.localToWorld(new THREE.Vector3(0,1.22,0));
+ const obstacles=[];
+ root.traverse(o=>{
+  if(!o.isMesh||!o.visible||!o.geometry||!o.material)return;
+  if(o===wyIndoorActor||wyIndoorActor.children.includes(o))return;
+  for(let q=o.parent;q;q=q.parent){if(q===wyIndoorActor)return;}
+  const m=Array.isArray(o.material)?o.material[0]:o.material;
+  if(m&&((m.transparent&&m.opacity<.8)||m.depthWrite===false))return;
+  obstacles.push(o);
+ });
+ let chosen=null,score=-Infinity;
+ const old=wy244FollowOffset;
+ for(const v of wy245ViewDirections){
+  const offset=new THREE.Vector3(...v),distance=offset.length(),dir=offset.clone().normalize();
+  wy245CameraRay.set(worldFocus,dir);wy245CameraRay.far=distance-.35;
+  const hits=wy245CameraRay.intersectObjects(obstacles,false);
+  const nearest=hits.length?hits[0].distance:distance;
+  // Pull the eye in front of any solid occluder instead of letting it disappear behind it.
+  const safeDist=Math.max(1.75,Math.min(distance,nearest-.5));
+  const candidate=worldFocus.clone().addScaledVector(dir,safeDist);
+  const clear=safeDist>=distance-.6;
+  const continuity=old?dir.dot(old.clone().normalize())*.6:0;
+  const merit=(clear?100:0)+safeDist*.9+continuity-(Math.abs(v[0])*.03);
+  if(merit>score){score=merit;chosen={offset:candidate.sub(worldFocus),clear};}
  }
- const actor=wyIndoorActor.position;
- const focus=new THREE.Vector3(actor.x,1.05,actor.z);
- const desired=focus.clone().add(wy244FollowOffset);
- const k=1-Math.exp(-dt*5.5);
- cam.position.lerp(desired,k);ctrl.target.lerp(focus,k);cam.lookAt(ctrl.target);
+ if(!chosen)return;
+ wy244FollowOffset=chosen.offset.clone();
+ const target=worldFocus.clone().add(chosen.offset);
+ const smoothing=1-Math.exp(-dt*(chosen.clear?5:12));
+ // On obstruction, avoid easing through the occluder: snap to the safe camera side.
+ if(!chosen.clear)cam.position.copy(target);else cam.position.lerp(target,smoothing);
+ ctrl.target.lerp(worldFocus,1-Math.exp(-dt*8));
+ cam.lookAt(ctrl.target);
 }
 
 function wyStartRide(dest){
@@ -2894,7 +2928,7 @@ function wyElevatorTick(dt){
    }
   }
  }
- wy244RideFollow(dt);
+ wy245RideFollow(dt);
  wyUpdateGlassCabin(wyDoorOpen,dt);
 
  for(const [i,doors] of [[1,wyElevDoors1],[2,wyElevDoors2]]){
