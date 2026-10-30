@@ -2171,12 +2171,33 @@ for(let j=0;j<19;j++){
   }
  }
 }
-// Heavy rectangular partner desk, lawyer side is -Z; visitor front (+Z) has no drawers.
-wy3Box(0,1.10,-1.55,6.35,.29,2.18,'#6a4938','desk');
-wy3Box(0,.62,-.44,6.22,1.00,.14,'#76523e','desk');
-for(const x of [-2.47,2.47]){wy3Box(x,.55,-1.65,1.05,1.03,1.88,'#718f9d');wy3Box(x,.58,-.58,1.12,.91,.12,'#8a654e')}
-for(const x of [-3.1,3.1])wy3Box(x,.72,-1.55,.10,1.26,2.2,wy3Gold);
-wy3Box(0,1.09,-.35,6.25,.085,.13,wy3Gold);
+// v240: Replace ONLY the executive desk geometry. Retain original location, tabletop height, footprint, logo and desktop objects.
+// Beveled sculpted walnut worktop: real 3D shape, not coplanar metallic overlays.
+function wy240Top(x,y,z,w,d,h,r,color){
+ const sh=new THREE.Shape();const a=-w/2,b=-d/2;
+ sh.moveTo(a+r,b);sh.lineTo(a+w-r,b);sh.quadraticCurveTo(a+w,b,a+w,b+r);
+ sh.lineTo(a+w,b+d-r);sh.quadraticCurveTo(a+w,b+d,a+w-r,b+d);
+ sh.lineTo(a+r,b+d);sh.quadraticCurveTo(a,b+d,a,b+d-r);
+ sh.lineTo(a,b+r);sh.quadraticCurveTo(a,b,a+r,b);
+ const g=new THREE.ExtrudeGeometry(sh,{depth:h,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.028,bevelThickness:.028,curveSegments:5});
+ g.rotateX(-Math.PI/2);
+ const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color,roughness:.58,metalness:.04}));
+ m.position.set(x,y-h/2,z);wy3Root.add(m);return m;
+}
+// Two distinctly separated layers avoid Z-fighting and give a substantial couture-style silhouette.
+wy240Top(0,1.105,-1.55,6.30,2.15,.23,.25,'#493024');
+wy240Top(0,1.235,-1.55,6.10,2.00,.075,.22,'#664331');
+// Sculptural leg pedestals, recessed dark panels and broad brass plinths.
+for(const x of [-2.47,2.47]){
+ wy3Box(x,.53,-1.65,.92,1.00,1.68,'#17493f');
+ wy3Box(x,.16,-1.65,1.03,.14,1.82,'#c8a76f');
+ wy3Box(x,.60,-.77,.73,.70,.055,'#244f46');
+ wy3Box(x,.59,-.731,.58,.04,.032,'#c8a76f');
+}
+// Single front apron, distinct from the official logo plane (logo remains in its original position).
+wy3Box(0,.64,-.47,5.10,.75,.18,'#493024');
+for(const x of [-1.55,1.55])wy3Box(x,.96,-.366,1.80,.055,.04,'#c8a76f');
+wy3Box(0,.30,-.366,4.90,.055,.04,'#c8a76f');
 // Actual unmodified official WY image on front-facing center, not a redraw.
 const wy3LogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png');wy3LogoTexture.colorSpace=THREE.SRGBColorSpace;
 // v203: same original artwork on both door leaves; each moves with its own hinge.
@@ -2189,9 +2210,25 @@ const wy3DeskLogo=new THREE.Mesh(new THREE.PlaneGeometry(.86,.86),new THREE.Mesh
 wy3Box(0,1.272,-1.73,2.4,.018,.92,'#4e6970');wy3Box(.25,1.63,-2.18,1.35,.75,.11,'#304b59');wy3Box(.25,1.66,-2.11,1.21,.62,.025,'#a6c6cf');wy3Box(.25,1.32,-2.14,.12,.20,.12,'#cba665');wy3Box(.1,1.285,-1.65,.85,.025,.28,'#e8e4db');
 for(let i=0;i<3;i++)wy3Box(-2.0+i*.13,1.31,-1.50,.64,.07,.85,['#e7e2d5','#c7a45f','#e7d2aa'][i]);
 wy3Cyl(2.35,1.37,-2.13,.28,.28,.15,'#c9a462');wy3Box(2.35,1.80,-2.13,.09,.76,.09,'#c9a462');wy3Box(2.02,2.18,-2.13,.85,.10,.35,'#f1d69d');
-// Lawyer chair and two upholstered visitor chairs with four grounded legs.
-function wy3Chair(x,z,c,lawyer=false){const h=lawyer?1.15:.94;wy3Box(x,.73,z,lawyer?1.12:.98,.19,lawyer?1.08:.9,c);wy3Box(x,1.27,z+(lawyer?-.48:.38),lawyer?1.12:.98,h,.18,c);for(const dx of [-.36,.36])for(const dz of [-.30,.30])wy3Box(x+dx,.33,z+dz,.09,.64,.09,'#b69a6a');for(const dx of [-.52,.52])wy3Box(x+dx,.98,z,.09,.12,.74,'#c9a665')}
-wy3Chair(0,-4.0,'#7eaa9d',true);wy3Chair(-1.55,1.6,'#e2cba9');wy3Chair(1.55,1.6,'#e2cba9');
+// v240: detailed leather executive chair and two ivory upholstered guest chairs, original positions.
+function wy240Chair(x,z,lawyer){
+ const leather=lawyer?'#233d59':'#eee4d4',leatherDark=lawyer?'#182e46':'#d5c7b4',gold='#c8a76f';
+ const w=lawyer?1.14:1.02,depth=lawyer?1.04:.93;
+ wy3Box(x,.70,z,w,.17,depth,leatherDark);
+ wy3Box(x,.82,z,w-.11,.13,depth-.12,leather);
+ const backZ=z+(lawyer?-.46:.39),backH=lawyer?1.18:.96;
+ wy3Box(x,1.35,backZ,w,backH,.16,leatherDark);
+ wy3Box(x,1.35,backZ+(lawyer?.085:-.085),w-.14,backH-.16,.055,leather);
+ for(const dx of [-w/2+.09,w/2-.09]){
+  wy3Box(x+dx,1.00,z,.115,.12,.72,gold);
+  wy3Box(x+dx,.88,z,.09,.19,.09,leatherDark);
+ }
+ if(lawyer){
+  wy3Cyl(x,.35,z,.13,.13,.55,'#bda06c');
+  for(const [dx,dz] of [[-.45,0],[.45,0],[0,-.42],[0,.42]])wy3Box(x+dx,.13,z+dz,.46,.08,.09,'#4a4b4a');
+ }else for(const dx of [-.35,.35])for(const dz of [-.30,.30])wy3Box(x+dx,.32,z+dz,.07,.62,.07,gold);
+}
+wy240Chair(0,-4.0,true);wy240Chair(-1.55,1.6,false);wy240Chair(1.55,1.6,false);
 // v228: move the entire honor-display assembly together 0.65m toward the retained bookshelf-side window.
 const wy228CabinetStart=wy3Root.children.length;
 // B-style glass honor cabinet, wide central portrait screen visibly clickable.
@@ -2209,14 +2246,7 @@ const wy3PosterTex=new THREE.CanvasTexture(wy3Poster);wy3PosterTex.colorSpace=TH
 const wy3Screen=new THREE.Mesh(new THREE.PlaneGeometry(1.52,3.40),new THREE.MeshBasicMaterial({map:wy3PosterTex}));wy3Screen.rotation.y=Math.PI/2;wy3Screen.position.set(-9.19,2.80,1.75);wy3Screen.userData.wy3Action='video';wy3Root.add(wy3Screen);wy3Targets.push(wy3Screen);
 wy3Label('律師資格・影音展示',-8.55,5.22,1.75,2.4,.42);
 for(const obj of wy3Root.children.slice(wy228CabinetStart))obj.position.z-=.65;
-// Recessed low litigation-file storage along the south-west wall, no tall blocking unit.
-wy3Box(-5.65,.57,7.98,6.55,1.10,.64,'#6d4c39');
-wy3Box(-5.65,1.16,7.98,6.65,.10,.73,'#c3a06d');
-for(let i=0;i<31;i++){
- const colors=['#384c65','#7b4651','#d7c6a7','#725741','#516a70'];
- wy3Box(-8.60+i*.196,.68,7.56,.145,.75,.24,colors[i%colors.length]);
-}
-wy3Label('訴訟卷宗',-5.65,1.55,7.65,2.2,.35);
+// v240: Removed entire front-of-gym litigation file cabinet, all books and label.
 // v221 hotfix: 3D rods used by gym and robe hanger; must exist before scene initialization.
 function wy3Bar(x1,y1,z1,x2,y2,z2,r,color){
  const a=new THREE.Vector3(x1,y1,z1),b=new THREE.Vector3(x2,y2,z2),d=new THREE.Vector3().subVectors(b,a);
@@ -2225,38 +2255,7 @@ function wy3Bar(x1,y1,z1,x2,y2,z2,r,color){
  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());
  wy3Root.add(m);return m;
 }
-// v220: Photo-matched independent SOUTH-WEST glass gym; the original doors/elevator are untouched.
-// Existing file-storage cabinet stays outside the gym against the rear wall.
-const wy220Navy='#20364b',wy220Gold='#c9a466',wy220Metal='#3d454b';
-// Dark non-slip floor and fully separated glass partitions with a 1.3m open entry on the east.
-wy3Box(-6.40,.045,5.25,6.55,.09,4.15,'#242b30');
-for(let i=0;i<11;i++)wy3Box(-9.43+i*.59,.098,5.25,.014,.012,3.9,'#41494a');
-function wy220Glass(x,y,z,w,h,d){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshPhysicalMaterial({color:0xa6d8e2,transparent:true,opacity:.23,metalness:.05,roughness:.12,depthWrite:false,side:THREE.DoubleSide}));m.position.set(x,y,z);wy3Root.add(m);return m;}
-// Front face along z=3.14; rear wall already exists.
-wy220Glass(-6.40,1.82,3.14,6.65,3.48,.075);
-for(const x of [-9.75,-7.48,-5.21,-3.09])wy3Box(x,1.84,3.14,.095,3.62,.10,wy220Navy);
-for(const y of [.14,3.53])wy3Box(-6.40,y,3.14,6.7,.09,.11,wy220Gold);
-// East glass wall, intentional doorway gap z=5.65..7.00.
-wy220Glass(-3.10,1.82,4.38,.08,3.48,2.43);
-for(const z of [3.16,5.58])wy3Box(-3.10,1.84,z,.12,3.60,.12,wy220Navy);
-wy3Box(-3.10,3.53,4.37,.12,.09,2.43,wy220Gold);
-// Door leaf rests open INSIDE the gym, with a visible gold handle, clear entrance.
-const wy220GymDoor=new THREE.Group();wy220GymDoor.position.set(-3.10,0,5.58);wy220GymDoor.rotation.y=-1.20;wy3Root.add(wy220GymDoor);
-const gymLeaf=new THREE.Mesh(new THREE.BoxGeometry(.08,3.16,1.12),new THREE.MeshPhysicalMaterial({color:0xbadfe7,transparent:true,opacity:.29,roughness:.13,depthWrite:false}));gymLeaf.position.set(-.02,1.68,.56);wy220GymDoor.add(gymLeaf);
-const gymHandle=new THREE.Mesh(new THREE.BoxGeometry(.12,.40,.065),wy3Mat(wy220Gold));gymHandle.position.set(-.12,1.67,1.02);wy220GymDoor.add(gymHandle);
-// High-end treadmill, curved upright console, moving belt surface (static 3D model).
-wy3Box(-4.55,.23,4.75,1.68,.27,2.35,'#131b22','fitness');
-wy3Box(-4.55,.385,4.78,1.35,.035,1.86,'#39434a');
-for(const x of [-5.26,-3.84]){wy3Box(x,.37,4.75,.13,.32,2.35,'#c19b52');wy3Bar(x,.48,4.12,x,2.02,3.77,.075,wy220Metal);}
-wy3Bar(-5.25,1.98,3.78,-3.85,1.98,3.78,.075,'#c19b52');
-wy3Box(-4.55,2.11,3.75,1.05,.45,.24,'#111d28');wy3Box(-4.55,2.13,3.87,.80,.28,.025,'#4e9da4');
-// Multi-station weight machine with substantial frame, pulley and seat.
-for(const x of [-8.9,-7.08])for(const z of [4.30,6.78])wy3Bar(x,.14,z,x,2.88,z,.075,'#c9a466');
-for(const z of [4.30,6.78])wy3Bar(-8.9,2.85,z,-7.08,2.85,z,.08,wy220Metal);
-wy3Box(-7.97,.73,5.75,.95,.18,.75,'#1b2730');wy3Box(-7.97,1.27,6.10,.95,1.12,.20,'#24333d');
-for(const x of [-8.9,-7.08]){wy3Bar(x,2.78,4.4,x,1.56,5.15,.048,'#c9a466');wy3Bar(x,1.55,5.15,x+(x< -8?-.30:.30),1.30,5.44,.048,wy220Metal);}
-for(let i=0;i<5;i++)wy3Box(-8.85,.45+i*.17,6.34,.34,.12,.50,'#454f58');
-wy3Label('獨立玻璃健身房',-6.4,3.84,3.05,2.8,.42);
+// v240: Removed entire glass gym: floor, glass walls, door, equipment, rods and label.
 const wy223CoffeeStart=wy3Root.children.length;
 // v220: Large silver Magnifica-style coffee machine with deliberate visual exaggeration.
 // The machine fits wholly on the countertop; NO cup is placed under the outlets.
