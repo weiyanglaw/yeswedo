@@ -2042,11 +2042,25 @@ function wyBuildGlassCabin(parent,cx,cz,one){
 }
 wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,0,2);
-// v287: identical navy/gold/ice-blue elevator crown, fixed to the 2F cabin group.
-roomBox(0,6.91,-1.32,5.05,.77,.46,'#183D5D',wyElev2);
-roomBox(0,7.15,-1.06,4.60,.23,.10,'#D6AF72',wyElev2);
-roomBox(0,6.88,-1.00,3.62,.31,.08,'#74C8E4',wyElev2);
-roomBox(0,6.88,-.94,3.45,.13,.035,'#BDEBF7',wyElev2);
+// v288: 2F elevator crown must be on the VISIBLE room-facing side (+local Z),
+// not behind the cream backing wall (negative local Z). Rotate as a single unit
+// with wyElev2; the 2F portal then faces office west and remains wall-adjacent.
+const wy288Crown=new THREE.Group();wyElev2.add(wy288Crown);
+// Place the whole crown forward of the semi-circular glass doors and backing wall.
+wy288Crown.position.set(0,0,1.66);
+roomBox(0,6.91,0,5.05,.77,.46,'#183D5D',wy288Crown);
+roomBox(0,7.15,.245,4.60,.23,.10,'#D6AF72',wy288Crown);
+roomBox(0,6.88,.255,3.62,.31,.08,'#74C8E4',wy288Crown);
+roomBox(0,6.88,.307,3.45,.13,.035,'#BDEBF7',wy288Crown);
+// Architectural champagne-gold upright frames follow the same outward-facing portal.
+for(const x of [-2.32,2.32]){
+ roomBox(x,3.45,-.05,.38,6.72,.42,'#D6AF72',wy288Crown);
+ roomBox(x,3.43,.19,.13,6.30,.09,'#F0D49A',wy288Crown);
+}
+// Keep the gold '2' in front of the beam and visible from the office, rather
+// than leaving the numeral behind the new fascia.
+wy2Digit.position.set(0,6.30,2.12);
+wy2Digit.renderOrder=16;
 
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
@@ -2799,8 +2813,8 @@ wy180Welcome.visible=false; // v206: no interior sign or replay click target
 // v208: same clickable label only on 1F and 2F elevator (NOT 3F elevator).
 const wy208LiftSign1=wy208MakeSign(lobbyRoot,new THREE.Vector3(8.4,9.15,-7.75),.78,'elevator');
 wy208LiftSign1.scale.setScalar(1);wy208LiftSign1.geometry.dispose();wy208LiftSign1.geometry=new THREE.PlaneGeometry(3.25,.74);wy208LiftSign1.material.depthTest=true;wy208LiftSign1.userData.lobbyAction='elevator';lobbyTargets.push(wy208LiftSign1);
-const wy208LiftSign2=wy208MakeSign(wyElev2,new THREE.Vector3(0,9.15,0),.78,'elevator');
-wy208LiftSign2.scale.setScalar(1);wy208LiftSign2.geometry.dispose();wy208LiftSign2.geometry=new THREE.PlaneGeometry(3.25,.74);wy208LiftSign2.material.depthTest=true;wyElev2ClickTargets.push(wy208LiftSign2);
+const wy208LiftSign2=wy208MakeSign(wyElev2,new THREE.Vector3(0,9.15,2.10),.78,'elevator');
+wy208LiftSign2.scale.setScalar(1);wy208LiftSign2.geometry.dispose();wy208LiftSign2.geometry=new THREE.PlaneGeometry(3.25,.74);wy208LiftSign2.material.depthTest=false;wy208LiftSign2.renderOrder=30;wyElev2ClickTargets.push(wy208LiftSign2);
 const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal&&!wy198SlideDoors.some(d=>d.group===o));
 wy180SetOfficeView(false);
 const wy3IntroKey='weiyang-3f-office-raid-ack-v203';
