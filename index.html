@@ -2808,8 +2808,26 @@ function wy260MakeSign(e){
  m.position.set(...e.pos);m.userData.wy3Action='wy260:'+e.key;m.renderOrder=4;wy3Root.add(m);wy3Targets.push(m);wy260Signs.push(m);
 }
 wy260Entries.forEach(wy260MakeSign);
+// v264: two additional signs, using exactly the established v261 typography and palette.
+// Coffee plaque is parented to the station so its position remains next to the machine.
+function wy264Sign(title,key,width,parent,x,y,z){
+ const c=document.createElement('canvas');c.width=1024;c.height=192;const g=c.getContext('2d');
+ g.fillStyle='#263B57';g.beginPath();g.roundRect(7,7,1010,178,26);g.fill();
+ g.lineWidth=9;g.strokeStyle='#C5A36B';g.stroke();
+ g.font='bold 96px sans-serif';g.fillStyle='#F8E5BD';g.textAlign='center';g.textBaseline='middle';g.fillText(title,512,99,960);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(width,.72),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
+ m.position.set(x,y,z);m.userData.wy3Action='wy260:'+key;parent.add(m);wy3Targets.push(m);wy260Signs.push(m);
+ return m;
+}
+// Coffee machine stands on the counter; its plaque floats just above the machine, clear of the faceplate.
+wy264Sign('老闆今天第幾杯？','coffee',2.86,wy223CoffeeStation,0,4.68,1.30);
+// The lounge plaque is above the front edge of the sofa, inside the room and away from the wall.
+wy264Sign('坐下五分鐘就好？','sofa',2.90,wy3Root,6.65,2.70,1.10);
+
 // Explicit touch targets on the relevant physical objects, without altering their appearance.
 function wy260TagMeshes(root,key){root.traverse(o=>{if(o.isMesh&&!o.userData.wy3Action){o.userData.wy3Action='wy260:'+key;wy3Targets.push(o)}})}
+wy260TagMeshes(wy220Coffee,'coffee');wy260TagMeshes(wy241Sofa,'sofa');
 wy260TagMeshes(wy241Laptop,'overseas');wy260TagMeshes(wy241Document,'contract');wy260TagMeshes(wy243Cabinet,'evidence');wy260TagMeshes(wy220Robe,'robe');
 // Clickable desk surface only, not lawyer avatar or chair.
 const wy260DeskHit=new THREE.Mesh(new THREE.BoxGeometry(5.8,.09,1.95),new THREE.MeshBasicMaterial({visible:false}));
@@ -2867,7 +2885,7 @@ const wy260Escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','
 const wy260Css=document.createElement('style');wy260Css.textContent=`#wy260Modal{position:fixed;inset:0;z-index:116;display:none;align-items:center;justify-content:center;background:#0b1725c9;padding:14px;font-family:system-ui,'Noto Sans TC',sans-serif}#wy260Card{width:min(94vw,560px);max-height:86dvh;overflow:auto;background:#fffaf1;color:#27384c;border:2px solid #c5a36b;border-radius:17px;box-shadow:0 18px 60px #0008;padding:17px}#wy260Card h2{font-size:20px;color:#263B57;margin:4px 0 12px}#wy260Card p{line-height:1.8;font-size:15px;margin:8px 0 12px}#wy260Card button{display:block;width:100%;text-align:left;padding:12px 14px;margin:9px 0;background:#263B57;color:#F8E5BD;border:1px solid #C5A36B;border-radius:11px;font-size:14px;line-height:1.55;font-weight:650}#wy260Card .wy260Answer{padding:12px;border-left:4px solid #C5A36B;background:#f1eadc;border-radius:7px;line-height:1.8}#wy260Card .wy260Close{width:auto;margin:0 0 8px auto;background:#ede1ce;color:#263B57}#wy260Card .wy260GownGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#wy260Card .wy260Gown{border:1px solid #c5a36b;border-radius:9px;padding:8px 4px;text-align:center;background:#f8f2e8}#wy260Card .wy260Gown svg{width:100%;max-height:110px}#wy260Card .wy260Gown button{font-size:12px;padding:7px 3px;text-align:center}`;document.head.append(wy260Css);
 const wy260Modal=document.createElement('div');wy260Modal.id='wy260Modal';wy260Modal.innerHTML='<div id="wy260Card"></div>';document.body.append(wy260Modal);
 function wy260Render(body){wy260Modal.style.display='flex';document.getElementById('wy260Card').innerHTML='<button class="wy260Close" data-wy260="close">✕ 關閉</button>'+body;}
-function wy260Open(key){wy260Current=key;wy260Scene=0;wyLobbyDialog.style.display='none';if(key==='robe')return wy260RobeHome();if(key==='books')return wy260Books();wy260SceneHome();}
+function wy260Open(key){if(key==='coffee'||key==='sofa')return wy264Open(key);wy260Current=key;wy260Scene=0;wyLobbyDialog.style.display='none';if(key==='robe')return wy260RobeHome();if(key==='books')return wy260Books();wy260SceneHome();}
 function wy260SceneHome(){const d=wy260Data[wy260Current];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p>'+wy260Escape(d.intro)+'</p>'+d.scenes.map((s,i)=>'<button data-wy260="scene:'+i+'">'+(i+1)+'．'+wy260Escape(s.q)+'</button>').join(''));}
 function wy260Question(i){wy260Scene=i;const d=wy260Data[wy260Current],s=d.scenes[i];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p><b>'+wy260Escape(s.q)+'</b></p>'+s.opts.map((o,j)=>'<button data-wy260="answer:'+j+'">'+String.fromCharCode(65+j)+'．'+wy260Escape(o[0])+'</button>').join('')+'<button data-wy260="home">← 返回情境選單</button>');}
 function wy260Answer(i){const s=wy260Data[wy260Current].scenes[wy260Scene],o=s.opts[i];wy260Render('<h2>'+wy260Escape(wy260Data[wy260Current].title)+'</h2><p>'+wy260Escape(s.q)+'</p><p><b>你的選擇：</b>'+wy260Escape(o[0])+'</p><div class="wy260Answer"><b>林律師怎麼看？</b><p>'+wy260Escape(o[1])+'</p></div><p style="font-size:12px;color:#746d63">以上為一般法律知識與模擬情境，個案仍須依具體事實及適用法律判斷。</p><button data-wy260="question">重新選擇</button><button data-wy260="home">← 其他情境</button>');}
@@ -2878,9 +2896,31 @@ function wy260GownSvg(color){return '<svg viewBox="0 0 100 110" aria-hidden="tru
 function wy260RobeHome(){wy260Render('<h2>律師袍的秘密</h2><p>一件黑色法袍，竟然藏著兩個故事。你想先看哪一個？</p><button data-wy260="gowns">法袍顏色大解密｜六件完整法袍</button><button data-wy260="wash">律師袍不能洗的秘密｜趣味故事</button>');}
 function wy260GownPage(i=-1){let b='<h2>法袍顏色大解密</h2><p>法袍大多是黑色，辨識身分的關鍵在鑲邊。點選完整法袍看看！</p><div class="wy260GownGrid">'+wy260Gowns.map((g,j)=>'<div class="wy260Gown">'+wy260GownSvg(g[2])+'<button data-wy260="gown:'+j+'">'+g[0]+'｜'+g[1]+'邊</button></div>').join('')+'</div>';if(i>=0)b+='<div class="wy260Answer"><b>'+wy260Gowns[i][0]+'：'+wy260Gowns[i][1]+'鑲邊</b><p>'+wy260Gowns[i][3]+'</p></div>';b+='<p style="font-size:12px;color:#746d63">向量圖為服裝示意，非官方服制附圖。實際規定請依現行法令為準。</p><button data-wy260="robehome">← 返回律師袍主選單</button>';wy260Render(b);}
 function wy260Wash(){wy260Render('<h2>律師袍不能洗的秘密</h2><p>你知道嗎？律師界流傳著一個有趣的說法：<b>律師袍不能隨便拿去洗！</b></p><p>據說，有些人相信律師袍穿久了會累積勝訴好運，拿去洗，可能連好運都一起洗掉。還有人開玩笑說，洗了就會「一貧如洗」。</p><p>當然，這只是法界流傳的趣味迷信，<b>不是法律規定，也沒有證據顯示洗袍會影響官司勝敗。</b>衣物是否適合水洗或乾洗，還是要看材質與洗滌標示。</p><div class="wy260Answer"><b>那林律師的律師袍呢？</b><p>放心！林律師的律師袍一定會拿去清潔。林律師同時具有台灣及美國紐約州律師資格，對不同法律文化都有接觸。</p><p><b>比起擔心洗掉勝訴運，林律師更擔心的是——官司還沒打完，律師袍就先被當成生物跡證送去鑑定！</b> 😂</p></div><p style="font-size:12px;color:#746d63">以上結尾為網站設計的趣味台詞，並非律師本人逐字引言。</p><button data-wy260="robehome">← 返回律師袍主選單</button>');}
+// v264: compact, single-line-at-a-time dialogue shared by the coffee station and sofa.
+const wy264Dialogues={
+ coffee:{title:'老闆今天第幾杯？',stories:[
+ {title:'第一杯：開庭前的咖啡',lines:[['夢奇奇','老闆，你今天已經喝第幾杯咖啡了？'],['林律師','第一杯。'],['哈姆太郎','可是我早上已經聽到咖啡機運轉三次了。'],['林律師','前面兩杯是暖機。'],['薪水掌門人','老闆，咖啡機有暖機功能，但你這個說法沒有報帳依據。']]},
+ {title:'第二杯：咖啡機也想請假',lines:[['哈姆太郎','我覺得咖啡機最近工作量比我們還大。'],['夢奇奇','那它可以申請加班費嗎？'],['薪水掌門人','不行，但我開始擔心維修預算了。'],['林律師','那先幫它排一個下午茶休息時間。'],['哈姆太郎','老闆，下午茶時間你還是會按它啊！']]},
+ {title:'第三杯：咖啡與書狀',lines:[['夢奇奇','老闆，書狀快寫完了嗎？'],['林律師','還差最後一段。'],['哈姆太郎','這句話我一個小時前就聽過了。'],['林律師','因為最後一段最重要。'],['薪水掌門人','那咖啡豆可能要列入書狀製作成本了。']]}
+ ]},
+ sofa:{title:'坐下五分鐘就好？',stories:[
+ {title:'第一段：休息五分鐘',lines:[['夢奇奇','終於可以坐一下了！'],['哈姆太郎','妳確定？上次老闆說五分鐘，結果討論了四十分鐘的案件。'],['林律師','剛好大家都在，我有一個問題想討論。'],['夢奇奇','……我就知道。'],['薪水掌門人','請問這段要算休息時間，還是會議時間？']]},
+ {title:'第二段：沙發使用守則',lines:[['哈姆太郎','這張沙發是不是應該貼一張使用守則？'],['夢奇奇','第一條：坐下來不准談工作。'],['林律師','那如果只是分享一個很有趣的法律案例呢？'],['夢奇奇','老闆，這就叫工作。'],['薪水掌門人','我建議第一條後面加註：林律師也適用。']]},
+ {title:'第三段：誰最常坐沙發',lines:[['夢奇奇','你們覺得這張沙發誰最常坐？'],['哈姆太郎','我猜是客人。'],['薪水掌門人','我猜是等老闆開完會的員工。'],['林律師','我覺得應該是我吧？'],['夢奇奇','老闆，你每次才剛坐下就又要出門了！']]}
+ ]}
+};
+let wy264Key='coffee',wy264Story=0,wy264Step=0;
+function wy264Open(key){wy264Key=key;wy264Story=0;wy264Step=0;wyLobbyDialog.style.display='none';wy264Render();}
+function wy264Render(){
+ const d=wy264Dialogues[wy264Key],story=d.stories[wy264Story],line=story.lines[wy264Step];
+ const prev=wy264Step>0?'<button data-wy260="v264prev">← 上一句</button>':'';
+ const next=wy264Step<story.lines.length-1?'<button data-wy260="v264next">下一句 →</button>':'<button data-wy260="v264nextstory">換一段趣事 ↻</button>';
+ wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p style="font-size:13px;color:#6b7280">'+wy260Escape(story.title)+'　'+(wy264Step+1)+' / '+story.lines.length+'</p><div class="wy260Answer" style="min-height:100px"><b>'+wy260Escape(line[0])+'</b><p>'+wy260Escape(line[1])+'</p></div><div class="wy264Nav">'+prev+next+'</div><button data-wy260="v264nextstory">其他趣事（'+(wy264Story+1)+' / '+d.stories.length+'）</button><p style="font-size:12px;color:#746d63">以上為網站創作的趣味情境，非人物真實發言。</p>');
+}
+const wy264Css=document.createElement('style');wy264Css.textContent='#wy260Card .wy264Nav{display:flex;gap:8px}#wy260Card .wy264Nav button{flex:1;text-align:center;min-width:0}';document.head.append(wy264Css);
 wy260Modal.addEventListener('change',e=>{if(e.target.id==='wy263BookPick'){wy260BookIndex=Number(e.target.value)||0;wy260Books();}});
 wy260Modal.addEventListener('click',e=>{if(e.target===wy260Modal)wy260Modal.style.display='none'});
-wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='nextbook'){wy260BookIndex=(wy260BookIndex+1)%wy260BookTalks.length;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
+wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='v264prev'){wy264Step=Math.max(0,wy264Step-1);return wy264Render()}if(a==='v264next'){wy264Step=Math.min(wy264Dialogues[wy264Key].stories[wy264Story].lines.length-1,wy264Step+1);return wy264Render()}if(a==='v264nextstory'){wy264Story=(wy264Story+1)%wy264Dialogues[wy264Key].stories.length;wy264Step=0;return wy264Render()}if(a==='nextbook'){wy260BookIndex=(wy260BookIndex+1)%wy260BookTalks.length;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
 function wy260SignsTick(){if(wyOfficeFloor!==3||!insideOffice||!wy180AtOffice)return;for(const m of wy260Signs)m.quaternion.copy(wy3Cam.quaternion)}
 
 let wy180ExitAnim=null;
@@ -3067,7 +3107,7 @@ function wy247SetRideView(floor){
  const eye=center.clone().add(new THREE.Vector3(-d*.30,d*.72,d*.78));
  // v259: raise the entire fixed elevator-approach composition, not the UI or lift signage.
  // Keep the viewing angle and stationary third-person shot; crop more floor at the bottom.
- const wy259Up=1.65;
+ const wy259Up=2.75; // v264: higher fixed overhead framing; remains stationary throughout elevator run
  eye.y+=wy259Up;center.y+=wy259Up;
  cam.position.copy(eye);ctrl.target.copy(center);cam.lookAt(center);cam.updateMatrixWorld(true);
  wy247RideView={floor,eye,center,root,end};
