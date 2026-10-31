@@ -2769,6 +2769,7 @@ function wy166LawyerTick(dt){
 function wy3Enter(){wy209ViewMode='overview';wy209CameraTween=null;wy209ExitDestination=0;wy180ExitAnim=null;wy180SetOfficeView(false);wy3Cam.fov=82;wy3Cam.updateProjectionMatrix();wy177Reveal=null;wy3OfficeUnlocked=wy3IntroSeen;wy3OfficeDoorOpened=false;wy3DoorProgress=0;wy3AutoWalk=false;wy3OfficeDoorPivot.rotation.y=0;wy3OfficeDoorPivotR.rotation.y=0;wy3Lawyer.root.visible=Math.random()<.15;wy3Lawyer.root.position.set(0,.05,-4.1);wy166LawyerIndex=1;wy166LawyerWait=2;wy3UpdatePrompts()}
 function wy3UpdatePrompts(){const active=insideOffice&&wyOfficeFloor===3&&!activeIslandRoom;wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display=(active&&!wy180AtOffice&&!wy3OfficeDoorOpened&&!wy3ArrivalAnim&&!wyRide&&wy3Intro.style.display!=='flex')?'block':'none'}
 function wy3Interact(action){
+ if(action&&action.startsWith('wy260:')){wy260Open(action.slice(6));return}
  if(action==='wall'){wy3ShowIntro();return}
  if(action==='exit3f'){wy180ExitOffice();return}
  if(action==='arrivalReplay'){wy3PlayArrival();return}
@@ -2784,6 +2785,101 @@ function wy3Interact(action){
  if(action==='credentials'){openWyInfo('lawyer');return}
  if(action==='fitness'){wyLobbyDialog.innerHTML='<h3>林律師的私人運動區</h3><p>滑步機、蝴蝶式夾胸重訓機與室內伸展區。請保持器材間的安全距離。</p><button id="wy3Done">關閉</button>';wyLobbyDialog.style.display='block';document.getElementById('wy3Done').onclick=()=>wyLobbyDialog.style.display='none';return}
 }
+
+// v260: seven independent floating, camera-facing 3F interaction signs.
+// Anchors avoid furniture and keep the established portal sign and arrow unchanged.
+const wy260Entries=[
+ {key:'case',title:'這案子，你怎麼辦？',pos:[0,2.36,.58],width:2.78},
+ {key:'overseas',title:'跨國官司不迷航！',pos:[1.65,2.43,-2.22],width:2.72},
+ {key:'contract',title:'這份合約，敢簽嗎？',pos:[-2.08,2.43,-2.25],width:2.94},
+ {key:'books',title:'林律師又買書了？！',pos:[5.76,5.72,-7.34],width:2.96},
+ {key:'evidence',title:'證據到底躲哪裡？',pos:[-8.42,5.75,-2.45],width:3.04},
+ {key:'schedule',title:'律師今天又去哪了？',pos:[-8.88,5.70,-5.60],width:3.00},
+ {key:'robe',title:'律師袍不能洗？！',pos:[2.35,4.92,-5.90],width:2.75}
+];
+const wy260Signs=[];
+function wy260MakeSign(e){
+ const c=document.createElement('canvas');c.width=1024;c.height=220;const g=c.getContext('2d');
+ g.fillStyle='#263B57';g.beginPath();g.roundRect(10,12,1004,196,30);g.fill();
+ g.lineWidth=10;g.strokeStyle='#C5A36B';g.stroke();
+ g.font='bold 76px "Noto Sans TC",system-ui,sans-serif';g.fillStyle='#F8E5BD';g.textAlign='center';g.textBaseline='middle';g.fillText(e.title,512,113,925);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(e.width,.58),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
+ m.position.set(...e.pos);m.userData.wy3Action='wy260:'+e.key;m.renderOrder=4;wy3Root.add(m);wy3Targets.push(m);wy260Signs.push(m);
+}
+wy260Entries.forEach(wy260MakeSign);
+// Explicit touch targets on the relevant physical objects, without altering their appearance.
+function wy260TagMeshes(root,key){root.traverse(o=>{if(o.isMesh&&!o.userData.wy3Action){o.userData.wy3Action='wy260:'+key;wy3Targets.push(o)}})}
+wy260TagMeshes(wy241Laptop,'overseas');wy260TagMeshes(wy241Document,'contract');wy260TagMeshes(wy243Cabinet,'evidence');wy260TagMeshes(wy220Robe,'robe');
+// Clickable desk surface only, not lawyer avatar or chair.
+const wy260DeskHit=new THREE.Mesh(new THREE.BoxGeometry(5.8,.09,1.95),new THREE.MeshBasicMaterial({visible:false}));
+wy260DeskHit.position.set(0,1.33,-1.55);wy260DeskHit.userData.wy3Action='wy260:case';wy3Root.add(wy260DeskHit);wy3Targets.push(wy260DeskHit);
+const wy260ShelfHit=new THREE.Mesh(new THREE.BoxGeometry(8.2,4.3,.38),new THREE.MeshBasicMaterial({visible:false}));
+wy260ShelfHit.position.set(0,3.35,-7.85);wy260ShelfHit.userData.wy3Action='wy260:books';wy3Root.add(wy260ShelfHit);wy3Targets.push(wy260ShelfHit);
+// Window hit is narrow and placed at the original left-side window, away from the dossier cabinet.
+const wy260WindowHit=new THREE.Mesh(new THREE.BoxGeometry(.12,2.95,2.15),new THREE.MeshBasicMaterial({visible:false}));
+wy260WindowHit.position.set(-9.62,3.72,-5.50);wy260WindowHit.userData.wy3Action='wy260:schedule';wy3Root.add(wy260WindowHit);wy3Targets.push(wy260WindowHit);
+const wy260Data={
+ case:{title:'這案子，你怎麼辦？',intro:'林律師桌上有三份剛送進來的案件。今天換你做第一輪判斷！',scenes:[
+  {q:'車禍後，對方只說「我沒錢」，你會先做什麼？',opts:[['先整理事故、損害及醫療證據','這是比較穩健的起點。事故責任、損害項目與因果關係都需要證據支持，才能評估求償及後續程序。'],['立刻在網路公布對方個資','公開個資可能衍生隱私或其他法律風險，並不會自動讓對方履行賠償義務。'],['什麼都不做，等對方良心發現','等待可能影響蒐證及請求權時效。先確認時效、證據與可行的協商或訴訟方案較妥當。']]},
+  {q:'收到刑事案件通知，第一步怎麼辦？',opts:[['確認通知內容與程序身分','先釐清是證人、被告或其他身分，並了解案由、時間及權利義務，再準備資料或尋求律師協助。'],['把所有對話紀錄刪掉','任意刪除資料可能使事實更難釐清，甚至衍生其他風險。應妥善保留相關證據。'],['只問朋友「會不會被關」','刑事責任必須依個案事實、證據與法律構成要件分析，不能只靠傳聞判斷。']]},
+  {q:'公司收到合作廠商的違約通知，你會？',opts:[['先核對契約與履約紀錄','應檢視契約義務、通知期限、違約事實及往來證據，再評估回覆與談判策略。'],['直接承認所有責任','在事實與契約責任未釐清前，貿然承認可能增加後續爭議。'],['把通知當廣告信忽略','忽略通知可能錯過契約約定的回應或補正期限，應及早處理。']]}]},
+ overseas:{title:'跨國官司不迷航！',intro:'銀色筆電收到一封海外客戶來信。跨國交易，最怕漏看哪一行？',scenes:[
+  {q:'美國公司要與台灣供應商簽約，先看什麼？',opts:[['準據法、管轄與爭議解決','跨國契約應明確評估適用法律、法院或仲裁安排，以及實際執行的可行性。'],['只看合作價格','價格重要，但交付、驗收、責任限制與爭議解決條款同樣會影響風險。'],['英文版比較長，所以不用看','條款語言不代表風險大小。應確認雙語版本效力及關鍵條款的一致性。']]},
+  {q:'海外買家遲遲不付款，下一步？',opts:[['保存訂單、出貨、驗收及催款資料','這些資料有助釐清債權基礎、付款期限與是否存在品質或交付爭議。'],['先把對方帳號全部封鎖','封鎖可能切斷協商管道，也不會直接完成催收。'],['馬上認定一定是詐欺','單純未付款不必然構成詐欺，仍須檢視交易時的主觀意圖及相關事證。']]},
+  {q:'離職員工疑似帶走客戶資料，怎麼處理？',opts:[['先保存存取紀錄並檢視保密措施','應依法保存資料，評估資訊是否具營業秘密要件，以及保密措施與勞動契約安排。'],['立刻公開員工姓名指控','未釐清事實就公開指控，可能衍生名譽與個資爭議。'],['只要是公司檔案就一定是營業秘密','並非所有公司資料都自動構成營業秘密，須個別檢視法定要件。']]}]},
+ contract:{title:'這份合約，敢簽嗎？',intro:'對方說：「就差你一個簽名，現在簽就好！」先別急。',scenes:[
+  {q:'合約寫「任何情況下均不得退款」，你會？',opts:[['先確認交易類型及條款效力','退款條款的效力須視契約類型、消費者保護規範及具體約定判斷，並非寫上就必然有效。'],['反正有寫就一定有效','契約自由仍受強制規定、誠信原則等限制。'],['不看其他條款直接簽','應連同付款、履約、解除終止及違約責任一起評估。']]},
+  {q:'對方要求先付全額，交貨時間卻寫「另議」？',opts:[['要求具體交付、驗收及退款機制','把履約期限、驗收標準、逾期處理及付款條件寫清楚，能減少日後爭議。'],['相信口頭保證就好','口頭承諾的內容與證明可能產生爭議，重要約定最好書面化。'],['只要有蓋章就不用擔心','形式完整不代表條款對自己有利，仍應審閱實質內容。']]},
+  {q:'合約有很高的違約金，你會？',opts:[['了解計算方式、觸發條件及風險','應評估違約金性質、金額與適用條件，必要時談判調整。'],['覺得不會違約就不看','即使主觀認為不會違約，也可能因交期、驗收或不可抗力等問題發生爭議。'],['直接把違約金那頁撕掉','單方移除頁面可能造成契約內容爭議，應由雙方正式確認修訂。']]}]},
+ evidence:{title:'證據到底躲哪裡？',intro:'卷宗櫃打開了！這些資料各能證明什麼？',scenes:[
+  {q:'想證明已經借款給對方，哪一份資料最值得先找？',opts:[['匯款紀錄加上借貸對話','匯款可證明金流，對話與借據等資料有助進一步釐清款項的法律原因。'],['只有對方社群上的旅遊照片','旅遊照片通常無法直接證明借貸契約成立。'],['朋友說對方很有錢','他人的印象不足以直接證明特定債權存在。']]},
+  {q:'截圖只有一句「好」，夠證明雙方已談妥所有條件嗎？',opts:[['還要看前後完整對話及交易脈絡','片段訊息容易失去上下文，應保存完整紀錄並確認對方身分、時間與合意內容。'],['一個「好」就什麼都成立','是否成立契約與內容為何，仍須綜合整體事證判斷。'],['只要截圖有藍勾就一定贏','已讀或勾選符號通常不能單獨證明全部法律要件。']]},
+  {q:'準備提告前，發現關鍵證據在舊手機裡？',opts:[['妥善備份原始檔案並保留來源','應盡量保存原始資料、時間及取得過程，避免破壞證據完整性。'],['先用修圖軟體讓字更清楚','不當修改可能影響證據真實性與可信度。'],['只記得大概內容就夠了','記憶可供陳述，但仍宜尋找客觀資料相互印證。']]}]},
+ schedule:{title:'律師今天又去哪了？',intro:'站在窗邊看看林律師的行程：法庭、會議、書狀，還有一杯來不及喝的咖啡。',scenes:[
+  {q:'早上9點要開庭，10點又有客戶來電，怎麼排？',opts:[['先確認開庭與聯繫安排','法院期日及程序要求需優先確認；客戶溝通可依實際情況安排助理協調或回覆。'],['邊開庭邊接電話','法庭程序有秩序要求，不能任意中斷。'],['先把手機丟給咖啡機','咖啡機很努力，但它沒有律師執照。']]},
+  {q:'下午要演講，突然收到法院書狀期限提醒？',opts:[['先確認期限與必要程序','法定或法院指定期限需要嚴謹管理，必要時及早安排工作與評估合法處理方式。'],['等演講結束再想','若期限迫近，拖延可能造成程序上的不利益。'],['請書櫃幫忙寫','書櫃藏書很多，但還不會自己寫書狀。']]},
+  {q:'晚上終於回到辦公室，林律師第一件事可能是？',opts:[['整理明天的案件與資料','律師工作不只有出庭，還包含閱卷、研究、會議及文件準備。'],['宣布從此不看任何法律書','隔壁書櫃表示：這句話我不相信。'],['問咖啡機有沒有加班費','咖啡機和書櫃可能會一起要求成立員工福利委員會。']]}]}
+};
+const wy260BookTalks=[
+ ['你知道林律師的法律相關藏書預計有多少本嗎？','目前預計約有200多本，而且還會繼續增加。員工最擔心的不是書不夠，是書櫃先投降！'],
+ ['林律師：「最近想再買幾本書。」','薪水掌門人：「請問『幾本』的計量單位是一本、十本，還是一整箱？」'],
+ ['書櫃今天為什麼這麼安靜？','因為它正在思考：法律一直修，自己的容量是不是也應該修法擴編？'],
+ ['夢奇奇：「這本書放哪裡？」','哈姆太郎：「先問書櫃還有沒有空位。」書櫃：「請不要把我當無限雲端硬碟！」'],
+ ['如果林律師的書會說話？','它們可能會說：「我們不是背景裝潢，翻開來才有工作績效！」'],
+ ['法律書也有新舊版本？','有些法規與實務見解會變動，所以除了保存經典資料，也要持續更新。書櫃：「更新可以，但先讓我喘口氣。」'],
+ ['200多本書夠不夠？','對愛研究法律的人來說，可能只是下一輪購書清單的起點。'],
+ ['薪水掌門人最怕聽到哪一句？','「這一套法律叢書很值得收藏。」因為下一句通常是：「我們是不是還有地方？」'],
+ ['林律師的書櫃有沒有休假？','理論上有，實際上只要律師想到新問題，書櫃就可能被臨時召回。'],
+ ['為什麼書櫃要做成半圓形？','因為書越來越多，連書櫃都想用優雅的弧度面對壓力。'],
+ ['哈姆太郎：「找一本書需要多久？」','夢奇奇：「如果大家都記得放回原位，應該會快很多。」'],
+ ['書櫃最怕什麼？','不是灰塵，而是有人說：「這一套我覺得可以全部買齊。」'],
+ ['林律師又看到一本新書？','員工：「買之前先確認一下，我們是不是已經有三個不同版本？」'],
+ ['書櫃旁邊的隱藏任務是什麼？','請找到一本你真的想讀的書。答案不是「看起來最薄的那本」！'],
+ ['法律研究只靠一本書嗎？','通常還要比對法條、裁判、最新實務及案件事實。書櫃：「所以我不是單兵作戰。」'],
+ ['如果書櫃有年度考核？','績效指標可能是：新增書籍數、被翻閱次數，以及成功避免書本雪崩的天數。'],
+ ['律師的書為什麼會越來越多？','因為新的問題不會等舊問題解決才出現，專業資料也需要不斷累積。'],
+ ['最後一個問題：書櫃還能再塞幾本？','這題請不要讓薪水掌門人聽到。她可能會先拿出捲尺。']
+];
+let wy260BookIndex=0,wy260Current=null,wy260Scene=0;
+const wy260Escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const wy260Css=document.createElement('style');wy260Css.textContent=`#wy260Modal{position:fixed;inset:0;z-index:116;display:none;align-items:center;justify-content:center;background:#0b1725c9;padding:14px;font-family:system-ui,'Noto Sans TC',sans-serif}#wy260Card{width:min(94vw,560px);max-height:86dvh;overflow:auto;background:#fffaf1;color:#27384c;border:2px solid #c5a36b;border-radius:17px;box-shadow:0 18px 60px #0008;padding:17px}#wy260Card h2{font-size:20px;color:#263B57;margin:4px 0 12px}#wy260Card p{line-height:1.8;font-size:15px;margin:8px 0 12px}#wy260Card button{display:block;width:100%;text-align:left;padding:12px 14px;margin:9px 0;background:#263B57;color:#F8E5BD;border:1px solid #C5A36B;border-radius:11px;font-size:14px;line-height:1.55;font-weight:650}#wy260Card .wy260Answer{padding:12px;border-left:4px solid #C5A36B;background:#f1eadc;border-radius:7px;line-height:1.8}#wy260Card .wy260Close{width:auto;margin:0 0 8px auto;background:#ede1ce;color:#263B57}#wy260Card .wy260GownGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}#wy260Card .wy260Gown{border:1px solid #c5a36b;border-radius:9px;padding:8px 4px;text-align:center;background:#f8f2e8}#wy260Card .wy260Gown svg{width:100%;max-height:110px}#wy260Card .wy260Gown button{font-size:12px;padding:7px 3px;text-align:center}`;document.head.append(wy260Css);
+const wy260Modal=document.createElement('div');wy260Modal.id='wy260Modal';wy260Modal.innerHTML='<div id="wy260Card"></div>';document.body.append(wy260Modal);
+function wy260Render(body){wy260Modal.style.display='flex';document.getElementById('wy260Card').innerHTML='<button class="wy260Close" data-wy260="close">✕ 關閉</button>'+body;}
+function wy260Open(key){wy260Current=key;wy260Scene=0;wyLobbyDialog.style.display='none';if(key==='robe')return wy260RobeHome();if(key==='books')return wy260Books();wy260SceneHome();}
+function wy260SceneHome(){const d=wy260Data[wy260Current];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p>'+wy260Escape(d.intro)+'</p>'+d.scenes.map((s,i)=>'<button data-wy260="scene:'+i+'">'+(i+1)+'．'+wy260Escape(s.q)+'</button>').join(''));}
+function wy260Question(i){wy260Scene=i;const d=wy260Data[wy260Current],s=d.scenes[i];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p><b>'+wy260Escape(s.q)+'</b></p>'+s.opts.map((o,j)=>'<button data-wy260="answer:'+j+'">'+String.fromCharCode(65+j)+'．'+wy260Escape(o[0])+'</button>').join('')+'<button data-wy260="home">← 返回情境選單</button>');}
+function wy260Answer(i){const s=wy260Data[wy260Current].scenes[wy260Scene],o=s.opts[i];wy260Render('<h2>'+wy260Escape(wy260Data[wy260Current].title)+'</h2><p>'+wy260Escape(s.q)+'</p><p><b>你的選擇：</b>'+wy260Escape(o[0])+'</p><div class="wy260Answer"><b>林律師怎麼看？</b><p>'+wy260Escape(o[1])+'</p></div><p style="font-size:12px;color:#746d63">以上為一般法律知識與模擬情境，個案仍須依具體事實及適用法律判斷。</p><button data-wy260="question">重新選擇</button><button data-wy260="home">← 其他情境</button>');}
+function wy260Books(){const t=wy260BookTalks[wy260BookIndex%wy260BookTalks.length];wy260Render('<h2>林律師又買書了？！</h2><p><b>'+wy260Escape(t[0])+'</b></p><div class="wy260Answer">'+wy260Escape(t[1])+'</div><p style="font-size:12px;color:#746d63">第 '+(wy260BookIndex%wy260BookTalks.length+1)+'／'+wy260BookTalks.length+' 則趣味對話</p><button data-wy260="nextbook">再聽一段辦公室趣事 ↻</button>');}
+const wy260Gowns=[['法官','藍色','#2766a4','法官法袍以藍色鑲邊辨識。'],['檢察官','紫色','#8050a5','檢察官法袍以紫色鑲邊辨識。'],['律師','白色','#eeeeee','律師法袍以白色鑲邊辨識。'],['公設辯護人','綠色','#328961','公設辯護人法袍以綠色鑲邊辨識。'],['書記官','黑色','#555555','書記官法袍以黑色鑲邊辨識。'],['公證人','紅色','#c94a4a','公證人主持結婚儀式時，依法穿著黑色紅邊制服；不是所有公證業務都要穿。']];
+function wy260GownSvg(color){return '<svg viewBox="0 0 100 110" aria-hidden="true"><path d="M34 10 L18 18 L3 48 L20 57 L27 45 L24 101 Q50 108 76 101 L73 45 L80 57 L97 48 L82 18 L66 10 L59 18 L41 18Z" fill="#24282d" stroke="#101418" stroke-width="2"/><path d="M34 10 L43 28 L50 35 L57 28 L66 10 M43 28 L45 100 M57 28 L55 100 M9 46 L22 52 M78 52 L91 46" fill="none" stroke="'+color+'" stroke-width="6" stroke-linejoin="round"/></svg>'}
+function wy260RobeHome(){wy260Render('<h2>律師袍的秘密</h2><p>一件黑色法袍，竟然藏著兩個故事。你想先看哪一個？</p><button data-wy260="gowns">法袍顏色大解密｜六件完整法袍</button><button data-wy260="wash">律師袍不能洗的秘密｜趣味故事</button>');}
+function wy260GownPage(i=-1){let b='<h2>法袍顏色大解密</h2><p>法袍大多是黑色，辨識身分的關鍵在鑲邊。點選完整法袍看看！</p><div class="wy260GownGrid">'+wy260Gowns.map((g,j)=>'<div class="wy260Gown">'+wy260GownSvg(g[2])+'<button data-wy260="gown:'+j+'">'+g[0]+'｜'+g[1]+'邊</button></div>').join('')+'</div>';if(i>=0)b+='<div class="wy260Answer"><b>'+wy260Gowns[i][0]+'：'+wy260Gowns[i][1]+'鑲邊</b><p>'+wy260Gowns[i][3]+'</p></div>';b+='<p style="font-size:12px;color:#746d63">向量圖為服裝示意，非官方服制附圖。實際規定請依現行法令為準。</p><button data-wy260="robehome">← 返回律師袍主選單</button>';wy260Render(b);}
+function wy260Wash(){wy260Render('<h2>律師袍不能洗的秘密</h2><p>你知道嗎？律師界流傳著一個有趣的說法：<b>律師袍不能隨便拿去洗！</b></p><p>據說，有些人相信律師袍穿久了會累積勝訴好運，拿去洗，可能連好運都一起洗掉。還有人開玩笑說，洗了就會「一貧如洗」。</p><p>當然，這只是法界流傳的趣味迷信，<b>不是法律規定，也沒有證據顯示洗袍會影響官司勝敗。</b>衣物是否適合水洗或乾洗，還是要看材質與洗滌標示。</p><div class="wy260Answer"><b>那林律師的律師袍呢？</b><p>放心！林律師的律師袍一定會拿去清潔。林律師同時具有台灣及美國紐約州律師資格，對不同法律文化都有接觸。</p><p><b>比起擔心洗掉勝訴運，林律師更擔心的是——官司還沒打完，律師袍就先被當成生物跡證送去鑑定！</b> 😂</p></div><p style="font-size:12px;color:#746d63">以上結尾為網站設計的趣味台詞，並非律師本人逐字引言。</p><button data-wy260="robehome">← 返回律師袍主選單</button>');}
+wy260Modal.addEventListener('click',e=>{if(e.target===wy260Modal)wy260Modal.style.display='none'});
+wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='nextbook'){wy260BookIndex++;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
+function wy260SignsTick(){if(wyOfficeFloor!==3||!insideOffice||!wy180AtOffice)return;for(const m of wy260Signs)m.quaternion.copy(wy3Cam.quaternion)}
+
 let wy180ExitAnim=null;
 // 3F exit is isolated from the existing inbound elevator/arrival state machine.
 function wy208Blocked(x,z){
@@ -2867,7 +2963,7 @@ let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
 const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(9.1,0,-7.45),wyElev3Pos=new THREE.Vector3(7.75,0,6.45);const wyElevPos=f=>f===1?wyElev1Pos:f===2?wyElev2Pos:wyElev3Pos;
 
 // v165: globally suppress movement controls while any interaction panel is visible.
-const wy165ModalIds=['dialog','wyLobbyDialog','wyMainGuide','wyFamilyGuide','wyMedicalGuide','wy3Intro','wy3MovieModal','wyInfo'];
+const wy165ModalIds=['dialog','wyLobbyDialog','wyMainGuide','wyFamilyGuide','wyMedicalGuide','wy3Intro','wy3MovieModal','wy260Modal','wyInfo'];
 function wy165SyncControls(){const open=wy165ModalIds.some(id=>{const e=document.getElementById(id);return e&&getComputedStyle(e).display!=='none'&&getComputedStyle(e).visibility!=='hidden'&&(!e.classList.contains('open')?id!=='wyInfo':true)})||document.querySelector('#wyInfo.open');if(document.body.classList.contains('wy165-dialog-open')!==!!open)document.body.classList.toggle('wy165-dialog-open',!!open);if(open&&typeof wyJoyReset==='function')wyJoyReset();}
 new MutationObserver(wy165SyncControls).observe(document.body,{subtree:true,attributes:true,attributeFilter:['style','class']});wy165SyncControls();
 
@@ -3553,7 +3649,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div>
 
