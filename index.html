@@ -2277,7 +2277,7 @@ wy243Box(wy243Cabinet,.49,.43,0,.14,.72,2.76,wy243Emerald);
 wy243Box(wy243Cabinet,.58,.48,0,.025,.05,.32,wy243Brass);
 // V1 cinema-style VIDEO wall: restyle the existing video display in place, retaining video action.
 // Do not create a second video element or remove the existing movie modal.
-const wy243VideoWall=new THREE.Group();wy243VideoWall.position.set(-9.30,0,.72);wy3Root.add(wy243VideoWall);
+const wy243VideoWall=new THREE.Group();wy243VideoWall.position.set(-9.30,0,.72);wy3Root.add(wy243VideoWall);wy243VideoWall.visible=false;
 const wy243Navy=new THREE.MeshStandardMaterial({color:'#20354b',roughness:.68});
 wy243Box(wy243VideoWall,0,2.65,0,.22,4.95,3.50,wy243Navy);
 for(const zz of [-1.68,1.68])wy243Box(wy243VideoWall,.14,2.65,zz,.075,4.78,.045,wy243Brass);
@@ -2297,6 +2297,40 @@ vp.fillStyle='#e5d5bb';vp.font='19px sans-serif';vp.fillText('點擊播放影片
 const wy3PosterTex=new THREE.CanvasTexture(wy3Poster);wy3PosterTex.colorSpace=THREE.SRGBColorSpace;
 const wy3Screen=new THREE.Mesh(new THREE.PlaneGeometry(3.05,1.72),new THREE.MeshBasicMaterial({map:wy3PosterTex,side:THREE.DoubleSide}));
 wy3Screen.rotation.y=Math.PI/2;wy3Screen.position.set(.245,2.79,0);wy3Screen.userData.wy3Action='video';wy243VideoWall.add(wy3Screen);wy3Targets.push(wy3Screen);
+// v253: freestanding luxury digital film display, opposite the existing robe behind the lawyer.
+// Original video URL, poster texture and wy3Action are preserved; original wall fixture hidden.
+const wy253Display=new THREE.Group();wy253Display.position.set(-2.60,0,-5.76);wy3Root.add(wy253Display);
+const wy253GoldMat=new THREE.MeshStandardMaterial({color:0xe0b85f,metalness:.76,roughness:.23});
+const wy253EmeraldMat=new THREE.MeshStandardMaterial({color:0x116456,metalness:.38,roughness:.31});
+const wy253NavyMat=new THREE.MeshStandardMaterial({color:0x102a46,metalness:.26,roughness:.38});
+function wy253Part(x,y,z,w,h,d,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);wy253Display.add(m);return m;}
+// Screen faces into the office, with gold rim separated from glass to avoid z-fighting.
+wy253Part(0,3.10,-.10,3.82,2.40,.22,wy253EmeraldMat);
+wy253Part(0,3.10,.045,3.64,2.22,.075,wy253GoldMat);
+wy253Part(0,3.10,.099,3.49,2.07,.045,wy253NavyMat);
+wy253Part(0,3.10,.134,3.32,1.89,.018,new THREE.MeshBasicMaterial({color:0x081c2e}));
+wy3Screen.rotation.y=0;wy3Screen.position.set(0,3.10,.148);wy3Screen.scale.set(1.075,1.075,1);wy253Display.add(wy3Screen);
+// Jewel-like corner ornaments and champagne-gold floral engraving, no decorations over video.
+for(const side of [-1,1]){
+ wy253Part(side*1.85,3.10,.102,.055,2.17,.075,wy253GoldMat);
+ for(const yy of [2.14,4.06]){
+  const jewel=new THREE.Mesh(new THREE.OctahedronGeometry(.105,0),wy253GoldMat);
+  jewel.position.set(side*1.80,yy,.167);wy253Display.add(jewel);
+ }
+ for(let j=0;j<4;j++){
+  const leaf=new THREE.Mesh(new THREE.SphereGeometry(.06,10,8),j%2?wy253GoldMat:wy253EmeraldMat);
+  leaf.scale.set(.55,1.55,.40);leaf.position.set(side*(1.85-.03*j),2.30+j*.20,.165);leaf.rotation.z=side*.6;wy253Display.add(leaf);
+ }
+}
+// Twin pillars, connecting collar, beveled base and gold floor rails.
+for(const x of [-.64,.64]){
+ wy253Part(x,1.04,-.06,.14,1.78,.17,wy253GoldMat);
+ wy253Part(x,1.03,.046,.055,1.62,.035,wy253EmeraldMat);
+}
+wy253Part(0,1.91,-.06,1.65,.22,.29,wy253EmeraldMat);
+wy253Part(0,.20,-.08,2.14,.24,.85,wy253EmeraldMat);
+wy253Part(0,.36,-.08,1.88,.065,.69,wy253GoldMat);
+wy253Part(0,.075,-.08,2.30,.10,.94,wy253GoldMat);
 // Distinct side-facing selection surface keeps the established click-to-open movie workflow.
 // v240: Removed entire front-of-gym litigation file cabinet, all books and label.
 // v221 hotfix: 3D rods used by gym and robe hanger; must exist before scene initialization.
@@ -2308,83 +2342,62 @@ function wy3Bar(x1,y1,z1,x2,y2,z2,r,color){
  wy3Root.add(m);return m;
 }
 
-// v252: Emerald private fitness club, occupying only the front-left L corner.
-// All objects below belong to a separate group; the existing office furniture is untouched.
+// v253: compact rectangular private gym. Long dimension runs along the window-wall axis.
+// Two machines and one stretch mat ALL inside the enclosed glass room.
 const wy252Gym=new THREE.Group();wy3Root.add(wy252Gym);
-const wy252Emerald=0x165747,wy252Gold=0xc9a66b,wy252Dark=0x303942,wy252Ivory=0xf0e7d7;
+const wy252Emerald=0x165747,wy252Gold=0xc9a66b,wy252Dark=0x303942;
 const wy252Mat=(color,metalness=0,roughness=.62)=>new THREE.MeshStandardMaterial({color,metalness,roughness});
 function wy252Box(parent,x,y,z,w,h,d,color,metalness=0){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy252Mat(color,metalness));m.position.set(x,y,z);parent.add(m);return m;}
 function wy252Rod(parent,a,b,r,color){const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),v=bv.clone().sub(av);const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,v.length(),12),wy252Mat(color,.38));m.position.copy(av.add(bv).multiplyScalar(.5));m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.normalize());parent.add(m);return m;}
 function wy252Wheel(parent,x,y,z,r,color){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.16,28),wy252Mat(color,.25));m.rotation.x=Math.PI/2;m.position.set(x,y,z);parent.add(m);return m;}
 function wy252Device(x,z,rot=0){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;wy252Gym.add(g);return g;}
-// Site boundaries: x -9.55..-3.75, z 1.45..7.95; desk is centered at x=0,z=-1.55.
-// Deliberate open walkway and no internal walls. One exterior room with an inward-facing front entry.
-wy252Box(wy252Gym,-6.62,.038,4.72,5.66,.065,6.22,0x41474b);
-wy252Box(wy252Gym,-6.62,.081,4.72,5.30,.018,5.84,0x4b5254);
-// Rear wall, existing west wall is preserved. Decorative emerald interior wall and marble-style panels.
-wy252Box(wy252Gym,-6.62,2.55,1.61,5.66,5.10,.14,wy252Emerald);
-for(let i=0;i<9;i++)wy252Box(wy252Gym,-9.15+i*.63,2.52,1.70,.018,4.76,.018,wy252Gold,.6);
-// North/south glazed side and east-facing glass facade, with conservative transparency depth settings.
-const wy252GlassMat=new THREE.MeshPhysicalMaterial({color:0xc8e7df,transparent:true,opacity:.17,metalness:0,roughness:.17,depthWrite:false,side:THREE.DoubleSide});
+// Room: x -9.34 to -4.32 (5.02 long), z 1.83 to 5.39 (3.56 deep).
+// Previous footprint reached z=7.85 and x=-3.78, obstructing circulation.
+const wy253GymCX=-6.83,wy253GymCZ=3.61;
+wy252Box(wy252Gym,wy253GymCX,.035,wy253GymCZ,5.02,.07,3.56,0x41474b);
+wy252Box(wy252Gym,wy253GymCX,.077,wy253GymCZ,4.88,.015,3.42,0x4b5254);
+const wy252GlassMat=new THREE.MeshPhysicalMaterial({color:0xc8e7df,transparent:true,opacity:.14,metalness:0,roughness:.23,depthWrite:false,side:THREE.DoubleSide});
 function wy252Glass(x,y,z,w,h,d){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy252GlassMat);m.position.set(x,y,z);m.renderOrder=2;wy252Gym.add(m);return m;}
-wy252Glass(-9.39,2.56,4.77,.075,4.82,6.16);
-wy252Glass(-6.62,2.56,7.85,5.55,4.82,.07);
-// Front facade along x=-3.80, doorway gap from z=4.55 to 6.35.
-wy252Glass(-3.79,2.55,2.99,.07,4.82,2.72);
-wy252Glass(-3.79,2.55,7.10,.07,4.82,1.36);
-for(const z of [1.63,4.46,6.43,7.84])wy252Box(wy252Gym,-3.78,2.55,z,.15,5.13,.12,wy252Gold,.7);
-wy252Box(wy252Gym,-3.78,5.08,4.72,.16,.18,6.25,wy252Gold,.7);
-wy252Box(wy252Gym,-3.78,.18,4.72,.17,.19,6.25,wy252Gold,.65);
-// Emerald stone portal columns, layered to show shape on small phone screens.
-for(const z of [4.44,6.45]){wy252Box(wy252Gym,-3.78,2.56,z,.39,5.12,.36,wy252Emerald);wy252Box(wy252Gym,-3.57,2.56,z,.045,4.90,.26,wy252Gold,.6);}
-wy252Box(wy252Gym,-3.78,5.46,5.43,.35,.64,2.55,wy252Emerald);
-// Entrance leaves open visually, door hardware and two glass leaves at a permanently open angle.
-for(const z of [4.89,6.00]){const door=new THREE.Group();door.position.set(-3.78,0,z);door.rotation.y=z<5.5?-.85:.85;wy252Gym.add(door);const pane=new THREE.Mesh(new THREE.BoxGeometry(.07,4.55,.76),wy252GlassMat);pane.position.y=2.48;door.add(pane);wy252Box(door,.02,2.48,0,.085,4.58,.79,wy252Gold,.65);wy252Rod(door,[-.15,1.85,.22],[-.15,3.05,.22],.035,wy252Gold);}
-// Warm-white lettering: canvas texture is a single plane and cannot z-fight with stone.
+// Four fully enclosed sides, front entrance has two stationary open leaves.
+wy252Glass(-9.31,2.30,3.61,.06,4.35,3.48);
+wy252Glass(-6.83,2.30,1.86,4.96,4.35,.06);
+wy252Glass(-6.83,2.30,5.36,4.96,4.35,.06);
+wy252Glass(-4.35,2.30,2.42,.06,4.35,1.12);
+wy252Glass(-4.35,2.30,4.86,.06,4.35,.95);
+for(const x of [-9.31,-4.35])for(const z of [1.86,5.36])wy252Box(wy252Gym,x,2.30,z,.085,4.52,.085,wy252Gold,.6);
+for(const z of [1.86,5.36])wy252Box(wy252Gym,-6.83,4.51,z,5.01,.10,.09,wy252Gold,.65);
+for(const z of [1.86,5.36])wy252Box(wy252Gym,-6.83,.19,z,5.01,.10,.09,wy252Gold,.65);
+for(const x of [-9.31,-4.35])wy252Box(wy252Gym,x,4.51,3.61,.09,.10,3.55,wy252Gold,.65);
+// Opening at x=-4.35, z 3.00..4.39, angled glass door leaves do not cross the passage.
+for(const z of [3.12,4.23]){const door=new THREE.Group();door.position.set(-4.35,0,z);door.rotation.y=z<3.7?-.58:.58;wy252Gym.add(door);const pane=new THREE.Mesh(new THREE.BoxGeometry(.045,4.15,.58),wy252GlassMat);pane.position.y=2.25;door.add(pane);wy252Box(door,.01,2.25,0,.055,4.19,.60,wy252Gold,.55);wy252Rod(door,[-.10,1.55,.19],[-.10,2.56,.19],.03,wy252Gold);}
+// Gold-edged top nameplate, no coplanar surfaces.
+wy252Box(wy252Gym,-4.32,4.77,3.61,.16,.43,1.62,wy252Emerald);
 const wy252Canvas=document.createElement('canvas');wy252Canvas.width=1024;wy252Canvas.height=180;
-const wy252Ctx=wy252Canvas.getContext('2d');wy252Ctx.clearRect(0,0,1024,180);wy252Ctx.fillStyle='#f4dfaf';wy252Ctx.textAlign='center';wy252Ctx.font='bold 65px sans-serif';wy252Ctx.fillText('WEIYANG',512,74);wy252Ctx.font='bold 42px sans-serif';wy252Ctx.fillText('PRIVATE FITNESS CLUB',512,137);
+const wy252Ctx=wy252Canvas.getContext('2d');wy252Ctx.fillStyle='#f4dfaf';wy252Ctx.textAlign='center';wy252Ctx.font='bold 70px sans-serif';wy252Ctx.fillText('WEIYANG',512,77);wy252Ctx.font='bold 42px sans-serif';wy252Ctx.fillText('PRIVATE FITNESS CLUB',512,141);
 const wy252Tex=new THREE.CanvasTexture(wy252Canvas);wy252Tex.colorSpace=THREE.SRGBColorSpace;
-const wy252Sign=new THREE.Mesh(new THREE.PlaneGeometry(2.32,.42),new THREE.MeshBasicMaterial({map:wy252Tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy252Sign.position.set(-3.57,5.47,5.43);wy252Sign.rotation.y=Math.PI/2;wy252Gym.add(wy252Sign);
-// 1. Treadmill: distinct wide belt, drive casing, side rails, raised display and controls.
-const wy252T=wy252Device(-7.80,3.30,0);
-wy252Box(wy252T,0,.31,0,1.50,.32,2.10,wy252Dark);
-wy252Box(wy252T,0,.495,.08,1.20,.025,1.57,0x161e24);
-for(const x of [-.67,.67]){wy252Box(wy252T,x,.54,0,.105,.12,1.89,wy252Gold,.6);wy252Rod(wy252T,[x,.48,-.68],[x,1.65,-.68],.065,wy252Dark);}
-wy252Box(wy252T,0,.55,-.90,1.58,.40,.42,wy252Emerald);
-wy252Rod(wy252T,[-.65,1.67,-.70],[.65,1.67,-.70],.06,wy252Gold);
-wy252Box(wy252T,0,1.94,-.80,.96,.55,.13,wy252Dark);
-wy252Box(wy252T,0,1.96,-.725,.76,.35,.035,0x8fc8cf);
-// 2. Elliptical, next to bike along rear half, with proper paired pedals and tall moving handles.
-const wy252E=wy252Device(-5.77,3.00,0);
-wy252Box(wy252E,0,.22,0,.79,.27,1.62,wy252Dark);
-wy252Wheel(wy252E,0,.68,-.56,.54,wy252Emerald);
-for(const x of [-.35,.35]){wy252Rod(wy252E,[x,.34,.55],[x,.74,-.37],.055,wy252Gold);wy252Box(wy252E,x,.51,.25,.35,.07,.76,0x1c252a);wy252Rod(wy252E,[x,.55,-.40],[x*1.18,2.44,-.58],.065,wy252Dark);wy252Rod(wy252E,[x*1.18,2.44,-.58],[x*1.18,2.75,-.38],.055,wy252Gold);}
-wy252Rod(wy252E,[0,.35,-.60],[0,2.10,-.66],.07,wy252Dark);
-wy252Box(wy252E,0,2.20,-.59,.55,.40,.13,0x91c3c8);
-// 3. Upright exercise bike, beside elliptical with clear saddle, handlebars, flywheel and pedals.
-const wy252B=wy252Device(-5.72,5.28,0);
-wy252Wheel(wy252B,0,.70,.05,.57,wy252Emerald);
-wy252Rod(wy252B,[0,.50,.10],[0,1.75,.45],.085,wy252Dark);
-wy252Box(wy252B,0,1.77,.46,.68,.14,.43,0x1e252b);
-wy252Rod(wy252B,[0,.78,-.10],[0,2.03,-.54],.07,wy252Dark);
-wy252Rod(wy252B,[-.48,2.06,-.52],[.48,2.06,-.52],.075,wy252Gold);
-wy252Box(wy252B,0,2.23,-.52,.53,.35,.10,0x8fc8cf);
-for(const side of [-1,1]){wy252Rod(wy252B,[0,.71,.06],[side*.38,.54,.06],.07,wy252Gold);wy252Box(wy252B,side*.40,.52,.06,.25,.12,.36,0x20272a);}
-// 4. Butterfly chest fly: weight stack, contoured seat, high back, two articulated arms.
-const wy252P=wy252Device(-7.75,5.93,Math.PI);
-for(const x of [-.72,.72])wy252Rod(wy252P,[x,.15,-.50],[x,2.55,-.50],.075,wy252Dark);
-wy252Box(wy252P,0,.38,-.50,1.54,.15,.60,wy252Dark);
-wy252Box(wy252P,0,1.04,.23,.95,.23,.70,wy252Emerald);
-wy252Box(wy252P,0,1.78,.50,.94,1.28,.22,wy252Emerald);
-wy252Rod(wy252P,[0,.35,-.50],[0,2.54,-.50],.09,wy252Gold);
-for(let i=0;i<7;i++)wy252Box(wy252P,-.49,.45+i*.19,-.53,.35,.13,.38,0x414b52);
+const wy252Sign=new THREE.Mesh(new THREE.PlaneGeometry(1.50,.30),new THREE.MeshBasicMaterial({map:wy252Tex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));wy252Sign.position.set(-4.218,4.78,3.61);wy252Sign.rotation.y=Math.PI/2;wy252Gym.add(wy252Sign);
+// Elliptical cross-trainer, placed on the long wall side.
+const wy252E=wy252Device(-7.85,2.94,0);
+wy252Box(wy252E,0,.22,0,.77,.27,1.35,wy252Dark);
+wy252Wheel(wy252E,0,.65,-.40,.43,wy252Emerald);
+for(const x of [-.32,.32]){wy252Rod(wy252E,[x,.34,.47],[x,.70,-.30],.052,wy252Gold);wy252Box(wy252E,x,.48,.24,.30,.065,.62,0x1c252a);wy252Rod(wy252E,[x,.52,-.33],[x*1.16,2.23,-.45],.060,wy252Dark);wy252Rod(wy252E,[x*1.16,2.23,-.45],[x*1.16,2.52,-.29],.052,wy252Gold);}
+wy252Rod(wy252E,[0,.35,-.43],[0,1.98,-.48],.067,wy252Dark);
+wy252Box(wy252E,0,2.08,-.45,.49,.36,.12,0x91c3c8);
+// Animated butterfly/pec-deck machine, separated from the elliptical.
+const wy252P=wy252Device(-5.72,2.93,Math.PI);
+for(const x of [-.59,.59])wy252Rod(wy252P,[x,.15,-.38],[x,2.27,-.38],.065,wy252Dark);
+wy252Box(wy252P,0,.37,-.38,1.29,.13,.52,wy252Dark);
+wy252Box(wy252P,0,.91,.20,.80,.20,.59,wy252Emerald);
+wy252Box(wy252P,0,1.59,.43,.80,1.08,.20,wy252Emerald);
+wy252Rod(wy252P,[0,.35,-.38],[0,2.29,-.38],.078,wy252Gold);
+for(let i=0;i<7;i++)wy252Box(wy252P,-.41,.45+i*.16,-.42,.28,.10,.30,0x414b52);
 const wy252PArms=[];
-for(const side of [-1,1]){const arm=new THREE.Group();arm.position.set(side*.57,2.34,-.36);wy252P.add(arm);wy252Rod(arm,[0,0,0],[side*.64,-.48,.44],.075,wy252Gold);wy252Rod(arm,[side*.64,-.48,.44],[side*.64,-1.10,.48],.09,wy252Dark);wy252Box(arm,side*.64,-.78,.50,.19,.50,.22,wy252Emerald);wy252PArms.push({arm,side});}
-// Stretch mats are flat but visibly thick, without an internal partition.
-for(const [x,z,color] of [[-8.15,7.20,0x36796a],[-6.88,7.20,0x7797a6]]){wy252Box(wy252Gym,x,.13,z,.85,.065,1.02,color);}
-// Clickable exterior sign: reuse existing 3F fitness dialog without altering other actions.
-const wy252Hit=new THREE.Mesh(new THREE.BoxGeometry(.20,1.05,2.20),new THREE.MeshBasicMaterial({visible:false}));wy252Hit.position.set(-3.53,4.97,5.42);wy252Hit.userData.wy3Action='fitness';wy252Gym.add(wy252Hit);wy3Targets.push(wy252Hit);
-function wy252GymTick(t){const p=Math.sin(t*.0011);for(const a of wy252PArms)a.arm.rotation.y=a.side*(.18+.25*(p+1)/2);}
+for(const side of [-1,1]){const arm=new THREE.Group();arm.position.set(side*.46,2.10,-.28);wy252P.add(arm);wy252Rod(arm,[0,0,0],[side*.47,-.39,.35],.065,wy252Gold);wy252Rod(arm,[side*.47,-.39,.35],[side*.47,-.95,.39],.074,wy252Dark);wy252Box(arm,side*.47,-.66,.41,.15,.38,.18,wy252Emerald);wy252PArms.push({arm,side});}
+// Stretch area: one thick mat, strictly INSIDE gym (z 4.28..5.04).
+wy252Box(wy252Gym,-7.02,.135,4.60,1.65,.065,.72,0x36796a);
+// Existing gym interaction preserved, hitbox follows the reduced room entrance.
+const wy252Hit=new THREE.Mesh(new THREE.BoxGeometry(.17,.85,1.45),new THREE.MeshBasicMaterial({visible:false}));wy252Hit.position.set(-4.22,4.73,3.61);wy252Hit.userData.wy3Action='fitness';wy252Gym.add(wy252Hit);wy3Targets.push(wy252Hit);
+function wy252GymTick(t){const p=Math.sin(t*.0011);for(const a of wy252PArms)a.arm.rotation.y=a.side*(.16+.22*(p+1)/2);}
 
 // v240: Removed entire glass gym: floor, glass walls, door, equipment, rods and label.
 const wy223CoffeeStart=wy3Root.children.length;
