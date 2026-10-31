@@ -2913,25 +2913,63 @@ function wy260SceneHome(){const d=wy260Data[wy260Current];wy260Render('<h2>'+wy2
 function wy260Question(i){wy260Scene=i;const d=wy260Data[wy260Current],s=d.scenes[i];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p><b>'+wy260Escape(s.q)+'</b></p>'+s.opts.map((o,j)=>'<button data-wy260="answer:'+j+'">'+String.fromCharCode(65+j)+'．'+wy260Escape(o[0])+'</button>').join('')+'<button data-wy260="home">← 返回情境選單</button>');}
 function wy260Answer(i){const s=wy260Data[wy260Current].scenes[wy260Scene],o=s.opts[i];wy260Render('<h2>'+wy260Escape(wy260Data[wy260Current].title)+'</h2><p>'+wy260Escape(s.q)+'</p><p><b>你的選擇：</b>'+wy260Escape(o[0])+'</p><div class="wy260Answer"><b>林律師怎麼看？</b><p>'+wy260Escape(o[1])+'</p></div><p style="font-size:12px;color:#746d63">以上為一般法律知識與模擬情境，個案仍須依具體事實及適用法律判斷。</p><button data-wy260="question">重新選擇</button><button data-wy260="home">← 其他情境</button>');}
 const wy263BookStyle=document.createElement('style');wy263BookStyle.textContent='#wy260Card #wy263BookPick{display:block;width:100%;box-sizing:border-box;font-size:15px;padding:12px;border:1px solid #c5a36b;border-radius:10px;background:#fff;color:#263B57}#wy260Card .wy263Talk{max-width:93%;background:#f1eadc;border-left:4px solid #c5a36b;border-radius:10px;padding:10px 12px;margin:9px 0}#wy260Card .wy263TalkAlt{margin-left:auto;background:#e6edf4;border-left-color:#263B57}#wy260Card .wy263Talk b{color:#263B57}#wy260Card .wy263Talk p{margin:3px 0 0;font-size:15px;line-height:1.7}#wy260Card .wy263BookNote{font-size:12px;color:#746d63;line-height:1.65}';document.head.append(wy263BookStyle);
-function wy260Books(){const t=wy260BookTalks[wy260BookIndex%wy260BookTalks.length];const list=wy260BookTalks.map((v,i)=>'<option value="'+i+'"'+(i===wy260BookIndex?' selected':'')+'>'+(i+1)+'．'+wy260Escape(v.title)+'</option>').join('');const talk=t.lines.map((v,i)=>'<div class="wy263Talk '+(i%2?'wy263TalkAlt':'')+'"><b>'+wy260Escape(v[0])+'</b><p>'+wy260Escape(v[1])+'</p></div>').join('');wy260Render('<h2>林律師又買書了？！</h2><p>這面半圓形書櫃已經收藏超過200本各類書籍，還會繼續增加。想聽哪一段辦公室趣事？</p><label for="wy263BookPick" style="display:block;font-weight:700;margin:10px 0 6px">選擇趣味情境</label><select id="wy263BookPick" aria-label="選擇書櫃趣味情境">'+list+'</select><h3 style="font-size:17px;color:#263B57;margin:16px 0 10px">'+wy260Escape(t.title)+'</h3>'+talk+(t.note?'<p class="wy263BookNote">'+wy260Escape(t.note)+'</p>':'')+'<p class="wy263BookNote">以上為網站創作的趣味對話，非人物真實逐字發言。</p><button data-wy260="nextbook">再聽一段辦公室趣事 ↻</button>');}
+function wy260Books(){
+ const t=wy260BookTalks[wy260BookIndex%wy260BookTalks.length];
+ const entries=t.lines.map(v=>v[1]);
+ const prose=entries.join(' ');
+ const pages=wy260BookTalks.map((v,i)=>'<option value="'+i+'"'+(i===wy260BookIndex?' selected':'')+'>'+(i+1)+'．'+wy260Escape(v.title)+'</option>').join('');
+ wy260Render('<h2>林律師的私人藏書冊</h2><p>半圓形書櫃收藏超過200本書。翻開藏書筆記，看看辦公室裡的趣味故事。</p><div class="wy276Book" role="region" aria-label="電子藏書冊"><div class="wy276BookLabel">WEIYANG · PRIVATE LIBRARY</div><div class="wy276BookPage">第 '+(wy260BookIndex+1)+' / '+wy260BookTalks.length+' 頁</div><h3>'+wy260Escape(t.title)+'</h3><p>'+wy260Escape(prose)+'</p>'+(t.note?'<p class="wy276BookNote">'+wy260Escape(t.note)+'</p>':'')+'</div><div class="wy276BookNav"><button data-wy260="prevbook">← 上一頁</button><button data-wy260="nextbook">下一頁 →</button></div><button data-wy260="randbook">✦ 神祕抽一本</button><label for="wy263BookPick" style="display:block;margin:12px 0 6px">藏書目錄</label><select id="wy263BookPick">'+pages+'</select><p style="font-size:12px;color:#746d63">內容為網站創作的趣味故事，並非人物真實逐字發言。</p>');
+}
+const wy276BookCss=document.createElement('style');wy276BookCss.textContent='#wy260Card .wy276Book{background:linear-gradient(110deg,#eee0c2,#fff8e8 15%,#fffaf1 85%,#e9d7b5);border:2px solid #c5a36b;border-left:9px solid #263B57;border-radius:8px 16px 16px 8px;min-height:210px;padding:20px 19px;box-shadow:inset 3px 0 6px #6c523522,4px 6px 12px #0002}#wy260Card .wy276BookLabel{font-size:10px;letter-spacing:1px;color:#82683e}#wy260Card .wy276BookPage{font-size:12px;color:#897a67;margin:12px 0}#wy260Card .wy276Book h3{color:#263B57;font-size:20px;line-height:1.5}#wy260Card .wy276Book p{font-size:15px;line-height:1.95}#wy260Card .wy276BookNav{display:grid;grid-template-columns:1fr 1fr;gap:8px}#wy260Card #wy263BookPick{width:100%;padding:12px;border-radius:9px;border:1px solid #c5a36b;background:white;font-size:15px}';document.head.append(wy276BookCss);
 const wy260Gowns=[['法官','藍色','#2766a4','法官法袍以藍色鑲邊辨識。'],['檢察官','紫色','#8050a5','檢察官法袍以紫色鑲邊辨識。'],['律師','白色','#eeeeee','律師法袍以白色鑲邊辨識。'],['公設辯護人','綠色','#328961','公設辯護人法袍以綠色鑲邊辨識。'],['書記官','黑色','#555555','書記官法袍以黑色鑲邊辨識。'],['公證人','紅色','#c94a4a','公證人主持結婚儀式時，依法穿著黑色紅邊制服；不是所有公證業務都要穿。']];
 function wy260GownSvg(color){return '<svg viewBox="0 0 100 110" aria-hidden="true"><path d="M34 10 L18 18 L3 48 L20 57 L27 45 L24 101 Q50 108 76 101 L73 45 L80 57 L97 48 L82 18 L66 10 L59 18 L41 18Z" fill="#24282d" stroke="#101418" stroke-width="2"/><path d="M34 10 L43 28 L50 35 L57 28 L66 10 M43 28 L45 100 M57 28 L55 100 M9 46 L22 52 M78 52 L91 46" fill="none" stroke="'+color+'" stroke-width="6" stroke-linejoin="round"/></svg>'}
 function wy260RobeHome(){wy260Render('<h2>律師袍的秘密</h2><p>一件黑色法袍，竟然藏著兩個故事。你想先看哪一個？</p><button data-wy260="gowns">法袍顏色大解密｜六件完整法袍</button><button data-wy260="wash">律師袍不能洗的秘密｜趣味故事</button>');}
 function wy260GownPage(i=-1){let b='<h2>法袍顏色大解密</h2><p>法袍大多是黑色，辨識身分的關鍵在鑲邊。點選完整法袍看看！</p><div class="wy260GownGrid">'+wy260Gowns.map((g,j)=>'<div class="wy260Gown">'+wy260GownSvg(g[2])+'<button data-wy260="gown:'+j+'">'+g[0]+'｜'+g[1]+'邊</button></div>').join('')+'</div>';if(i>=0)b+='<div class="wy260Answer"><b>'+wy260Gowns[i][0]+'：'+wy260Gowns[i][1]+'鑲邊</b><p>'+wy260Gowns[i][3]+'</p></div>';b+='<p style="font-size:12px;color:#746d63">向量圖為服裝示意，非官方服制附圖。實際規定請依現行法令為準。</p><button data-wy260="robehome">← 返回律師袍主選單</button>';wy260Render(b);}
 function wy260Wash(){wy260Render('<h2>律師袍不能洗的秘密</h2><p>你知道嗎？律師界流傳著一個有趣的說法：<b>律師袍不能隨便拿去洗！</b></p><p>據說，有些人相信律師袍穿久了會累積勝訴好運，拿去洗，可能連好運都一起洗掉。還有人開玩笑說，洗了就會「一貧如洗」。</p><p>當然，這只是法界流傳的趣味迷信，<b>不是法律規定，也沒有證據顯示洗袍會影響官司勝敗。</b>衣物是否適合水洗或乾洗，還是要看材質與洗滌標示。</p><div class="wy260Answer"><b>那林律師的律師袍呢？</b><p>放心！林律師的律師袍一定會拿去清潔。林律師同時具有台灣及美國紐約州律師資格，對不同法律文化都有接觸。</p><p><b>比起擔心洗掉勝訴運，林律師更擔心的是——官司還沒打完，律師袍就先被當成生物跡證送去鑑定！</b> 😂</p></div><p style="font-size:12px;color:#746d63">以上結尾為網站設計的趣味台詞，並非律師本人逐字引言。</p><button data-wy260="robehome">← 返回律師袍主選單</button>');}
 // v264: compact, single-line-at-a-time dialogue shared by the coffee station and sofa.
-const wy264Dialogues={
- coffee:{title:'老闆今天第幾杯？',stories:[
- {title:'第一杯：開庭前的咖啡',lines:[['夢奇奇','老闆，你今天已經喝第幾杯咖啡了？'],['林律師','第一杯。'],['哈姆太郎','可是我早上已經聽到咖啡機運轉三次了。'],['林律師','前面兩杯是暖機。'],['薪水掌門人','老闆，咖啡機有暖機功能，但你這個說法沒有報帳依據。']]},
- {title:'第二杯：咖啡機也想請假',lines:[['哈姆太郎','我覺得咖啡機最近工作量比我們還大。'],['夢奇奇','那它可以申請加班費嗎？'],['薪水掌門人','不行，但我開始擔心維修預算了。'],['林律師','那先幫它排一個下午茶休息時間。'],['哈姆太郎','老闆，下午茶時間你還是會按它啊！']]},
- {title:'第三杯：咖啡與書狀',lines:[['夢奇奇','老闆，書狀快寫完了嗎？'],['林律師','還差最後一段。'],['哈姆太郎','這句話我一個小時前就聽過了。'],['林律師','因為最後一段最重要。'],['薪水掌門人','那咖啡豆可能要列入書狀製作成本了。']]}
- ]},
- sofa:{title:'坐下五分鐘就好？',stories:[
- {title:'第一段：休息五分鐘',lines:[['夢奇奇','終於可以坐一下了！'],['哈姆太郎','妳確定？上次老闆說五分鐘，結果討論了四十分鐘的案件。'],['林律師','剛好大家都在，我有一個問題想討論。'],['夢奇奇','……我就知道。'],['薪水掌門人','請問這段要算休息時間，還是會議時間？']]},
- {title:'第二段：沙發使用守則',lines:[['哈姆太郎','這張沙發是不是應該貼一張使用守則？'],['夢奇奇','第一條：坐下來不准談工作。'],['林律師','那如果只是分享一個很有趣的法律案例呢？'],['夢奇奇','老闆，這就叫工作。'],['薪水掌門人','我建議第一條後面加註：林律師也適用。']]},
- {title:'第三段：誰最常坐沙發',lines:[['夢奇奇','你們覺得這張沙發誰最常坐？'],['哈姆太郎','我猜是客人。'],['薪水掌門人','我猜是等老闆開完會的員工。'],['林律師','我覺得應該是我吧？'],['夢奇奇','老闆，你每次才剛坐下就又要出門了！']]}
- ]}
-};
+const wy264Dialogues={coffee:{title:'老闆今天第幾杯？',stories:[
+ {title:'濃縮雙倍的早晨',lines:[['夢奇奇','咖啡機今天特別忙'],['哈姆太郎','那是因為老闆今天有兩個會議'],['林律師','濃縮咖啡也要濃縮時間嗎'],['薪水掌門人','時間不能濃縮，咖啡可以'],['夢奇奇','我建議先讓咖啡機喝杯水']]} ,
+ {title:'咖啡豆失蹤案',lines:[['夢奇奇','咖啡豆怎麼又少一半'],['哈姆太郎','是不是有人偷偷帶走'],['林律師','我只有帶走一杯咖啡'],['薪水掌門人','一杯？這裡有五個空杯'],['夢奇奇','這案子證物比卷宗還多']]} ,
+ {title:'咖啡機年度體檢',lines:[['夢奇奇','咖啡機今天要保養'],['哈姆太郎','那老闆今天怎麼辦'],['林律師','先喝水也很好'],['薪水掌門人','你這句話說得很勉強'],['夢奇奇','我已經開始查附近咖啡店了']]} ,
+ {title:'美式與拿鐵辯論',lines:[['夢奇奇','今天要美式還是拿鐵'],['哈姆太郎','我需要先想一下'],['林律師','這個決定比午餐還久'],['薪水掌門人','咖啡要講究，法律也要講究'],['夢奇奇','那先講究一下開會時間']]} ,
+ {title:'最後一杯宣言',lines:[['夢奇奇','老闆說這是最後一杯'],['哈姆太郎','這句話是今天第幾次'],['林律師','第三次吧'],['薪水掌門人','我說的是最後一杯熱的'],['夢奇奇','那冰咖啡又有新預算了']]} ,
+ {title:'咖啡機維修警報',lines:[['夢奇奇','咖啡機亮紅燈了'],['哈姆太郎','全辦公室怎麼突然安靜'],['林律師','大家都在研究說明書'],['薪水掌門人','比查判決還認真'],['夢奇奇','原來只是水箱沒裝好']]} ,
+ {title:'書狀與咖啡',lines:[['夢奇奇','書狀完成了嗎'],['哈姆太郎','還差最後確認'],['林律師','咖啡已經換第三杯了'],['薪水掌門人','文件要仔細，咖啡要新鮮'],['夢奇奇','那先確認書狀，不要確認咖啡']]} ,
+ {title:'神祕空杯',lines:[['夢奇奇','桌上怎麼有四個空杯'],['哈姆太郎','誰喝的誰帶走'],['林律師','我只喝了一杯'],['薪水掌門人','可是每個人都這樣說'],['夢奇奇','那就把杯子當成物證排列']]} ,
+ {title:'咖啡機年度考核',lines:[['夢奇奇','咖啡機的績效怎麼算'],['哈姆太郎','每天出杯數應該很驚人'],['林律師','它有全勤獎嗎'],['薪水掌門人','我先替它算折舊'],['夢奇奇','請不要讓它聽到這句話']]} ,
+ {title:'咖啡會員卡',lines:[['夢奇奇','老闆應該有咖啡會員卡'],['哈姆太郎','這台機器就在辦公室'],['林律師','那集點要找誰蓋章'],['薪水掌門人','我可以幫忙設計印章'],['夢奇奇','先不要新增行政流程']]} ,
+ {title:'咖啡機想休假',lines:[['夢奇奇','咖啡機說它想請特休'],['哈姆太郎','它昨天才剛清洗完'],['林律師','那算休假嗎'],['薪水掌門人','那算設備保養'],['夢奇奇','原來它也有工作與休息之爭']]} ,
+ {title:'濃度研究所',lines:[['夢奇奇','今天咖啡怎麼特別濃'],['哈姆太郎','我調整了萃取設定'],['林律師','這是科學實驗嗎'],['薪水掌門人','可以寫成研究報告'],['夢奇奇','先不要替咖啡機申請專利']]} ,
+ {title:'誰補咖啡豆',lines:[['夢奇奇','咖啡豆又見底了'],['哈姆太郎','上次是誰補的'],['林律師','我以為會自動補貨'],['薪水掌門人','它是咖啡機不是魔法機'],['夢奇奇','那我們需要一張補貨清單']]} ,
+ {title:'咖啡機對印表機',lines:[['夢奇奇','印表機說自己最忙'],['哈姆太郎','咖啡機不同意'],['林律師','它們要比工作量嗎'],['薪水掌門人','一個吐紙一個吐咖啡'],['夢奇奇','兩個都不能在開庭前罷工']]} ,
+ {title:'開庭前五分鐘',lines:[['夢奇奇','老闆要出門了'],['哈姆太郎','咖啡還在萃取'],['林律師','可以先關機嗎'],['薪水掌門人','我可以拿保溫杯等'],['夢奇奇','電梯不會等咖啡，但我會提醒時間']]} ,
+ {title:'使用紀錄',lines:[['夢奇奇','咖啡機有使用紀錄嗎'],['哈姆太郎','有的話會很精彩'],['林律師','老闆的杯數會曝光'],['薪水掌門人','那是商業機密'],['夢奇奇','這份機密的香味藏不住']]} ,
+ {title:'咖啡偵查',lines:[['夢奇奇','誰把我的咖啡拿走了'],['哈姆太郎','先看杯子上的名字'],['林律師','杯子沒有名字'],['薪水掌門人','那看誰精神最好'],['夢奇奇','這個證據標準不夠嚴謹']]} ,
+ {title:'今天改喝水',lines:[['夢奇奇','老闆今天說改喝水'],['哈姆太郎','真的嗎'],['林律師','我先倒一杯水'],['薪水掌門人','咖啡機終於能休息'],['夢奇奇','等等，水是拿來配咖啡的嗎']]} ,
+ {title:'績效獎金',lines:[['夢奇奇','咖啡機要求年度獎金'],['哈姆太郎','它是誰代言的'],['林律師','我代表辛勤工作的機器'],['薪水掌門人','那要先有員工編號'],['夢奇奇','別鬧了，咖啡快好了']]} ,
+ {title:'最不能停的設備',lines:[['夢奇奇','辦公室最重要的設備是什麼'],['哈姆太郎','我投電腦一票'],['林律師','我投印表機'],['薪水掌門人','咖啡機好像不太開心'],['夢奇奇','全部都重要，先別讓任何一台停機']]} 
+]},sofa:{title:'坐下五分鐘就好？',stories:[
+ {title:'五分鐘休息法',lines:[['夢奇奇','我只坐五分鐘'],['哈姆太郎','電話現在響了'],['林律師','假裝沒聽見可以嗎'],['薪水掌門人','不行，這是客戶來電'],['夢奇奇','五分鐘從明天開始算']]} ,
+ {title:'沙發的魔法',lines:[['夢奇奇','坐上沙發突然想到一件事'],['哈姆太郎','什麼事'],['林律師','剛剛那封信還沒寄'],['薪水掌門人','沙發不是記憶喚醒器吧'],['夢奇奇','它的提醒功能比手機還強']]} ,
+ {title:'老闆請坐',lines:[['夢奇奇','老闆難得坐下了'],['哈姆太郎','大家先別出聲'],['林律師','我等一下還有行程'],['薪水掌門人','沙發剛剛是不是嘆氣'],['夢奇奇','它的使用率真的不高']]} ,
+ {title:'熱門座位',lines:[['夢奇奇','這張沙發怎麼永遠有人想坐'],['哈姆太郎','因為靠窗很舒服'],['林律師','可以預約嗎'],['薪水掌門人','要先填申請單嗎'],['夢奇奇','別把休息變成行政流程']]} ,
+ {title:'午休消失',lines:[['夢奇奇','午休時間到了'],['哈姆太郎','剛好有個會議'],['林律師','午休去哪了'],['薪水掌門人','被會議借走了'],['夢奇奇','那請記得把它還回來']]} ,
+ {title:'沙發說明書',lines:[['夢奇奇','沙發需要使用說明嗎'],['哈姆太郎','第一條禁止帶卷宗'],['林律師','第二條禁止開會'],['薪水掌門人','第三條老闆也適用'],['夢奇奇','我看這張沙發快沒人能坐了']]} ,
+ {title:'今天不加班',lines:[['夢奇奇','今天大家準時下班'],['哈姆太郎','真的嗎'],['林律師','老闆也這樣說'],['薪水掌門人','沙發表示它不敢相信'],['夢奇奇','我們先把工作排程確認好']]} ,
+ {title:'放空三分鐘',lines:[['夢奇奇','我想放空三分鐘'],['哈姆太郎','第一分鐘在想案件'],['林律師','第二分鐘在想行程'],['薪水掌門人','第三分鐘在想晚餐'],['夢奇奇','至少晚餐跟工作無關吧']]} ,
+ {title:'沙發的抗議',lines:[['夢奇奇','沙發上怎麼又放卷宗'],['哈姆太郎','它已經不是文件櫃了'],['林律師','可是這裡很方便'],['薪水掌門人','請讓它恢復沙發身分'],['夢奇奇','我替它貼一張請勿堆放']]} ,
+ {title:'終於坐下',lines:[['夢奇奇','終於有時間坐下了'],['哈姆太郎','大家別打擾'],['林律師','手機亮了'],['薪水掌門人','這次只是天氣通知'],['夢奇奇','全辦公室都鬆了一口氣']]} ,
+ {title:'沙發預約制度',lines:[['夢奇奇','我要預約下午三點的沙發'],['哈姆太郎','那時候有人開會'],['林律師','沙發也有行事曆嗎'],['薪水掌門人','它比會議室還搶手'],['夢奇奇','我建議先坐再說']]} ,
+ {title:'三秒鐘休息',lines:[['夢奇奇','老闆剛坐下'],['哈姆太郎','一、二、三'],['林律師','怎麼又站起來了'],['薪水掌門人','想起還有文件要拿'],['夢奇奇','這休息速度刷新紀錄']]} ,
+ {title:'有人敲門',lines:[['夢奇奇','才剛坐下就有人敲門'],['哈姆太郎','請進'],['林律師','不好意思只是送快遞'],['薪水掌門人','那我可以繼續休息嗎'],['夢奇奇','可以，直到下一聲門鈴']]} ,
+ {title:'神祕卷宗',lines:[['夢奇奇','沙發上這份卷宗是誰的'],['哈姆太郎','看起來很重要'],['林律師','重要更不能放這裡'],['薪水掌門人','先送回正確位置'],['夢奇奇','沙發終於重獲清白']]} ,
+ {title:'臨時辦公桌',lines:[['夢奇奇','誰把筆電放在沙發上'],['哈姆太郎','這樣坐著比較舒服'],['林律師','但姿勢不太對'],['薪水掌門人','而且茶几不是辦公桌'],['夢奇奇','好吧，我回書桌工作']]} ,
+ {title:'手機響五次',lines:[['夢奇奇','我想休息五分鐘'],['哈姆太郎','手機響第一聲'],['林律師','第二聲又來了'],['薪水掌門人','第五聲是鬧鐘提醒休息'],['夢奇奇','原來連手機都不相信我會休息']]} ,
+ {title:'舒適度評鑑',lines:[['夢奇奇','這張沙發有幾顆星'],['哈姆太郎','我給五顆'],['林律師','為什麼'],['薪水掌門人','因為坐下就不想起來'],['夢奇奇','那可能影響下午的工作效率']]} ,
+ {title:'難得休息',lines:[['夢奇奇','今天老闆竟然在休息'],['哈姆太郎','我們要拍照留念嗎'],['林律師','不要打擾他'],['薪水掌門人','我只是閉眼想事情'],['夢奇奇','果然還是在工作']]} ,
+ {title:'員工福利',lines:[['夢奇奇','沙發說它想加入福利制度'],['哈姆太郎','它要什麼福利'],['林律師','每週一次清潔保養'],['薪水掌門人','這要求很合理'],['夢奇奇','終於有一項提案大家都同意']]} ,
+ {title:'沒人打擾',lines:[['夢奇奇','今天終於沒人打擾了'],['哈姆太郎','真的好安靜'],['林律師','沙發是不是可以好好休息'],['薪水掌門人','叮，會議提醒響了'],['夢奇奇','原來安靜只有三十秒']]} 
+]}};
 let wy264Key='coffee',wy264Story=0,wy264Step=0;
 function wy264Open(key){wy264Key=key;wy264Story=0;wy264Step=0;wyLobbyDialog.style.display='none';wy264Render();}
 function wy264Render(){
@@ -3015,7 +3053,7 @@ function wy266Start(game){
   const ox=b.x-px,oy=b.y-py,d=Math.hypot(ox,oy)||.001;
   if(d>=b.r+6||b.vy<0)return;
   // Idle paddle: contact does not inject upward energy; ball slides toward the drain.
-  if(!active){/* Resting paddle: do not reposition the ball or inject lift; gravity carries it to drain. */return;}
+  if(!active){b.x=px+(ox/d)*(b.r+6.5);b.y=py+(oy/d)*(b.r+6.5);const nx=ox/d,ny=oy/d,dot=b.vx*nx+b.vy*ny;if(dot<0){b.vx-=1.18*dot*nx;b.vy-=1.18*dot*ny;}b.vx+=(side==='left'?25:-25)*h;return;}
   // Only the first 160ms of a new press produces a strong flipper stroke.
   const fresh=(e.elapsed-(side==='left'?e.leftPressed:e.rightPressed))<.19;if(!fresh)return;
   b.x=px+(ox/d)*(b.r+7);b.y=py-(b.r+7);
@@ -3023,22 +3061,23 @@ function wy266Start(game){
   b.vx=clamp((b.x-160)*.72+(side==='left'?72:-72),-175,175);
   if(fresh){wy265Score+=80;wy265Hits++;wy265Combo++;wy265BestCombo=Math.max(wy265BestCombo,wy265Combo)}
  }
- // The left/right outside tips meet the side rails; no unreachable side drain.
- // Side funnels are solid: a ball falling beside a paddle is guided onto it.
- if(b.y>308&&b.y<411){
-  const railY=338+Math.max(0,b.y-338)*.26;
-  if(b.x<38+b.r){b.x=38+b.r;b.vx=Math.max(48,Math.abs(b.vx)*.55)}
-  if(b.x>282-b.r){b.x=282-b.r;b.vx=-Math.max(48,Math.abs(b.vx)*.55)}
-  // Sloped guide plates run down toward the outside end of each paddle.
-  if(b.y>railY&&b.x<65){b.vx=Math.max(58,b.vx);}
-  if(b.y>railY&&b.x>255){b.vx=Math.min(-58,b.vx);}
- }
+ // Solid sloped side guides, with physics matching the drawn geometry.
+ function guide(ax,ay,cx,cy){const dx=cx-ax,dy=cy-ay,L=dx*dx+dy*dy;const u=clamp(((b.x-ax)*dx+(b.y-ay)*dy)/L,0,1);const px=ax+u*dx,py=ay+u*dy;const ox=b.x-px,oy=b.y-py,dist=Math.hypot(ox,oy)||.001;
+ if(dist<b.r+4 && b.y<py+10){const nx=ox/dist,ny=oy/dist;b.x=px+nx*(b.r+4);b.y=py+ny*(b.r+4);const dot=b.vx*nx+b.vy*ny;if(dot<0){b.vx-=1.5*dot*nx;b.vy-=1.5*dot*ny;}b.vx+=(ax<160?18:-18)*h;}}
+ guide(22,313,38,365);guide(298,313,282,365);
+ if(b.y>320){if(b.x<38+b.r){b.x=38+b.r;b.vx=Math.abs(b.vx)*.8;}if(b.x>282-b.r){b.x=282-b.r;b.vx=-Math.abs(b.vx)*.8;}}
  const lEnd=e.left?{x:151,y:343}:{x:151,y:388};const rEnd=e.right?{x:169,y:343}:{x:169,y:388};
  flipper(38,365,lEnd.x,lEnd.y,e.left,'left');flipper(282,365,rEnd.x,rEnd.y,e.right,'right');
 
+ // Below the paddles, the only open drain is the center channel.
+ if(b.y>398 && (b.x<=143 || b.x>=177)){
+   b.y=398;
+   b.vy=-Math.max(35,Math.abs(b.vy)*.30);
+   b.vx+=(b.x<160?145:-145)*h;
+ }
  let v=Math.hypot(b.vx,b.vy);const max=330;if(v>max){b.vx*=max/v;b.vy*=max/v}if(v<95&&b.y<310){b.vx*=1.006;b.vy*=1.006}}
  e.trail.push({x:b.x,y:b.y});if(e.trail.length>9)e.trail.shift();e.trail.forEach((p,i)=>circle(p.x,p.y,2+i*.32,'rgba(244,215,153,'+(i/e.trail.length*.35)+')'));
- line(22,313,38,365,'#c5a36b',7);line(298,313,282,365,'#c5a36b',7);line(38,365,151,e.left?343:388,e.left?'#ffe9aa':'#c5a36b',e.left?12:9);line(282,365,169,e.right?343:388,e.right?'#ffe9aa':'#c5a36b',e.right?12:9);circle(b.x,b.y,b.r,'#fff1c7','#f4d078');if(b.y>417)resetBall();txt('左右擋板接球 · 按住可抬起擋板',160,413,11);}
+ line(22,313,38,365,'#c5a36b',7);line(298,313,282,365,'#c5a36b',7);line(38,365,151,e.left?343:388,e.left?'#ffe9aa':'#c5a36b',e.left?12:9);line(282,365,169,e.right?343:388,e.right?'#ffe9aa':'#c5a36b',e.right?12:9);circle(b.x,b.y,b.r,'#fff1c7','#f4d078');if(b.y>417 && b.x>143 && b.x<177)resetBall();txt('左右擋板接球 · 按住可抬起擋板',160,413,11);}
  function frame(now){if(!e.alive||wy266Engine!==e||wy265Mode!=='play')return;const dt=Math.min(.034,Math.max(.001,(now-e.last)/1000));e.last=now;e.elapsed=wy265Elapsed();if(e.elapsed>=wy265Duration){wy265Finish();return;}if(dodge)drawDodge(dt);else drawPinball(dt);const time=document.getElementById('wy266Time'),score=document.getElementById('wy266Score'),lives=document.getElementById('wy266Lives');if(time){time.textContent=Math.ceil(wy265Duration-e.elapsed)+' 秒';score.textContent=wy265Score.toLocaleString()+' 分';lives.textContent=dodge?'♥ '.repeat(Math.max(0,e.hearts)):'球 '+(4-e.balls)+' / 3';}if(e.alive)requestAnimationFrame(frame)}requestAnimationFrame(frame);
 }
 function wy265Result(r){const grade=r.score>=3000?'A+':r.score>=1800?'A':r.score>=900?'B':'C';const title=r.game==='rhythm'?'法庭節奏大師':r.game==='stress'?'壓力管理高手':r.game==='balance'?'穩定控場專家':'黃金60秒全能王';wy265Set('<div class="wy265Title">WEI & YANG INTERNATIONAL LAW FIRM</div><h2>德威陽｜體能挑戰成績卡</h2><div class="wy265Share" id="wy265ResultCard"><div style="color:#e6c78e;font-size:12px">YES, WE DO!</div><h2>'+title+'</h2><div style="font-size:40px;color:#f0d29a;font-weight:800">'+r.score.toLocaleString()+'</div><p>'+wy265Titles[r.game]+'</p><div class="wy265Stat"><span>評級 '+grade+'</span><span>最高連擊 '+r.combo+'</span><span>成功操作 '+r.hits+'</span></div><p>法庭講求專注，挑戰也要保持節奏！</p><div style="font-size:12px;color:#e6c78e">德威陽國際法律事務所 · YES, WE DO!</div></div><div class="wy265Row"><button data-gym="again">再玩一次</button><button data-gym="save">儲存成績卡</button></div><button class="wy265Full" data-gym="scores">查看本次排行榜</button><button class="wy265Full" data-gym="menu">返回遊戲選單</button>');}
@@ -3058,7 +3097,7 @@ function wy265Tick(){if(wy265Mode==='play'&&!wy266Engine){const t=performance.no
 
 wy260Modal.addEventListener('change',e=>{if(e.target.id==='wy263BookPick'){wy260BookIndex=Number(e.target.value)||0;wy260Books();}});
 wy260Modal.addEventListener('click',e=>{if(e.target===wy260Modal)wy260Modal.style.display='none'});
-wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='v264prev'){wy264Step=Math.max(0,wy264Step-1);return wy264Render()}if(a==='v264next'){wy264Step=Math.min(wy264Dialogues[wy264Key].stories[wy264Story].lines.length-1,wy264Step+1);return wy264Render()}if(a==='v264nextstory'){wy264Story=(wy264Story+1)%wy264Dialogues[wy264Key].stories.length;wy264Step=0;return wy264Render()}if(a==='nextbook'){wy260BookIndex=(wy260BookIndex+1)%wy260BookTalks.length;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
+wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='v264prev'){wy264Step=Math.max(0,wy264Step-1);return wy264Render()}if(a==='v264next'){wy264Step=Math.min(wy264Dialogues[wy264Key].stories[wy264Story].lines.length-1,wy264Step+1);return wy264Render()}if(a==='v264nextstory'){wy264Story=(wy264Story+1)%wy264Dialogues[wy264Key].stories.length;wy264Step=0;return wy264Render()}if(a==='nextbook'){wy260BookIndex=(wy260BookIndex+1)%wy260BookTalks.length;return wy260Books()}if(a==='prevbook'){wy260BookIndex=(wy260BookIndex+wy260BookTalks.length-1)%wy260BookTalks.length;return wy260Books()}if(a==='randbook'){wy260BookIndex=(wy260BookIndex+1+Math.floor(Math.random()*(wy260BookTalks.length-1)))%wy260BookTalks.length;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
 function wy260SignsTick(){if(wyOfficeFloor!==3||!insideOffice||!wy180AtOffice)return;for(const m of wy260Signs){const p=m.parent; if(p===wy3Root){m.quaternion.copy(wy3Cam.quaternion)}else{p.getWorldQuaternion(wy226ParentWorldQuat);m.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion))}}}
 
 let wy180ExitAnim=null;
