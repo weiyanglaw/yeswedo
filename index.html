@@ -2790,11 +2790,11 @@ function wy3Interact(action){
 // Anchors avoid furniture and keep the established portal sign and arrow unchanged.
 const wy260Entries=[
  {key:'case',title:'這案子，你怎麼辦？',pos:[0,2.36,.58],width:2.78},
- {key:'overseas',title:'跨國官司不迷航！',pos:[1.65,2.43,-2.22],width:2.72},
+ {key:'overseas',title:'跨國官司不迷航！',pos:[0.72,2.60,-1.82],width:2.72},
  {key:'contract',title:'這份合約，敢簽嗎？',pos:[-2.08,2.43,-2.25],width:2.94},
  {key:'books',title:'林律師又買書了？！',pos:[0,6.91,-7.18],width:3.25},
  {key:'evidence',title:'證據到底躲哪裡？',pos:[-8.42,5.75,-2.45],width:3.04},
- {key:'schedule',title:'律師今天又去哪了？',pos:[-8.88,5.70,-5.60],width:3.00},
+ {key:'schedule',title:'律師今天又去哪了？',pos:[-7.75,5.55,-5.35],width:3.00},
  {key:'robe',title:'律師袍不能洗？！',pos:[2.35,4.92,-5.90],width:2.75}
 ];
 const wy260Signs=[];
@@ -2842,24 +2842,25 @@ const wy260Data={
   {q:'晚上終於回到辦公室，林律師第一件事可能是？',opts:[['整理明天的案件與資料','律師工作不只有出庭，還包含閱卷、研究、會議及文件準備。'],['宣布從此不看任何法律書','隔壁書櫃表示：這句話我不相信。'],['問咖啡機有沒有加班費','咖啡機和書櫃可能會一起要求成立員工福利委員會。']]}]}
 };
 const wy260BookTalks=[
- ['你知道林律師的法律相關藏書預計有多少本嗎？','目前預計約有200多本，而且還會繼續增加。員工最擔心的不是書不夠，是書櫃先投降！'],
- ['林律師：「最近想再買幾本書。」','薪水掌門人：「請問『幾本』的計量單位是一本、十本，還是一整箱？」'],
- ['書櫃今天為什麼這麼安靜？','因為它正在思考：法律一直修，自己的容量是不是也應該修法擴編？'],
- ['夢奇奇：「這本書放哪裡？」','哈姆太郎：「先問書櫃還有沒有空位。」書櫃：「請不要把我當無限雲端硬碟！」'],
- ['如果林律師的書會說話？','它們可能會說：「我們不是背景裝潢，翻開來才有工作績效！」'],
- ['法律書也有新舊版本？','有些法規與實務見解會變動，所以除了保存經典資料，也要持續更新。書櫃：「更新可以，但先讓我喘口氣。」'],
- ['200多本書夠不夠？','對愛研究法律的人來說，可能只是下一輪購書清單的起點。'],
- ['薪水掌門人最怕聽到哪一句？','「這一套法律叢書很值得收藏。」因為下一句通常是：「我們是不是還有地方？」'],
- ['林律師的書櫃有沒有休假？','理論上有，實際上只要律師想到新問題，書櫃就可能被臨時召回。'],
- ['為什麼書櫃要做成半圓形？','因為書越來越多，連書櫃都想用優雅的弧度面對壓力。'],
- ['哈姆太郎：「找一本書需要多久？」','夢奇奇：「如果大家都記得放回原位，應該會快很多。」'],
- ['書櫃最怕什麼？','不是灰塵，而是有人說：「這一套我覺得可以全部買齊。」'],
- ['林律師又看到一本新書？','員工：「買之前先確認一下，我們是不是已經有三個不同版本？」'],
- ['書櫃旁邊的隱藏任務是什麼？','請找到一本你真的想讀的書。答案不是「看起來最薄的那本」！'],
- ['法律研究只靠一本書嗎？','通常還要比對法條、裁判、最新實務及案件事實。書櫃：「所以我不是單兵作戰。」'],
- ['如果書櫃有年度考核？','績效指標可能是：新增書籍數、被翻閱次數，以及成功避免書本雪崩的天數。'],
- ['律師的書為什麼會越來越多？','因為新的問題不會等舊問題解決才出現，專業資料也需要不斷累積。'],
- ['最後一個問題：書櫃還能再塞幾本？','這題請不要讓薪水掌門人聽到。她可能會先拿出捲尺。']
+ {title:'買書可以打統編嗎？',lines:[['林律師','薪水掌門人，我又買了幾本書。買書可以打統編嗎？'],['薪水掌門人','老闆，先問一下：這次是工作需要的專業資料，還是你昨天說超好看的小說？'],['林律師','可是閱讀能增進思考能力，思考能力又能幫助法律分析啊！'],['薪水掌門人','照這個邏輯，買食譜也能說是在研究「證據怎麼料理」了。'],['林律師','……那我再買一本會計書研究？'],['薪水掌門人','先不用！請先研究書櫃還有沒有位置！😂']],note:'趣味情境不代表實際報帳行為。購書是否得列為業務支出，須依實際用途、憑證及適用稅務規定判斷；並非有統編就能報帳或抵稅。'},
+ {title:'林律師到底有幾本書？',lines:[['夢奇奇','林律師，這面書櫃到底有幾本書？'],['林律師','目前藏書已經超過兩百本了，而且不只有法律書，之後還會繼續增加。'],['哈姆太郎','那書櫃是不是該列入事務所的擴編計畫？'],['薪水掌門人','擴編之前，先把書的數量和書櫃尺寸算清楚！']]},
+ {title:'書櫃快放不下了！',lines:[['夢奇奇','老闆，書櫃真的快滿了耶！'],['林律師','沒關係，書是知識的累積。'],['哈姆太郎','我們累積的可能還有書櫃的承重壓力。'],['薪水掌門人','下一本請先買《空間管理》！']]},
+ {title:'「再買幾本」到底是幾本？',lines:[['林律師','我最近想再買幾本書。'],['薪水掌門人','請問「幾本」的單位是一本、十本，還是一整箱？'],['林律師','這個嘛，要看出版社有沒有出套書。'],['薪水掌門人','好，我先去找捲尺。']]},
+ {title:'書櫃也想申請擴編',lines:[['哈姆太郎','法律一直更新，書也一直增加。'],['夢奇奇','那書櫃是不是也要跟著升級？'],['薪水掌門人','你們先不要讓家具也開始提人力需求。']]},
+ {title:'這本書到底放哪裡？',lines:[['夢奇奇','誰知道這本書原本放哪裡？'],['哈姆太郎','我以為書櫃有自動歸位功能。'],['薪水掌門人','這裡是律師事務所，不是魔法圖書館！']]},
+ {title:'如果書本會說話',lines:[['哈姆太郎','如果這些書會說話，第一句會說什麼？'],['夢奇奇','「不要只拿我當背景，快翻開我！」'],['林律師','那我今天就先從這一本開始。']]},
+ {title:'新版本又出版了！',lines:[['林律師','這本專業書好像出了新版。'],['薪水掌門人','舊版不是才剛買嗎？'],['林律師','法規和實務會更新，資料也要跟上。'],['薪水掌門人','了解，但書櫃更新速度好像跟不上。']]},
+ {title:'兩百多本夠了嗎？',lines:[['夢奇奇','超過兩百本，應該很夠了吧？'],['林律師','不同問題需要不同資料，而且我也喜歡讀其他類型的書。'],['哈姆太郎','翻譯：購書清單還沒結束。']]},
+ {title:'薪水掌門人最怕的一句話',lines:[['林律師','這套書很值得收藏。'],['薪水掌門人','請問是一套幾本？'],['林律師','這個不重要，重點是內容很完整。'],['薪水掌門人','對我來說，本數也非常重要！']]},
+ {title:'書櫃有休假嗎？',lines:[['哈姆太郎','這面書櫃有休假日嗎？'],['夢奇奇','只要林律師想到新問題，就可能來找書。'],['薪水掌門人','我先替書櫃申請一張排班表。']]},
+ {title:'為什麼偏偏是半圓形？',lines:[['夢奇奇','為什麼書櫃做成半圓形？'],['哈姆太郎','因為書越來越多，書櫃要用優雅的弧度承受壓力。'],['薪水掌門人','我只希望它承受的是書，不是你們的冷笑話。']]},
+ {title:'找一本書要多久？',lines:[['哈姆太郎','找一本書需要多久？'],['夢奇奇','如果大家都記得放回原位，應該很快。'],['林律師','那我手上這本先放哪裡？'],['薪水掌門人','就是原來的位置！']]},
+ {title:'最可怕的購書提議',lines:[['林律師','這套我覺得可以全部買齊。'],['薪水掌門人','我剛剛是不是聽到「全部」兩個字？'],['哈姆太郎','書櫃剛剛好像抖了一下。']]},
+ {title:'又看到一本新書',lines:[['林律師','這本新書看起來不錯。'],['夢奇奇','我們是不是已經有類似的書？'],['林律師','這本切入角度不一樣。'],['薪水掌門人','那先幫我確認，不是換個封面而已！']]},
+ {title:'書櫃的隱藏任務',lines:[['夢奇奇','來書櫃前面，要不要挑一本想讀的書？'],['哈姆太郎','我選最薄的那本。'],['林律師','挑書不能只看厚度，還要看你想了解什麼。'],['哈姆太郎','好，那我重新選一次！']]},
+ {title:'法律研究不是一本書',lines:[['夢奇奇','查法律問題，翻一本書就夠了嗎？'],['林律師','通常還要比對法條、裁判、實務見解與案件事實。'],['哈姆太郎','所以這面書櫃不是單兵作戰，是整個研究團隊。']]},
+ {title:'書櫃年度考核',lines:[['薪水掌門人','如果書櫃也要做年度考核，績效指標是什麼？'],['哈姆太郎','新增書籍數、被翻閱次數，還有沒有發生書本雪崩！'],['夢奇奇','最後一項最重要吧！']]},
+ {title:'最後還能再塞幾本？',lines:[['林律師','這面書櫃還能再放幾本？'],['哈姆太郎','這題需要精密計算。'],['薪水掌門人','計算之前，請先暫停購書！'],['林律師','……我只是問問。']]}
 ];
 let wy260BookIndex=0,wy260Current=null,wy260Scene=0;
 const wy260Escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -2870,14 +2871,16 @@ function wy260Open(key){wy260Current=key;wy260Scene=0;wyLobbyDialog.style.displa
 function wy260SceneHome(){const d=wy260Data[wy260Current];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p>'+wy260Escape(d.intro)+'</p>'+d.scenes.map((s,i)=>'<button data-wy260="scene:'+i+'">'+(i+1)+'．'+wy260Escape(s.q)+'</button>').join(''));}
 function wy260Question(i){wy260Scene=i;const d=wy260Data[wy260Current],s=d.scenes[i];wy260Render('<h2>'+wy260Escape(d.title)+'</h2><p><b>'+wy260Escape(s.q)+'</b></p>'+s.opts.map((o,j)=>'<button data-wy260="answer:'+j+'">'+String.fromCharCode(65+j)+'．'+wy260Escape(o[0])+'</button>').join('')+'<button data-wy260="home">← 返回情境選單</button>');}
 function wy260Answer(i){const s=wy260Data[wy260Current].scenes[wy260Scene],o=s.opts[i];wy260Render('<h2>'+wy260Escape(wy260Data[wy260Current].title)+'</h2><p>'+wy260Escape(s.q)+'</p><p><b>你的選擇：</b>'+wy260Escape(o[0])+'</p><div class="wy260Answer"><b>林律師怎麼看？</b><p>'+wy260Escape(o[1])+'</p></div><p style="font-size:12px;color:#746d63">以上為一般法律知識與模擬情境，個案仍須依具體事實及適用法律判斷。</p><button data-wy260="question">重新選擇</button><button data-wy260="home">← 其他情境</button>');}
-function wy260Books(){const t=wy260BookTalks[wy260BookIndex%wy260BookTalks.length];wy260Render('<h2>林律師又買書了？！</h2><p><b>'+wy260Escape(t[0])+'</b></p><div class="wy260Answer">'+wy260Escape(t[1])+'</div><p style="font-size:12px;color:#746d63">第 '+(wy260BookIndex%wy260BookTalks.length+1)+'／'+wy260BookTalks.length+' 則趣味對話</p><button data-wy260="nextbook">再聽一段辦公室趣事 ↻</button>');}
+const wy263BookStyle=document.createElement('style');wy263BookStyle.textContent='#wy260Card #wy263BookPick{display:block;width:100%;box-sizing:border-box;font-size:15px;padding:12px;border:1px solid #c5a36b;border-radius:10px;background:#fff;color:#263B57}#wy260Card .wy263Talk{max-width:93%;background:#f1eadc;border-left:4px solid #c5a36b;border-radius:10px;padding:10px 12px;margin:9px 0}#wy260Card .wy263TalkAlt{margin-left:auto;background:#e6edf4;border-left-color:#263B57}#wy260Card .wy263Talk b{color:#263B57}#wy260Card .wy263Talk p{margin:3px 0 0;font-size:15px;line-height:1.7}#wy260Card .wy263BookNote{font-size:12px;color:#746d63;line-height:1.65}';document.head.append(wy263BookStyle);
+function wy260Books(){const t=wy260BookTalks[wy260BookIndex%wy260BookTalks.length];const list=wy260BookTalks.map((v,i)=>'<option value="'+i+'"'+(i===wy260BookIndex?' selected':'')+'>'+(i+1)+'．'+wy260Escape(v.title)+'</option>').join('');const talk=t.lines.map((v,i)=>'<div class="wy263Talk '+(i%2?'wy263TalkAlt':'')+'"><b>'+wy260Escape(v[0])+'</b><p>'+wy260Escape(v[1])+'</p></div>').join('');wy260Render('<h2>林律師又買書了？！</h2><p>這面半圓形書櫃已經收藏超過200本各類書籍，還會繼續增加。想聽哪一段辦公室趣事？</p><label for="wy263BookPick" style="display:block;font-weight:700;margin:10px 0 6px">選擇趣味情境</label><select id="wy263BookPick" aria-label="選擇書櫃趣味情境">'+list+'</select><h3 style="font-size:17px;color:#263B57;margin:16px 0 10px">'+wy260Escape(t.title)+'</h3>'+talk+(t.note?'<p class="wy263BookNote">'+wy260Escape(t.note)+'</p>':'')+'<p class="wy263BookNote">以上為網站創作的趣味對話，非人物真實逐字發言。</p><button data-wy260="nextbook">再聽一段辦公室趣事 ↻</button>');}
 const wy260Gowns=[['法官','藍色','#2766a4','法官法袍以藍色鑲邊辨識。'],['檢察官','紫色','#8050a5','檢察官法袍以紫色鑲邊辨識。'],['律師','白色','#eeeeee','律師法袍以白色鑲邊辨識。'],['公設辯護人','綠色','#328961','公設辯護人法袍以綠色鑲邊辨識。'],['書記官','黑色','#555555','書記官法袍以黑色鑲邊辨識。'],['公證人','紅色','#c94a4a','公證人主持結婚儀式時，依法穿著黑色紅邊制服；不是所有公證業務都要穿。']];
 function wy260GownSvg(color){return '<svg viewBox="0 0 100 110" aria-hidden="true"><path d="M34 10 L18 18 L3 48 L20 57 L27 45 L24 101 Q50 108 76 101 L73 45 L80 57 L97 48 L82 18 L66 10 L59 18 L41 18Z" fill="#24282d" stroke="#101418" stroke-width="2"/><path d="M34 10 L43 28 L50 35 L57 28 L66 10 M43 28 L45 100 M57 28 L55 100 M9 46 L22 52 M78 52 L91 46" fill="none" stroke="'+color+'" stroke-width="6" stroke-linejoin="round"/></svg>'}
 function wy260RobeHome(){wy260Render('<h2>律師袍的秘密</h2><p>一件黑色法袍，竟然藏著兩個故事。你想先看哪一個？</p><button data-wy260="gowns">法袍顏色大解密｜六件完整法袍</button><button data-wy260="wash">律師袍不能洗的秘密｜趣味故事</button>');}
 function wy260GownPage(i=-1){let b='<h2>法袍顏色大解密</h2><p>法袍大多是黑色，辨識身分的關鍵在鑲邊。點選完整法袍看看！</p><div class="wy260GownGrid">'+wy260Gowns.map((g,j)=>'<div class="wy260Gown">'+wy260GownSvg(g[2])+'<button data-wy260="gown:'+j+'">'+g[0]+'｜'+g[1]+'邊</button></div>').join('')+'</div>';if(i>=0)b+='<div class="wy260Answer"><b>'+wy260Gowns[i][0]+'：'+wy260Gowns[i][1]+'鑲邊</b><p>'+wy260Gowns[i][3]+'</p></div>';b+='<p style="font-size:12px;color:#746d63">向量圖為服裝示意，非官方服制附圖。實際規定請依現行法令為準。</p><button data-wy260="robehome">← 返回律師袍主選單</button>';wy260Render(b);}
 function wy260Wash(){wy260Render('<h2>律師袍不能洗的秘密</h2><p>你知道嗎？律師界流傳著一個有趣的說法：<b>律師袍不能隨便拿去洗！</b></p><p>據說，有些人相信律師袍穿久了會累積勝訴好運，拿去洗，可能連好運都一起洗掉。還有人開玩笑說，洗了就會「一貧如洗」。</p><p>當然，這只是法界流傳的趣味迷信，<b>不是法律規定，也沒有證據顯示洗袍會影響官司勝敗。</b>衣物是否適合水洗或乾洗，還是要看材質與洗滌標示。</p><div class="wy260Answer"><b>那林律師的律師袍呢？</b><p>放心！林律師的律師袍一定會拿去清潔。林律師同時具有台灣及美國紐約州律師資格，對不同法律文化都有接觸。</p><p><b>比起擔心洗掉勝訴運，林律師更擔心的是——官司還沒打完，律師袍就先被當成生物跡證送去鑑定！</b> 😂</p></div><p style="font-size:12px;color:#746d63">以上結尾為網站設計的趣味台詞，並非律師本人逐字引言。</p><button data-wy260="robehome">← 返回律師袍主選單</button>');}
+wy260Modal.addEventListener('change',e=>{if(e.target.id==='wy263BookPick'){wy260BookIndex=Number(e.target.value)||0;wy260Books();}});
 wy260Modal.addEventListener('click',e=>{if(e.target===wy260Modal)wy260Modal.style.display='none'});
-wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='nextbook'){wy260BookIndex++;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
+wy260Modal.addEventListener('click',e=>{const b=e.target.closest('button[data-wy260]');if(!b)return;const a=b.dataset.wy260;if(a==='close'){wy260Modal.style.display='none';return}if(a==='nextbook'){wy260BookIndex=(wy260BookIndex+1)%wy260BookTalks.length;return wy260Books()}if(a==='home')return wy260SceneHome();if(a==='question')return wy260Question(wy260Scene);if(a==='robehome')return wy260RobeHome();if(a==='gowns')return wy260GownPage();if(a==='wash')return wy260Wash();if(a.startsWith('gown:'))return wy260GownPage(+a.split(':')[1]);if(a.startsWith('scene:'))return wy260Question(+a.split(':')[1]);if(a.startsWith('answer:'))return wy260Answer(+a.split(':')[1]);});
 function wy260SignsTick(){if(wyOfficeFloor!==3||!insideOffice||!wy180AtOffice)return;for(const m of wy260Signs)m.quaternion.copy(wy3Cam.quaternion)}
 
 let wy180ExitAnim=null;
