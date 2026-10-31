@@ -2245,8 +2245,21 @@ function wy240Chair(x,z,lawyer){
   wy3Box(x+dx,.88,z,.09,.19,.09,leatherDark);
  }
  if(lawyer){
-  wy3Cyl(x,.35,z,.13,.13,.55,'#bda06c');
-  for(const [dx,dz] of [[-.45,0],[.45,0],[0,-.42],[0,.42]])wy3Box(x+dx,.13,z+dz,.46,.08,.09,'#4a4b4a');
+  // v259: five-spoke executive swivel base; each arm radiates cleanly from the hub.
+  // The old four unrotated boxes formed a disconnected-looking cross.
+  wy3Cyl(x,.38,z,.105,.105,.48,'#bda06c');
+  wy3Cyl(x,.165,z,.19,.19,.095,'#38454b');
+  const wy259FootMat=new THREE.MeshStandardMaterial({color:'#3a4449',metalness:.32,roughness:.48});
+  const wy259WheelMat=new THREE.MeshStandardMaterial({color:'#252c32',metalness:.12,roughness:.65});
+  for(let k=0;k<5;k++){
+   const a=Math.PI*2*k/5+Math.PI/10;
+   const arm=new THREE.Mesh(new THREE.BoxGeometry(.50,.075,.115),wy259FootMat);
+   arm.position.set(x+Math.cos(a)*.27,.115,z+Math.sin(a)*.27);
+   arm.rotation.y=-a;wy3Root.add(arm);
+   const wx=x+Math.cos(a)*.54,wz=z+Math.sin(a)*.54;
+   const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.077,.077,.09,14),wy259WheelMat);
+   wheel.rotation.z=Math.PI/2;wheel.position.set(wx,.079,wz);wy3Root.add(wheel);
+  }
  }else for(const dx of [-.35,.35])for(const dz of [-.30,.30])wy3Box(x+dx,.32,z+dz,.07,.62,.07,gold);
 }
 wy240Chair(0,-4.0,true);wy240Chair(-1.55,1.6,false);wy240Chair(1.55,1.6,false);
@@ -2953,6 +2966,10 @@ function wy247SetRideView(floor){
  // Fixed angle 35-45 degrees downward, distance scaled to fit actor + lift.
  const d=Math.max(13,Math.min(30,span*1.45+8));
  const eye=center.clone().add(new THREE.Vector3(-d*.30,d*.72,d*.78));
+ // v259: raise the entire fixed elevator-approach composition, not the UI or lift signage.
+ // Keep the viewing angle and stationary third-person shot; crop more floor at the bottom.
+ const wy259Up=1.65;
+ eye.y+=wy259Up;center.y+=wy259Up;
  cam.position.copy(eye);ctrl.target.copy(center);cam.lookAt(center);cam.updateMatrixWorld(true);
  wy247RideView={floor,eye,center,root,end};
 }
