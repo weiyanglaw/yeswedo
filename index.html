@@ -1403,7 +1403,7 @@ function lbMat(c,opacity=1){return new THREE.MeshBasicMaterial({color:c,transpar
 function lbBox(x,y,z,w,h,d,c,action=null,opacity=1){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),lbMat(c,opacity));m.position.set(x,y,z);lobbyRoot.add(m);if(action){m.userData.lobbyAction=action;lobbyTargets.push(m)}return m}
 function lbCylinder(x,y,z,r1,r2,h,c,action=null,n=20){const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,n),lbMat(c));m.position.set(x,y,z);lobbyRoot.add(m);if(action){m.userData.lobbyAction=action;lobbyTargets.push(m)}return m}
 function lbText(text,x,y,z,w=3.0,h=.68,action=null,face='front'){
- const c=document.createElement('canvas');c.width=1024;c.height=220;const g=c.getContext('2d');
+ const c=document.createElement('canvas');c.width=1024;c.height=192;const g=c.getContext('2d');
  g.fillStyle='#203c57';g.beginPath();g.roundRect(9,8,1006,204,37);g.fill();g.strokeStyle='#e2e9ef';g.lineWidth=8;g.stroke();
  g.fillStyle='#fffdf7';g.textAlign='center';g.textBaseline='middle';g.font='bold 90px "Noto Sans TC",sans-serif';g.fillText(text,512,114,935);
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;
@@ -2792,19 +2792,19 @@ const wy260Entries=[
  {key:'case',title:'這案子，你怎麼辦？',pos:[0,2.36,.58],width:2.78},
  {key:'overseas',title:'跨國官司不迷航！',pos:[1.65,2.43,-2.22],width:2.72},
  {key:'contract',title:'這份合約，敢簽嗎？',pos:[-2.08,2.43,-2.25],width:2.94},
- {key:'books',title:'林律師又買書了？！',pos:[5.76,5.72,-7.34],width:2.96},
+ {key:'books',title:'林律師又買書了？！',pos:[0,6.91,-7.18],width:3.25},
  {key:'evidence',title:'證據到底躲哪裡？',pos:[-8.42,5.75,-2.45],width:3.04},
  {key:'schedule',title:'律師今天又去哪了？',pos:[-8.88,5.70,-5.60],width:3.00},
  {key:'robe',title:'律師袍不能洗？！',pos:[2.35,4.92,-5.90],width:2.75}
 ];
 const wy260Signs=[];
 function wy260MakeSign(e){
- const c=document.createElement('canvas');c.width=1024;c.height=220;const g=c.getContext('2d');
- g.fillStyle='#263B57';g.beginPath();g.roundRect(10,12,1004,196,30);g.fill();
- g.lineWidth=10;g.strokeStyle='#C5A36B';g.stroke();
- g.font='bold 76px "Noto Sans TC",system-ui,sans-serif';g.fillStyle='#F8E5BD';g.textAlign='center';g.textBaseline='middle';g.fillText(e.title,512,113,925);
+ const c=document.createElement('canvas');c.width=1024;c.height=192;const g=c.getContext('2d');
+ g.fillStyle='#263B57';g.beginPath();g.roundRect(7,7,1010,178,26);g.fill();
+ g.lineWidth=9;g.strokeStyle='#C5A36B';g.stroke();
+ g.font='bold 96px sans-serif';g.fillStyle='#F8E5BD';g.textAlign='center';g.textBaseline='middle';g.fillText(e.title,512,99,960);
  const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
- const m=new THREE.Mesh(new THREE.PlaneGeometry(e.width,.58),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(e.width,.72),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
  m.position.set(...e.pos);m.userData.wy3Action='wy260:'+e.key;m.renderOrder=4;wy3Root.add(m);wy3Targets.push(m);wy260Signs.push(m);
 }
 wy260Entries.forEach(wy260MakeSign);
