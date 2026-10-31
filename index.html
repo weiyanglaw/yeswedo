@@ -3006,6 +3006,7 @@ function wy266Start(game){
  // Physics: gravity, elastic walls, flipper impulse and velocity-dependent bumper bounce.
  const steps=3,h=dt/steps;for(let j=0;j<steps;j++){b.vy+=310*h;b.x+=b.vx*h;b.y+=b.vy*h;if(b.x<22+b.r){b.x=22+b.r;b.vx=Math.abs(b.vx)*.97}if(b.x>298-b.r){b.x=298-b.r;b.vx=-Math.abs(b.vx)*.97}if(b.y<49+b.r){b.y=49+b.r;b.vy=Math.abs(b.vy)*.96}
  for(const q of e.bumps){const dx=b.x-q.x,dy=b.y-q.y,dist=Math.hypot(dx,dy)||1;if(dist<b.r+q.r){const nx=dx/dist,ny=dy/dist;b.x=q.x+nx*(b.r+q.r+1);b.y=q.y+ny*(b.r+q.r+1);const dot=b.vx*nx+b.vy*ny;if(dot<0){b.vx-=2*dot*nx;b.vy-=2*dot*ny}const kick=12+Math.min(25,t*.4);b.vx+=nx*kick;b.vy+=ny*kick;wy265Score+=q.p;wy265Hits++;wy265Combo++;wy265BestCombo=Math.max(wy265BestCombo,wy265Combo);}}
+ // v275: side rails funnel the ball to the paddles; only the central drain is open.
  // Real angled flipper segments: collision uses closest point to the drawn paddle,
  // not a rectangular region above it. Both flippers sweep toward the center when held.
  function flipper(ax,ay,cx,cy,active,side){
@@ -3022,12 +3023,22 @@ function wy266Start(game){
   b.vx=clamp((b.x-160)*.72+(side==='left'?72:-72),-175,175);
   if(fresh){wy265Score+=80;wy265Hits++;wy265Combo++;wy265BestCombo=Math.max(wy265BestCombo,wy265Combo)}
  }
- const lEnd=e.left?{x:151,y:345}:{x:151,y:388};const rEnd=e.right?{x:169,y:345}:{x:169,y:388};
- flipper(42,365,lEnd.x,lEnd.y,e.left,'left');flipper(278,365,rEnd.x,rEnd.y,e.right,'right');
+ // The left/right outside tips meet the side rails; no unreachable side drain.
+ // Side funnels are solid: a ball falling beside a paddle is guided onto it.
+ if(b.y>308&&b.y<411){
+  const railY=338+Math.max(0,b.y-338)*.26;
+  if(b.x<38+b.r){b.x=38+b.r;b.vx=Math.max(48,Math.abs(b.vx)*.55)}
+  if(b.x>282-b.r){b.x=282-b.r;b.vx=-Math.max(48,Math.abs(b.vx)*.55)}
+  // Sloped guide plates run down toward the outside end of each paddle.
+  if(b.y>railY&&b.x<65){b.vx=Math.max(58,b.vx);}
+  if(b.y>railY&&b.x>255){b.vx=Math.min(-58,b.vx);}
+ }
+ const lEnd=e.left?{x:151,y:343}:{x:151,y:388};const rEnd=e.right?{x:169,y:343}:{x:169,y:388};
+ flipper(38,365,lEnd.x,lEnd.y,e.left,'left');flipper(282,365,rEnd.x,rEnd.y,e.right,'right');
 
  let v=Math.hypot(b.vx,b.vy);const max=330;if(v>max){b.vx*=max/v;b.vy*=max/v}if(v<95&&b.y<310){b.vx*=1.006;b.vy*=1.006}}
  e.trail.push({x:b.x,y:b.y});if(e.trail.length>9)e.trail.shift();e.trail.forEach((p,i)=>circle(p.x,p.y,2+i*.32,'rgba(244,215,153,'+(i/e.trail.length*.35)+')'));
- line(42,365,e.left?151:151,e.left?345:388,e.left?'#ffe9aa':'#c5a36b',e.left?12:9);line(278,365,169,e.right?345:388,e.right?'#ffe9aa':'#c5a36b',e.right?12:9);circle(b.x,b.y,b.r,'#fff1c7','#f4d078');if(b.y>417)resetBall();txt('左右擋板接球 · 按住可抬起擋板',160,413,11);}
+ line(22,313,38,365,'#c5a36b',7);line(298,313,282,365,'#c5a36b',7);line(38,365,151,e.left?343:388,e.left?'#ffe9aa':'#c5a36b',e.left?12:9);line(282,365,169,e.right?343:388,e.right?'#ffe9aa':'#c5a36b',e.right?12:9);circle(b.x,b.y,b.r,'#fff1c7','#f4d078');if(b.y>417)resetBall();txt('左右擋板接球 · 按住可抬起擋板',160,413,11);}
  function frame(now){if(!e.alive||wy266Engine!==e||wy265Mode!=='play')return;const dt=Math.min(.034,Math.max(.001,(now-e.last)/1000));e.last=now;e.elapsed=wy265Elapsed();if(e.elapsed>=wy265Duration){wy265Finish();return;}if(dodge)drawDodge(dt);else drawPinball(dt);const time=document.getElementById('wy266Time'),score=document.getElementById('wy266Score'),lives=document.getElementById('wy266Lives');if(time){time.textContent=Math.ceil(wy265Duration-e.elapsed)+' 秒';score.textContent=wy265Score.toLocaleString()+' 分';lives.textContent=dodge?'♥ '.repeat(Math.max(0,e.hearts)):'球 '+(4-e.balls)+' / 3';}if(e.alive)requestAnimationFrame(frame)}requestAnimationFrame(frame);
 }
 function wy265Result(r){const grade=r.score>=3000?'A+':r.score>=1800?'A':r.score>=900?'B':'C';const title=r.game==='rhythm'?'法庭節奏大師':r.game==='stress'?'壓力管理高手':r.game==='balance'?'穩定控場專家':'黃金60秒全能王';wy265Set('<div class="wy265Title">WEI & YANG INTERNATIONAL LAW FIRM</div><h2>德威陽｜體能挑戰成績卡</h2><div class="wy265Share" id="wy265ResultCard"><div style="color:#e6c78e;font-size:12px">YES, WE DO!</div><h2>'+title+'</h2><div style="font-size:40px;color:#f0d29a;font-weight:800">'+r.score.toLocaleString()+'</div><p>'+wy265Titles[r.game]+'</p><div class="wy265Stat"><span>評級 '+grade+'</span><span>最高連擊 '+r.combo+'</span><span>成功操作 '+r.hits+'</span></div><p>法庭講求專注，挑戰也要保持節奏！</p><div style="font-size:12px;color:#e6c78e">德威陽國際法律事務所 · YES, WE DO!</div></div><div class="wy265Row"><button data-gym="again">再玩一次</button><button data-gym="save">儲存成績卡</button></div><button class="wy265Full" data-gym="scores">查看本次排行榜</button><button class="wy265Full" data-gym="menu">返回遊戲選單</button>');}
