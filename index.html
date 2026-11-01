@@ -1963,6 +1963,7 @@ function wyLiftNumeral(n,x,y,z,w,h,parent){
  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthTest:true,side:THREE.DoubleSide}));
  mesh.position.set(x,y,z);parent.add(mesh);return mesh;
 }
+const wy290FirstFloorLiftStart=lobbyRoot.children.length; // capture the actual first-floor architecture
 // v118: slim five-star hotel elevator; matte charcoal, champagne trim, cream side piers.
 // Keep original interactive door objects and room roots intact.
 const wyLiftX=8.4,wyLiftZ=-9.94;
@@ -1996,9 +1997,10 @@ lbBox(wyLiftX,7.15,-9.53,4.60,.23,.10,wyLiftChampagne,'elevator');
 lbBox(wyLiftX,6.88,-9.55,3.62,.31,.08,wyLiftIce,'elevator');
 lbBox(wyLiftX,6.88,-9.49,3.45,.13,.035,'#BDEBF7','elevator');
 // Maintain the original floor numeral and all elevator open/close logic.
+const wy290FirstFloorLiftParts=lobbyRoot.children.slice(wy290FirstFloorLiftStart);
 // v282: 2F exactly reuses the 1F glass-cabin builder. Entrance faces LEFT (-X).
 const wyElev2=new THREE.Group();roomRoot.add(wyElev2);
-wyElev2.position.set(13.02,0,8.55);wyElev2.rotation.y=-Math.PI/2; // v284 far-right bottom corner; glass entrance faces west
+wyElev2.position.set(12.15,0,8.55);wyElev2.rotation.y=-Math.PI/2; // v284 far-right bottom corner; glass entrance faces west
 const wyElevDoors2=[]; // no opaque double doors on 2F
 const wyElev2ClickTargets=[];
 const wy2Digit=wyLiftNumeral('2',0,6.38,2.05,1.18,.57,wyElev2);
@@ -2042,25 +2044,23 @@ function wyBuildGlassCabin(parent,cx,cz,one){
 }
 wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,0,2);
-// v289: use the exact 1F architectural portal dimensions, materials and
-// relative cabin offsets. The 1F backing panel is already created identically
-// for both floors by wyBuildGlassCabin (the cream BoxGeometry(3.22,5.25,.11)).
-// The portal is anchored to the CABIN rather than offset 1.66m into the room.
-// Local +Z is the entrance; the whole 2F assembly rotates to face west.
-const wy289Portal=new THREE.Group();wyElev2.add(wy289Portal);
-const wy289Gold='#D6AF72',wy289Light='#F1D8A8',wy289Navy='#183D5D';
-for(const xx of [-2.24,2.24]){
- roomBox(xx,3.35,-.34,.48,6.76,.42,wy289Gold,wy289Portal);
- roomBox(xx,3.35,-.09,.17,6.42,.12,wy289Light,wy289Portal);
+// v290: discard the independently reconstructed second-floor portal entirely.
+// Clone the actual first-floor architectural meshes, including its cream rear
+// panels, gold piers, substantial navy crown, ice-blue light bars and trims.
+// Keep the 2F glass cabin/door pivots and all movement/ride logic untouched.
+const wy290Portal=new THREE.Group();wyElev2.add(wy290Portal);
+for(const original of wy290FirstFloorLiftParts){
+ if(!original.isMesh || original===wy1Digit || !original.visible)continue;
+ // Exclude the two legacy opaque sliding doors; these are hidden on 1F too.
+ if(wyElevDoors1.includes(original))continue;
+ const part=original.clone();
+ part.position.set(original.position.x-wyLiftX,original.position.y,original.position.z-(-9.48));
+ part.userData={};
+ wy290Portal.add(part);
 }
-roomBox(0,6.91,-.33,5.05,.77,.46,wy289Navy,wy289Portal);
-roomBox(0,7.15,-.05,4.60,.23,.10,wy289Gold,wy289Portal);
-roomBox(0,6.88,-.07,3.62,.31,.08,'#74C8E4',wy289Portal);
-roomBox(0,6.88,-.01,3.45,.13,.035,'#BDEBF7',wy289Portal);
-// The numeral is in front of the portal and its cream backing panel.
-wy2Digit.position.set(0,6.38,.50);
+// Keep the same gold number texture/size/placement as the first floor.
+wy2Digit.position.set(wy1Digit.position.x-wyLiftX,wy1Digit.position.y,wy1Digit.position.z-(-9.48));
 wy2Digit.renderOrder=16;
-
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
 wyElevDoors1.forEach(d=>d.visible=false);
