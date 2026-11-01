@@ -1164,10 +1164,11 @@ roomBox(6.75,-.24,5.5,40.5,.48,33,'#EADDCB');
 for(let x=-12.5;x<=26.25;x+=3.6)roomBox(x,.009,5.5,.014,.012,32.6,'#E1D8CA');
 for(let z=-9.7;z<=21.7;z+=6.0)roomBox(6.75,.012,z,40,.012,.012,'#E1D8CA');
 roomBox(6.75,4.255,-10.75,40.5,8.51,.40,'#F8F4EB');
-// v323: left-wall doorway at the user-marked far end, z=16.5. Real gap, not a door pasted on solid wall.
-roomBox(-13.3,4.255,2.65,.40,8.51,27.3,'#F7F2E9'); // z=-11..16.3
-roomBox(-13.3,4.255,20.15,.40,8.51,3.7,'#F7F2E9'); // z=18.3..22
-roomBox(-13.3,6.50,17.30,.40,4.02,2.0,'#F7F2E9'); // lintel above door
+// v324: widened entrance on the SAME left wall marked by the user.
+// Opening spans z=15.55..19.05 (3.5m wide) and rises to y=5.35.
+roomBox(-13.3,4.255,2.275,.40,8.51,26.55,'#F7F2E9'); // -11..15.55
+roomBox(-13.3,4.255,20.525,.40,8.51,2.95,'#F7F2E9'); // 19.05..22
+roomBox(-13.3,6.93,17.30,.40,3.16,3.5,'#F7F2E9'); // lintel
 
 roomBox(26.8,4.255,5.5,.40,8.51,33,'#F7F2E9');
 
@@ -1181,18 +1182,16 @@ const wy323Butter=new THREE.MeshStandardMaterial({color:'#FFCF63',roughness:.66}
 const wy323Gold=new THREE.MeshStandardMaterial({color:'#C99B55',metalness:.62,roughness:.28});
 const wy323Glass=new THREE.MeshPhysicalMaterial({color:'#D7F5FF',transparent:true,opacity:.48,side:THREE.DoubleSide,roughness:.1,depthWrite:false});
 function wy323Mesh(geo,mat,x,y,z,group=wy323DoorGroup){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);group.add(m);return m;}
-// Wall is x=-13.3; the doorway sits in the opening at z≈17.3.
-// Opening is 2m along z, 4.5m tall, arch frame faces into the office (+X).
-for(const z of [16.23,18.37])wy323Mesh(new THREE.BoxGeometry(.58,4.55,.35),wy323Peach,-13.13,2.28,z);
-wy323Mesh(new THREE.BoxGeometry(.58,.35,2.45),wy323Peach,-13.13,4.55,17.3);
-const wy323Leaf=wy323Mesh(new THREE.BoxGeometry(.17,3.83,1.74),wy323Butter,-13.03,1.94,17.30);
-// Rounded arched glass insert: curved shape, not a flat yellow rectangle.
-const wy323WindowShape=new THREE.Shape();wy323WindowShape.moveTo(-.62,0);wy323WindowShape.lineTo(-.62,.66);wy323WindowShape.absarc(0,.66,.62,Math.PI,0,true);wy323WindowShape.lineTo(.62,0);wy323WindowShape.closePath();
-const wy323Window=wy323Mesh(new THREE.ShapeGeometry(wy323WindowShape,32),wy323Glass,-12.92,2.55,17.30);
+// Widened 3.5m portal; large transparent hit surface for iPhone taps.
+for(const z of [15.42,19.18])wy323Mesh(new THREE.BoxGeometry(.58,5.50,.35),wy323Peach,-13.13,2.75,z);
+wy323Mesh(new THREE.BoxGeometry(.58,.35,4.15),wy323Peach,-13.13,5.47,17.30);
+const wy323Leaf=wy323Mesh(new THREE.BoxGeometry(.17,4.85,3.34),wy323Butter,-13.03,2.43,17.30);
+const wy323WindowShape=new THREE.Shape();wy323WindowShape.moveTo(-1.20,0);wy323WindowShape.lineTo(-1.20,.90);wy323WindowShape.absarc(0,.90,1.20,Math.PI,0,true);wy323WindowShape.lineTo(1.20,0);wy323WindowShape.closePath();
+const wy323Window=wy323Mesh(new THREE.ShapeGeometry(wy323WindowShape,40),wy323Glass,-12.92,3.08,17.30);
 wy323Window.rotation.y=Math.PI/2;
-const wy323Arch=new THREE.Mesh(new THREE.TorusGeometry(.95,.13,10,36,Math.PI),wy323Peach);wy323Arch.rotation.y=Math.PI/2;wy323Arch.position.set(-12.98,4.30,17.30);wy323DoorGroup.add(wy323Arch);
-wy323Mesh(new THREE.SphereGeometry(.13,16,12),wy323Gold,-12.87,1.82,16.64);
-const wy323DoorClick=wy323Mesh(new THREE.BoxGeometry(.32,4.4,2.25),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-12.75,2.25,17.30);
+const wy323Arch=new THREE.Mesh(new THREE.TorusGeometry(1.68,.16,12,48,Math.PI),wy323Peach);wy323Arch.rotation.y=Math.PI/2;wy323Arch.position.set(-12.98,4.52,17.30);wy323DoorGroup.add(wy323Arch);
+wy323Mesh(new THREE.SphereGeometry(.18,18,12),wy323Gold,-12.85,2.05,16.02);
+const wy323DoorClick=wy323Mesh(new THREE.BoxGeometry(.50,5.65,4.15),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-12.65,2.80,17.30);
 wy323EntranceHits.push(wy323DoorClick,wy323Leaf);
 // Entirely separate spatial island, 110+ units away from original office.
 // It is not attached to the office footprint and contains NO furnishings.
@@ -1200,26 +1199,26 @@ const wy323Room=new THREE.Group();officeScene.add(wy323Room);wy323Room.visible=f
 const wy323X=115,wy323Z=0;
 function wy323Part(x,y,z,w,h,d,color){return roomBox(x,y,z,w,h,d,color,wy323Room);}
 wy323Part(wy323X,-.24,wy323Z,34,.48,28,'#FFF0D9');
-// Four walls, with a genuine central opening in the near wall for the exit door.
+// v324: completely remove the near/front wall. Leave the floor unobstructed.
+// Three remaining walls: rear, left, and right with a doorway at the right-front corner.
 wy323Part(wy323X,3.2,-14,34,6.4,.35,'#FCE4D7');
 wy323Part(wy323X-17,3.2,0,.35,6.4,28,'#FCE4D7');
-wy323Part(wy323X+17,3.2,0,.35,6.4,28,'#FCE4D7');
-wy323Part(wy323X-9.25,3.2,14,15.5,6.4,.35,'#FCE4D7');
-wy323Part(wy323X+9.25,3.2,14,15.5,6.4,.35,'#FCE4D7');
-wy323Part(wy323X,5.55,14,3,1.7,.35,'#FCE4D7');
-// Spacious blank interior, with broad visible floor and subtle perimeter baseboard.
-for(const xx of [wy323X-16.65,wy323X+16.65])wy323Part(xx,.24,0,.12,.30,27.5,'#DDBB96');
+wy323Part(wy323X+17,3.2,-3.5,.35,6.4,21,'#FCE4D7'); // right wall z=-14..7
+wy323Part(wy323X+17,3.2,12.5,.35,6.4,3,'#FCE4D7'); // right wall z=11..14
+wy323Part(wy323X+17,5.75,9,.35,1.3,4,'#FCE4D7'); // lintel above side exit
+// Subtle skirting, never a wall along the near edge.
+wy323Part(wy323X-16.65,.24,0,.12,.30,27.5,'#DDBB96');
+wy323Part(wy323X+16.65,.24,-3.5,.12,.30,20.8,'#DDBB96');
 wy323Part(wy323X,.24,-13.7,33,.30,.12,'#DDBB96');
-// Matching exit door, the only clickable object in the new room.
+// Exit sits in the right wall's front corner, oriented like a side elevator doorway.
 const wy323Exit=new THREE.Group();wy323Room.add(wy323Exit);
 function wy323ExitPart(w,h,d,x,y,z,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);wy323Exit.add(m);return m;}
-for(const xx of [wy323X-1.65,wy323X+1.65])wy323ExitPart(.35,4.7,.4,xx,2.35,13.7,wy323Peach);
-wy323ExitPart(3.6,.35,.4,wy323X,4.7,13.7,wy323Peach);
-const wy323ExitLeaf=wy323ExitPart(2.95,4.25,.17,wy323X,2.15,13.5,wy323Butter);
-wy323ExitPart(.18,.55,.18,wy323X+1.0,2.0,13.29,wy323Gold);
-const wy323ExitHit=wy323ExitPart(3.4,4.8,.48,wy323X,2.45,13.15,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
-// A tiny non-interactive floor inscription makes it clear this is an intentionally empty room.
-function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X,.08,8);officeCam.position.set(wy323X+24,24,30);officeOrbit.target.set(wy323X,1,0);officeOrbit.update();}
+for(const zz of [6.85,11.15])wy323ExitPart(.46,5.5,.34,wy323X+16.90,2.75,zz,wy323Peach);
+wy323ExitPart(.46,.34,4.7,wy323X+16.90,5.45,9,wy323Peach);
+const wy323ExitLeaf=wy323ExitPart(.19,4.95,3.78,wy323X+16.84,2.50,9,wy323Butter);
+wy323ExitPart(.18,.58,.20,wy323X+16.68,2.20,7.65,wy323Gold);
+const wy323ExitHit=wy323ExitPart(.8,5.8,4.7,wy323X+16.35,2.85,9,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
+function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+12,.08,8);officeCam.position.set(wy323X+5,21,31);officeOrbit.target.set(wy323X,1,0);officeOrbit.update();}
 function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update();}
 
 // Warm skirting and picture lights.
