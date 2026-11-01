@@ -1434,9 +1434,9 @@ function wyVideoTitleSprite(text){
  const c=document.createElement('canvas');c.width=640;c.height=112;
  const g=c.getContext('2d');g.fillStyle='#263B57';g.fillRect(0,0,640,112);
  g.strokeStyle='#C5A46E';g.lineWidth=5;g.strokeRect(3,3,634,106);
- g.fillStyle='#F2D9A3';g.font='bold 48px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(text,320,56);
+ g.fillStyle='#F2D9A3';g.font='bold 66px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(text,320,56);
  const t=new THREE.CanvasTexture(c);const m=new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false});
- const sp=new THREE.Sprite(m);sp.scale.set(4.4,.77,1);return sp;
+ const sp=new THREE.Sprite(m);sp.scale.set(5.8,1.02,1);return sp;
 }
 // v316: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
 // Clear, single-layer glass, physically separate blinds, no coplanar floor or decorative layers.
@@ -1525,21 +1525,22 @@ function wyVideoTitleSprite(text){
    }
    for(let j=0;j<4;j++){
     let z=cz+(j-1.5)*1.50;
-    chair(cx-2.12,z,Math.PI/2,navy);chair(cx+2.12,z,-Math.PI/2,navy);
+    chair(cx-2.12,z,-Math.PI/2,navy);chair(cx+2.12,z,Math.PI/2,navy);
    }
    chair(cx,cz-4.02,Math.PI,navy);chair(cx,cz+4.02,0,navy);
   }else{
    // Two ROUND tabletops tangent edge-to-edge, NOT overlapping; 6 seats (2+2 sides, 1+1 ends).
-   const radius=1.42, left=cx-radius, right=cx+radius;
-   for(const xx of [left,right]){
-    ellipse(xx,1.18,cz,radius,radius,.34,walnut);
-    cyl(xx,.61,cz,.31,.43,.95,edge,24);cyl(xx,.14,cz,.75,.75,.23,steel,24);
+   const radius=1.42, front=cz-radius, back=cz+radius;
+   for(const zz of [front,back]){
+    ellipse(cx,1.18,zz,radius,radius,.34,walnut);
+    cyl(cx,.61,zz,.31,.43,.95,edge,24);cyl(cx,.14,zz,.75,.75,.23,steel,24);
    }
-   for(const xx of [left,right]){
-    chair(xx,cz-2.16,Math.PI,teal);chair(xx,cz+2.16,0,teal);
+   // All seats face inward: backrest is local +Z, seat front is local -Z.
+   for(const zz of [front,back]){
+    chair(cx-2.16,zz,-Math.PI/2,teal);chair(cx+2.16,zz,Math.PI/2,teal);
    }
-   chair(cx-2*radius-1.00,cz,Math.PI/2,teal);
-   chair(cx+2*radius+1.00,cz,-Math.PI/2,teal);
+   chair(cx,cz-2*radius-1.00,Math.PI,teal);
+   chair(cx,cz+2*radius+1.00,0,teal);
   }
   // A single solid wall-mounted presentation panel, not overlapping several planes.
   const videoScreen=put(cx,3.38,z0+.53,isLarge?4.1:3.1,2.08,.19,navy);
@@ -1547,7 +1548,8 @@ function wyVideoTitleSprite(text){
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoScreen);
   // Gold headline sits above the screen, using existing geometry (no video texture).
   const videoLabel=wyVideoTitleSprite(isLarge?'企業法律顧問':'專業法律諮詢');
-  videoLabel.position.set(cx,4.95,z0+.82);roomRoot.add(videoLabel);
+  videoLabel.position.set(cx,4.95,z0+.82);videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
+  (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoLabel);
  }
  // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
  // East sides align with existing office wall; elevator at far south-east remains clear.
@@ -4261,11 +4263,17 @@ function updateDoorPrompt(){
 }
 // All six large 3D entrance-cloud sprites removed; keep elevated island-name clouds intact.
 const entranceSigns=[];
+window.wy318MeetingVideoActive=()=>insideOffice&&wyOfficeFloor===2&&!activeIslandRoom;
 let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;wy211LabelsTick();if(insideOffice){if(activeIslandRoom){
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){const action=hit[0].object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
  const objects=themeRooms[2].medicalRoom?.interactionTargets||[];
  const hit=ray.intersectObjects(objects,true);if(hit.length){const target=hit[0].object;if(target.userData.medicalAction==='logo'){openWyInfo('company');return;}medicalExperience.open(target.userData.medicalAction||'staff');return;}
- return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}if(wyOfficeFloor===3){ray.setFromCamera(pointer,wy3Cam);const h=ray.intersectObjects(wy3Targets,true);const hit3=h.find(item=>{const a=item.object.userData.wy3Action||item.object.parent?.userData.wy3Action;return a&&a!=='elevator'})||h.find(item=>(item.object.userData.wy3Action||item.object.parent?.userData.wy3Action)==='elevator');if(hit3){wy3Interact(hit3.object.userData.wy3Action||hit3.object.parent?.userData.wy3Action);return;}/* v278: wall-tap camera movement disabled */return;}ray.setFromCamera(pointer,officeCam);const wyElev2Hit=ray.intersectObjects(wyElev2ClickTargets,true);if(wyElev2Hit.length){wyElevatorOpen();wyLobbyOpen('elevator');return;}const hit=ray.intersectObjects(roomClickable);const labelHit=hit.find(h=>h.object.isSprite&&(h.object.userData.officeZone===3||h.object.userData.officeZone===7));if(labelHit)officeTalk(labelHit.object.userData.officeZone);else if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);if(ray.intersectObjects(islandLabels).length)return;if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}for(let idx=1;idx<6;idx++){const target=islandBuildingTargets[idx];if(target&&ray.intersectObject(target,true).length){enterIslandRoom(idx);return;}}const hits=ray.intersectObjects(clickable);if(hits.length){const label=hits[0].object.userData.label;const idx=names.indexOf(label);if(idx>0){enterIslandRoom(idx);return;}talk(label);return}// Cloud nameplates are decorative and NEVER act as entry buttons.
+ return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}if(wyOfficeFloor===3){ray.setFromCamera(pointer,wy3Cam);const h=ray.intersectObjects(wy3Targets,true);const hit3=h.find(item=>{const a=item.object.userData.wy3Action||item.object.parent?.userData.wy3Action;return a&&a!=='elevator'})||h.find(item=>(item.object.userData.wy3Action||item.object.parent?.userData.wy3Action)==='elevator');if(hit3){wy3Interact(hit3.object.userData.wy3Action||hit3.object.parent?.userData.wy3Action);return;}/* v278: wall-tap camera movement disabled */return;}ray.setFromCamera(pointer,officeCam);
+ const wyVideoHit=ray.intersectObjects(window.wyVideoScreens||[],false);
+ if(wyVideoHit.length&&typeof window.wy317OpenVideo==='function'){
+  window.wy317OpenVideo(wyVideoHit[0].object.userData.wyVideoRoom);return;
+ }
+ const wyElev2Hit=ray.intersectObjects(wyElev2ClickTargets,true);if(wyElev2Hit.length){wyElevatorOpen();wyLobbyOpen('elevator');return;}const hit=ray.intersectObjects(roomClickable);const labelHit=hit.find(h=>h.object.isSprite&&(h.object.userData.officeZone===3||h.object.userData.officeZone===7));if(labelHit)officeTalk(labelHit.object.userData.officeZone);else if(hit.length)officeTalk(hit[0].object.userData.officeZone);return;}if(Math.abs(e.movementX)>5||Math.abs(e.movementY)>5)return;pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,camera);if(ray.intersectObjects(islandLabels).length)return;if(castleClickTarget&&ray.intersectObject(castleClickTarget,true).length){enterOffice();return;}for(let idx=1;idx<6;idx++){const target=islandBuildingTargets[idx];if(target&&ray.intersectObject(target,true).length){enterIslandRoom(idx);return;}}const hits=ray.intersectObjects(clickable);if(hits.length){const label=hits[0].object.userData.label;const idx=names.indexOf(label);if(idx>0){enterIslandRoom(idx);return;}talk(label);return}// Cloud nameplates are decorative and NEVER act as entry buttons.
 
 
  // Ground tap: raycast against the six floating island top surfaces and bridge decks.
@@ -4403,31 +4411,26 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
 #wy317End a{display:inline-block;text-decoration:none;color:#fff;border:1px solid #d8b879;padding:11px 15px;border-radius:11px;margin:5px;font-weight:600}
 #wy317End a.wy317Primary{display:block;background:linear-gradient(#f7db9c,#cf9d4e);color:#162b42;margin:20px auto 12px;max-width:390px}
 #wy317End .wy317Links{display:flex;flex-wrap:wrap;justify-content:center}
-#wy317Floating{position:fixed;z-index:49;bottom:108px;right:12px;background:#263B57;color:#f2d6a1;border:1px solid #d4ae6f;border-radius:12px;padding:11px;font-size:13px;display:none;box-shadow:0 5px 15px #0005}
+#wy317Floating{position:fixed;z-index:49;bottom:108px;right:12px;display:none;gap:5px;flex-direction:column}#wy317Floating button{background:#263B57;color:#f2d6a1;border:1px solid #d4ae6f;border-radius:10px;padding:10px;font-size:13px;box-shadow:0 5px 15px #0005}
 </style>
 <div id="wy317Overlay" role="dialog" aria-modal="true" aria-label="會議室影片"><div id="wy317Box"><button id="wy317Close" aria-label="關閉影片">×</button><h2 id="wy317Heading"></h2><div id="wy317List"></div><div id="wy317Player"><video id="wy317Video" controls playsinline preload="none"></video><button id="wy317Back">返回影片清單</button></div><div id="wy317End"><h2>法律問題，不必獨自面對。</h2><p>德威陽國際法律事務所</p><a class="wy317Primary" href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener noreferrer">預約專業法律諮詢｜LINE @wylaw</a><div class="wy317Links"><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer">IG</a><a href="https://www.facebook.com/weiandyang/" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer">官網</a></div><button id="wy317Again" style="margin-top:14px;background:transparent;border:0;color:#e8c88c;text-decoration:underline;padding:9px">返回影片清單</button></div></div></div>
-<button id="wy317Floating" type="button">▶ 會議室影片</button>
+<div id="wy317Floating"><button type="button" id="wy318SmallBtn">▶ 個人諮詢影片</button><button type="button" id="wy318LargeBtn">▶ 企業講座影片</button></div>
 <script>
 (function(){
- const data={small:[{title:'法律服務影片',src:'videos/meeting-small.mp4'}],large:[{title:'專業影片（一）',src:'videos/meeting-large-1.mp4'},{title:'專業影片（二）',src:'videos/meeting-large-2.mp4'}]};
+ const data={small:[{title:'識詐有法｜法律觀點',src:'videos/meeting-small.mp4'}],large:[{title:'臺北醫學大學｜講座紀實',src:'videos/meeting-large-1.mp4'},{title:'法庭內外｜企業法律實務',src:'videos/meeting-large-2.mp4'}]};
  const $=id=>document.getElementById(id),overlay=$('wy317Overlay'),video=$('wy317Video');let current='small',lastFocus=null;
  function clear(){video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317End').style.display='none';}
  function list(){clear();$('wy317List').style.display='block';$('wy317Heading').textContent=current==='small'?'專業法律諮詢':'企業法律顧問';$('wy317List').replaceChildren();data[current].forEach((v,i)=>{let b=document.createElement('button');b.className='wy317VideoChoice';let p=document.createElement('strong');p.textContent=v.title;let desc=document.createElement('small');desc.textContent='點擊播放影片';let span=document.createElement('span');span.append(p,desc);let play=document.createElement('b');play.className='wy317Play';play.textContent='▶';b.append(play,span);b.onclick=()=>{clear();$('wy317List').style.display='none';$('wy317Player').style.display='block';$('wy317Heading').textContent=v.title;video.src=v.src;video.load();video.play().catch(()=>{});};$('wy317List').append(b);});}
- function open(room){current=room;lastFocus=document.activeElement;overlay.classList.add('open');document.body.dataset.wyVideoOpen='1';list();$('wy317Close').focus();}
+ function open(room){if(room!=='small'&&room!=='large')return;current=room;lastFocus=document.activeElement;overlay.classList.add('open');document.body.dataset.wyVideoOpen='1';list();if(room==='small')$('wy317List').querySelector('button')?.click();$('wy317Close').focus();}
  function close(){clear();overlay.classList.remove('open');delete document.body.dataset.wyVideoOpen;if(lastFocus?.focus)lastFocus.focus();}
  video.addEventListener('ended',()=>{video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317List').style.display='none';$('wy317End').style.display='block';$('wy317Heading').textContent='德威陽國際法律事務所';});
  $('wy317Close').onclick=close;$('wy317Back').onclick=list;$('wy317Again').onclick=list;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))close()});
  window.wy317OpenVideo=open;
  // Accessible fallback: appears on floor 2 even if 3D target cannot be tapped.
- const fallback=$('wy317Floating');fallback.onclick=()=>{const chosen=window.confirm('播放大會議室影片？\n「確定」大會議室／「取消」小會議室');open(chosen?'large':'small')};
- setInterval(()=>{fallback.style.display=(typeof insideOffice!=='undefined'&&insideOffice&&typeof wyOfficeFloor!=='undefined'&&wyOfficeFloor===2&&!overlay.classList.contains('open'))?'block':'none'},650);
- // Tap-test exact 3D television meshes, only when office floor 2 is active.
- document.addEventListener('pointerup',e=>{if(overlay.classList.contains('open')||!window.wyVideoScreens||typeof insideOffice==='undefined'||!insideOffice||typeof wyOfficeFloor==='undefined'||wyOfficeFloor!==2||typeof activeIslandRoom!=='undefined'&&activeIslandRoom)return;
- if(e.target.closest('button,a,input,textarea,select,[role="dialog"]'))return;
- if(typeof officeCam==='undefined'||typeof ray==='undefined'||typeof renderer==='undefined'||e.target!==renderer.domElement)return;
- const rect=renderer.domElement.getBoundingClientRect();const p=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
- const r=new THREE.Raycaster();r.setFromCamera(p,officeCam);const hits=r.intersectObjects(window.wyVideoScreens,false);if(hits.length){e.stopImmediatePropagation();open(hits[0].object.userData.wyVideoRoom);}
- },true);
+ const fallback=$('wy317Floating');$('wy318SmallBtn').onclick=()=>open('small');$('wy318LargeBtn').onclick=()=>open('large');
+ setInterval(()=>{fallback.style.display=(window.wy318MeetingVideoActive?.()&&!overlay.classList.contains('open'))?'flex':'none'},650);
+ // 3D television and sign tap handlers are attached inside the main Three.js module.
+ // This avoids inaccessible module-local camera and office state from classic scripts.
 })();
 </script>
 </body></html>
