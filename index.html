@@ -186,9 +186,9 @@ body:not(.wy174-theme-room) #wyV151Controls{grid-template-columns:max-content ma
 body:not(.wy174-theme-room) #wyV151Controls{display:grid!important;grid-template-columns:max-content max-content!important;grid-template-rows:auto auto!important;column-gap:8px!important;row-gap:8px!important;}
 body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;margin:0!important;transform:none!important;}
 </style><meta name="weiyang-version" content="v196"/></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
-<div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy178Section"><h3>基本資料</h3><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div></div><div class="wy178Section"><h3>外型設定</h3><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section></div><div class="wy178Section"><h3>服裝與配色</h3><section class="wy166Pane" data-wy166-pane="clothes"><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section></div><div class="wy178Section"><h3>配件</h3><section class="wy166Pane" data-wy166-pane="accessory"><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section></div><div class="wy178Section"><h3>職業設定</h3><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div></div><button id="startExplore" type="button">完成創建・開始探索</button></div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
+<div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy178Section"><h3>基本資料</h3><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div></div><div class="wy178Section"><h3>外型設定</h3><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section></div><div class="wy178Section"><h3>服裝與配色</h3><section class="wy166Pane" data-wy166-pane="clothes"><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section></div><div class="wy178Section"><h3>配件</h3><section class="wy166Pane" data-wy166-pane="accessory"><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section></div><div class="wy178Section"><h3>職業設定</h3><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div></div><button id="startExplore" type="button">完成創建・開始探索</button></div></div><div id="top"><div id="brand"><img src="weiyang-office-logo-v309.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
-<div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
+<div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="weiyang-office-logo-v309.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script><script>
 /* Role creation must remain usable even if a 3D island model fails to load. */
 (()=>{
@@ -418,7 +418,7 @@ function createFamilyMansion(parent,THREE){
    cube(.75,.27,.51,x,4.55,5.25,luxGold);
  }
  // Gold original official emblem: actual PNG, never approximated with geometry.
- const tex=new THREE.TextureLoader().load('./office-logo-transparent.png');tex.colorSpace=THREE.SRGBColorSpace;
+ const tex=new THREE.TextureLoader().load('./weiyang-office-logo-v309.png');tex.colorSpace=THREE.SRGBColorSpace;
  const plaqueBack=cube(4.15,4.15,.16,0,9.2,4.97,wine);
  const plaque=new THREE.Mesh(new THREE.PlaneGeometry(3.65,3.65),new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:true}));plaque.position.set(0,9.2,5.075);g.add(plaque);
  // Flag and original emblem, at the right tower.
@@ -1179,7 +1179,7 @@ for(const px of [4.40,9.10])for(const py of [2.03,6.60]){
 }
 const logoLight=new THREE.PointLight(0xffe6b8,1.1,9);logoLight.position.set(6.75,6.8,-7.7);roomRoot.add(logoLight);
 // Office-only transparent-background version of the official logo: same original gold emblem, no white square.
-const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png?v=20261026-v44'),transparent:true,side:THREE.DoubleSide})),0);
+const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-office-logo-v309.png?v=20261026-v44'),transparent:true,side:THREE.DoubleSide})),0);
 logoOffice.position.set(6.75,4.32,-9.48);roomRoot.add(logoOffice);
 // v214: a fixed wall-mounted 3D sign, not a camera-facing Sprite.
 // Reuse the exact existing sign texture and its officeZone=0 click action.
@@ -1206,11 +1206,16 @@ for(const item of [logoFrame,logoTrim,logoInner,logoOffice]){
 // v306: visible 30% increase from original; scale image isotropically.
 // Enlarge the whole navy installation so the larger emblem has breathing room.
 for(const item of [logoFrame,logoTrim,logoInner]){item.scale.x*=1.43;item.scale.y*=1.18;}
-logoOffice.scale.x=1.48;
-logoOffice.scale.y=1.48;
+// v309: visibly enlarge the original image, preserving exact aspect ratio.
+// The emblem is rendered on its original transparent image; no replacement of other island assets.
+logoOffice.scale.set(1.78,1.78,1);
+logoOffice.position.y=4.22;
+logoFrame.position.y=4.28;logoTrim.position.y=4.28;logoInner.position.y=4.28;
+logoFrame.scale.y=1.52;logoTrim.scale.y=1.52;logoInner.scale.y=1.52;
+logoOffice.position.z=-9.445;
 logoLight.position.y*=1.15;
 // Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
-wy214AboutSign.position.y=10.35; // v306: raised clear of 8.51m wall crown
+wy214AboutSign.position.y=11.25; // v306: raised clear of 8.51m wall crown
 wy214AboutSign.material.side=THREE.FrontSide;
 wy214AboutSign.material.depthTest=true;
 wy214AboutSign.renderOrder=4;
@@ -1363,7 +1368,7 @@ registerOffice(roomBox(6.7,1.99,-2.8,1.65,.17,1.25,'#394a55'),9);
 registerOffice(roomBox(6.7,1.38,-2.13,1.18,.13,.12,'#37444e'),9);
 roomBox(6.7,1.27,-2.09,1.0,.06,.32,'#ffffff');
 // v308: printer label on the visitor-facing/right side, away from the rear WEIYANG logo; printer itself remains unobstructed.
-officeSign('影印機｜事務所今天又怎麼了？',10.2,3.55,0.55,4.4,'#263b51',9);
+officeSign('影印機｜事務所今天又怎麼了？',3.55,3.70,-1.10,4.4,'#263b51',9);
 // v103: intentionally oversized bright-green Kuai Kuai snack bag on the printer.
 // One large texture makes the brand readable instead of dozens of tiny 3D pieces.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
@@ -1448,8 +1453,8 @@ function animateIndoor(dt,t){
 }
 indoorNpc.root.traverse(o=>{if(o.isMesh){o.userData.officeZone=4;roomClickable.push(o)}});
 
-const wyCompany=`<div class="wyHero"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><p class="wyEyebrow">ABOUT OUR FIRM · 認識德威陽</p><h1>德威陽國際法律事務所</h1><p>WEI & YANG INTERNATIONAL LAW FIRM</p><p>跨國視野 × 實戰法務 × 公益責任</p></div><div class="wyContent"><p class="wyIntro">法律不只是爭議發生後的處理方式，更是企業經營與個人生活中，預先管理風險、守護權益的重要力量。</p><h2>我們是誰</h2><p>德威陽國際法律事務所結合台灣與國際法律視野、企業法務管理經驗及訴訟實務，服務企業與個人客戶。從事前契約規劃、風險預防，到爭議發生後的訴訟及協商，重視每一項法律問題背後的實際需求。</p><h2>我們如何協助您</h2><div class="wyGrid"><div class="wyTile">🌏 跨國商務與國際契約</div><div class="wyTile">🏢 企業法務與公司治理</div><div class="wyTile">🛡️ 智慧財產與營業秘密</div><div class="wyTile">⚖️ 民事、刑事及行政訴訟</div><div class="wyTile">🏠 婚姻家事與繼承</div><div class="wyTile">🤝 勞動法與勞資爭議</div><div class="wyTile">🏥 醫療法律與爭議</div><div class="wyTile">📋 企業常年法律顧問</div></div><h2>服務理念</h2><p><strong>事前預防：</strong>重視契約、權利義務與風險評估，協助減少不必要的爭議。</p><p><strong>務實溝通：</strong>依據具體事實與法律規範，協助當事人理解可行方案與可能風險。</p><p><strong>跨域視角：</strong>兼顧法律、商業管理及企業經營實務，尋求適切的處理方向。</p><h2>法律教育與公益參與</h2><p>除了法律案件服務，本所亦重視企業法律教育、法治宣導及公益法律服務，致力於將專業法律知識轉化為容易理解、可在生活與經營中運用的觀念。</p><footer class="wyContact"><h2>聯絡德威陽國際法律事務所</h2><div class="wyContactGrid"><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener noreferrer"><b>LINE</b><span>@wylaw</span></a><a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener noreferrer"><b>Facebook</b><span>weiandyang</span></a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer"><b>Instagram</b><span>weiyang_ceo</span></a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer"><b>官方網站</b><span>weiandyang.com</span></a></div></footer></div>`;
-const wyLawyer=`<div class="wyHero"><p class="wyEyebrow">ATTORNEY PROFILE · 專業履歷</p><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><h1>林柏均 律師</h1><p>PROFESSIONAL EXPERIENCE & EDUCATION</p><p>德威陽國際法律事務所｜創辦人暨主持律師</p><p>台灣律師・美國紐約州律師</p></div><div class="wyContent"><h2>個人專業簡介</h2><p>林柏均律師具有台灣與美國紐約州律師資格，兼具跨國法律視野、企業法務管理與訴訟實務背景。曾任上市公司法務長、企業資深法務，並具有美國法律事務所實務經驗，協助企業與個人評估法律風險及處理爭議。</p><h2>律師資格</h2><div class="wyGrid"><div class="wyTile">中華民國（台灣）律師</div><div class="wyTile">美國紐約州律師</div></div><h2>學歷</h2><ul><li>Emory University｜法律碩士（LL.M.）</li><li>University of La Verne｜企業管理碩士（MBA，會計專業領域）</li><li>中國文化大學｜法律學系、日本語文學系雙學士</li></ul><h2>企業與法律專業歷程</h2><ul class="wyCareer"><li>德威陽國際法律事務所｜創辦人暨主持律師</li><li>揚智科技股份有限公司｜法務長</li><li>藥華醫藥股份有限公司｜資深法務</li><li>台達電子工業股份有限公司｜法務</li><li>泰金寶電通／Cal-Comp Electronics｜法務</li><li>美國法律事務所｜法律實務經歷</li></ul><h2>個人主要執業領域</h2><div class="wyGrid"><div class="wyTile">跨國商務契約與國際交易</div><div class="wyTile">企業法務、公司治理及法律風險</div><div class="wyTile">智慧財產、營業秘密</div><div class="wyTile">民事、刑事、行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動與勞資爭議</div><div class="wyTile">醫療法律爭議</div><div class="wyTile">企業法律顧問</div></div><h2>演講、專業授課及法治教育實績</h2><p>結合台美法律專業及企業法務實務經驗，投入企業法律教育、法治宣導與公益法律講座。</p><h3>企業與專業機構授課</h3><ul><li>經濟部國際貿易署／外貿協會高雄辦事處</li><li>中華工商研究院</li><li>北、中、南地區企業法律教育與內部訓練</li></ul><h3>大學與法治教育</h3><ul><li>元智大學｜講師經歷</li></ul><h3>政府機關、社福及公益法律講座</h3><ul><li>苗栗縣政府苗南區社會福利服務中心</li><li>苗栗縣頭份社會福利服務中心</li><li>雲林婦女保護會</li><li>財團法人臺北市賽親關懷基金會</li></ul><h3>主要演講與授課主題</h3><ul><li>公司經理人法律責任與公司治理</li><li>國際商務契約與跨境交易風險</li><li>OEM／ODM 契約與智慧財產保護</li><li>企業營業秘密與勞動法律風險</li><li>應收帳款催收與呆帳防範</li><li>詐欺防制與民刑事法律責任</li><li>婚姻家事、繼承與婦幼權益保護</li><li>青少年法治教育與法律觀念宣導</li><li>醫療法律爭議與權益保障</li></ul><h2>公益法律服務與社會參與</h2><p>曾獲台北律師公會「最佳公益律師」肯定，並參與法律諮詢、法治教育及公益服務。相關服務機構包括台北市政府、新北市政府、現代婦女基金會、犯罪被害人保護協會、崔媽媽基金會等。</p><footer class="wyContact"><h2>聯絡德威陽國際法律事務所</h2><div class="wyContactGrid"><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener noreferrer"><b>LINE</b><span>@wylaw</span></a><a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener noreferrer"><b>Facebook</b><span>weiandyang</span></a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer"><b>Instagram</b><span>weiyang_ceo</span></a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer"><b>官方網站</b><span>weiandyang.com</span></a></div></footer></div>`;
+const wyCompany=`<div class="wyHero"><img src="weiyang-office-logo-v309.png" alt="WEIYANG 官方 Logo"><p class="wyEyebrow">ABOUT OUR FIRM · 認識德威陽</p><h1>德威陽國際法律事務所</h1><p>WEI & YANG INTERNATIONAL LAW FIRM</p><p>跨國視野 × 實戰法務 × 公益責任</p></div><div class="wyContent"><p class="wyIntro">法律不只是爭議發生後的處理方式，更是企業經營與個人生活中，預先管理風險、守護權益的重要力量。</p><h2>我們是誰</h2><p>德威陽國際法律事務所結合台灣與國際法律視野、企業法務管理經驗及訴訟實務，服務企業與個人客戶。從事前契約規劃、風險預防，到爭議發生後的訴訟及協商，重視每一項法律問題背後的實際需求。</p><h2>我們如何協助您</h2><div class="wyGrid"><div class="wyTile">🌏 跨國商務與國際契約</div><div class="wyTile">🏢 企業法務與公司治理</div><div class="wyTile">🛡️ 智慧財產與營業秘密</div><div class="wyTile">⚖️ 民事、刑事及行政訴訟</div><div class="wyTile">🏠 婚姻家事與繼承</div><div class="wyTile">🤝 勞動法與勞資爭議</div><div class="wyTile">🏥 醫療法律與爭議</div><div class="wyTile">📋 企業常年法律顧問</div></div><h2>服務理念</h2><p><strong>事前預防：</strong>重視契約、權利義務與風險評估，協助減少不必要的爭議。</p><p><strong>務實溝通：</strong>依據具體事實與法律規範，協助當事人理解可行方案與可能風險。</p><p><strong>跨域視角：</strong>兼顧法律、商業管理及企業經營實務，尋求適切的處理方向。</p><h2>法律教育與公益參與</h2><p>除了法律案件服務，本所亦重視企業法律教育、法治宣導及公益法律服務，致力於將專業法律知識轉化為容易理解、可在生活與經營中運用的觀念。</p><footer class="wyContact"><h2>聯絡德威陽國際法律事務所</h2><div class="wyContactGrid"><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener noreferrer"><b>LINE</b><span>@wylaw</span></a><a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener noreferrer"><b>Facebook</b><span>weiandyang</span></a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer"><b>Instagram</b><span>weiyang_ceo</span></a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer"><b>官方網站</b><span>weiandyang.com</span></a></div></footer></div>`;
+const wyLawyer=`<div class="wyHero"><p class="wyEyebrow">ATTORNEY PROFILE · 專業履歷</p><img src="weiyang-office-logo-v309.png" alt="WEIYANG 官方 Logo"><h1>林柏均 律師</h1><p>PROFESSIONAL EXPERIENCE & EDUCATION</p><p>德威陽國際法律事務所｜創辦人暨主持律師</p><p>台灣律師・美國紐約州律師</p></div><div class="wyContent"><h2>個人專業簡介</h2><p>林柏均律師具有台灣與美國紐約州律師資格，兼具跨國法律視野、企業法務管理與訴訟實務背景。曾任上市公司法務長、企業資深法務，並具有美國法律事務所實務經驗，協助企業與個人評估法律風險及處理爭議。</p><h2>律師資格</h2><div class="wyGrid"><div class="wyTile">中華民國（台灣）律師</div><div class="wyTile">美國紐約州律師</div></div><h2>學歷</h2><ul><li>Emory University｜法律碩士（LL.M.）</li><li>University of La Verne｜企業管理碩士（MBA，會計專業領域）</li><li>中國文化大學｜法律學系、日本語文學系雙學士</li></ul><h2>企業與法律專業歷程</h2><ul class="wyCareer"><li>德威陽國際法律事務所｜創辦人暨主持律師</li><li>揚智科技股份有限公司｜法務長</li><li>藥華醫藥股份有限公司｜資深法務</li><li>台達電子工業股份有限公司｜法務</li><li>泰金寶電通／Cal-Comp Electronics｜法務</li><li>美國法律事務所｜法律實務經歷</li></ul><h2>個人主要執業領域</h2><div class="wyGrid"><div class="wyTile">跨國商務契約與國際交易</div><div class="wyTile">企業法務、公司治理及法律風險</div><div class="wyTile">智慧財產、營業秘密</div><div class="wyTile">民事、刑事、行政訴訟</div><div class="wyTile">婚姻家事與繼承</div><div class="wyTile">勞動與勞資爭議</div><div class="wyTile">醫療法律爭議</div><div class="wyTile">企業法律顧問</div></div><h2>演講、專業授課及法治教育實績</h2><p>結合台美法律專業及企業法務實務經驗，投入企業法律教育、法治宣導與公益法律講座。</p><h3>企業與專業機構授課</h3><ul><li>經濟部國際貿易署／外貿協會高雄辦事處</li><li>中華工商研究院</li><li>北、中、南地區企業法律教育與內部訓練</li></ul><h3>大學與法治教育</h3><ul><li>元智大學｜講師經歷</li></ul><h3>政府機關、社福及公益法律講座</h3><ul><li>苗栗縣政府苗南區社會福利服務中心</li><li>苗栗縣頭份社會福利服務中心</li><li>雲林婦女保護會</li><li>財團法人臺北市賽親關懷基金會</li></ul><h3>主要演講與授課主題</h3><ul><li>公司經理人法律責任與公司治理</li><li>國際商務契約與跨境交易風險</li><li>OEM／ODM 契約與智慧財產保護</li><li>企業營業秘密與勞動法律風險</li><li>應收帳款催收與呆帳防範</li><li>詐欺防制與民刑事法律責任</li><li>婚姻家事、繼承與婦幼權益保護</li><li>青少年法治教育與法律觀念宣導</li><li>醫療法律爭議與權益保障</li></ul><h2>公益法律服務與社會參與</h2><p>曾獲台北律師公會「最佳公益律師」肯定，並參與法律諮詢、法治教育及公益服務。相關服務機構包括台北市政府、新北市政府、現代婦女基金會、犯罪被害人保護協會、崔媽媽基金會等。</p><footer class="wyContact"><h2>聯絡德威陽國際法律事務所</h2><div class="wyContactGrid"><a href="https://line.me/R/ti/p/~@wylaw" target="_blank" rel="noopener noreferrer"><b>LINE</b><span>@wylaw</span></a><a href="https://www.facebook.com/weiandyang" target="_blank" rel="noopener noreferrer"><b>Facebook</b><span>weiandyang</span></a><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer"><b>Instagram</b><span>weiyang_ceo</span></a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer"><b>官方網站</b><span>weiandyang.com</span></a></div></footer></div>`;
 function openWyInfo(kind){const panel=document.querySelector('#wyInfo article');panel.classList.toggle('lawyerPage',kind==='lawyer');panel.classList.toggle('companyPage',kind!=='lawyer');document.getElementById('wyInfoBody').innerHTML=kind==='lawyer'?wyLawyer:wyCompany;panel.scrollTop=0;document.getElementById('wyInfo').classList.add('open');document.getElementById('dialog').style.display='none'}
 function closeWyInfo(){document.getElementById('wyInfo').classList.remove('open')}
 document.getElementById('wyInfoClose').onclick=closeWyInfo;
@@ -2121,67 +2126,50 @@ function wyBuildGlassCabin(parent,cx,cz,one){
 }
 wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,0,2);
-// v291: discard the independently reconstructed second-floor portal entirely.
-// Clone the actual first-floor architectural meshes, including its cream rear
-// panels, gold piers, substantial navy crown, ice-blue light bars and trims.
-// Keep the 2F glass cabin/door pivots and all movement/ride logic untouched.
-const wy290Portal=new THREE.Group();wyElev2.add(wy290Portal);
+// v309: REBUILD second-floor lift from the first-floor lift architecture.
+// Remove the previous independently assembled second-floor cabin, instead
+// clone every original 1F facade part (including numeral's surrounding crown).
+// Keep its curved glass geometry generated from the same 1F cabin factory,
+// with its own 2F door click targets and 2F floor numeral.
+const wy309OldCabin=wyGlassCabins[2];
+wyElev2.remove(wy309OldCabin.root);
+for(const d of wy309OldCabin.doors){
+ const i=wyElev2ClickTargets.indexOf(d.pivot.children[0]);
+ if(i>=0)wyElev2ClickTargets.splice(i,1);
+}
+wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,0,2);
+const wy309Portal=new THREE.Group();wyElev2.add(wy309Portal);
 for(const original of wy290FirstFloorLiftParts){
  if(!original.isMesh || original===wy1Digit || !original.visible)continue;
- // Exclude the opaque 1F sliding doors and full-width rear wall panel:
- // the 2F cabin already has its own integral curved glass and flat back.
- // A duplicated solid rear wall looked like the unwanted gap-cover board.
+ // Clone the complete 1F lift facade rather than an incomplete subset.
+ // Sliding opaque doors are excluded because the original curved glass doors
+ // are the working 1F cabin entrance, not an opaque 2F door.
  if(wyElevDoors1.includes(original))continue;
- if(original.position.z < -10.00 && original.geometry?.parameters?.width > 3.0 && original.geometry?.parameters?.height > 5.0)continue;
  const part=original.clone();
- // v307: copy the 1F portal at full horizontal proportions, no squeezed 0.635 factor.
- // Match the same local coordinate system as the original 1F entrance.
  part.position.set(original.position.x-wyLiftX, original.position.y,
                    original.position.z-(-9.48)+1.00);
- part.userData={};
- wy290Portal.add(part);
+ part.userData={};wy309Portal.add(part);
 }
-// v307: use the 1F full facade, including its top crown, blue strip and gold trim.
-// Preserve 2F curved cabin and animation pivots behind it. Do not add gap-cover boards.
+// Keep the visible 2F numeral in the front-facing crown, independent of doors.
 wy2Digit.position.set(0,6.38,1.80);
 wy2Digit.renderOrder=16;
-wyElev2.scale.set(1.15,1.15,1.15);
-// v299 geometric alignment: measure the COMPLETE rotated lift, including cloned
-// gold portal, glass, floor, side trims and digit, not just its group origin.
-// Interior face of east wall = 26.60 (wall center 26.8, thickness .40).
-// South/end floor edge = 22.00 (floor z 5.5 +/-16.5).
-// The cabin must stay wholly inside the room, with its outer edges touching
-// the two boundaries. Recompute after all portal meshes have been attached.
-// v304: 2F elevator elevation matches raised office walls, without enlarging footprint.
-wyElev2.scale.y=1.15;
+wyElev2.scale.setScalar(1.15);
+// Align the complete elevator architectural footprint to the office walls.
+// Use actual model geometry, NOT just the group origin. Preserve the original
+// glass/door and all navigation logic. No freestanding gap-cover panels.
 wyElev2.updateMatrixWorld(true);
-const wy299BoundsBefore=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
-const wy299WallX=26.60, wy299FloorZ=22.00;
-wyElev2.position.x+=wy299WallX-wy299BoundsBefore.max.x;
-wyElev2.position.z+=wy299FloorZ-wy299BoundsBefore.max.z;
+const wy309Bound=new THREE.Box3().setFromObject(wy309Portal);
+const wy309WallX=26.60,wy309FloorZ=22.00;
+wyElev2.position.x+=wy309WallX-wy309Bound.max.x;
+wyElev2.position.z+=wy309FloorZ-wy309Bound.max.z;
 wyElev2.updateMatrixWorld(true);
-// v303: remove all v301/v302 external gap-cover panels. The original glass
-// elevator and its gold trim remain unobstructed. Keep the complete-model
-// bounds alignment against the two room edges above, with no added walls.
-const wy299BoundsAfter=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
-// v305: measure the actual curved car separately, not only the outer portal.
-// Both must touch the east-wall / south-edge corner without a fake cover panel.
-// v306: validate the actual curved cabin rear edge against the east wall,
-// and the southern edge against the floor. Do not align to decorative parts.
-const wy306GlassBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
-const wy306GapX=wy299WallX-wy306GlassBounds.max.x;
-const wy306GapZ=wy299FloorZ-wy306GlassBounds.max.z;
-if(Math.abs(wy306GapX)>.03||Math.abs(wy306GapZ)>.03){
- console.error('v306 curved cabin wall clearance',wy306GapX,wy306GapZ);
+const wy309PortalBounds=new THREE.Box3().setFromObject(wy309Portal);
+const wy309CabinBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
+if(Math.abs(wy309PortalBounds.max.x-wy309WallX)>.025 ||
+   Math.abs(wy309PortalBounds.max.z-wy309FloorZ)>.025){
+ console.error('v309 2F portal perimeter not aligned');
 }
-const wy299Tolerance=.012;
-if(Math.abs(wy299BoundsAfter.max.x-wy299WallX)>wy299Tolerance ||
-   Math.abs(wy299BoundsAfter.max.z-wy299FloorZ)>wy299Tolerance ||
-   wy299BoundsAfter.max.x>wy299WallX+wy299Tolerance ||
-   wy299BoundsAfter.max.z>wy299FloorZ+wy299Tolerance){
- console.error('v299: 2F lift geometric alignment check failed',wy299BoundsAfter);
-}
-
+// Preserve original 1F geometry and numeral, including its navy crown.
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
 wyElevDoors1.forEach(d=>d.visible=false);
@@ -2400,7 +2388,7 @@ wy3Box(0,.64,-.47,5.10,.75,.18,'#493024');
 for(const x of [-1.55,1.55])wy3Box(x,.96,-.366,1.80,.055,.04,'#c8a76f');
 wy3Box(0,.30,-.366,4.90,.055,.04,'#c8a76f');
 // Actual unmodified official WY image on front-facing center, not a redraw.
-const wy3LogoTexture=new THREE.TextureLoader().load('office-logo-transparent.png');wy3LogoTexture.colorSpace=THREE.SRGBColorSpace;
+const wy3LogoTexture=new THREE.TextureLoader().load('weiyang-office-logo-v309.png');wy3LogoTexture.colorSpace=THREE.SRGBColorSpace;
 // v203: same original artwork on both door leaves; each moves with its own hinge.
 for(const [pivot,side] of [[wy3OfficeDoorPivot,1],[wy3OfficeDoorPivotR,-1]]){
  const logo=new THREE.Mesh(new THREE.PlaneGeometry(1.02,1.02),new THREE.MeshBasicMaterial({map:wy3LogoTexture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));
@@ -2902,7 +2890,7 @@ const wy181ExitHinge=wy208DoorLeaves[0].hinge;
 // v224: Original main office door meshes and appearance are preserved unchanged.
 
 // Official source asset, unchanged, centered on the opaque navy lintel.
-const wy208Logo=new THREE.Mesh(new THREE.PlaneGeometry(1.05,1.05),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('office-logo-transparent.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
+const wy208Logo=new THREE.Mesh(new THREE.PlaneGeometry(1.05,1.05),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-office-logo-v309.png'),transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
 wy208Logo.position.set(0,4.77,.287);wy180OfficePortal.add(wy208Logo);
 function wy208MakeSign(parent,position,scale,action){
  const c=document.createElement('canvas');c.width=1024;c.height=192;const ctx=c.getContext('2d');
