@@ -1203,11 +1203,14 @@ for(const item of [logoFrame,logoTrim,logoInner,logoOffice]){
  item.scale.y*=1.15;
 }
 // Official logo is isotropically scaled (both dimensions), not distorted.
-logoOffice.scale.x=1.15;
-logoOffice.scale.y=1.15;
+// v306: visible 30% increase from original; scale image isotropically.
+// Enlarge the whole navy installation so the larger emblem has breathing room.
+for(const item of [logoFrame,logoTrim,logoInner]){item.scale.x*=1.30;item.scale.y*=1.12;}
+logoOffice.scale.x=1.30;
+logoOffice.scale.y=1.30;
 logoLight.position.y*=1.15;
 // Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
-wy214AboutSign.position.y=8.75;
+wy214AboutSign.position.y=9.55; // v306: raised clear of 8.51m wall crown
 wy214AboutSign.material.side=THREE.FrontSide;
 wy214AboutSign.material.depthTest=true;
 wy214AboutSign.renderOrder=4;
@@ -1218,6 +1221,7 @@ const wy304PlaqueBack=new THREE.Mesh(
 );
 wy304PlaqueBack.position.copy(wy214AboutSign.position);
 wy304PlaqueBack.position.z-=.012;
+wy304PlaqueBack.position.y=wy214AboutSign.position.y;
 roomRoot.add(wy304PlaqueBack);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
@@ -1358,7 +1362,7 @@ registerOffice(roomBox(6.7,1.64,-2.8,1.62,.56,1.16,'#e6e9e8'),9);
 registerOffice(roomBox(6.7,1.99,-2.8,1.65,.17,1.25,'#394a55'),9);
 registerOffice(roomBox(6.7,1.38,-2.13,1.18,.13,.12,'#37444e'),9);
 roomBox(6.7,1.27,-2.09,1.0,.06,.32,'#ffffff');
-officeSign('影印機｜事務所今天又怎麼了？',6.7,4.35,-2.8,4.4,'#263b51',9);
+officeSign('影印機｜事務所今天又怎麼了？',10.6,3.85,-1.4,4.4,'#263b51',9);
 // v103: intentionally oversized bright-green Kuai Kuai snack bag on the printer.
 // One large texture makes the brand readable instead of dozens of tiny 3D pieces.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
@@ -2143,6 +2147,16 @@ for(const original of wy290FirstFloorLiftParts){
 // Keep the same gold number texture/size/placement as the first floor.
 wy2Digit.position.set((wy1Digit.position.x-wyLiftX)*.635,wy1Digit.position.y,wy1Digit.position.z-(-9.48)+1.00);
 wy2Digit.renderOrder=16;
+// v306: the 1F rectangular portal was incompatible with the curved 2F cabin.
+// Its detached cream pier caused the visible rear-wall seam. Remove the cloned
+// facade completely rather than adding an external cover panel. The curved
+// elevator retains its own integral flat rear wall, glass, gold posts and floor.
+wyElev2.remove(wy290Portal);
+wy290Portal.clear();
+// Scale the complete original curved elevator in all three axes, not only height.
+wyElev2.scale.set(1.15,1.15,1.15);
+// The numeral is kept as a separate clickable sign on the cabin's front.
+wy2Digit.position.set(0,6.38,1.80);
 // v299 geometric alignment: measure the COMPLETE rotated lift, including cloned
 // gold portal, glass, floor, side trims and digit, not just its group origin.
 // Interior face of east wall = 26.60 (wall center 26.8, thickness .40).
@@ -2152,7 +2166,7 @@ wy2Digit.renderOrder=16;
 // v304: 2F elevator elevation matches raised office walls, without enlarging footprint.
 wyElev2.scale.y=1.15;
 wyElev2.updateMatrixWorld(true);
-const wy299BoundsBefore=new THREE.Box3().setFromObject(wyElev2);
+const wy299BoundsBefore=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
 const wy299WallX=26.60, wy299FloorZ=22.00;
 wyElev2.position.x+=wy299WallX-wy299BoundsBefore.max.x;
 wyElev2.position.z+=wy299FloorZ-wy299BoundsBefore.max.z;
@@ -2160,16 +2174,17 @@ wyElev2.updateMatrixWorld(true);
 // v303: remove all v301/v302 external gap-cover panels. The original glass
 // elevator and its gold trim remain unobstructed. Keep the complete-model
 // bounds alignment against the two room edges above, with no added walls.
-const wy299BoundsAfter=new THREE.Box3().setFromObject(wyElev2);
+const wy299BoundsAfter=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
 // v305: measure the actual curved car separately, not only the outer portal.
 // Both must touch the east-wall / south-edge corner without a fake cover panel.
-const wy305GlassBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
-const wy305PortalBounds=new THREE.Box3().setFromObject(wy290Portal);
-const wy305MaxSeam=Math.max(
- Math.abs(wy305GlassBounds.max.x-wy305PortalBounds.max.x),
- Math.abs(wy305GlassBounds.max.z-wy305PortalBounds.max.z)
-);
-if(wy305MaxSeam>.20)console.error('v305: cabin-to-portal edge mismatch',wy305MaxSeam,wy305GlassBounds,wy305PortalBounds);
+// v306: validate the actual curved cabin rear edge against the east wall,
+// and the southern edge against the floor. Do not align to decorative parts.
+const wy306GlassBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
+const wy306GapX=wy299WallX-wy306GlassBounds.max.x;
+const wy306GapZ=wy299FloorZ-wy306GlassBounds.max.z;
+if(Math.abs(wy306GapX)>.03||Math.abs(wy306GapZ)>.03){
+ console.error('v306 curved cabin wall clearance',wy306GapX,wy306GapZ);
+}
 const wy299Tolerance=.012;
 if(Math.abs(wy299BoundsAfter.max.x-wy299WallX)>wy299Tolerance ||
    Math.abs(wy299BoundsAfter.max.z-wy299FloorZ)>wy299Tolerance ||
