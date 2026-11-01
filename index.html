@@ -1179,7 +1179,7 @@ for(const px of [4.40,9.10])for(const py of [2.03,6.60]){
 }
 const logoLight=new THREE.PointLight(0xffe6b8,1.1,9);logoLight.position.set(6.75,6.8,-7.7);roomRoot.add(logoLight);
 // Office-only transparent-background version of the official logo: same original gold emblem, no white square.
-const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-office-logo-v309.png?v=20261026-v44'),transparent:true,side:THREE.DoubleSide})),0);
+const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-office-wall-v310.png?v=310'),transparent:true,side:THREE.DoubleSide})),0);
 logoOffice.position.set(6.75,4.32,-9.48);roomRoot.add(logoOffice);
 // v214: a fixed wall-mounted 3D sign, not a camera-facing Sprite.
 // Reuse the exact existing sign texture and its officeZone=0 click action.
@@ -1208,11 +1208,18 @@ for(const item of [logoFrame,logoTrim,logoInner,logoOffice]){
 for(const item of [logoFrame,logoTrim,logoInner]){item.scale.x*=1.43;item.scale.y*=1.18;}
 // v309: visibly enlarge the original image, preserving exact aspect ratio.
 // The emblem is rendered on its original transparent image; no replacement of other island assets.
-logoOffice.scale.set(1.78,1.78,1);
-logoOffice.position.y=4.22;
+// v310: the exact original emblem, transparent margins cropped in a NEW 2F-only asset.
+// The emblem fills the enlarged navy panel with the same aspect ratio, never stretched.
+logoOffice.geometry.dispose();
+logoOffice.geometry=new THREE.PlaneGeometry(5.95,7.24);
+logoOffice.scale.set(1,1,1);
+logoOffice.material.depthTest=true;
+logoOffice.material.depthWrite=false;
+logoOffice.renderOrder=7;
+logoOffice.position.y=4.30;
 logoFrame.position.y=4.28;logoTrim.position.y=4.28;logoInner.position.y=4.28;
 logoFrame.scale.y=1.52;logoTrim.scale.y=1.52;logoInner.scale.y=1.52;
-logoOffice.position.z=-9.445;
+logoOffice.position.z=-9.18;
 logoLight.position.y*=1.15;
 // Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
 wy214AboutSign.position.y=11.25; // v306: raised clear of 8.51m wall crown
@@ -2151,7 +2158,10 @@ for(const original of wy290FirstFloorLiftParts){
  part.userData={};wy309Portal.add(part);
 }
 // Keep the visible 2F numeral in the front-facing crown, independent of doors.
-wy2Digit.position.set(0,6.38,1.80);
+// v310: match the original 1F numeral exactly in the cloned crown coordinate system.
+wy2Digit.position.set(wy1Digit.position.x-wyLiftX,wy1Digit.position.y,
+ wy1Digit.position.z-(-9.48)+1.00);
+wy2Digit.rotation.set(0,0,0);
 wy2Digit.renderOrder=16;
 wyElev2.scale.setScalar(1.15);
 // Align the complete elevator architectural footprint to the office walls.
@@ -2165,6 +2175,17 @@ wyElev2.position.z+=wy309FloorZ-wy309Bound.max.z;
 wyElev2.updateMatrixWorld(true);
 const wy309PortalBounds=new THREE.Box3().setFromObject(wy309Portal);
 const wy309CabinBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
+// v310: remove ONLY non-interactive curved trim that penetrates the outer wall.
+// Do not touch glass panels, moving doors, their click targets, or the elevator shell.
+const wy310ExteriorWallX=26.60,wy310ExteriorWallZ=22.00;
+for(const ornament of [...wyGlassCabins[2].root.children]){
+ if(!ornament.isMesh || ornament.geometry?.type!=='TorusGeometry')continue;
+ const b=new THREE.Box3().setFromObject(ornament);
+ if(b.max.x>wy310ExteriorWallX+.015 || b.max.z>wy310ExteriorWallZ+.015){
+  wyGlassCabins[2].root.remove(ornament);
+ }
+}
+
 if(Math.abs(wy309PortalBounds.max.x-wy309WallX)>.025 ||
    Math.abs(wy309PortalBounds.max.z-wy309FloorZ)>.025){
  console.error('v309 2F portal perimeter not aligned');
