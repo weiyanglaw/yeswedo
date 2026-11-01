@@ -1163,9 +1163,9 @@ function wyBuildOriginalOfficeFloor(addBox){
 roomBox(6.75,-.24,5.5,40.5,.48,33,'#EADDCB');
 for(let x=-12.5;x<=26.25;x+=3.6)roomBox(x,.009,5.5,.014,.012,32.6,'#E1D8CA');
 for(let z=-9.7;z<=21.7;z+=6.0)roomBox(6.75,.012,z,40,.012,.012,'#E1D8CA');
-roomBox(6.75,3.7,-10.75,40.5,7.4,.40,'#F8F4EB');
-roomBox(-13.3,3.7,5.5,.40,7.4,33,'#F7F2E9');
-roomBox(26.8,3.7,5.5,.40,7.4,33,'#F7F2E9');
+roomBox(6.75,4.255,-10.75,40.5,8.51,.40,'#F8F4EB');
+roomBox(-13.3,4.255,5.5,.40,8.51,33,'#F7F2E9');
+roomBox(26.8,4.255,5.5,.40,8.51,33,'#F7F2E9');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 // v101: no tiny decorative wall lamps; visible geometry carries the luxury design.
@@ -1196,6 +1196,29 @@ roomRoot.remove(wy214AboutSprite);
 const wy214SignIndex=roomClickable.indexOf(wy214AboutSprite);
 if(wy214SignIndex>=0)roomClickable.splice(wy214SignIndex,1,wy214AboutSign);
 roomRoot.add(wy214AboutSign);
+// v304: proportional vertical lift for the original wall installation and its trim.
+// Scale the decorative wall assembly about the floor; preserve logo aspect ratio.
+for(const item of [logoFrame,logoTrim,logoInner,logoOffice]){
+ item.position.y*=1.15;
+ item.scale.y*=1.15;
+}
+// Official logo is isotropically scaled (both dimensions), not distorted.
+logoOffice.scale.x=1.15;
+logoOffice.scale.y=1.15;
+logoLight.position.y*=1.15;
+// Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
+wy214AboutSign.position.y=8.75;
+wy214AboutSign.material.side=THREE.FrontSide;
+wy214AboutSign.material.depthTest=true;
+wy214AboutSign.renderOrder=4;
+// Add a solid navy back to the plaque itself, NOT to the elevator or wall gap.
+const wy304PlaqueBack=new THREE.Mesh(
+ new THREE.PlaneGeometry(wy214AboutSign.geometry.parameters.width,wy214AboutSign.geometry.parameters.height),
+ new THREE.MeshBasicMaterial({color:'#293e53',side:THREE.BackSide,depthTest:true})
+);
+wy304PlaqueBack.position.copy(wy214AboutSign.position);
+wy304PlaqueBack.position.z-=.012;
+roomRoot.add(wy304PlaqueBack);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
 // v282: pale blue-gray luxury rug contrasts with the ivory wooden floor and navy desk.
@@ -1209,6 +1232,15 @@ for(const xx of [-12.48,-1.32])for(const zz of [-9.98,-1.42]){
  const med=roomCylinder(xx,.119,zz,.32,.32,.018,'#B88E55');med.scale.set(1,.9,.62);
  roomCylinder(xx,.132,zz,.16,.16,.018,'#EDE2CB');
  for(let k=0;k<4;k++){const a=k*Math.PI/2;const leaf=roomBall(xx+Math.cos(a)*.42,.13,zz+Math.sin(a)*.40,.15,'#8DA9B9');leaf.scale.set(1,.16,.58);}
+}
+// v304: wall-mounted executive panels grow with the new wall height.
+for(const o of roomRoot.children){
+ if(!o.isMesh || !o.geometry || !o.geometry.parameters)continue;
+ const p=o.geometry.parameters;
+ if(o.position.z < -10.15 && o.position.z > -10.55 && o.position.y>2.0 && o.position.y<7.35 &&
+    p.height && p.height>=.3 && o!==logoFrame && o!==logoTrim && o!==logoInner){
+   o.position.y*=1.15;o.scale.y*=1.15;
+ }
 }
 // v44: restore unobstructed original executive desk, chair and bookshelf; no freestanding rods or hanging lights.
 // Gold-edged executive wall panels and awards.
@@ -2091,15 +2123,25 @@ wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,0,2);
 const wy290Portal=new THREE.Group();wyElev2.add(wy290Portal);
 for(const original of wy290FirstFloorLiftParts){
  if(!original.isMesh || original===wy1Digit || !original.visible)continue;
- // Exclude the two legacy opaque sliding doors; these are hidden on 1F too.
+ // Exclude the opaque 1F sliding doors and full-width rear wall panel:
+ // the 2F cabin already has its own integral curved glass and flat back.
+ // A duplicated solid rear wall looked like the unwanted gap-cover board.
  if(wyElevDoors1.includes(original))continue;
+ if(original.position.z < -10.00 && original.geometry?.parameters?.width > 3.0 && original.geometry?.parameters?.height > 5.0)continue;
  const part=original.clone();
- part.position.set(original.position.x-wyLiftX,original.position.y,original.position.z-(-9.48));
+ // v305: the copied 1F portal was 5.05m wide while the 2F glass car is
+ // only 3.27m wide. Its far-side jamb touched the room edge but the actual
+ // curved glass stopped almost a metre short: this was the visible gap.
+ // Keep the same architectural materials and meshes, but fit the PORTAL to
+ // the glass car instead of covering the void with a separate board.
+ part.position.set((original.position.x-wyLiftX)*.635,original.position.y,
+                   original.position.z-(-9.48)+1.00);
+ part.scale.x*=.635;
  part.userData={};
  wy290Portal.add(part);
 }
 // Keep the same gold number texture/size/placement as the first floor.
-wy2Digit.position.set(wy1Digit.position.x-wyLiftX,wy1Digit.position.y,wy1Digit.position.z-(-9.48));
+wy2Digit.position.set((wy1Digit.position.x-wyLiftX)*.635,wy1Digit.position.y,wy1Digit.position.z-(-9.48)+1.00);
 wy2Digit.renderOrder=16;
 // v299 geometric alignment: measure the COMPLETE rotated lift, including cloned
 // gold portal, glass, floor, side trims and digit, not just its group origin.
@@ -2107,6 +2149,8 @@ wy2Digit.renderOrder=16;
 // South/end floor edge = 22.00 (floor z 5.5 +/-16.5).
 // The cabin must stay wholly inside the room, with its outer edges touching
 // the two boundaries. Recompute after all portal meshes have been attached.
+// v304: 2F elevator elevation matches raised office walls, without enlarging footprint.
+wyElev2.scale.y=1.15;
 wyElev2.updateMatrixWorld(true);
 const wy299BoundsBefore=new THREE.Box3().setFromObject(wyElev2);
 const wy299WallX=26.60, wy299FloorZ=22.00;
@@ -2117,6 +2161,15 @@ wyElev2.updateMatrixWorld(true);
 // elevator and its gold trim remain unobstructed. Keep the complete-model
 // bounds alignment against the two room edges above, with no added walls.
 const wy299BoundsAfter=new THREE.Box3().setFromObject(wyElev2);
+// v305: measure the actual curved car separately, not only the outer portal.
+// Both must touch the east-wall / south-edge corner without a fake cover panel.
+const wy305GlassBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
+const wy305PortalBounds=new THREE.Box3().setFromObject(wy290Portal);
+const wy305MaxSeam=Math.max(
+ Math.abs(wy305GlassBounds.max.x-wy305PortalBounds.max.x),
+ Math.abs(wy305GlassBounds.max.z-wy305PortalBounds.max.z)
+);
+if(wy305MaxSeam>.20)console.error('v305: cabin-to-portal edge mismatch',wy305MaxSeam,wy305GlassBounds,wy305PortalBounds);
 const wy299Tolerance=.012;
 if(Math.abs(wy299BoundsAfter.max.x-wy299WallX)>wy299Tolerance ||
    Math.abs(wy299BoundsAfter.max.z-wy299FloorZ)>wy299Tolerance ||
