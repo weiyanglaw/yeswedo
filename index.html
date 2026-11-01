@@ -1091,7 +1091,7 @@ function desk(x,z,w,color,zone,monitor=true){
  const xExtension=leftReturn?x-w/2-extend/2:x+w/2+extend/2;
  registerOffice(roomBox(xExtension,1.08,z,extend,.24,1.68,top),zone);
  roomBox(xExtension,1.00,z+.82,extend,.085,.095,trim);
- const sideX=leftReturn?x-w/2+.28:x+w/2-.28;
+ const sideX=leftReturn?x-w/2-extend+.38:x+w/2+extend-.38;
  registerOffice(roomBox(sideX,1.08,z-1.58,.76,.24,2.20,top),zone);
  roomBox(sideX,.57,z-1.65,.14,.95,1.75,base);
  chair(x,z-1.43,boss?'#F2E7D4':'#A7C9DA',boss);
@@ -1199,14 +1199,13 @@ roomRoot.add(wy214AboutSign);
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
 // v282: pale blue-gray luxury rug contrasts with the ivory wooden floor and navy desk.
-roomBox(-8.45,.045,-5.8,8.9,.075,8.0,'#B8C9D3');
-roomBox(-8.45,.087,-5.8,8.55,.018,7.65,'#D6E1E5');
-// Broad champagne-gold floral border, large enough for mobile rendering.
-for(const [w,d] of [[8.35,7.45],[7.55,6.65]]){
- for(const zz of [-5.8-d/2,-5.8+d/2])roomBox(-8.45,.106,zz,w,.018,.12,'#C39C62');
- for(const xx of [-8.45-w/2,-8.45+w/2])roomBox(xx,.106,-5.8,.12,.018,d,'#C39C62');
+roomBox(-6.9,.045,-5.7,12.6,.075,10.1,'#B8C9D3');
+roomBox(-6.9,.087,-5.7,12.28,.018,9.78,'#D6E1E5');
+for(const [w,d] of [[12.05,9.55],[11.25,8.75]]){
+ for(const zz of [-5.7-d/2,-5.7+d/2])roomBox(-6.9,.106,zz,w,.018,.12,'#C39C62');
+ for(const xx of [-6.9-w/2,-6.9+w/2])roomBox(xx,.106,-5.7,.12,.018,d,'#C39C62');
 }
-for(const xx of [-12.12,-4.78])for(const zz of [-8.95,-2.65]){
+for(const xx of [-12.48,-1.32])for(const zz of [-9.98,-1.42]){
  const med=roomCylinder(xx,.119,zz,.32,.32,.018,'#B88E55');med.scale.set(1,.9,.62);
  roomCylinder(xx,.132,zz,.16,.16,.018,'#EDE2CB');
  for(let k=0;k<4;k++){const a=k*Math.PI/2;const leaf=roomBall(xx+Math.cos(a)*.42,.13,zz+Math.sin(a)*.40,.15,'#8DA9B9');leaf.scale.set(1,.16,.58);}
@@ -1226,10 +1225,18 @@ roomBox(-7.8,4.1,-10.49,1.3,1.65,.13,'#a47a4c');
 roomBox(-7.8,4.1,-10.39,1.05,1.40,.04,'#f9f5e9');
 officeSign('林柏均律師｜所長辦公室',-7.7,3.7,-4.6,5.4,'#fff8e9',5);
 plant(-5.2,-7.7);
+// v297: move whole workstation including desk, chair, computer, signage, decorative items.
+function wy297StaffGroup(build,dz){
+ const first=roomRoot.children.length;
+ build();
+ for(const item of roomRoot.children.slice(first))item.position.z+=dz;
+}
 // Three full-size staff desks occupy the row immediately in front of the executive area.
+wy297StaffGroup(()=>{
 desk(-8.0,.65,3.45,'#C3DFED',6);
 officeSign('夢奇奇飼養者｜事務所今天又怎麼了？',-8.0,3.1,1.05,4.6,'#3b3546',6);
 roomBall(-6.75,1.30,1.15,.20,'#f4b4c6');
+},2.4);
 // v285: Hamutaro's single flagship creative workstation merges his desk and the former comic desk.
 // Seated user is at negative Z; every screen's visible surface faces negative Z.
 function wy285CreativeStation(x,z){
@@ -1302,13 +1309,17 @@ function wy285CreativeStation(x,z){
  roomBox(x+3.60,.56,z-1.7,.17,.93,1.62,silver);
  chair(x,z-1.66,'#8CA9BD',false);
 }
+wy297StaffGroup(()=>{
 wy285CreativeStation(-2.4,8.7);
-// v286: two separate, single-line, floating labels, matching Meng's nameplate typography.
+// Original floating signs remain attached to the moved workstation.
 officeSign('哈姆太郎',-3.70,4.20,8.10,2.75,'#3b3546',7,7);
 officeSign('德威陽漫畫',-1.10,4.20,8.10,2.75,'#3b3546',3,3);
+},2.4);
+wy297StaffGroup(()=>{
 desk(3.6,.65,3.45,'#C3DFED',8);
 officeSign('薪水掌門人｜事務所今天又怎麼了？',3.6,3.1,1.05,4.5,'#3b3546',8);
 roomBox(4.85,1.23,1.15,.5,.13,.40,'#efb7c8');
+},2.4);
 // Printer station: visible office equipment and comic easter egg.
 roomBox(6.7,.78,-2.8,1.8,1.55,1.3,'#9bb9bb');
 registerOffice(roomBox(6.7,1.64,-2.8,1.62,.56,1.16,'#e6e9e8'),9);
@@ -2029,7 +2040,7 @@ lbBox(wyLiftX,6.88,-9.49,3.45,.13,.035,'#BDEBF7','elevator');
 const wy290FirstFloorLiftParts=lobbyRoot.children.slice(wy290FirstFloorLiftStart);
 // v282: 2F exactly reuses the 1F glass-cabin builder. Entrance faces LEFT (-X).
 const wyElev2=new THREE.Group();roomRoot.add(wyElev2);
-wyElev2.position.set(25.1,0,20.35);wyElev2.rotation.y=-Math.PI/2; // v284 far-right bottom corner; glass entrance faces west
+wyElev2.position.set(24.25,0,19.40);wyElev2.rotation.y=-Math.PI/2; // v284 far-right bottom corner; glass entrance faces west
 const wyElevDoors2=[]; // no opaque double doors on 2F
 const wyElev2ClickTargets=[];
 const wy2Digit=wyLiftNumeral('2',0,6.38,2.05,1.18,.57,wyElev2);
@@ -3319,7 +3330,7 @@ floorBtn.style.cssText='display:none;position:fixed;z-index:60;top:70px;right:ma
 document.body.appendChild(floorBtn);
 // v110 elevator ride state: walking, entering, selecting floor, closing, travelling, opening and exiting.
 let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
-const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(24.0,0,20.35),wyElev3Pos=new THREE.Vector3(7.75,0,6.45);const wyElevPos=f=>f===1?wyElev1Pos:f===2?wyElev2Pos:wyElev3Pos;
+const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(23.5,0,19.40),wyElev3Pos=new THREE.Vector3(7.75,0,6.45);const wyElevPos=f=>f===1?wyElev1Pos:f===2?wyElev2Pos:wyElev3Pos;
 
 // v165: globally suppress movement controls while any interaction panel is visible.
 const wy165ModalIds=['dialog','wyLobbyDialog','wyMainGuide','wyFamilyGuide','wyMedicalGuide','wy3Intro','wy3MovieModal','wy260Modal','wyInfo'];
@@ -3342,7 +3353,7 @@ const wyLiftPrompt=document.createElement('button');wyLiftPrompt.id='wyLiftPromp
 const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyRideShade.style.cssText='display:none;position:fixed;inset:0;z-index:95;background:#172c43ee;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:10px;font:700 21px system-ui;text-align:center';wyRideShade.innerHTML='<div>德威陽｜有法度</div><div id="wyRideProgress">電梯門關閉中…</div><div id="wyRideFloor" style="font-size:46px">1F</div>';document.body.append(wyRideShade);
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,10.85);lobbyRoot.add(wyIndoorActor)}
 function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;const parent=n===1?lobbyRoot:n===2?roomRoot:wy3Root;if(wyIndoorActor.parent!==parent){wyIndoorActor.parent.remove(wyIndoorActor);parent.add(wyIndoorActor)}
- const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,9.65)):(n===2?(atElevator?new THREE.Vector3(24.0,.08,20.35):new THREE.Vector3(21.5,.08,19.55)):(atElevator?new THREE.Vector3(8.15,.08,7.25):new THREE.Vector3(7.95,.08,7.25))); wyIndoorActor.position.copy(p);wyIndoorActor.visible=!(n===3&&wy3ArrivalAnim);
+ const p=n===1?(atElevator?new THREE.Vector3(8.4,.08,-8.8):new THREE.Vector3(0,.08,9.65)):(n===2?(atElevator?new THREE.Vector3(23.5,.08,19.40):new THREE.Vector3(21.5,.08,19.55)):(atElevator?new THREE.Vector3(8.15,.08,7.25):new THREE.Vector3(7.95,.08,7.25))); wyIndoorActor.position.copy(p);wyIndoorActor.visible=!(n===3&&wy3ArrivalAnim);
  wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear();}
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
@@ -3415,7 +3426,7 @@ function wy247SetRideView(floor){
  if(!actor)return;
  actor.updateWorldMatrix(true,false);
  const start=actor.localToWorld(new THREE.Vector3(0,1,0));
- const endLocal=floor===1?new THREE.Vector3(8.4,1.5,-9.1):floor===2?new THREE.Vector3(24.0,1.5,20.35):new THREE.Vector3(10.45,1.5,5.55);
+ const endLocal=floor===1?new THREE.Vector3(8.4,1.5,-9.1):floor===2?new THREE.Vector3(23.5,1.5,19.40):new THREE.Vector3(10.45,1.5,5.55);
  const root=floor===1?lobbyScene:floor===2?officeScene:wy3Scene;
  const end=endLocal.clone();
  const center=start.clone().add(end).multiplyScalar(.5);
@@ -3488,7 +3499,7 @@ function wyStartRide(dest){
   // Fallback through the clear east aisle; old lift location is never used.
   path=[];
   if(current.z<4.6)path.push(new THREE.Vector3(20.7,.08,15.55));
-  path.push(new THREE.Vector3(20.7,.08,20.35));
+  path.push(new THREE.Vector3(20.7,.08,19.40));
   path.push(approach.clone());
  }
  if(!path){
@@ -3596,7 +3607,7 @@ function wyElevatorTick(dt){
     if(len<.17)wyIndoorPath.shift();else{const move=Math.min(len,dt*28.0);wyIndoorActor.position.addScaledVector(diff,move/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z);}
    }else{r.phase='enter';r.time=0;wyDoorOpen=1;}
   }else if(r.phase==='enter'){
-   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):r.source===2?new THREE.Vector3(24.0,.08,20.35):new THREE.Vector3(10.45,.08,5.55);
+   const center=r.source===1?new THREE.Vector3(8.4,.08,-9.1):r.source===2?new THREE.Vector3(23.5,.08,19.40):new THREE.Vector3(10.45,.08,5.55);
    const diff=center.clone().sub(wyIndoorActor.position);diff.y=0;const len=diff.length();
    if(len>.13){wyIndoorActor.position.addScaledVector(diff,Math.min(len,dt*20.0)/len);wyIndoorActor.rotation.y=Math.atan2(diff.x,diff.z)}
    else{r.phase='close';r.time=0;}
@@ -3610,7 +3621,7 @@ function wyElevatorTick(dt){
    wyDoorOpen=Math.min(1,r.time/1.5);
    if(r.time>=1.5){wyRideShade.style.display='none';r.phase='exit';r.time=0;}
   }else if(r.phase==='exit'){
-   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):r.dest===2?new THREE.Vector3(21.8,.08,20.35):new THREE.Vector3(7.12,.08,5.45);
+   const out=r.dest===1?new THREE.Vector3(8.4,.08,-7.1):r.dest===2?new THREE.Vector3(21.3,.08,19.40):new THREE.Vector3(7.12,.08,5.45);
    const d=out.clone().sub(wyIndoorActor.position);d.y=0;const len=d.length();
    if(len>.12){wyIndoorActor.position.addScaledVector(d,Math.min(len,dt*17.0)/len);wyIndoorActor.rotation.y=Math.atan2(d.x,d.z)}
    else{
