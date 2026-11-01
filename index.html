@@ -1205,12 +1205,12 @@ for(const item of [logoFrame,logoTrim,logoInner,logoOffice]){
 // Official logo is isotropically scaled (both dimensions), not distorted.
 // v306: visible 30% increase from original; scale image isotropically.
 // Enlarge the whole navy installation so the larger emblem has breathing room.
-for(const item of [logoFrame,logoTrim,logoInner]){item.scale.x*=1.30;item.scale.y*=1.12;}
-logoOffice.scale.x=1.30;
-logoOffice.scale.y=1.30;
+for(const item of [logoFrame,logoTrim,logoInner]){item.scale.x*=1.43;item.scale.y*=1.18;}
+logoOffice.scale.x=1.48;
+logoOffice.scale.y=1.48;
 logoLight.position.y*=1.15;
 // Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
-wy214AboutSign.position.y=9.55; // v306: raised clear of 8.51m wall crown
+wy214AboutSign.position.y=10.35; // v306: raised clear of 8.51m wall crown
 wy214AboutSign.material.side=THREE.FrontSide;
 wy214AboutSign.material.depthTest=true;
 wy214AboutSign.renderOrder=4;
@@ -1362,7 +1362,8 @@ registerOffice(roomBox(6.7,1.64,-2.8,1.62,.56,1.16,'#e6e9e8'),9);
 registerOffice(roomBox(6.7,1.99,-2.8,1.65,.17,1.25,'#394a55'),9);
 registerOffice(roomBox(6.7,1.38,-2.13,1.18,.13,.12,'#37444e'),9);
 roomBox(6.7,1.27,-2.09,1.0,.06,.32,'#ffffff');
-officeSign('影印機｜事務所今天又怎麼了？',10.6,3.85,-1.4,4.4,'#263b51',9);
+// v308: printer label on the visitor-facing/right side, away from the rear WEIYANG logo; printer itself remains unobstructed.
+officeSign('影印機｜事務所今天又怎麼了？',10.2,3.55,0.55,4.4,'#263b51',9);
 // v103: intentionally oversized bright-green Kuai Kuai snack bag on the printer.
 // One large texture makes the brand readable instead of dozens of tiny 3D pieces.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
@@ -2133,30 +2134,18 @@ for(const original of wy290FirstFloorLiftParts){
  if(wyElevDoors1.includes(original))continue;
  if(original.position.z < -10.00 && original.geometry?.parameters?.width > 3.0 && original.geometry?.parameters?.height > 5.0)continue;
  const part=original.clone();
- // v305: the copied 1F portal was 5.05m wide while the 2F glass car is
- // only 3.27m wide. Its far-side jamb touched the room edge but the actual
- // curved glass stopped almost a metre short: this was the visible gap.
- // Keep the same architectural materials and meshes, but fit the PORTAL to
- // the glass car instead of covering the void with a separate board.
- part.position.set((original.position.x-wyLiftX)*.635,original.position.y,
+ // v307: copy the 1F portal at full horizontal proportions, no squeezed 0.635 factor.
+ // Match the same local coordinate system as the original 1F entrance.
+ part.position.set(original.position.x-wyLiftX, original.position.y,
                    original.position.z-(-9.48)+1.00);
- part.scale.x*=.635;
  part.userData={};
  wy290Portal.add(part);
 }
-// Keep the same gold number texture/size/placement as the first floor.
-wy2Digit.position.set((wy1Digit.position.x-wyLiftX)*.635,wy1Digit.position.y,wy1Digit.position.z-(-9.48)+1.00);
-wy2Digit.renderOrder=16;
-// v306: the 1F rectangular portal was incompatible with the curved 2F cabin.
-// Its detached cream pier caused the visible rear-wall seam. Remove the cloned
-// facade completely rather than adding an external cover panel. The curved
-// elevator retains its own integral flat rear wall, glass, gold posts and floor.
-wyElev2.remove(wy290Portal);
-wy290Portal.clear();
-// Scale the complete original curved elevator in all three axes, not only height.
-wyElev2.scale.set(1.15,1.15,1.15);
-// The numeral is kept as a separate clickable sign on the cabin's front.
+// v307: use the 1F full facade, including its top crown, blue strip and gold trim.
+// Preserve 2F curved cabin and animation pivots behind it. Do not add gap-cover boards.
 wy2Digit.position.set(0,6.38,1.80);
+wy2Digit.renderOrder=16;
+wyElev2.scale.set(1.15,1.15,1.15);
 // v299 geometric alignment: measure the COMPLETE rotated lift, including cloned
 // gold portal, glass, floor, side trims and digit, not just its group origin.
 // Interior face of east wall = 26.60 (wall center 26.8, thickness .40).
