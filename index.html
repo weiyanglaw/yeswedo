@@ -2113,29 +2113,9 @@ const wy299WallX=26.60, wy299FloorZ=22.00;
 wyElev2.position.x+=wy299WallX-wy299BoundsBefore.max.x;
 wyElev2.position.z+=wy299FloorZ-wy299BoundsBefore.max.z;
 wyElev2.updateMatrixWorld(true);
-// v301: the portal's outermost crown touches the wall, but its recessed glass
-// and cream back used to leave a visible slit. Fill that recess inside the
-// complete portal envelope, without moving any exterior beyond the floor.
-wyElev2.updateMatrixWorld(true);
-const wy301LiftBounds=new THREE.Box3().setFromObject(wyElev2);
-const wy301BackGap=Math.max(0,26.60-(wyElev2.position.x+1.61));
-if(wy301BackGap>.015){
- const filler=new THREE.Mesh(new THREE.BoxGeometry(wy301BackGap,.0+5.45,3.20),new THREE.MeshStandardMaterial({color:0xF5E9D5,roughness:.78,side:THREE.DoubleSide}));
- // A flush inner back panel, within the already established east-wall plane.
- filler.position.set(26.60-wy301BackGap/2,2.82,wyElev2.position.z);
- roomRoot.add(filler);
-}
-// v302: connect the recessed cabin side/back to BOTH interior perimeter walls.
-// Panels sit on the room-facing boundaries and never extend past the floor.
-wyElev2.updateMatrixWorld(true);
-const wy302B=new THREE.Box3().setFromObject(wyElev2);
-const wy302Cream=new THREE.MeshStandardMaterial({color:0xF5E9D5,roughness:.79,metalness:.03,side:THREE.DoubleSide});
-const wy302East=new THREE.Mesh(new THREE.BoxGeometry(.075,5.9,Math.max(.25,wy302B.max.z-wy302B.min.z)),wy302Cream);
-wy302East.position.set(26.56,2.95,(wy302B.min.z+wy302B.max.z)/2);
-roomRoot.add(wy302East);
-const wy302South=new THREE.Mesh(new THREE.BoxGeometry(Math.max(.25,wy302B.max.x-wy302B.min.x),5.9,.075),wy302Cream);
-wy302South.position.set((wy302B.min.x+wy302B.max.x)/2,2.95,21.96);
-roomRoot.add(wy302South);
+// v303: remove all v301/v302 external gap-cover panels. The original glass
+// elevator and its gold trim remain unobstructed. Keep the complete-model
+// bounds alignment against the two room edges above, with no added walls.
 const wy299BoundsAfter=new THREE.Box3().setFromObject(wyElev2);
 const wy299Tolerance=.012;
 if(Math.abs(wy299BoundsAfter.max.x-wy299WallX)>wy299Tolerance ||
@@ -3403,7 +3383,7 @@ function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;c
 const wy300Caption=document.createElement('div');
 wy300Caption.id='wy300Caption';
 wy300Caption.textContent='德威陽的日常，精彩輪番登場。';
-wy300Caption.style.cssText='border-bottom:1px solid rgba(188,156,101,.48);padding:0 5px 7px;position:fixed;top:calc(235px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:7;max-width:calc(100vw - 22px);white-space:nowrap;font-size:clamp(13px,3.65vw,18px);font-weight:650;letter-spacing:.035em;color:#263B57;text-shadow:0 1px 2px #f3f7f7a8;pointer-events:none;text-align:center;display:none';
+wy300Caption.style.cssText='border-bottom:1px solid rgba(188,156,101,.48);padding:0 5px 7px;position:fixed;top:calc(235px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:7;max-width:calc(100vw - 22px);white-space:nowrap;font-size:clamp(19px,5.3vw,24px);font-weight:700;letter-spacing:-.025em;color:#263B57;text-shadow:0 1px 2px #f3f7f7a8;pointer-events:none;text-align:center;display:none';
 document.body.appendChild(wy300Caption);
 function wy300SyncCaption(){
  const visible=insideOffice&&!activeIslandRoom&&wyOfficeFloor===2;
@@ -3424,7 +3404,7 @@ function wy300SyncCaption(){
   if(p.z>=-1&&p.z<=1)pts.push({x:(p.x+1)*innerWidth/2,y:(1-p.y)*innerHeight/2});
  }
  const officeTop=pts.length?Math.min(...pts.map(p=>p.y)):innerHeight;
- const textBottom=y+Math.max(30,wy300Caption.offsetHeight);
+ const textBottom=y+Math.max(38,wy300Caption.offsetHeight);
  wy300Caption.style.display=officeTop<textBottom+8?'none':'block';
 }
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
