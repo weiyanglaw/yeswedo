@@ -1429,80 +1429,92 @@ for(const x of [-6.7,6.7]){
  roomBox(x,4.05,-10.00,3.05,4.67,.12,'#FFF1D7');
  roomBox(x,4.05,-9.91,2.68,4.28,.10,'#F8F4EB');
 }
-// v313: meeting-zone replacement ONLY. No floor overlays, coplanar trims or transparent panels.
-(function wy313MeetingZone(){
- const navy='#263B57', gold='#D7AF6E', ivory='#F6EDDC',sage='#6B9B89',teal='#168F91',walnut='#75492F',woodEdge='#9B6B47';
+// v314: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
+// Clear, single-layer glass, physically separate blinds, no coplanar floor or decorative layers.
+(function wy314MeetingZone(){
+ const sage='#648F84', gold='#C5A46E', ivory='#E7DAC5',mauve='#8B6687',teal='#3E7D86',navy='#344E70',walnut='#76513B',edge='#956C4F',steel='#54616B';
  const put=(x,y,z,w,h,d,c)=>roomBox(x,y,z,w,h,d,c);
- const cylinder=(x,y,z,top,bottom,h,c,segments=24)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,segments),roomMat(c));m.position.set(x,y,z);roomRoot.add(m);return m;};
- const oval=(x,y,z,rx,rz,h,c)=>{const m=cylinder(x,y,z,1,1,h,c,32);m.scale.set(rx,1,rz);return m;};
- // Wall modules do not share a surface. All rooms use existing office floor (no duplicate slabs).
- function room(x0,x1,z0,z1,large){
-  const cx=(x0+x1)/2,cz=(z0+z1)/2, wallH=5.55,wy=wallH/2;
-  const main=large?sage:navy,secondary=large?ivory:teal;
-  // Keep a physical 2.7m entrance gap in west wall; no overlapping door or threshold meshes.
-  put(cx,wy,z0+.22,x1-x0-.75,wallH,.32,main);
-  put(x1-.20,wy,cz,.32,wallH,z1-z0-.65,secondary);
-  put(cx,wy,z1-.22,x1-x0-.75,wallH,.32,large?ivory:navy);
-  const doorHalf=1.42;
-  for(const [lo,hi] of [[z0+.35,cz-doorHalf],[cz+doorHalf,z1-.35]]){
-   if(hi-lo>.1)put(x0+.18,wy,(lo+hi)/2,.32,wallH,hi-lo,main);
-  }
-  // Strong high-contrast entrance arch, using structural blocks separated from wall faces.
-  put(x0+.18,5.28,cz,.42,.42,2.96,gold);
-  // Distinctive exterior shape: large vertical blocks, never thin overlaid coplanar decals.
-  if(large){
-   put(x1-.44,3.1,z0+1.12,.42,3.8,1.15,ivory);
-  }else{
-   put(x1-.44,3.1,z0+1.18,.42,3.8,1.15,ivory);
-   put(x1-.44,3.1,z1-1.16,.42,3.8,1.05,teal);
-  }
-  // Table: one thick oval/round walnut tabletop with obvious separated pedestal legs.
-  if(large){
-   oval(cx,1.16,cz,1.18,3.05,.30,walnut);
-   for(const dz of [-1.65,1.65]){
-    put(cx,.59,cz+dz,.62,.98,.72,woodEdge);
-    put(cx,.16,cz+dz,1.06,.24,1.00,navy);
-   }
-  }else{
-   oval(cx,1.16,cz,1.55,1.55,.30,walnut);
-   cylinder(cx,.62,cz,.31,.43,.93,woodEdge,16);
-   cylinder(cx,.14,cz,.78,.78,.22,navy,20);
-  }
-  // Chair is composed of visibly separated padded seat, upright back, two strong legs.
-  function chair(x,z,rot,color){
-   const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;roomRoot.add(g);
-   const box=(px,py,pz,w,h,d,col)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(col));o.position.set(px,py,pz);g.add(o);};
-   box(0,.70,0,.80,.23,.78,color);
-   box(0,1.25,.38,.80,.88,.20,color);
-   box(-.28,.32,-.21,.15,.52,.17,navy);box(.28,.32,-.21,.15,.52,.17,navy);
-   box(-.28,.32,.22,.15,.52,.17,navy);box(.28,.32,.22,.15,.52,.17,navy);
-   box(-.48,.91,0,.15,.14,.66,woodEdge);box(.48,.91,0,.15,.14,.66,woodEdge);
-  }
-  if(large){
-   for(let j=0;j<4;j++){
-    const zz=cz+(j-1.5)*1.43;
-    chair(cx-2.04,zz,Math.PI/2,navy);chair(cx+2.04,zz,-Math.PI/2,navy);
-   }
-   chair(cx,cz-3.72,Math.PI,navy);chair(cx,cz+3.72,0,navy);
-  }else{
-   chair(cx-2.08,cz,Math.PI/2,teal);chair(cx+2.08,cz,-Math.PI/2,teal);
-   chair(cx,cz-2.12,Math.PI,teal);chair(cx,cz+2.12,0,teal);
-  }
-  // One solid presentation display, offset from wall, with no layered near-coplanar screen.
-  put(cx,3.50,z0+.51,large?4.15:3.20,2.30,.20,navy);
+ const mat=(c)=>new THREE.MeshStandardMaterial({color:c,roughness:.82,metalness:0});
+ function cyl(x,y,z,rt,rb,h,c,n=24){let o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,n),mat(c));o.position.set(x,y,z);roomRoot.add(o);return o;}
+ function ellipse(x,y,z,rx,rz,h,c){let o=cyl(x,y,z,1,1,h,c,40);o.scale.set(rx,1,rz);return o;}
+ function chair(x,z,rot,color){
+  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;roomRoot.add(g);
+  function part(px,py,pz,w,h,d,c){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));o.position.set(px,py,pz);g.add(o)}
+  part(0,.73,0,.79,.22,.76,color);part(0,1.29,.36,.83,.91,.20,color);
+  for(const xx of [-.29,.29])for(const zz of [-.25,.25])part(xx,.32,zz,.13,.54,.13,steel);
+  part(-.45,.95,0,.12,.13,.63,edge);part(.45,.95,0,.12,.13,.63,edge);
  }
- room(14.0,23.55,-8.65,1.55,true);
- room(14.0,23.55,3.10,10.45,false);
- // Screen A: single solid navy central barrier, bold sage/teal rounded silhouette.
- // Open BOTH ends: north gap (-10.1..-7.25), south gap (8.55..11.2).
- // Three separate thick blocks form an arch-like stepped curve without coincident faces.
- const sx=11.70;
- put(sx,2.70,.60,.56,5.40,13.9,navy); // z -6.35..7.55
- put(sx-.37,2.10,-4.70,.24,4.20,2.25,sage);
- put(sx-.37,2.45,4.70,.24,4.90,2.25,teal);
- // Curved top profile is a single solid rounded end-cap, not overlapping decorative layers.
- const cap=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,13.9,12,1,false,0,Math.PI),roomMat(gold));
- cap.rotation.x=Math.PI/2;cap.rotation.z=Math.PI/2;cap.position.set(sx,5.40,.60);roomRoot.add(cap);
+ // Rooms use the original office floor; no added floor plane, duplicate surface or ceiling.
+ // Entrances face the screen and have a genuinely empty 3.1-unit-wide opening.
+ function meeting(x0,x1,z0,z1,isLarge){
+  const cx=(x0+x1)/2,cz=(z0+z1)/2,wallH=5.4,wallY=wallH/2;
+  const color=isLarge?sage:mauve,accent=isLarge?navy:teal;
+  const width=x1-x0,depth=z1-z0;
+  // Outer back/side walls: leave the rear-facing glass window inset, never overlay wall.
+  put(cx,wallY,z0+.19,width-.4,wallH,.38,color);
+  put(x1-.19,wallY,cz,.38,wallH,depth-.38,color);
+  // The opposite wall is transparent glass, not a colored wall behind glass.
+  const glassZ=z1-.19;
+  let glass=new THREE.Mesh(new THREE.PlaneGeometry(width-.48,wallH-.5),new THREE.MeshPhysicalMaterial({color:0xBFD9D8,transparent:true,opacity:.23,depthWrite:false,side:THREE.DoubleSide,roughness:.18,metalness:0}));
+  glass.position.set(cx,wallY,glassZ);glass.renderOrder=5;roomRoot.add(glass);
+  // One perimeter frame only, not stacked directly over the glass face.
+  put(cx,5.18,glassZ+.15,width-.30,.24,.28,gold);
+  put(cx,.19,glassZ+.15,width-.30,.30,.28,gold);
+  for(const xx of [x0+.18,x1-.18])put(xx,wallY,glassZ+.15,.25,wallH,.28,gold);
+  // Curtains sit 0.36 units inside the glass, never at the same depth.
+  const curtainZ=glassZ-.36;
+  put(cx,5.02,curtainZ,width-.55,.16,.20,ivory);
+  if(isLarge){
+   // Rolled-up ivory shade; visible top cassette, with no large opaque curtain plane.
+   put(cx,4.72,curtainZ,width-.80,.38,.25,ivory);
+  }else{
+   // Two sage drapes parked at the edges; central glass remains transparent.
+   for(const xx of [x0+.68,x1-.68]){
+    put(xx,3.17,curtainZ,1.02,3.52,.22,sage);
+    for(const off of [-.27,0,.27])put(xx+off,3.17,curtainZ-.17,.08,3.47,.10,'#527D73');
+   }
+  }
+  // West-facing entry wall split into two solid parts, with an empty opening.
+  const gap=3.1,west=x0+.18;
+  for(const [lo,hi] of [[z0+.38,cz-gap/2],[cz+gap/2,z1-.38]]){
+   if(hi>lo)put(west,wallY,(lo+hi)/2,.36,wallH,hi-lo,color);
+  }
+  // Upper door header at 4.95m, safely above the playable entrance.
+  put(west,5.16,cz,.40,.44,gap+.22,gold);
+  // Solid furniture, deliberately larger than the previous v313 meeting tables.
+  if(isLarge){
+   // Oval is 6.6 long x 2.8 wide, with a thick tabletop and two leg assemblies.
+   ellipse(cx,1.18,cz,1.39,3.30,.34,walnut);
+   for(const zz of [cz-1.67,cz+1.67]){
+    put(cx,.61,zz,.65,.97,.74,edge);put(cx,.15,zz,1.15,.25,1.00,steel);
+   }
+   for(let j=0;j<4;j++){
+    let z=cz+(j-1.5)*1.50;
+    chair(cx-2.12,z,Math.PI/2,navy);chair(cx+2.12,z,-Math.PI/2,navy);
+   }
+   chair(cx,cz-4.02,Math.PI,navy);chair(cx,cz+4.02,0,navy);
+  }else{
+   ellipse(cx,1.18,cz,1.73,1.73,.34,walnut);
+   cyl(cx,.61,cz,.34,.45,.95,edge,20);cyl(cx,.14,cz,.89,.89,.23,steel,24);
+   chair(cx-2.32,cz,Math.PI/2,teal);chair(cx+2.32,cz,-Math.PI/2,teal);
+   chair(cx,cz-2.32,Math.PI,teal);chair(cx,cz+2.32,0,teal);
+  }
+  // A single solid wall-mounted presentation panel, not overlapping several planes.
+  put(cx,3.38,z0+.53,isLarge?4.1:3.1,2.08,.19,navy);
+ }
+ // Both rooms enlarged chiefly in their east-west footprint; maintain the west elevator corridor.
+ // Large room has ample chair clearance and the small room remains distinct and fully accessible.
+ meeting(14.25,24.55,-9.10,1.95,true);
+ meeting(14.25,24.55,3.10,10.65,false);
+ // ONE closed privacy screen: no stacked front plates, no wooden overhead crossbar.
+ // Screen occupies x=11.65 and z=-6.15..7.25; both ends stay OPEN.
+ const sx=11.65,zMid=.55,screenLength=13.40;
+ put(sx,2.58,zMid,.50,5.16,screenLength,sage);
+ // A rounded upper silhouette formed by an isolated rounded edge; no coplanar faces.
+ const top=cyl(sx,5.16,zMid,.25,.25,screenLength,gold,16);
+ top.rotation.x=Math.PI/2;
+ // NOTE: screen's main body is a continuous opaque solid with no slats or seams.
+ // LEFT/RIGHT passage gaps are at the two z ends, never filled by collision props.
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
 // printer, reception, official logos, clickable targets, NPC and routes intact.
