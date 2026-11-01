@@ -1429,6 +1429,15 @@ for(const x of [-6.7,6.7]){
  roomBox(x,4.05,-10.00,3.05,4.67,.12,'#FFF1D7');
  roomBox(x,4.05,-9.91,2.68,4.28,.10,'#F8F4EB');
 }
+// v317: single-line meeting-room headings, lightweight canvas labels.
+function wyVideoTitleSprite(text){
+ const c=document.createElement('canvas');c.width=640;c.height=112;
+ const g=c.getContext('2d');g.fillStyle='#263B57';g.fillRect(0,0,640,112);
+ g.strokeStyle='#C5A46E';g.lineWidth=5;g.strokeRect(3,3,634,106);
+ g.fillStyle='#F2D9A3';g.font='bold 48px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(text,320,56);
+ const t=new THREE.CanvasTexture(c);const m=new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false});
+ const sp=new THREE.Sprite(m);sp.scale.set(4.4,.77,1);return sp;
+}
 // v316: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
 // Clear, single-layer glass, physically separate blinds, no coplanar floor or decorative layers.
 (function wy314MeetingZone(){
@@ -1520,13 +1529,25 @@ for(const x of [-6.7,6.7]){
    }
    chair(cx,cz-4.02,Math.PI,navy);chair(cx,cz+4.02,0,navy);
   }else{
-   ellipse(cx,1.18,cz,1.73,1.73,.34,walnut);
-   cyl(cx,.61,cz,.34,.45,.95,edge,20);cyl(cx,.14,cz,.89,.89,.23,steel,24);
-   chair(cx-2.32,cz,Math.PI/2,teal);chair(cx+2.32,cz,-Math.PI/2,teal);
-   chair(cx,cz-2.32,Math.PI,teal);chair(cx,cz+2.32,0,teal);
+   // Two ROUND tabletops tangent edge-to-edge, NOT overlapping; 6 seats (2+2 sides, 1+1 ends).
+   const radius=1.42, left=cx-radius, right=cx+radius;
+   for(const xx of [left,right]){
+    ellipse(xx,1.18,cz,radius,radius,.34,walnut);
+    cyl(xx,.61,cz,.31,.43,.95,edge,24);cyl(xx,.14,cz,.75,.75,.23,steel,24);
+   }
+   for(const xx of [left,right]){
+    chair(xx,cz-2.16,Math.PI,teal);chair(xx,cz+2.16,0,teal);
+   }
+   chair(cx-2*radius-1.00,cz,Math.PI/2,teal);
+   chair(cx+2*radius+1.00,cz,-Math.PI/2,teal);
   }
   // A single solid wall-mounted presentation panel, not overlapping several planes.
-  put(cx,3.38,z0+.53,isLarge?4.1:3.1,2.08,.19,navy);
+  const videoScreen=put(cx,3.38,z0+.53,isLarge?4.1:3.1,2.08,.19,navy);
+  videoScreen.userData.wyVideoRoom=isLarge?'large':'small';
+  (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoScreen);
+  // Gold headline sits above the screen, using existing geometry (no video texture).
+  const videoLabel=wyVideoTitleSprite(isLarge?'企業法律顧問':'專業法律諮詢');
+  videoLabel.position.set(cx,4.95,z0+.82);roomRoot.add(videoLabel);
  }
  // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
  // East sides align with existing office wall; elevator at far south-east remains clear.
@@ -4256,7 +4277,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());if(wyOfficeFloor===2)wy300SyncCaption();renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());if(wyOfficeFloor===2)wy300SyncCaption();renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div>
 
@@ -4371,4 +4392,42 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
 #wyLobbyDialog.wy228Elevator button[data-lb="return3f"],#wyLobbyDialog.wy228Elevator button[data-lb="close"]{display:inline-block!important;width:calc(50% - 6px)!important;text-align:center!important;min-height:46px!important;font-size:13px!important}
 #wyLobbyDialog.wy228Elevator button[data-lb="return3f"]{margin-right:12px!important}
 </style>
+<style id="wy317Styles">
+#wy317Overlay{position:fixed;inset:0;z-index:10001;background:#081523b8;display:none;align-items:center;justify-content:center;padding:12px;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif}
+#wy317Overlay.open{display:flex}#wy317Box{background:#172b45;color:#fff;width:min(95vw,760px);max-height:92dvh;overflow-y:auto;border:1px solid #d5b477;border-radius:17px;box-shadow:0 20px 70px #0009;padding:16px;position:relative}
+#wy317Box h2{color:#f0d69e;text-align:center;font-size:20px;margin:4px 35px 14px}#wy317Close{position:absolute;right:9px;top:8px;color:#fff;background:transparent;border:0;font-size:30px;line-height:1;padding:4px 10px}
+.wy317VideoChoice{display:flex;width:100%;align-items:center;gap:12px;padding:12px;margin:9px 0;background:#263e5b;color:white;border:1px solid #bda371;border-radius:12px;text-align:left}
+.wy317VideoChoice span{flex:1}.wy317VideoChoice small{display:block;color:#d7c6a8;margin-top:5px}.wy317Play{font-size:27px;color:#f3d39c}
+#wy317Player{display:none}#wy317Player video{display:block;width:100%;max-height:62dvh;background:black;border-radius:8px}#wy317Back{border:1px solid #c8a86e;color:#fff;background:#263e5b;border-radius:9px;padding:9px 13px;margin-top:10px}
+#wy317End{display:none;text-align:center;padding:18px 5px}#wy317End h2{color:white;font-size:clamp(21px,5vw,32px);line-height:1.5;margin:12px 0}#wy317End p{color:#e7c789}
+#wy317End a{display:inline-block;text-decoration:none;color:#fff;border:1px solid #d8b879;padding:11px 15px;border-radius:11px;margin:5px;font-weight:600}
+#wy317End a.wy317Primary{display:block;background:linear-gradient(#f7db9c,#cf9d4e);color:#162b42;margin:20px auto 12px;max-width:390px}
+#wy317End .wy317Links{display:flex;flex-wrap:wrap;justify-content:center}
+#wy317Floating{position:fixed;z-index:49;bottom:108px;right:12px;background:#263B57;color:#f2d6a1;border:1px solid #d4ae6f;border-radius:12px;padding:11px;font-size:13px;display:none;box-shadow:0 5px 15px #0005}
+</style>
+<div id="wy317Overlay" role="dialog" aria-modal="true" aria-label="會議室影片"><div id="wy317Box"><button id="wy317Close" aria-label="關閉影片">×</button><h2 id="wy317Heading"></h2><div id="wy317List"></div><div id="wy317Player"><video id="wy317Video" controls playsinline preload="none"></video><button id="wy317Back">返回影片清單</button></div><div id="wy317End"><h2>法律問題，不必獨自面對。</h2><p>德威陽國際法律事務所</p><a class="wy317Primary" href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener noreferrer">預約專業法律諮詢｜LINE @wylaw</a><div class="wy317Links"><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer">IG</a><a href="https://www.facebook.com/weiandyang/" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer">官網</a></div><button id="wy317Again" style="margin-top:14px;background:transparent;border:0;color:#e8c88c;text-decoration:underline;padding:9px">返回影片清單</button></div></div></div>
+<button id="wy317Floating" type="button">▶ 會議室影片</button>
+<script>
+(function(){
+ const data={small:[{title:'法律服務影片',src:'videos/meeting-small.mp4'}],large:[{title:'專業影片（一）',src:'videos/meeting-large-1.mp4'},{title:'專業影片（二）',src:'videos/meeting-large-2.mp4'}]};
+ const $=id=>document.getElementById(id),overlay=$('wy317Overlay'),video=$('wy317Video');let current='small',lastFocus=null;
+ function clear(){video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317End').style.display='none';}
+ function list(){clear();$('wy317List').style.display='block';$('wy317Heading').textContent=current==='small'?'專業法律諮詢':'企業法律顧問';$('wy317List').replaceChildren();data[current].forEach((v,i)=>{let b=document.createElement('button');b.className='wy317VideoChoice';let p=document.createElement('strong');p.textContent=v.title;let desc=document.createElement('small');desc.textContent='點擊播放影片';let span=document.createElement('span');span.append(p,desc);let play=document.createElement('b');play.className='wy317Play';play.textContent='▶';b.append(play,span);b.onclick=()=>{clear();$('wy317List').style.display='none';$('wy317Player').style.display='block';$('wy317Heading').textContent=v.title;video.src=v.src;video.load();video.play().catch(()=>{});};$('wy317List').append(b);});}
+ function open(room){current=room;lastFocus=document.activeElement;overlay.classList.add('open');document.body.dataset.wyVideoOpen='1';list();$('wy317Close').focus();}
+ function close(){clear();overlay.classList.remove('open');delete document.body.dataset.wyVideoOpen;if(lastFocus?.focus)lastFocus.focus();}
+ video.addEventListener('ended',()=>{video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317List').style.display='none';$('wy317End').style.display='block';$('wy317Heading').textContent='德威陽國際法律事務所';});
+ $('wy317Close').onclick=close;$('wy317Back').onclick=list;$('wy317Again').onclick=list;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))close()});
+ window.wy317OpenVideo=open;
+ // Accessible fallback: appears on floor 2 even if 3D target cannot be tapped.
+ const fallback=$('wy317Floating');fallback.onclick=()=>{const chosen=window.confirm('播放大會議室影片？\n「確定」大會議室／「取消」小會議室');open(chosen?'large':'small')};
+ setInterval(()=>{fallback.style.display=(typeof insideOffice!=='undefined'&&insideOffice&&typeof wyOfficeFloor!=='undefined'&&wyOfficeFloor===2&&!overlay.classList.contains('open'))?'block':'none'},650);
+ // Tap-test exact 3D television meshes, only when office floor 2 is active.
+ document.addEventListener('pointerup',e=>{if(overlay.classList.contains('open')||!window.wyVideoScreens||typeof insideOffice==='undefined'||!insideOffice||typeof wyOfficeFloor==='undefined'||wyOfficeFloor!==2||typeof activeIslandRoom!=='undefined'&&activeIslandRoom)return;
+ if(e.target.closest('button,a,input,textarea,select,[role="dialog"]'))return;
+ if(typeof officeCam==='undefined'||typeof ray==='undefined'||typeof renderer==='undefined'||e.target!==renderer.domElement)return;
+ const rect=renderer.domElement.getBoundingClientRect();const p=new THREE.Vector2(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);
+ const r=new THREE.Raycaster();r.setFromCamera(p,officeCam);const hits=r.intersectObjects(window.wyVideoScreens,false);if(hits.length){e.stopImmediatePropagation();open(hits[0].object.userData.wyVideoRoom);}
+ },true);
+})();
+</script>
 </body></html>
