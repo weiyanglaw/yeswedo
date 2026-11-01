@@ -1147,10 +1147,16 @@ function wyBuildOriginalOfficeFloor(addBox){
  for(let x=-12.5;x<=12.5;x+=3.6)addBox(x,.009,0,.014,.012,21.6,'#E1D8CA');
  for(let z=-9.7;z<=9.7;z+=6.0)addBox(0,.012,z,26,.012,.012,'#E1D8CA');
 }
-wyBuildOriginalOfficeFloor(roomBox);
-roomBox(0,3.7,-10.75,27,7.4,.40,'#F8F4EB');
-roomBox(-13.3,3.7,0,.40,7.4,22,'#F7F2E9');
-roomBox(13.3,3.7,0,.40,7.4,22,'#F7F2E9');
+// v291: 2F-only expanded floor plate: width 27 -> 40.5, depth 22 -> 33.
+// All existing furniture, elevator, signs and their interaction coordinates remain unchanged.
+// Extend usable floor to the west and south while preserving the original logo wall and elevator-side boundary.
+// This keeps the existing office circulation and branding physically anchored.
+roomBox(-6.75,-.24,5.5,40.5,.48,33,'#EADDCB');
+for(let x=-26.25;x<=12.5;x+=3.6)roomBox(x,.009,5.5,.014,.012,32.6,'#E1D8CA');
+for(let z=-9.7;z<=21.7;z+=6.0)roomBox(-6.75,.012,z,40,.012,.012,'#E1D8CA');
+roomBox(-6.75,3.7,-10.75,40.5,7.4,.40,'#F8F4EB');
+roomBox(-26.8,3.7,5.5,.40,7.4,33,'#F7F2E9');
+roomBox(13.3,3.7,5.5,.40,7.4,33,'#F7F2E9');
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
 // v101: no tiny decorative wall lamps; visible geometry carries the luxury design.
@@ -2044,7 +2050,7 @@ function wyBuildGlassCabin(parent,cx,cz,one){
 }
 wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 wyGlassCabins[2]=wyBuildGlassCabin(wyElev2,0,0,2);
-// v290: discard the independently reconstructed second-floor portal entirely.
+// v291: discard the independently reconstructed second-floor portal entirely.
 // Clone the actual first-floor architectural meshes, including its cream rear
 // panels, gold piers, substantial navy crown, ice-blue light bars and trims.
 // Keep the 2F glass cabin/door pivots and all movement/ride logic untouched.
@@ -3318,7 +3324,7 @@ function wyIndoorPlace(n,atElevator=false){wyIndoorMakeActor();wyIndoorFloor=n;c
 function wySetFloor(n){wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
- if(wyOfficeFloor===2){officeCam.position.set(19,19,25);officeOrbit.target.set(0,1.3,-.5);officeOrbit.update()}
+ if(wyOfficeFloor===2){officeCam.position.set(30,30,38);officeOrbit.target.set(-6,1.3,5);officeOrbit.update()}
  else if(wyOfficeFloor===3){wy3Cam.position.set(7.15,2.4,6.7);wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.lookAt(wy3Orbit.target)}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';if(wyOfficeFloor===3){wy3Enter();if(!wyRide)wy3PlayArrival();}else{wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
@@ -3547,7 +3553,7 @@ function wyElevatorTick(dt){
   if(k.has('arrowdown')||k.has('s'))z+=1;
   x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
    if(wyOfficeFloor===1){const canMove=(xx,zz)=>xx>-12&&xx<12&&zz>-9.5&&zz<10&&!(Math.abs(xx)<7.2&&zz>4.4&&zz<7.6)&&!(Math.abs(xx)<4&&zz>-5.5&&zz<-1.2);if(canMove(nx,p.z))p.x=nx;if(canMove(p.x,nz))p.z=nz;}
-   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<11.8&&nz>-8.5&&nz<9.7){p.x=nx;p.z=nz;}
+   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(nx>-25.8&&nx<11.8&&nz>-8.5&&nz<21.5){p.x=nx;p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
   }
   const target=wyElevPos(wyOfficeFloor);
