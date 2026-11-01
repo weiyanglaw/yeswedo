@@ -1179,7 +1179,7 @@ for(const px of [4.40,9.10])for(const py of [2.03,6.60]){
 }
 const logoLight=new THREE.PointLight(0xffe6b8,1.1,9);logoLight.position.set(6.75,6.8,-7.7);roomRoot.add(logoLight);
 // Office-only transparent-background version of the official logo: same original gold emblem, no white square.
-const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-office-wall-v311.png?v=312'),transparent:true,side:THREE.DoubleSide})),0);
+const logoOffice=registerOffice(new THREE.Mesh(new THREE.PlaneGeometry(4.38,4.38),new THREE.MeshBasicMaterial({map:new THREE.TextureLoader().load('weiyang-office-wall-v313.png?v=313'),transparent:true,side:THREE.DoubleSide})),0);
 logoOffice.position.set(6.75,4.32,-9.48);roomRoot.add(logoOffice);
 // v214: a fixed wall-mounted 3D sign, not a camera-facing Sprite.
 // Reuse the exact existing sign texture and its officeZone=0 click action.
@@ -1429,87 +1429,80 @@ for(const x of [-6.7,6.7]){
  roomBox(x,4.05,-10.00,3.05,4.67,.12,'#FFF1D7');
  roomBox(x,4.05,-9.91,2.68,4.28,.10,'#F8F4EB');
 }
-// v311 MEETING ZONE ONLY — new 2F geometry. All original office elements remain unchanged.
-// Logo is to the west; elevator remains at the far southeast. The clear southern
-// corridor (z >= 11.2) connects the elevator with the existing office.
-(function wy311MeetingZone(){
- const navy='#263B57',deep='#193750',gold='#D8B477',bright='#F3D698';
- const ivory='#FFF0D6',teal='#198D91',jade='#41B8A5',blue='#3379B9';
- const make=(x,y,z,w,h,d,c)=>roomBox(x,y,z,w,h,d,c);
- // Large and small rooms have no roof: mobile overhead views reveal the interiors.
- // Walls stop below the existing 8.51m office crown. West-facing doorways are real openings.
- function meetingRoom(name,x0,x1,z0,z1,accent,large){
-  const cx=(x0+x1)/2,cz=(z0+z1)/2,wallY=3.12,wallH=6.24;
-  // Rear and east enclosure; substantial colored bands visible on phone screens.
-  make(cx,wallY,z0,x1-x0,wallH,.30,ivory);
-  make(x1,wallY,cz,.30,wallH,z1-z0,ivory);
-  make(cx,wallY,z1,x1-x0,wallH,.30,accent);
-  make(cx,5.80,z1+.19,x1-x0,.74,.20,navy);
-  make(cx,5.42,z1+.31,x1-x0,.18,.16,gold);
-  // West wall with an actual 2.7m doorway opening, not a textured fake door.
-  const gap0=cz-1.38,gap1=cz+1.38;
-  const l0=gap0-z0,l1=z1-gap1;
-  if(l0>.1)make(x0,wallY,(z0+gap0)/2,.30,wallH,l0,accent);
-  if(l1>.1)make(x0,wallY,(gap1+z1)/2,.30,wallH,l1,accent);
-  make(x0,5.94,cz,.38,.60,2.95,navy);
-  for(const dz of [-1.50,1.50])make(x0,3.05,cz+dz,.48,6.10,.24,gold);
-  // Bold color-block facade and trim. These are distinct surfaces, not coplanar decals.
-  for(const zz of [z0+.55,z1-.55])make(x1-.18,3.4,zz,.12,4.25,.54,gold);
-  make(cx,.065,cz,x1-x0-.75,.12,z1-z0-.65,large?'#E8D6BA':'#DCE8DC');
-  make(cx,.15,cz,x1-x0-1.05,.06,z1-z0-.95,large?'#D1B58C':'#B4D8CD');
-  // A large, unmistakable conference table and individual chairs.
-  const tableLength=large?6.10:3.25;
-  make(cx,1.20,cz,2.05,.22,tableLength,large?'#38546F':'#F7E9D3');
-  make(cx,.68,cz,1.60,.90,tableLength-.40,large?'#243A52':'#477F7C');
-  make(cx,1.34,cz,1.68,.035,tableLength-.35,gold);
-  for(const side of [-1,1]){
-   for(let j=0;j<(large?4:2);j++){
-    const zz=cz+(j-((large?4:2)-1)/2)*(large?1.52:1.32);
-    const xx=cx+side*1.72;
-    make(xx,.58,zz,.75,.20,.72,large?'#567C9C':'#4FA5A1');
-    make(xx,.98,zz,.18,.83,.72,large?'#31506B':'#287D7A');
-    make(xx,.28,zz,.55,.48,.50,deep);
-   }
+// v313: meeting-zone replacement ONLY. No floor overlays, coplanar trims or transparent panels.
+(function wy313MeetingZone(){
+ const navy='#263B57', gold='#D7AF6E', ivory='#F6EDDC',sage='#6B9B89',teal='#168F91',walnut='#75492F',woodEdge='#9B6B47';
+ const put=(x,y,z,w,h,d,c)=>roomBox(x,y,z,w,h,d,c);
+ const cylinder=(x,y,z,top,bottom,h,c,segments=24)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(top,bottom,h,segments),roomMat(c));m.position.set(x,y,z);roomRoot.add(m);return m;};
+ const oval=(x,y,z,rx,rz,h,c)=>{const m=cylinder(x,y,z,1,1,h,c,32);m.scale.set(rx,1,rz);return m;};
+ // Wall modules do not share a surface. All rooms use existing office floor (no duplicate slabs).
+ function room(x0,x1,z0,z1,large){
+  const cx=(x0+x1)/2,cz=(z0+z1)/2, wallH=5.55,wy=wallH/2;
+  const main=large?sage:navy,secondary=large?ivory:teal;
+  // Keep a physical 2.7m entrance gap in west wall; no overlapping door or threshold meshes.
+  put(cx,wy,z0+.22,x1-x0-.75,wallH,.32,main);
+  put(x1-.20,wy,cz,.32,wallH,z1-z0-.65,secondary);
+  put(cx,wy,z1-.22,x1-x0-.75,wallH,.32,large?ivory:navy);
+  const doorHalf=1.42;
+  for(const [lo,hi] of [[z0+.35,cz-doorHalf],[cz+doorHalf,z1-.35]]){
+   if(hi-lo>.1)put(x0+.18,wy,(lo+hi)/2,.32,wallH,hi-lo,main);
   }
-  // Oversized presentation wall, intentionally not glossy or transparent.
-  make(cx,3.75,z0+.25,large?5.2:3.8,2.72,.15,navy);
-  make(cx,3.75,z0+.35,large?4.85:3.45,2.38,.08,large?'#83C9DD':'#9BD8C9');
-  make(cx,2.30,z0+.40,large?5.0:3.6,.13,.10,gold);
-  // Big room identification plaque, independent of all original click targets.
-  const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=256;
-  const ctx=canvas.getContext('2d');ctx.fillStyle=navy;ctx.fillRect(0,0,1024,256);
-  ctx.strokeStyle=bright;ctx.lineWidth=16;ctx.strokeRect(10,10,1004,236);
-  ctx.fillStyle=ivory;ctx.font='bold 112px "Noto Sans TC", sans-serif';
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(name,512,134,940);
-  const tx=new THREE.CanvasTexture(canvas);tx.colorSpace=THREE.SRGBColorSpace;
-  const sign=new THREE.Mesh(new THREE.PlaneGeometry(4.6,1.15),new THREE.MeshBasicMaterial({map:tx,side:THREE.DoubleSide,depthWrite:false}));
-  sign.position.set(cx,6.90,z1+.23);roomRoot.add(sign);
+  // Strong high-contrast entrance arch, using structural blocks separated from wall faces.
+  put(x0+.18,5.28,cz,.42,.42,2.96,gold);
+  // Distinctive exterior shape: large vertical blocks, never thin overlaid coplanar decals.
+  if(large){
+   put(x1-.44,3.1,z0+1.12,.42,3.8,1.15,ivory);
+  }else{
+   put(x1-.44,3.1,z0+1.18,.42,3.8,1.15,ivory);
+   put(x1-.44,3.1,z1-1.16,.42,3.8,1.05,teal);
+  }
+  // Table: one thick oval/round walnut tabletop with obvious separated pedestal legs.
+  if(large){
+   oval(cx,1.16,cz,1.18,3.05,.30,walnut);
+   for(const dz of [-1.65,1.65]){
+    put(cx,.59,cz+dz,.62,.98,.72,woodEdge);
+    put(cx,.16,cz+dz,1.06,.24,1.00,navy);
+   }
+  }else{
+   oval(cx,1.16,cz,1.55,1.55,.30,walnut);
+   cylinder(cx,.62,cz,.31,.43,.93,woodEdge,16);
+   cylinder(cx,.14,cz,.78,.78,.22,navy,20);
+  }
+  // Chair is composed of visibly separated padded seat, upright back, two strong legs.
+  function chair(x,z,rot,color){
+   const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;roomRoot.add(g);
+   const box=(px,py,pz,w,h,d,col)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(col));o.position.set(px,py,pz);g.add(o);};
+   box(0,.70,0,.80,.23,.78,color);
+   box(0,1.25,.38,.80,.88,.20,color);
+   box(-.28,.32,-.21,.15,.52,.17,navy);box(.28,.32,-.21,.15,.52,.17,navy);
+   box(-.28,.32,.22,.15,.52,.17,navy);box(.28,.32,.22,.15,.52,.17,navy);
+   box(-.48,.91,0,.15,.14,.66,woodEdge);box(.48,.91,0,.15,.14,.66,woodEdge);
+  }
+  if(large){
+   for(let j=0;j<4;j++){
+    const zz=cz+(j-1.5)*1.43;
+    chair(cx-2.04,zz,Math.PI/2,navy);chair(cx+2.04,zz,-Math.PI/2,navy);
+   }
+   chair(cx,cz-3.72,Math.PI,navy);chair(cx,cz+3.72,0,navy);
+  }else{
+   chair(cx-2.08,cz,Math.PI/2,teal);chair(cx+2.08,cz,-Math.PI/2,teal);
+   chair(cx,cz-2.12,Math.PI,teal);chair(cx,cz+2.12,0,teal);
+  }
+  // One solid presentation display, offset from wall, with no layered near-coplanar screen.
+  put(cx,3.50,z0+.51,large?4.15:3.20,2.30,.20,navy);
  }
- // Both rooms lie entirely to the right of the existing logo display.
- meetingRoom('大會議室',14.0,23.55,-8.65,1.55,navy,true);
- meetingRoom('小會議室',14.0,23.55,3.10,10.45,teal,false);
- // Screen: three physically thick, large arched frames in the YZ plane.
- // The curved contour is one extruded shape per arch; no stacked transparent
- // surfaces or coincident polygons (avoids common z-fighting artifacts).
- function arch(x,z,width,height,outer,inner){
-  const w=width/2,top=height-.68;
-  const shape=new THREE.Shape();shape.moveTo(-w,0);shape.lineTo(-w,top);
-  shape.quadraticCurveTo(-w,height,0,height);shape.quadraticCurveTo(w,height,w,top);
-  shape.lineTo(w,0);shape.lineTo(w-.53,0);shape.lineTo(w-.53,top-.13);
-  shape.quadraticCurveTo(w-.53,height-.66,0,height-.66);
-  shape.quadraticCurveTo(-w+.53,height-.66,-w+.53,top-.13);
-  shape.lineTo(-w+.53,0);shape.closePath();
-  const mesh=new THREE.Mesh(new THREE.ExtrudeGeometry(shape,{depth:.48,bevelEnabled:false,curveSegments:12}),roomMat(outer));
-  mesh.rotation.y=Math.PI/2;mesh.position.set(x-.24,0,z);roomRoot.add(mesh);
-  // Broad offset accent base; no shared coplanar surfaces.
-  make(x, .42,z,.70,.84,width+.14,inner);
-  make(x,.94,z,.76,.17,width+.14,gold);
- }
- arch(11.70,-6.75,2.60,5.70,navy,blue);
- arch(11.70,-3.35,2.60,5.70,teal,jade);
- arch(11.70, 7.15,2.60,5.70,navy,teal);
- // Open between the north and south arches for room access; south of z=10.5
- // remains completely free for the elevator-to-office corridor.
+ room(14.0,23.55,-8.65,1.55,true);
+ room(14.0,23.55,3.10,10.45,false);
+ // Screen A: single solid navy central barrier, bold sage/teal rounded silhouette.
+ // Open BOTH ends: north gap (-10.1..-7.25), south gap (8.55..11.2).
+ // Three separate thick blocks form an arch-like stepped curve without coincident faces.
+ const sx=11.70;
+ put(sx,2.70,.60,.56,5.40,13.9,navy); // z -6.35..7.55
+ put(sx-.37,2.10,-4.70,.24,4.20,2.25,sage);
+ put(sx-.37,2.45,4.70,.24,4.90,2.25,teal);
+ // Curved top profile is a single solid rounded end-cap, not overlapping decorative layers.
+ const cap=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,13.9,12,1,false,0,Math.PI),roomMat(gold));
+ cap.rotation.x=Math.PI/2;cap.rotation.z=Math.PI/2;cap.position.set(sx,5.40,.60);roomRoot.add(cap);
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
 // printer, reception, official logos, clickable targets, NPC and routes intact.
