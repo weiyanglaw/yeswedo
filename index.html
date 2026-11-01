@@ -1429,10 +1429,10 @@ for(const x of [-6.7,6.7]){
  roomBox(x,4.05,-10.00,3.05,4.67,.12,'#FFF1D7');
  roomBox(x,4.05,-9.91,2.68,4.28,.10,'#F8F4EB');
 }
-// v314: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
+// v316: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
 // Clear, single-layer glass, physically separate blinds, no coplanar floor or decorative layers.
 (function wy314MeetingZone(){
- const sage='#648F84', gold='#C5A46E', ivory='#E7DAC5',mauve='#8B6687',teal='#3E7D86',navy='#344E70',walnut='#76513B',edge='#956C4F',steel='#54616B';
+ const sage='#648F84', screen='#657F9D', gold='#C5A46E', ivory='#E7DAC5',mauve='#8B6687',teal='#3E7D86',navy='#344E70',walnut='#76513B',edge='#956C4F',steel='#54616B';
  const put=(x,y,z,w,h,d,c)=>roomBox(x,y,z,w,h,d,c);
  const mat=(c)=>new THREE.MeshStandardMaterial({color:c,roughness:.82,metalness:0});
  function cyl(x,y,z,rt,rb,h,c,n=24){let o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,n),mat(c));o.position.set(x,y,z);roomRoot.add(o);return o;}
@@ -1451,8 +1451,24 @@ for(const x of [-6.7,6.7]){
   const color=isLarge?sage:mauve,accent=isLarge?navy:teal;
   const width=x1-x0,depth=z1-z0;
   // Outer back/side walls: leave the rear-facing glass window inset, never overlay wall.
-  put(cx,wallY,z0+.19,width-.4,wallH,.38,color);
-  put(x1-.19,wallY,cz,.38,wallH,depth-.38,color);
+  // Rear elevation: single glass surface, no solid wall hidden behind it.
+  const rearZ=z0+.19;
+  function glassPanel(x,y,z,w,h){
+   let m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshPhysicalMaterial({color:0xC8E5E3,transparent:true,opacity:.22,depthWrite:false,side:THREE.DoubleSide,roughness:.24,metalness:0}));
+   m.position.set(x,y,z);m.renderOrder=5;roomRoot.add(m);
+  }
+  glassPanel(cx,wallY,rearZ,width-.65,wallH-.50);
+  put(cx,5.16,rearZ+.16,width-.35,.25,.25,gold);
+  put(cx,.18,rearZ+.16,width-.35,.28,.25,gold);
+  for(const xx of [x0+.18,x1-.18])put(xx,wallY,rearZ+.16,.23,wallH,.26,gold);
+  // Rear curtain is kept physically apart from glass.
+  const rearCurtainZ=rearZ+.43;
+  put(cx,4.94,rearCurtainZ,width-.8,.17,.20,ivory);
+  if(isLarge)put(cx,4.66,rearCurtainZ,width-.95,.35,.22,ivory);
+  else for(const xx of [x0+.78,x1-.78])put(xx,3.12,rearCurtainZ,.92,3.42,.22,sage);
+  // East side uses the ORIGINAL office exterior wall; do not overlay a second wall.
+  // A narrow colored interior accent stays offset from the wall to prevent Z-fighting.
+  put(x1-.72,3.10,cz,.16,3.65,Math.min(depth-1.5,3.3),color);
   // The opposite wall is transparent glass, not a colored wall behind glass.
   const glassZ=z1-.19;
   let glass=new THREE.Mesh(new THREE.PlaneGeometry(width-.48,wallH-.5),new THREE.MeshPhysicalMaterial({color:0xBFD9D8,transparent:true,opacity:.23,depthWrite:false,side:THREE.DoubleSide,roughness:.18,metalness:0}));
@@ -1474,13 +1490,23 @@ for(const x of [-6.7,6.7]){
     for(const off of [-.27,0,.27])put(xx+off,3.17,curtainZ-.17,.08,3.47,.10,'#527D73');
    }
   }
-  // West-facing entry wall split into two solid parts, with an empty opening.
-  const gap=3.1,west=x0+.18;
-  for(const [lo,hi] of [[z0+.38,cz-gap/2],[cz+gap/2,z1-.38]]){
-   if(hi>lo)put(west,wallY,(lo+hi)/2,.36,wallH,hi-lo,color);
+  // Entrance elevation is ALSO transparent, with a wide unobstructed sliding-door opening.
+  // The glass panels remain stationary at the sides; the door leaves are shown parked open.
+  const gap=3.7,west=x0+.18;
+  for(const [lo,hi] of [[z0+.40,cz-gap/2],[cz+gap/2,z1-.40]]){
+   if(hi>lo){
+    const zm=(lo+hi)/2;
+    let g=new THREE.Mesh(new THREE.PlaneGeometry(hi-lo,wallH-.50),new THREE.MeshPhysicalMaterial({color:0xC8E5E3,transparent:true,opacity:.22,depthWrite:false,side:THREE.DoubleSide,roughness:.24}));
+    g.rotation.y=Math.PI/2;g.position.set(west,wallY,zm);g.renderOrder=5;roomRoot.add(g);
+    put(west,5.15,zm,.25,.22,hi-lo,gold);
+    put(west,.18,zm,.25,.28,hi-lo,gold);
+   }
   }
-  // Upper door header at 4.95m, safely above the playable entrance.
-  put(west,5.16,cz,.40,.44,gap+.22,gold);
+  put(west,5.16,cz,.27,.30,gap+.25,gold);
+  // Sliding door panels are parked to either side, NOT across the entry gap.
+  for(const zz of [cz-gap/2-.23,cz+gap/2+.23])put(west,2.36,zz,.20,4.55,.12,gold);
+  // Entrance curtains parked to the side; no hanging curtain blocks the doorway.
+  for(const zz of [z0+.77,z1-.77])put(west+.45,3.10,zz,.18,3.30,.75,isLarge?ivory:sage);
   // Solid furniture, deliberately larger than the previous v313 meeting tables.
   if(isLarge){
    // Oval is 6.6 long x 2.8 wide, with a thick tabletop and two leg assemblies.
@@ -1502,18 +1528,27 @@ for(const x of [-6.7,6.7]){
   // A single solid wall-mounted presentation panel, not overlapping several planes.
   put(cx,3.38,z0+.53,isLarge?4.1:3.1,2.08,.19,navy);
  }
- // Both rooms enlarged chiefly in their east-west footprint; maintain the west elevator corridor.
- // Large room has ample chair clearance and the small room remains distinct and fully accessible.
- meeting(14.25,24.55,-9.10,1.95,true);
- meeting(14.25,24.55,3.10,10.65,false);
- // ONE closed privacy screen: no stacked front plates, no wooden overhead crossbar.
- // Screen occupies x=11.65 and z=-6.15..7.25; both ends stay OPEN.
- const sx=11.65,zMid=.55,screenLength=13.40;
- put(sx,2.58,zMid,.50,5.16,screenLength,sage);
- // A rounded upper silhouette formed by an isolated rounded edge; no coplanar faces.
- const top=cyl(sx,5.16,zMid,.25,.25,screenLength,gold,16);
- top.rotation.x=Math.PI/2;
- // NOTE: screen's main body is a continuous opaque solid with no slats or seams.
+ // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
+ // East sides align with existing office wall; elevator at far south-east remains clear.
+ // West entrance corridor is 14.30-11.90 = 2.40 units, uninterrupted.
+ meeting(14.30,26.58,-10.00,3.60,true);
+ meeting(14.30,26.58,4.40,17.20,false);
+ // F matte steel-blue, single solid privacy screen. Leave the official logo at x=6.75,z=-9.18 fully visible.
+ // The screen is shifted away from the logo wall; both Z ends remain open for walkways.
+ const sx=11.90,zMid=3.35,screenLength=13.70;
+ {
+  // Single extruded silhouette with rounded upper corners; one material and no coplanar overlays.
+  const L=screenLength/2, H=5.16, r=.72;
+  const sh=new THREE.Shape();
+  sh.moveTo(-L,0);sh.lineTo(L,0);sh.lineTo(L,H-r);
+  sh.quadraticCurveTo(L,H,L-r,H);sh.lineTo(-L+r,H);
+  sh.quadraticCurveTo(-L,H,-L,H-r);sh.closePath();
+  const mesh=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.50,bevelEnabled:false,curveSegments:10}),mat(screen));
+  // Shape XY maps to office Z/Y; depth maps to X. Position centered on X=sx.
+  mesh.rotation.y=Math.PI/2;mesh.position.set(sx-.25,0,zMid);roomRoot.add(mesh);
+ }
+ // No top crossbeam or stacked plates; continuous opaque main panel.
+ // Screen body is continuous, opaque, and seam-free. Rounded ends are built into the silhouette.
  // LEFT/RIGHT passage gaps are at the two z ends, never filled by collision props.
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
