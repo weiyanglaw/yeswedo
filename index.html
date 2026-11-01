@@ -1430,13 +1430,19 @@ for(const x of [-6.7,6.7]){
  roomBox(x,4.05,-9.91,2.68,4.28,.10,'#F8F4EB');
 }
 // v317: single-line meeting-room headings, lightweight canvas labels.
+// v319: solid opaque elevated meeting-room signs, matching the other office labels.
 function wyVideoTitleSprite(text){
- const c=document.createElement('canvas');c.width=640;c.height=112;
- const g=c.getContext('2d');g.fillStyle='#263B57';g.fillRect(0,0,640,112);
- g.strokeStyle='#C5A46E';g.lineWidth=5;g.strokeRect(3,3,634,106);
- g.fillStyle='#F2D9A3';g.font='bold 66px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(text,320,56);
- const t=new THREE.CanvasTexture(c);const m=new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false});
- const sp=new THREE.Sprite(m);sp.scale.set(5.8,1.02,1);return sp;
+ const c=document.createElement('canvas');c.width=1280;c.height=370;
+ const g=c.getContext('2d');
+ g.fillStyle='#263B57';g.beginPath();g.roundRect(28,25,1224,320,44);g.fill();
+ g.strokeStyle='#C5A46E';g.lineWidth=15;g.stroke();
+ g.fillStyle='#F2D9A3';g.font='900 118px "Noto Sans TC",sans-serif';
+ g.textAlign='center';g.textBaseline='middle';g.fillText(text,640,185,1140);
+ const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;
+ // Plane is fully opaque; no translucent sprite blending or ghosted backing.
+ const mesh=new THREE.Mesh(new THREE.PlaneGeometry(5.8,1.68),
+   new THREE.MeshBasicMaterial({map:texture,transparent:false,side:THREE.DoubleSide,depthTest:false,depthWrite:false}));
+ mesh.renderOrder=100;return mesh;
 }
 // v316: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
 // Clear, single-layer glass, physically separate blinds, no coplanar floor or decorative layers.
@@ -1548,7 +1554,7 @@ function wyVideoTitleSprite(text){
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoScreen);
   // Gold headline sits above the screen, using existing geometry (no video texture).
   const videoLabel=wyVideoTitleSprite(isLarge?'企業法律顧問':'專業法律諮詢');
-  videoLabel.position.set(cx,4.95,z0+.82);videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
+  videoLabel.position.set(cx,6.35,z0+.82);videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoLabel);
  }
  // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
@@ -4413,16 +4419,17 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
 #wy317End .wy317Links{display:flex;flex-wrap:wrap;justify-content:center}
 #wy317Floating{position:fixed;z-index:49;bottom:108px;right:12px;display:none;gap:5px;flex-direction:column}#wy317Floating button{background:#263B57;color:#f2d6a1;border:1px solid #d4ae6f;border-radius:10px;padding:10px;font-size:13px;box-shadow:0 5px 15px #0005}
 </style>
-<div id="wy317Overlay" role="dialog" aria-modal="true" aria-label="會議室影片"><div id="wy317Box"><button id="wy317Close" aria-label="關閉影片">×</button><h2 id="wy317Heading"></h2><div id="wy317List"></div><div id="wy317Player"><video id="wy317Video" controls playsinline preload="none"></video><button id="wy317Back">返回影片清單</button></div><div id="wy317End"><h2>法律問題，不必獨自面對。</h2><p>德威陽國際法律事務所</p><a class="wy317Primary" href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener noreferrer">預約專業法律諮詢｜LINE @wylaw</a><div class="wy317Links"><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer">IG</a><a href="https://www.facebook.com/weiandyang/" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer">官網</a></div><button id="wy317Again" style="margin-top:14px;background:transparent;border:0;color:#e8c88c;text-decoration:underline;padding:9px">返回影片清單</button></div></div></div>
+<div id="wy317Overlay" role="dialog" aria-modal="true" aria-label="會議室影片"><div id="wy317Box"><button id="wy317Close" aria-label="關閉影片">×</button><h2 id="wy317Heading"></h2><div id="wy317List"></div><div id="wy317Player"><video id="wy317Video" controls playsinline preload="none"></video><p id="wy319VideoError" role="alert" style="display:none;color:#ffd7a0;font-size:13px;line-height:1.5">影片暫時無法載入，請確認 GitHub Pages 的影片檔案已完成部署。</p><button id="wy317Back">返回影片清單</button></div><div id="wy317End"><h2>法律問題，不必獨自面對。</h2><p>德威陽國際法律事務所</p><a class="wy317Primary" href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener noreferrer">預約專業法律諮詢｜LINE @wylaw</a><div class="wy317Links"><a href="https://www.instagram.com/weiyang_ceo/" target="_blank" rel="noopener noreferrer">IG</a><a href="https://www.facebook.com/weiandyang/" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://weiandyang.com/" target="_blank" rel="noopener noreferrer">官網</a></div><button id="wy317Again" style="margin-top:14px;background:transparent;border:0;color:#e8c88c;text-decoration:underline;padding:9px">返回影片清單</button></div></div></div>
 <div id="wy317Floating"><button type="button" id="wy318SmallBtn">▶ 個人諮詢影片</button><button type="button" id="wy318LargeBtn">▶ 企業講座影片</button></div>
 <script>
 (function(){
- const data={small:[{title:'識詐有法｜法律觀點',src:'videos/meeting-small.mp4'}],large:[{title:'臺北醫學大學｜講座紀實',src:'videos/meeting-large-1.mp4'},{title:'法庭內外｜企業法律實務',src:'videos/meeting-large-2.mp4'}]};
+ const data={small:[{title:'識詐有法｜法律觀點',src:'meeting-small.mp4'}],large:[{title:'臺北醫學大學｜講座紀實',src:'meeting-large-1.mp4'},{title:'法庭內外｜企業法律實務',src:'meeting-large-2.mp4'}]};
  const $=id=>document.getElementById(id),overlay=$('wy317Overlay'),video=$('wy317Video');let current='small',lastFocus=null;
- function clear(){video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317End').style.display='none';}
+ function clear(){$('wy319VideoError').style.display='none';video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317End').style.display='none';}
  function list(){clear();$('wy317List').style.display='block';$('wy317Heading').textContent=current==='small'?'專業法律諮詢':'企業法律顧問';$('wy317List').replaceChildren();data[current].forEach((v,i)=>{let b=document.createElement('button');b.className='wy317VideoChoice';let p=document.createElement('strong');p.textContent=v.title;let desc=document.createElement('small');desc.textContent='點擊播放影片';let span=document.createElement('span');span.append(p,desc);let play=document.createElement('b');play.className='wy317Play';play.textContent='▶';b.append(play,span);b.onclick=()=>{clear();$('wy317List').style.display='none';$('wy317Player').style.display='block';$('wy317Heading').textContent=v.title;video.src=v.src;video.load();video.play().catch(()=>{});};$('wy317List').append(b);});}
  function open(room){if(room!=='small'&&room!=='large')return;current=room;lastFocus=document.activeElement;overlay.classList.add('open');document.body.dataset.wyVideoOpen='1';list();if(room==='small')$('wy317List').querySelector('button')?.click();$('wy317Close').focus();}
  function close(){clear();overlay.classList.remove('open');delete document.body.dataset.wyVideoOpen;if(lastFocus?.focus)lastFocus.focus();}
+ video.addEventListener('error',()=>{if(overlay.classList.contains('open')&&video.getAttribute('src'))$('wy319VideoError').style.display='block';});
  video.addEventListener('ended',()=>{video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317List').style.display='none';$('wy317End').style.display='block';$('wy317Heading').textContent='德威陽國際法律事務所';});
  $('wy317Close').onclick=close;$('wy317Back').onclick=list;$('wy317Again').onclick=list;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))close()});
  window.wy317OpenVideo=open;
