@@ -1173,7 +1173,7 @@ roomBox(-13.3,6.93,17.30,.40,3.16,3.5,'#F7F2E9'); // lintel
 roomBox(26.8,4.255,5.5,.40,8.51,33,'#F7F2E9');
 
 // v323 — stage one only: correctly placed doorway and a genuinely separate EMPTY room.
-// No pantry furniture, no games, no bottom entry button.
+// Pantry furnishings added in v325; no bottom entry button.
 let wy323Inside=false;
 const wy323DoorGroup=new THREE.Group();roomRoot.add(wy323DoorGroup);
 const wy323EntranceHits=[];
@@ -1218,6 +1218,91 @@ wy323ExitPart(.46,.34,4.7,wy323X+16.90,5.45,9,wy323Peach);
 const wy323ExitLeaf=wy323ExitPart(.19,4.95,3.78,wy323X+16.84,2.50,9,wy323Butter);
 wy323ExitPart(.18,.58,.20,wy323X+16.68,2.20,7.65,wy323Gold);
 const wy323ExitHit=wy323ExitPart(.8,5.8,4.7,wy323X+16.35,2.85,9,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
+
+// v325 — independent Colorful Luxury Relax Lounge, all objects physically grounded.
+const wy325=new THREE.Group();wy323Room.add(wy325);
+function w325box(x,y,z,w,h,d,c){return roomBox(wy323X+x,y,z,w,h,d,c,wy325);}
+function w325cyl(x,y,z,r,h,c,n=32){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,n),roomMat(c));m.position.set(wy323X+x,y,z);wy325.add(m);return m;}
+function w325ell(x,y,z,rx,ry,rz,c){const m=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),roomMat(c));m.position.set(wy323X+x,y,z);m.scale.set(rx,ry,rz);wy325.add(m);return m;}
+function w325group(x,z,angle=0){const g=new THREE.Group();g.position.set(wy323X+x,0,z);g.rotation.y=angle;wy325.add(g);return g;}
+function w325piece(g,x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),roomMat(c));m.position.set(x,y,z);g.add(m);return m;}
+function w325pillow(g,x,y,z,c){const m=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),roomMat(c));m.scale.set(.48,.36,.18);m.position.set(x,y,z);g.add(m);}
+// Plump residential sofas: substantial upholstered backrests, seat cushions, arms, and legs.
+// Their open/front side faces positive local Z, toward their individual coffee tables.
+function w325sofa(x,z,w,c,angle){const g=w325group(x,z,angle);
+ for(const dx of [-w/2+.38,w/2-.38])for(const zz of [-.54,.54])w325piece(g,dx,.14,zz,.12,.28,.12,'#D9B676');
+ w325piece(g,0,.38,0,w,.38,1.62,c);
+ w325piece(g,0,.88,-.68,w,1.26,.36,c);
+ const n=w>4?3:2;
+ for(let i=0;i<n;i++){const cx=(i-(n-1)/2)*(w-.65)/n;w325piece(g,cx,.67,.24,(w-.52)/n-.08,.26,1.22,'#FFF0E6');w325pillow(g,cx,1.23,-.43,['#FFD76C','#B6A0F3','#F8B1C7'][i%3]);}
+ for(const dx of [-w/2+.18,w/2-.18]){w325piece(g,dx,.80,.07,.38,.83,1.58,c);w325piece(g,dx,1.20,-.15,.36,.10,1.08,'#FFF1E2');}
+ return g;}
+// Warm floor and two irregular overlapping lounge rugs (not four square zones).
+w325box(0,.013,0,33.3,.024,27.3,'#FFF4E6');
+for(let x=-16;x<17;x+=3.1)w325box(x,.028,0,.012,.008,27,'#F4DFCB');
+const rug1=w325ell(7,.053,-3,7.2,.045,5.4,'#FAD4DC');
+const rug2=w325ell(6,.055,7,5.3,.045,4.3,'#DBF4E6');
+// Architectural soft rounded window panorama on rear wall, with visible outside blue/green scenery.
+for(let i=0;i<5;i++){const x=-12.7+i*6.1;w325box(x,3.75,-13.72,5.45,3.85,.07,'#A7E7FF');w325box(x,2.05,-13.61,5.3,.75,.07,'#B6DDB4');w325box(x,3.75,-13.55,.07,3.8,.08,'#FFF9E9');w325box(x,5.66,-13.54,5.45,.09,.08,'#E8BB80');}
+// Large sofa group near window, facing its table, slightly angled.
+w325sofa(7,-7,5.5,'#FF91B1',-.16);
+w325sofa(11,-.4,2.4,'#FFD66F',-1.35);
+// Second independent seating group with separate table.
+w325sofa(4,8.5,3.8,'#76D9B5',Math.PI-.17);
+w325sofa(9.5,9.1,2.3,'#FFB987',Math.PI+.35);
+// Two independent coffee tables and their plates, each directly on the floor.
+function w325table(x,z,r){w325cyl(x,.38,z,.12,.75,'#CFA768');w325cyl(x,.79,z,r,.09,'#FFF5E8');w325cyl(x,.855,z,.24,.035,'#F6D8D0');w325ell(x,.91,z,.12,.08,.12,'#E3A46F');}
+w325table(7,-3.2,1.1);w325table(6.6,5.7,.88);
+// Massage chair on its own quiet corner, facing inward, not backwards into a wall.
+const mc=w325group(14,5,-.72);
+w325piece(mc,0,.35,0,1.65,.7,1.85,'#D8C4F8');w325piece(mc,0,1.34,-.67,1.58,2.15,.65,'#C6A7F0');
+w325piece(mc,0,.72,.30,1.32,.28,1.45,'#FFF3F7');
+for(const dx of [-.76,.76])w325piece(mc,dx,.87,.16,.27,.75,1.5,'#AA91D9');
+w325piece(mc,0,.24,1.14,1.3,.35,1.0,'#E9DDF9');
+// Centerpiece: an elongated, softly curved, multi-layered luxury self-service island.
+// Bar is deliberately modest in size to prioritize the lounge.
+const bar=w325group(-3,0,.10);
+for(const [r,y,h,c] of [[3.0,.25,.5,'#70D9B5'],[3.1,.72,.14,'#F1C879'],[3.25,.85,.13,'#FFF9E9']]){
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,48),roomMat(c));m.position.set(0,y,0);m.scale.set(1.65,1,.69);bar.add(m);
+}
+// Decorative island face ribs, all supported by island base.
+for(let i=0;i<13;i++){const a=Math.PI*(.12+i/14);const x=4.6*Math.cos(a),z=1.82*Math.sin(a);w325piece(bar,x,.47,z,.07,.46,.08,'#FDE1B0');}
+// Coffee machine (machine housing, cup area, spouts), tea maker, cups.
+w325piece(bar,-2.5,1.20,-.65,1.02,.65,.76,'#E8E7EA');w325piece(bar,-2.5,1.48,-.23,.70,.24,.16,'#99B3C1');
+w325piece(bar,-2.5,1.00,-.02,.47,.14,.31,'#6E7F8B');
+w325cyl(-3.5,1.14,-.8,.31,.54,'#B6A3E8');
+for(let i=0;i<4;i++)w325cyl(-.6+i*.40,1.02,-.75,.14,.22,['#F7B3C8','#FFE082','#A5E6C6','#C9B3F1'][i]);
+// Glass cake cloche and colourful desserts on top of island.
+for(const [xx,zz,cc] of [[.8,.15,'#FF9AAE'],[1.7,.55,'#FFE178'],[2.35,-.2,'#BBA1F1']]){
+ w325cyl(-3+xx,1.02,zz,.37,.06,'#D7AF6F');w325cyl(-3+xx,1.17,zz,.24,.23,cc);
+ const dome=w325ell(-3+xx,1.35,zz,.42,.33,.42,'#E9FBFC');dome.material=new THREE.MeshPhysicalMaterial({color:'#E5FFFF',transparent:true,opacity:.27,roughness:.12,depthWrite:false});
+}
+// Bar stools placed along visitor-facing south side, facing bar, legs touch floor.
+for(let i=0;i<3;i++){const xx=-6+i*2.1;w325cyl(xx,.43,3.2,.11,.86,'#D4AC72');w325cyl(xx,.87,3.2,.49,.16,['#F6A8B8','#FFCF68','#BCA9ED'][i]);w325box(xx,.20,3.2,.72,.07,.10,'#D4AC72');}
+// Side wall drinks fridge: glass-front double doors, five brightly stocked shelves.
+w325box(-15.35,2.5,-5.7,1.8,4.9,5.7,'#E9F3F3');
+for(const zz of [-7.1,-4.3]){
+ w325box(-14.36,2.55,zz,.07,4.35,2.54,'#BDE9F6');
+ for(let level=0;level<5;level++){
+  const yy=.7+level*.86;w325box(-14.2,yy-.25,zz,.13,.08,2.35,'#F2D6A4');
+  for(let j=0;j<5;j++){const bz=zz-1.02+j*.49;w325cyl(-14.12,yy,bz,.13,.47,['#F8A5B8','#FFE174','#8EDCC7','#A8A7EE','#FFB480'][(j+level)%5]);}
+ }
+}
+// Wall-side appliance counter: microwave, oven, large recognizable apple-green rice cooker.
+w325box(-7.5,.45,-12.0,10,.9,2.0,'#FFD98A');w325box(-7.5,.98,-12,10,.16,2.05,'#FFF8EC');
+w325box(-10.7,1.48,-12,1.95,.85,1.25,'#E8EEF2');w325box(-10.7,1.48,-11.32,1.42,.49,.05,'#839DAA');
+w325box(-7.8,1.42,-12,1.9,.73,1.25,'#E6DDF3');w325box(-7.8,1.42,-11.32,1.38,.45,.06,'#8E819C');
+w325cyl(-4.55,1.49,-12,.86,.87,'#9BD76F');w325ell(-4.55,1.97,-12,.89,.22,.86,'#B5E58D');w325cyl(-4.55,1.09,-11.45,.15,.08,'#F7E6D1');
+// Plant pots, trunks and full leaf clusters, all grounded.
+for(const [x,z] of [[-11,10],[14,-10],[-11,-2]]){
+ w325cyl(x,.38,z,.52,.76,'#FFCBAD');w325cyl(x,1.05,z,.09,.85,'#A8A47B');
+ for(let k=0;k<7;k++){const a=k*Math.PI*2/7;w325ell(x+Math.cos(a)*.44,1.58+Math.sin(a*2)*.18,z+Math.sin(a)*.44,.37,.54,.35,'#80CFA5');}
+}
+// Warm, stationary ceiling lighting; no time-driven flicker or animated light intensity.
+for(const [x,z] of [[-3,0],[7,-3],[6,7]]){w325cyl(x,5.9,z,1.25,.11,'#FFE9AD');w325cyl(x,5.80,z,.90,.07,'#FFF9E8');}
+const loungeLight=new THREE.AmbientLight(0xfff5e8,.62);wy325.add(loungeLight);
+for(const [x,z] of [[-3,0],[7,-3],[6,7]]){const l=new THREE.PointLight(0xffe8c7,.55,19);l.position.set(wy323X+x,5.35,z);wy325.add(l);}
+
 function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+12,.08,8);officeCam.position.set(wy323X+5,21,31);officeOrbit.target.set(wy323X,1,0);officeOrbit.update();}
 function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update();}
 
