@@ -1221,9 +1221,10 @@ const wy323ExitHit=wy323ExitPart(.8,5.8,4.7,wy323X+16.35,2.85,9,new THREE.MeshBa
 
 // v326 — compact premium private lounge.  No ceiling fixtures, no animated lamps.
 // Room is scaled as a whole about its centre, preserving wall/exit alignment.
-const wy326Scale=.76;
-wy323Room.scale.set(wy326Scale,1,wy326Scale);
-wy323Room.position.x=wy323X*(1-wy326Scale);
+// v327: match the standard 1F/3F 27 x 22 footprint exactly (not the expanded 2F 40.5 x 33).
+const wy327ScaleX=27/34,wy327ScaleZ=22/28;
+wy323Room.scale.set(wy327ScaleX,1,wy327ScaleZ);
+wy323Room.position.x=wy323X*(1-wy327ScaleX);
 const wy325=new THREE.Group();wy323Room.add(wy325);
 const wy326MatCache=new Map();
 function w326mat(color){if(!wy326MatCache.has(color))wy326MatCache.set(color,new THREE.MeshStandardMaterial({color,roughness:.76,metalness:0}));return wy326MatCache.get(color);}
@@ -1250,11 +1251,13 @@ function w326sofa(x,z,w,c,angle){const g=w325group(x,z,angle),n=w>=4?3:2;
  for(const dx of [-w/2+.19,w/2-.19])w326rounded(g,dx,.86,.06,.38,.91,1.67,c,.15);
  return g;}
 // Both independent groups sit immediately by windows, aligned toward scenery.
-w326sofa(1.6,-5.2,5.0,'#F79FB9',Math.PI);
-w326sofa(10.4,-5.2,3.5,'#83D9B9',Math.PI);
+// Angle the sofa fronts toward BOTH the panoramic windows (-Z) and the entry (+X),
+// so visitors see upholstered seating rather than a straight wall of sofa backs.
+w326sofa(-2.5,-5.2,5.0,'#F79FB9',2.20);
+w326sofa(7.7,-5.2,3.5,'#83D9B9',2.20);
 // Two distinct low cocktail tables between sofas and windows; supported feet.
 function w326table(x,z,r){w325cyl(x,.38,z,.16,.76,'#D2AA6D');w325cyl(x,.78,z,r,.11,'#FFF9F0');w325cyl(x,.85,z,.28,.035,'#F5D4C6');w325ell(x+.13,.93,z,.14,.09,.14,'#F3A77D');}
-w326table(1.6,-9.1,1.03);w326table(10.4,-9.0,.86);
+w326table(-.4,-8.45,1.03);w326table(9.8,-8.40,.86);
 // Premium massage chair in its own corner, oriented to the view rather than wall.
 const mc=w325group(13.4,4.5,Math.PI);
 w326rounded(mc,0,.42,0,1.65,.77,1.86,'#D1B8F4');
@@ -1306,7 +1309,7 @@ w325cyl(-5.9,1.10,-11.37,.15,.08,'#F8E6D0');
 for(const [x,z] of [[-11,9],[15,-10]]){w325cyl(x,.37,z,.47,.74,'#F8C4A7');w325cyl(x,1.04,z,.09,.85,'#9D9D74');for(let k=0;k<7;k++){let a=k*Math.PI*2/7;w325ell(x+Math.cos(a)*.39,1.57,z+Math.sin(a)*.39,.33,.50,.32,'#80D2A1');}}
 // No point lights near transparent glass or coplanar floor decals to reduce z-fighting.
 const loungeLight=new THREE.AmbientLight(0xfff3e8,.75);wy325.add(loungeLight);
-function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+12,.08,9);officeCam.position.set(wy323X+4,19,25);officeOrbit.target.set(wy323X,1,-1);officeOrbit.update();}
+function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+12,.08,9);officeCam.position.set(wy323X+4,17,22);officeOrbit.target.set(wy323X,1,-1);officeOrbit.update();}
 function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update();}
 
 // Warm skirting and picture lights.
