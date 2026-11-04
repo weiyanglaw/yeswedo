@@ -1238,69 +1238,70 @@ for(let i=0;i<5;i++){
  w325box(x+2.09,3.55,-10.56,.11,4.72,.14,'#FFF9F0');
 }
 w325box(0,5.97,-10.54,22,.15,.16,'#E5B987');
-// Rugs: thin enough not to z-fight with the floor, below all seats.
-w325ell(-5.5,.055,-4.7,5.0,.035,4.2,'#F8DCE8');
-w325ell(5.4,.056,-4.5,4.6,.035,3.9,'#DDF2E9');
-// Soft tailored upholstery with complete back, armrests and full seat cushioning.
+// v330: Entrance-led layout: entry is RIGHT wall x=+13.5, z=7.
+// Guests see upholstery FRONT/side, never a row of sofa backs. The center is a generous promenade.
+w325ell(-6.9,.055,-4.6,4.45,.035,3.75,'#F8DCE8');
+w325ell(5.1,.056,-4.0,4.2,.035,3.65,'#DDF2E9');
+w325ell(-4.9,.057,6.0,3.0,.035,2.7,'#F4E8FA');
 function w328sofa(x,z,w,c,angle){
  const g=w325group(x,z,angle),n=w>=3.8?3:2;
- w326rounded(g,0,.42,0,w,.53,1.52,c,.20);
- w326rounded(g,0,1.13,.61,w,1.37,.42,c,.18); // back behind sitter, local +Z
- for(let i=0;i<n;i++){
-  const cx=(i-(n-1)/2)*(w-.56)/n;
-  w326rounded(g,cx,.76,-.14,(w-.58)/n-.065,.24,1.02,'#FFF3EC',.13);
-  w326rounded(g,cx,1.12,.39,(w-.58)/n-.07,.68,.25,c,.12);
+ w326rounded(g,0,.46,0,w,.64,1.60,c,.23);
+ w326rounded(g,0,1.18,.61,w,1.47,.44,c,.22);
+ for(let i=0;i<n;i++){const cx=(i-(n-1)/2)*(w-.54)/n;
+  w326rounded(g,cx,.82,-.17,(w-.56)/n-.07,.27,1.03,'#FFF4EF',.15);
+  w326rounded(g,cx,1.22,.36,(w-.56)/n-.07,.70,.26,c,.14);
  }
- for(const dx of [-w/2+.20,w/2-.20])w326rounded(g,dx,.85,0,.39,.87,1.52,c,.15);
- for(const dx of [-w/2+.38,w/2-.38])for(const dz of [-.51,.51])w325piece(g,dx,.13,dz,.13,.26,.13,'#D8B37B');
+ for(const dx of [-w/2+.20,w/2-.20])w326rounded(g,dx,.90,0,.40,.89,1.58,c,.19);
+ for(const dx of [-w/2+.39,w/2-.39])for(const dz of [-.52,.52])w325piece(g,dx,.13,dz,.13,.26,.13,'#D8B37B');
  return g;
 }
-// Seat fronts face the rear windows (-Z). Side chairs are canted toward windows
-// and each group table; from entrance the viewer sees their upholstered sides.
-w328sofa(-6.2,-3.55,4.65,'#F5A1BC',-.68);
-w328sofa(5.6,-3.45,3.35,'#85D8B7',.68);
-w328sofa(-10.0,-5.4,1.65,'#FFD17E',-.20);
-w328sofa(-2.35,-5.65,1.65,'#C8B1EE',-.35);
-w328sofa(2.4,-5.45,1.65,'#FFB17F',.35);
-w328sofa(9.35,-5.2,1.65,'#F4C4DB',.20);
-// Two separate tables, each in FRONT of its sofas and not inside seating geometry.
+// Sofa local FRONT is -Z. 2.3 rad turns fronts toward entrance (+X,+Z),
+// while maintaining a diagonal view of the scenic window wall.
+w328sofa(-7.4,-4.0,4.65,'#F5A1BC',2.32);
+w328sofa(5.0,-4.0,3.65,'#85D8B7',-2.34);
+// Supporting chairs face the group center, not the doorway with their backs.
+w328sofa(-10.7,-6.7,1.50,'#FFD17E',-.55);
+w328sofa(-4.3,-7.0,1.50,'#C8B1EE',.62);
+w328sofa(2.1,-6.6,1.50,'#FFB17F',-.60);
+w328sofa(8.2,-6.8,1.50,'#F4C4DB',.65);
 function w328table(x,z,r){w325cyl(x,.39,z,.18,.76,'#D2AC78');w325cyl(x,.81,z,r,.09,'#FFF8ED');w325cyl(x,.88,z,.23,.045,'#F2C5B4');w325ell(x+.20,.95,z,.12,.08,.12,'#ECA57F');}
-w328table(-6.1,-6.65,.83);w328table(5.7,-6.45,.80);
-// The curved BAR has a solid cabinet from near floor to counter, a raised
-// service ledge, curved trim, a working side and a guest side: never table legs.
-const bar=w325group(-3.0,4.2,.05);
-function w328oval(g,y,h,rx,rz,color){const m=new THREE.Mesh(new THREE.CylinderGeometry(1,1,h,48),w326mat(color));m.scale.set(rx,1,rz);m.position.y=y;g.add(m);return m;}
-w328oval(bar,.16,.30,3.1,1.27,'#D5AF76');
-w328oval(bar,.58,.70,3.2,1.36,'#74D8B6');
-w328oval(bar,.98,.13,3.35,1.50,'#D9B47A');
-w328oval(bar,1.10,.12,3.43,1.58,'#FFF7EA');
-for(let i=0;i<13;i++){let xx=-2.78+i*.46;let zz=1.23*Math.sqrt(Math.max(.05,1-(xx/3.1)**2));w325piece(bar,xx,.58,zz,.06,.58,.065,'#F5E2B4');}
-// Coffee/tea equipment is fully supported on the countertop.
-w325piece(bar,-2.2,1.42,-.52,.93,.56,.70,'#E6E9EC');
-w325piece(bar,-2.2,1.56,-.12,.67,.22,.12,'#8DA3B1');
-w325piece(bar,-.75,1.35,-.55,.69,.42,.64,'#C9B3EA');
-for(let i=0;i<4;i++){const m=new THREE.Mesh(new THREE.CylinderGeometry(.13,.11,.22,18),w326mat(['#F5B2C7','#FFE08A','#A4E6CB','#C8B2F2'][i]));m.position.set(.1+i*.34,1.29,-.48);bar.add(m);}
-// Dessert domes are slightly separated from plates to avoid depth flicker.
-const w328glass=new THREE.MeshPhysicalMaterial({color:'#E5F8FF',transparent:true,opacity:.26,roughness:.17,depthWrite:false});
-for(const [xx,zz,cc] of [[.3,.50,'#FF9DB3'],[1.40,.40,'#FFE17A'],[2.42,.20,'#BFA7EF']]){
- const plate=new THREE.Mesh(new THREE.CylinderGeometry(.33,.33,.055,22),w326mat('#D7B17B'));plate.position.set(xx,1.205,zz);bar.add(plate);
- const cake=new THREE.Mesh(new THREE.CylinderGeometry(.20,.23,.18,22),w326mat(cc));cake.position.set(xx,1.32,zz);bar.add(cake);
- const dome=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),w328glass);dome.scale.set(.39,.37,.39);dome.position.set(xx,1.23,zz);bar.add(dome);
+w328table(-7.25,-6.1,.90);w328table(5.0,-6.2,.86);
+// Third intimate lounge group in the formerly empty near-left quadrant.
+w328sofa(-5.2,6.4,2.75,'#D4B6ED',2.35);
+w328sofa(-8.3,7.6,1.40,'#F7BEA5',-.50);
+w328table(-6.0,4.2,.65);
+// Large full-height luxury curved self-service bar, suitable for standing and talking.
+// Solid cabinetry, accessible guest edge, display and premium equipment.
+const bar=w325group(1.1,3.1,-.12);
+function w328oval(g,y,h,rx,rz,color){const m=new THREE.Mesh(new THREE.CylinderGeometry(1,1,h,56),w326mat(color));m.scale.set(rx,1,rz);m.position.y=y;g.add(m);return m;}
+w328oval(bar,.17,.32,3.75,1.60,'#D5AF76');
+w328oval(bar,.70,1.02,3.85,1.65,'#74D8B6');
+w328oval(bar,1.28,.16,4.02,1.78,'#D9B47A');
+w328oval(bar,1.41,.13,4.12,1.85,'#FFF7EA');
+for(let i=0;i<17;i++){let xx=-3.50+i*.44;let zz=1.55*Math.sqrt(Math.max(.05,1-(xx/3.83)**2));w325piece(bar,xx,.76,zz,.07,.88,.075,'#F5E2B4');}
+// Raised presentation ledge, not a flat dining tabletop.
+w325piece(bar,0,1.65,-1.03,4.9,.17,.55,'#FFF8EF');
+w325piece(bar,0,1.54,-1.05,4.75,.11,.48,'#D6B17A');
+w325piece(bar,-2.65,1.85,-.65,1.30,.82,.85,'#DDE4E8');
+w325piece(bar,-2.65,1.94,-.16,.88,.35,.09,'#758A98');
+w325piece(bar,-2.65,2.22,-.13,.65,.12,.11,'#A5B5C0');
+w325piece(bar,-.9,1.76,-.62,.85,.53,.76,'#C9B3EA');
+for(let i=0;i<5;i++){const m=new THREE.Mesh(new THREE.CylinderGeometry(.14,.12,.24,18),w326mat(['#F5B2C7','#FFE08A','#A4E6CB','#C8B2F2','#FFBD96'][i]));m.position.set(.1+i*.39,1.63,-.48);bar.add(m);}
+const w328glass=new THREE.MeshPhysicalMaterial({color:'#E5F8FF',transparent:true,opacity:.28,roughness:.14,depthWrite:false});
+for(const [xx,zz,cc] of [[.2,.60,'#FF9DB3'],[1.55,.54,'#FFE17A'],[2.83,.32,'#BFA7EF']]){
+ const plate=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.055,24),w326mat('#D7B17B'));plate.position.set(xx,1.52,zz);bar.add(plate);
+ const cake=new THREE.Mesh(new THREE.CylinderGeometry(.23,.27,.21,24),w326mat(cc));cake.position.set(xx,1.67,zz);bar.add(cake);
+ const dome=new THREE.Mesh(new THREE.SphereGeometry(1,24,14,0,Math.PI*2,0,Math.PI/2),w328glass);dome.scale.set(.44,.43,.44);dome.position.set(xx,1.57,zz);bar.add(dome);
 }
-// Bar chairs WITH proper upholstered backrests, both oriented toward bar.
-for(let i=0;i<2;i++){const g=w325group(-4.4+i*2.0,7.55,0);
- w325piece(g,0,.47,0,.16,.90,.16,'#D4AF7C');
- w326rounded(g,0,.94,0,.86,.20,.72,['#F5AAC0','#FFE08A'][i]);
- w326rounded(g,0,1.43,.32,.84,.86,.20,['#F5AAC0','#FFE08A'][i]);
- for(const dx of [-.32,.32])w325piece(g,dx,.37,0,.08,.72,.08,'#D4AF7C');
+// Tall backed stools on the outer guest side, leaving door and promenade clear.
+for(let i=0;i<3;i++){const g=w325group(-1.0+i*2.0,6.15,0);
+ w325piece(g,0,.51,0,.16,1.02,.16,'#D4AF7C');
+ w326rounded(g,0,1.04,0,.91,.23,.79,['#F5AAC0','#FFE08A','#CBB3EC'][i]);
+ w326rounded(g,0,1.58,.35,.89,.91,.22,['#F5AAC0','#FFE08A','#CBB3EC'][i]);
+ for(const dx of [-.34,.34])w325piece(g,dx,.42,0,.09,.80,.09,'#D4AF7C');
 }
-// Massage chair, grounded, supported, separate from walk-through entrance.
-const mc=w325group(10.7,1.1,2.5);
-w326rounded(mc,0,.43,0,1.58,.78,1.74,'#C9B1EE');
-w326rounded(mc,0,1.39,.57,1.50,2.12,.58,'#BCA2E9');
-w326rounded(mc,0,.83,-.18,1.25,.25,1.22,'#FFF0F8');
-for(const dx of [-.72,.72])w326rounded(mc,dx,.89,.04,.27,.83,1.42,'#AE92D8');
-w326rounded(mc,0,.27,-1.04,1.24,.36,.88,'#E8DAF8');
+// Legacy massage object retained hidden for compatibility with old scene references.
+const mc=w325group(10.7,1.1,2.5);mc.visible=false;
 // Glass-front fridge with visible drink rows, against the LEFT wall.
 w325box(-12.3,2.10,1.0,1.50,4.20,3.75,'#F1F3F1');
 for(const zz of [-.02,2.02]){
@@ -1310,27 +1311,40 @@ for(const zz of [-.02,2.02]){
   for(let j=0;j<3;j++)w325cyl(-11.34,yy,zz-.55+j*.54,.11,.40,['#F4A5BB','#FFE181','#91DCC3','#BDA8EE'][(level+j)%4]);
  }
 }
+// v330 enlarged unmistakable illuminated double-door fridge fascia on the left wall.
+w325box(-12.60,2.45,1.0,1.40,4.90,4.75,'#F8F5F0');
+w325box(-11.86,2.45,1.0,.10,4.55,4.50,'#F2D7A4');
+for(const zz of [-.12,2.12]){
+ w325box(-11.78,2.44,zz,.10,4.14,2.05,'#A5E7F8');
+ w325box(-11.68,2.42,zz+.73,.15,2.05,.13,'#D3A95E');
+ for(let level=0;level<5;level++)for(let j=0;j<4;j++){
+  const y=.75+level*.77,z=zz-.70+j*.47;
+  w325cyl(-11.62,y,z,.14,.48,['#F6A5C3','#E8D66B','#83D6BD','#BCA9E8'][(level+j)%4],16);
+  w325cyl(-11.62,y+.27,z,.075,.09,'#FFF9EF',12);
+ }
+}
+w325box(-11.75,4.81,1.0,.15,.18,4.6,'#FFFDE8');
 // v329: high-visibility appliance cabinetry against left wall; no appliance blocks rear windows.
 // Distinct microwave, toaster oven and 1.5x apple-green rice cooker on a supported counter.
-w325box(-10.0,.66,-8.65,5.4,1.32,2.0,'#FFE1A0');
-w325box(-10.0,1.37,-8.65,5.5,.14,2.08,'#FFF9ED');
+w325box(-10.0,.66,-9.82,5.4,1.32,2.0,'#FFE1A0');
+w325box(-10.0,1.37,-9.82,5.5,.14,2.08,'#FFF9ED');
 for(const x of [-11.65,-10.15,-8.65]){w325box(x,.63,-7.59,.065,.85,.045,'#D2B17D');}
 // Microwave: front glass and side-mounted buttons, all anchored on counter.
-w325box(-11.45,1.93,-8.75,1.45,1.00,1.05,'#E9EEF1');
-w325box(-11.57,1.94,-8.19,1.02,.67,.055,'#667F8C');
-w325box(-10.78,1.94,-8.18,.18,.68,.06,'#D2D9DE');
-for(const yy of [1.72,1.94,2.16])w325cyl(-10.78,yy,-8.12,.047,.045,'#788C99',12);
+w325box(-11.45,1.93,-9.92,1.45,1.00,1.05,'#E9EEF1');
+w325box(-11.57,1.94,-9.36,1.02,.67,.055,'#667F8C');
+w325box(-10.78,1.94,-9.35,.18,.68,.06,'#D2D9DE');
+for(const yy of [1.72,1.94,2.16])w325cyl(-10.78,yy,-9.29,.047,.045,'#788C99',12);
 // Toaster oven: recognizable dark window, metallic housing and controls.
-w325box(-9.85,1.87,-8.74,1.35,.88,1.05,'#E8D6EE');
-w325box(-9.94,1.91,-8.18,1.02,.52,.055,'#6B687A');
-w325box(-9.94,2.19,-8.13,.82,.065,.06,'#E9D4B8');
-for(const xx of [-9.35,-9.18])w325cyl(xx,1.62,-8.14,.065,.07,'#D3AE6D',16);
+w325box(-9.85,1.87,-9.91,1.35,.88,1.05,'#E8D6EE');
+w325box(-9.94,1.91,-9.35,1.02,.52,.055,'#6B687A');
+w325box(-9.94,2.19,-9.30,.82,.065,.06,'#E9D4B8');
+for(const xx of [-9.35,-9.18])w325cyl(xx,1.62,-9.31,.065,.07,'#D3AE6D',16);
 // Large green rice cooker: cylindrical body, domed lid, control panel and side handles.
-w325cyl(-7.88,1.85,-8.65,.72,.90,'#9ADB77');
-w325ell(-7.88,2.36,-8.65,.76,.20,.73,'#B9E995');
-w325box(-7.88,1.69,-7.92,.47,.22,.07,'#FFF3D4');
-w325box(-7.88,1.68,-7.87,.22,.10,.03,'#8C9F72');
-for(const xx of [-8.66,-7.10])w325box(xx,1.96,-8.65,.21,.18,.39,'#8FCA6C');
+w325cyl(-7.88,1.85,-9.82,.72,.90,'#9ADB77');
+w325ell(-7.88,2.36,-9.82,.76,.20,.73,'#B9E995');
+w325box(-7.88,1.69,-9.09,.47,.22,.07,'#FFF3D4');
+w325box(-7.88,1.68,-9.04,.22,.10,.03,'#8C9F72');
+for(const xx of [-8.66,-7.10])w325box(xx,1.96,-9.82,.21,.18,.39,'#8FCA6C');
 // Planters and wall fixtures only; no hanging or floating ceiling pieces.
 for(const [x,z] of [[-11.8,8.4],[11.8,-8.9]]){
  w325cyl(x,.34,z,.39,.68,'#F6C2A5');w325cyl(x,.89,z,.075,.72,'#95AA7A');
@@ -1384,8 +1398,8 @@ function w329Massage(x,z,angle,c){
 // Replace the original block-like massage chair with a more legible second premium unit.
 // Place both on right-side relaxation strip, away from entrance opening at x=13.5,z=7.
 mc.visible=false;
-w329Massage(10.2,.1,-.42,'#BFA8E8');
-w329Massage(8.0,4.3,-.38,'#D3B7EE');
+w329Massage(-10.9,3.7,-1.05,'#BFA8E8');
+w329Massage(-10.9,6.1,-1.05,'#D3B7EE');
 // Soft freestanding planters and a low side console make seating feel curated rather than empty.
 for(const [x,z] of [[-1.0,-8.7],[10.8,-8.6]]){
  w325cyl(x,.29,z,.31,.58,'#FFD4A8');
