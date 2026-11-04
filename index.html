@@ -1258,17 +1258,17 @@ function w328sofa(x,z,w,c,angle){
 }
 // Sofa local FRONT is -Z. 2.3 rad turns fronts toward entrance (+X,+Z),
 // while maintaining a diagonal view of the scenic window wall.
-w328sofa(-7.4,-4.0,4.65,'#F5A1BC',-2.38);
-w328sofa(5.0,-4.0,3.65,'#85D8B7',-2.45);
+w328sofa(-7.4,-4.0,4.65,'#F5A1BC',-2.10);
+w328sofa(5.0,-4.0,3.65,'#85D8B7',-2.16);
 // Supporting chairs face the group center, not the doorway with their backs.
-w328sofa(-10.3,-7.3,1.50,'#FFD17E',-.55);
+// v333: remove yellow chair blocking appliance access; do not relocate it.
 w328sofa(-4.3,-7.0,1.50,'#C8B1EE',.62);
 w328sofa(2.1,-6.6,1.50,'#FFB17F',-.60);
 w328sofa(8.2,-6.8,1.50,'#F4C4DB',.65);
 function w328table(x,z,r){w325cyl(x,.39,z,.18,.76,'#D2AC78');w325cyl(x,.81,z,r,.09,'#FFF8ED');w325cyl(x,.88,z,.23,.045,'#F2C5B4');w325ell(x+.20,.95,z,.12,.08,.12,'#ECA57F');}
 w328table(-7.25,-6.1,.90);w328table(5.0,-6.2,.86);
 // Third intimate lounge group in the formerly empty near-left quadrant.
-w328sofa(-5.2,6.4,2.75,'#D4B6ED',2.35);
+w328sofa(-5.2,6.4,2.75,'#D4B6ED',-1.97);
 w328sofa(-8.3,7.6,1.40,'#F7BEA5',-.50);
 w328table(-6.0,4.2,.65);
 // Large full-height luxury curved self-service bar, suitable for standing and talking.
@@ -1410,10 +1410,13 @@ function w331Screen(x,z,angle,width){
  w325piece(g,0,.20,0,width,.40,.38,'#FFF2DF');
  for(const px of [-width/2+.12,width/2-.12])w325piece(g,px,1.23,0,.13,2.05,.15,'#D7AF76');
  w325piece(g,0,2.27,0,width,.12,.17,'#D7AF76');
- for(let j=0;j<Math.floor(width/.36);j++){
-  const xx=-width/2+.30+j*.36;
-  w325piece(g,xx,1.23,-.018,.18,1.77,.055,'#DCE9E8');
- }
+ // Single broad translucent reeded-glass panel, not individual vertical bars.
+ // The glass is inset into the frame, with no overlapping coplanar strips.
+ const glass=new THREE.Mesh(new THREE.BoxGeometry(width-.34,1.72,.075),
+   new THREE.MeshPhysicalMaterial({color:0xCDEBE7,transparent:true,opacity:.66,roughness:.34,metalness:0,depthWrite:false}));
+ glass.position.set(0,1.25,0);g.add(glass);
+ // Champagne-gold lower rail, held above the substantial floor plinth.
+ w325piece(g,0,.43,.025,width-.22,.09,.11,'#D7AF76');
  return g;
 }
 // Partitions screen sofa backs from entry without enclosing the seating clusters.
@@ -4710,6 +4713,53 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
 
  // 3D television and sign tap handlers are attached inside the main Three.js module.
  // This avoids inaccessible module-local camera and office state from classic scripts.
+})();
+</script>
+<style id="wy334OfficeLogoStyle">
+.wy334-logo-head{display:flex;align-items:center;gap:10px;min-height:53px;margin:0 0 13px;padding:0 0 10px;border-bottom:1px solid rgba(188,153,93,.48);box-sizing:border-box}
+.wy334-logo-tile{width:50px;height:50px;flex:0 0 50px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#172c46;border:1px solid #c5a36b;box-shadow:0 2px 8px #14243b22;overflow:hidden}
+.wy334-logo-tile img{display:block;width:42px;height:42px;object-fit:contain;background:#172c46}
+.wy334-logo-caption{font-size:11px;font-weight:750;letter-spacing:.6px;color:#b18c52;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:430px){.wy334-logo-head{gap:8px;min-height:44px;margin-bottom:9px;padding-bottom:8px}.wy334-logo-tile{width:42px;height:42px;flex-basis:42px}.wy334-logo-tile img{width:35px;height:35px}.wy334-logo-caption{font-size:10px}}
+</style>
+<script id="wy334OfficeLogoPatch">
+(()=>{
+'use strict';
+const src='weiyang-official-logo-v320.png';
+// Only the main-island interaction surfaces; other legal islands remain unchanged.
+const targets=[
+ ['wy260Modal','#wy260Card'],
+ ['wyLobbyDialog',null],
+ ['wy3Intro','.wy3Card'],
+ ['wyInfo','article'],
+ ['wy317Overlay','#wy317Box'],
+ ['wy265Modal',null],
+ ['wy264Modal',null],
+ ['wyMainGuide',null],
+ ['wy3MovieModal',null]
+];
+function add(container){
+ if(!container||container.querySelector(':scope > .wy334-logo-head'))return;
+ const head=document.createElement('div');head.className='wy334-logo-head';
+ const tile=document.createElement('span');tile.className='wy334-logo-tile';
+ const img=document.createElement('img');img.src=src;img.alt='德威陽國際法律事務所官方 Logo';img.loading='eager';tile.append(img);
+ const caption=document.createElement('span');caption.className='wy334-logo-caption';caption.textContent='WEIYANG · 德威陽國際法律事務所';
+ head.append(tile,caption);container.prepend(head);
+}
+let running=false;
+function sync(){
+ if(running)return;running=true;
+ try{
+  for(const [id,child] of targets){const root=document.getElementById(id);if(!root)continue;
+   const panel=child?root.querySelector(child):root.firstElementChild;
+   if(panel&&panel!==root&&panel.tagName!=='BUTTON')add(panel);
+  }
+ }finally{running=false;}
+}
+// Reapply to dynamically rendered interactive panels without touching dialogue text or button actions.
+const observer=new MutationObserver(sync);
+observer.observe(document.body,{subtree:true,childList:true});
+sync();
 })();
 </script>
 </body></html>
