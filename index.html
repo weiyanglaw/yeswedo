@@ -1198,33 +1198,26 @@ wy323EntranceHits.push(wy323DoorClick,wy323Leaf);
 const wy323Room=new THREE.Group();officeScene.add(wy323Room);wy323Room.visible=false;
 const wy323X=115,wy323Z=0;
 function wy323Part(x,y,z,w,h,d,color){return roomBox(x,y,z,w,h,d,color,wy323Room);}
-wy323Part(wy323X,-.24,wy323Z,34,.48,28,'#FFF0D9');
-// v324: completely remove the near/front wall. Leave the floor unobstructed.
-// Three remaining walls: rear, left, and right with a doorway at the right-front corner.
-wy323Part(wy323X,3.2,-14,34,6.4,.35,'#FCE4D7');
-wy323Part(wy323X-17,3.2,0,.35,6.4,28,'#FCE4D7');
-wy323Part(wy323X+17,3.2,-3.5,.35,6.4,21,'#FCE4D7'); // right wall z=-14..7
-wy323Part(wy323X+17,3.2,12.5,.35,6.4,3,'#FCE4D7'); // right wall z=11..14
-wy323Part(wy323X+17,5.75,9,.35,1.3,4,'#FCE4D7'); // lintel above side exit
-// Subtle skirting, never a wall along the near edge.
-wy323Part(wy323X-16.65,.24,0,.12,.30,27.5,'#DDBB96');
-wy323Part(wy323X+16.65,.24,-3.5,.12,.30,20.8,'#DDBB96');
-wy323Part(wy323X,.24,-13.7,33,.30,.12,'#DDBB96');
-// Exit sits in the right wall's front corner, oriented like a side elevator doorway.
+// v328: rebuild lounge shell from the EXACT 1F 27 x 22 floor specification.
+// This is a separate instance: 1F and 3F are never modified.
+wyBuildOriginalOfficeFloor((x,y,z,w,h,d,c)=>wy323Part(wy323X+x,y,z,w,h,d,c));
+// Three architectural walls, open front for mobile visibility; no ceiling.
+wy323Part(wy323X,3.2,-11,27,6.4,.32,'#FFF0E6');
+wy323Part(wy323X-13.5,3.2,0,.32,6.4,22,'#FFF0E6');
+wy323Part(wy323X+13.5,3.2,-2.7,.32,6.4,16.6,'#FFF0E6');
+wy323Part(wy323X+13.5,3.2,9.6,.32,6.4,2.8,'#FFF0E6');
+wy323Part(wy323X+13.5,5.65,7,.32,1.5,3.9,'#FFF0E6');
+// Low skirting; never create a second overlapping floor.
+wy323Part(wy323X-13.2,.23,0,.10,.26,21.6,'#E2C7AC');
+wy323Part(wy323X,.23,-10.75,26.5,.26,.10,'#E2C7AC');
 const wy323Exit=new THREE.Group();wy323Room.add(wy323Exit);
 function wy323ExitPart(w,h,d,x,y,z,mat){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);wy323Exit.add(m);return m;}
-for(const zz of [6.85,11.15])wy323ExitPart(.46,5.5,.34,wy323X+16.90,2.75,zz,wy323Peach);
-wy323ExitPart(.46,.34,4.7,wy323X+16.90,5.45,9,wy323Peach);
-const wy323ExitLeaf=wy323ExitPart(.19,4.95,3.78,wy323X+16.84,2.50,9,wy323Butter);
-wy323ExitPart(.18,.58,.20,wy323X+16.68,2.20,7.65,wy323Gold);
-const wy323ExitHit=wy323ExitPart(.8,5.8,4.7,wy323X+16.35,2.85,9,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
-
-// v326 — compact premium private lounge.  No ceiling fixtures, no animated lamps.
-// Room is scaled as a whole about its centre, preserving wall/exit alignment.
-// v327: match the standard 1F/3F 27 x 22 footprint exactly (not the expanded 2F 40.5 x 33).
-const wy327ScaleX=27/34,wy327ScaleZ=22/28;
-wy323Room.scale.set(wy327ScaleX,1,wy327ScaleZ);
-wy323Room.position.x=wy323X*(1-wy327ScaleX);
+for(const zz of [4.95,9.05])wy323ExitPart(.42,5.2,.30,wy323X+13.42,2.6,zz,wy323Peach);
+wy323ExitPart(.42,.32,4.45,wy323X+13.42,5.35,7,wy323Peach);
+const wy323ExitLeaf=wy323ExitPart(.17,4.78,3.54,wy323X+13.38,2.39,7,wy323Butter);
+wy323ExitPart(.16,.50,.18,wy323X+13.22,2.10,5.70,wy323Gold);
+const wy323ExitHit=wy323ExitPart(.72,5.45,4.2,wy323X+13.08,2.7,7,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
+// No room-level scale: furniture keeps its true dimensions.
 const wy325=new THREE.Group();wy323Room.add(wy325);
 const wy326MatCache=new Map();
 function w326mat(color){if(!wy326MatCache.has(color))wy326MatCache.set(color,new THREE.MeshStandardMaterial({color,roughness:.76,metalness:0}));return wy326MatCache.get(color);}
@@ -1234,82 +1227,106 @@ function w325ell(x,y,z,rx,ry,rz,c){const m=new THREE.Mesh(new THREE.SphereGeomet
 function w325group(x,z,angle=0){const g=new THREE.Group();g.position.set(wy323X+x,0,z);g.rotation.y=angle;wy325.add(g);return g;}
 function w325piece(g,x,y,z,w,h,d,c){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),w326mat(c));m.position.set(x,y,z);g.add(m);return m;}
 function w326rounded(g,x,y,z,w,h,d,c,r=.14){const shape=new THREE.Shape(),hw=w/2,hd=d/2,rr=Math.min(r,hw*.8,hd*.8);shape.moveTo(-hw+rr,-hd);shape.lineTo(hw-rr,-hd);shape.quadraticCurveTo(hw,-hd,hw,-hd+rr);shape.lineTo(hw,hd-rr);shape.quadraticCurveTo(hw,hd,hw-rr,hd);shape.lineTo(-hw+rr,hd);shape.quadraticCurveTo(-hw,hd,-hw,hd-rr);shape.lineTo(-hw,-hd+rr);shape.quadraticCurveTo(-hw,-hd,-hw+rr,-hd);const geom=new THREE.ExtrudeGeometry(shape,{depth:h,bevelEnabled:false,curveSegments:8});geom.rotateX(-Math.PI/2);const mesh=new THREE.Mesh(geom,w326mat(c));mesh.position.set(x,y-h/2,z);g.add(mesh);return mesh;}
-// Seam-free floor and two soft oval rugs. Rugs do not intersect seats or the bar.
-// Original architectural floor retained; no duplicate coplanar floor mesh.
-w325ell(2,.048,-6.3,6.1,.027,5.0,'#FFE0E9');
-w325ell(10.6,.049,-6.2,4.5,.027,4.7,'#E2F5E9');
-// Rear panoramic windows: windows are IN FRONT OF the rear wall, with no depth flicker.
-for(let i=0;i<4;i++){let x=-1.5+i*4.55;w325box(x,3.52,-13.68,4.24,4.55,.09,'#9DDBF5');w325box(x,2.04,-13.59,4.18,1.08,.07,'#9BCB9B');w325box(x,4.42,-13.57,4.18,.46,.07,'#D7EFF9');w325box(x,3.52,-13.50,.09,4.5,.12,'#FFF9EC');}
-w325box(5.32,5.81,-13.48,18.3,.13,.14,'#F2D2A2');
-// Upholstered sofa: all seats have high thick backs, padded armrests and tailored cushions.
-// Local open/front faces +Z; rotate PI so EVERY window seat faces the back (-Z).
-function w326sofa(x,z,w,c,angle){const g=w325group(x,z,angle),n=w>=4?3:2;
- for(const dx of [-w/2+.36,w/2-.36])for(const zz of [-.52,.52])w325piece(g,dx,.13,zz,.15,.26,.15,'#DDBB80');
- w326rounded(g,0,.40,0,w,.54,1.72,c,.22);
- w326rounded(g,0,1.10,-.72,w,1.38,.40,c,.17);
- for(let i=0;i<n;i++){let cx=(i-(n-1)/2)*(w-.60)/n;w326rounded(g,cx,.74,.25,(w-.65)/n-.07,.26,1.16,'#FFF2E8',.13);w326rounded(g,cx,1.14,-.45,(w-.68)/n-.07,.70,.27,c,.10);}
- for(const dx of [-w/2+.19,w/2-.19])w326rounded(g,dx,.86,.06,.38,.91,1.67,c,.15);
- return g;}
-// Both independent groups sit immediately by windows, aligned toward scenery.
-// Angle the sofa fronts toward BOTH the panoramic windows (-Z) and the entry (+X),
-// so visitors see upholstered seating rather than a straight wall of sofa backs.
-w326sofa(-2.5,-5.2,5.0,'#F79FB9',2.20);
-w326sofa(7.7,-5.2,3.5,'#83D9B9',2.20);
-// Two distinct low cocktail tables between sofas and windows; supported feet.
-function w326table(x,z,r){w325cyl(x,.38,z,.16,.76,'#D2AA6D');w325cyl(x,.78,z,r,.11,'#FFF9F0');w325cyl(x,.85,z,.28,.035,'#F5D4C6');w325ell(x+.13,.93,z,.14,.09,.14,'#F3A77D');}
-w326table(-.4,-8.45,1.03);w326table(9.8,-8.40,.86);
-// Premium massage chair in its own corner, oriented to the view rather than wall.
-const mc=w325group(13.4,4.5,Math.PI);
-w326rounded(mc,0,.42,0,1.65,.77,1.86,'#D1B8F4');
-w326rounded(mc,0,1.43,-.63,1.58,2.18,.65,'#BDA0ED');
-w326rounded(mc,0,.85,.18,1.35,.26,1.43,'#FFF2F9');
-for(const dx of [-.76,.76])w326rounded(mc,dx,.93,.10,.30,.85,1.55,'#AB90DA');
-w326rounded(mc,0,.25,1.15,1.35,.37,1.04,'#E7D9FA');
-// Luxury curved self-service BAR, deliberately not a table: solid vertical cabinet,
-// stepped marble countertop, front fluted panel, golden toe-kick, raised service ledge.
-const bar=w325group(-5,3.1,.08);
-function w326oval(g,y,h,rx,rz,color){const m=new THREE.Mesh(new THREE.CylinderGeometry(1,1,h,64),w326mat(color));m.scale.set(rx,1,rz);m.position.y=y;g.add(m);return m;}
-w326oval(bar,.14,.28,4.1,1.85,'#E1B872');
-w326oval(bar,.55,.64,4.22,1.92,'#75D9B9');
-w326oval(bar,.91,.12,4.38,2.03,'#D9B777');
-w326oval(bar,1.03,.13,4.47,2.10,'#FFF8EC');
-// Full-length decorative front ribs flush with bar's vertical cabinet.
-for(let i=0;i<17;i++){let xx=-3.75+i*.47;let zz=1.72*Math.sqrt(Math.max(.05,1-(xx/4.18)**2));w325piece(bar,xx,.57,zz,.065,.57,.075,'#F7E1B0');}
-// Slightly raised rear bar worktop, coffee maker and tea brewer visibly resting on counter.
-w325piece(bar,-2.4,1.40,-.65,1.20,.65,.82,'#E9E8EB');
-w325piece(bar,-2.4,1.62,-.19,.81,.25,.16,'#8095A5');
-w325piece(bar,-2.4,1.12,-.10,.55,.13,.32,'#657B8D');
-w325piece(bar,-.6,1.33,-.67,.73,.51,.72,'#C3B0E9');
-for(let i=0;i<4;i++){const m=new THREE.Mesh(new THREE.CylinderGeometry(.14,.12,.24,18),w326mat(['#F7B3C8','#FFE082','#A5E6C6','#C9B3F1'][i]));m.position.set(.45+i*.38,1.22,-.50);bar.add(m);}
-// Three dessert domes: stable non-flickering translucent glass (depthWrite off).
-const glass=new THREE.MeshPhysicalMaterial({color:'#E6F9FF',transparent:true,opacity:.30,roughness:.18,depthWrite:false});
-for(const [xx,zz,cc] of [[.35,.56,'#FF9AAF'],[1.65,.52,'#FFE079'],[2.85,.27,'#C2A5F4']]){
- const plate=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.065,24),w326mat('#D4AD70'));plate.position.set(xx,1.15,zz);bar.add(plate);
- const cake=new THREE.Mesh(new THREE.CylinderGeometry(.24,.26,.23,24),w326mat(cc));cake.position.set(xx,1.31,zz);bar.add(cake);
- const dome=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),glass);dome.scale.set(.45,.43,.45);dome.position.set(xx,1.17,zz);bar.add(dome);
+// v328: furnished luxury hospitality lounge, not a home living room or retail cafe.
+// Furniture is sized in actual 1F floor units, never shrunk with the shell.
+// Window landscape: three distinct bays, framed on the rear wall.
+for(let i=0;i<5;i++){
+ const x=-9.4+i*4.35;
+ w325box(x,3.55,-10.76,4.06,4.7,.085,'#A9DDF2');
+ w325box(x,2.10,-10.65,4.02,1.0,.055,'#A4D7AD');
+ w325box(x,4.55,-10.64,4.02,.32,.055,'#E8F6FA');
+ w325box(x+2.09,3.55,-10.56,.11,4.72,.14,'#FFF9F0');
 }
-// Bar stools ALL have substantial backs and seats; they face the counter (-Z).
-for(let i=0;i<2;i++){const xx=-6.9+i*2.35,zz=6.85;const g=w325group(xx,zz,Math.PI);
- w325piece(g,0,.44,0,.14,.88,.14,'#D1A96D');w326rounded(g,0,.91,0,.92,.20,.78,['#F3A6BC','#F4CF75'][i]);
- w326rounded(g,0,1.42,-.32,.88,.91,.18,['#F3A6BC','#F4CF75'][i]);
- for(const dx of [-.36,.36])w325piece(g,dx,.36,0,.09,.72,.09,'#D1A96D');
+w325box(0,5.97,-10.54,22,.15,.16,'#E5B987');
+// Rugs: thin enough not to z-fight with the floor, below all seats.
+w325ell(-5.5,.055,-4.7,5.0,.035,4.2,'#F8DCE8');
+w325ell(5.4,.056,-4.5,4.6,.035,3.9,'#DDF2E9');
+// Soft tailored upholstery with complete back, armrests and full seat cushioning.
+function w328sofa(x,z,w,c,angle){
+ const g=w325group(x,z,angle),n=w>=3.8?3:2;
+ w326rounded(g,0,.42,0,w,.53,1.52,c,.20);
+ w326rounded(g,0,1.13,.61,w,1.37,.42,c,.18); // back behind sitter, local +Z
+ for(let i=0;i<n;i++){
+  const cx=(i-(n-1)/2)*(w-.56)/n;
+  w326rounded(g,cx,.76,-.14,(w-.58)/n-.065,.24,1.02,'#FFF3EC',.13);
+  w326rounded(g,cx,1.12,.39,(w-.58)/n-.07,.68,.25,c,.12);
+ }
+ for(const dx of [-w/2+.20,w/2-.20])w326rounded(g,dx,.85,0,.39,.87,1.52,c,.15);
+ for(const dx of [-w/2+.38,w/2-.38])for(const dz of [-.51,.51])w325piece(g,dx,.13,dz,.13,.26,.13,'#D8B37B');
+ return g;
 }
-// Wall-mounted double glass-door refrigerator with colorful drinks and grounded shelving.
-w325box(-15.2,2.45,-4.1,2.0,4.9,5.7,'#F1F4F3');
-for(const zz of [-5.5,-2.7]){w325box(-14.12,2.5,zz,.09,4.30,2.56,'#C1E7F4');
- for(let level=0;level<5;level++){const yy=.68+level*.85;w325box(-14.03,yy-.26,zz,.12,.075,2.35,'#E9C99B');
- for(let j=0;j<5;j++){w325cyl(-13.93,yy,zz-1.02+j*.49,.12,.43,['#F7A4B8','#FFE176','#88DAC1','#B1A6ED','#FFB37F'][(level+j)%5]);}}}
-// Counter-mounted domestic appliances: nothing floats and nothing overlaps the bar.
-w325box(-9.0,.43,-11.9,10.0,.86,2.05,'#FFD98C');w325box(-9.0,.94,-11.9,10.0,.16,2.1,'#FFF7E9');
-w325box(-12.1,1.48,-11.9,1.95,.87,1.22,'#E8EDF2');w325box(-12.1,1.48,-11.24,1.42,.48,.06,'#849CA9');
-w325box(-9.2,1.44,-11.9,1.87,.77,1.24,'#E8DEF1');w325box(-9.2,1.44,-11.24,1.38,.43,.07,'#8C819A');
-w325cyl(-5.9,1.49,-11.9,.87,.87,'#9BD96C');w325ell(-5.9,1.98,-11.9,.91,.21,.86,'#B4E889');
-w325cyl(-5.9,1.10,-11.37,.15,.08,'#F8E6D0');
-// Grounded plants and wall lights (no overhead mesh, no fake ceiling).
-for(const [x,z] of [[-11,9],[15,-10]]){w325cyl(x,.37,z,.47,.74,'#F8C4A7');w325cyl(x,1.04,z,.09,.85,'#9D9D74');for(let k=0;k<7;k++){let a=k*Math.PI*2/7;w325ell(x+Math.cos(a)*.39,1.57,z+Math.sin(a)*.39,.33,.50,.32,'#80D2A1');}}
-// No point lights near transparent glass or coplanar floor decals to reduce z-fighting.
-const loungeLight=new THREE.AmbientLight(0xfff3e8,.75);wy325.add(loungeLight);
-function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+12,.08,9);officeCam.position.set(wy323X+4,17,22);officeOrbit.target.set(wy323X,1,-1);officeOrbit.update();}
+// Seat fronts face the rear windows (-Z). Side chairs are canted toward windows
+// and each group table; from entrance the viewer sees their upholstered sides.
+w328sofa(-6.2,-3.55,4.65,'#F5A1BC',.24);
+w328sofa(5.6,-3.45,3.35,'#85D8B7',-.23);
+w328sofa(-10.0,-5.4,1.65,'#FFD17E',-.55);
+w328sofa(-2.35,-5.65,1.65,'#C8B1EE',.55);
+w328sofa(2.4,-5.45,1.65,'#FFB17F',-.55);
+w328sofa(9.35,-5.2,1.65,'#F4C4DB',.55);
+// Two separate tables, each in FRONT of its sofas and not inside seating geometry.
+function w328table(x,z,r){w325cyl(x,.39,z,.18,.76,'#D2AC78');w325cyl(x,.81,z,r,.09,'#FFF8ED');w325cyl(x,.88,z,.23,.045,'#F2C5B4');w325ell(x+.20,.95,z,.12,.08,.12,'#ECA57F');}
+w328table(-6.1,-6.65,.83);w328table(5.7,-6.45,.80);
+// The curved BAR has a solid cabinet from near floor to counter, a raised
+// service ledge, curved trim, a working side and a guest side: never table legs.
+const bar=w325group(-3.0,4.2,.05);
+function w328oval(g,y,h,rx,rz,color){const m=new THREE.Mesh(new THREE.CylinderGeometry(1,1,h,48),w326mat(color));m.scale.set(rx,1,rz);m.position.y=y;g.add(m);return m;}
+w328oval(bar,.16,.30,3.1,1.27,'#D5AF76');
+w328oval(bar,.58,.70,3.2,1.36,'#74D8B6');
+w328oval(bar,.98,.13,3.35,1.50,'#D9B47A');
+w328oval(bar,1.10,.12,3.43,1.58,'#FFF7EA');
+for(let i=0;i<13;i++){let xx=-2.78+i*.46;let zz=1.23*Math.sqrt(Math.max(.05,1-(xx/3.1)**2));w325piece(bar,xx,.58,zz,.06,.58,.065,'#F5E2B4');}
+// Coffee/tea equipment is fully supported on the countertop.
+w325piece(bar,-2.2,1.42,-.52,.93,.56,.70,'#E6E9EC');
+w325piece(bar,-2.2,1.56,-.12,.67,.22,.12,'#8DA3B1');
+w325piece(bar,-.75,1.35,-.55,.69,.42,.64,'#C9B3EA');
+for(let i=0;i<4;i++){const m=new THREE.Mesh(new THREE.CylinderGeometry(.13,.11,.22,18),w326mat(['#F5B2C7','#FFE08A','#A4E6CB','#C8B2F2'][i]));m.position.set(.1+i*.34,1.29,-.48);bar.add(m);}
+// Dessert domes are slightly separated from plates to avoid depth flicker.
+const w328glass=new THREE.MeshPhysicalMaterial({color:'#E5F8FF',transparent:true,opacity:.26,roughness:.17,depthWrite:false});
+for(const [xx,zz,cc] of [[.3,.50,'#FF9DB3'],[1.40,.40,'#FFE17A'],[2.42,.20,'#BFA7EF']]){
+ const plate=new THREE.Mesh(new THREE.CylinderGeometry(.33,.33,.055,22),w326mat('#D7B17B'));plate.position.set(xx,1.205,zz);bar.add(plate);
+ const cake=new THREE.Mesh(new THREE.CylinderGeometry(.20,.23,.18,22),w326mat(cc));cake.position.set(xx,1.32,zz);bar.add(cake);
+ const dome=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),w328glass);dome.scale.set(.39,.37,.39);dome.position.set(xx,1.23,zz);bar.add(dome);
+}
+// Bar chairs WITH proper upholstered backrests, both oriented toward bar.
+for(let i=0;i<2;i++){const g=w325group(-4.4+i*2.0,7.55,0);
+ w325piece(g,0,.47,0,.16,.90,.16,'#D4AF7C');
+ w326rounded(g,0,.94,0,.86,.20,.72,['#F5AAC0','#FFE08A'][i]);
+ w326rounded(g,0,1.43,.32,.84,.86,.20,['#F5AAC0','#FFE08A'][i]);
+ for(const dx of [-.32,.32])w325piece(g,dx,.37,0,.08,.72,.08,'#D4AF7C');
+}
+// Massage chair, grounded, supported, separate from walk-through entrance.
+const mc=w325group(10.7,1.1,2.5);
+w326rounded(mc,0,.43,0,1.58,.78,1.74,'#C9B1EE');
+w326rounded(mc,0,1.39,.57,1.50,2.12,.58,'#BCA2E9');
+w326rounded(mc,0,.83,-.18,1.25,.25,1.22,'#FFF0F8');
+for(const dx of [-.72,.72])w326rounded(mc,dx,.89,.04,.27,.83,1.42,'#AE92D8');
+w326rounded(mc,0,.27,-1.04,1.24,.36,.88,'#E8DAF8');
+// Glass-front fridge with visible drink rows, against the LEFT wall.
+w325box(-12.3,2.10,1.0,1.50,4.20,3.75,'#F1F3F1');
+for(const zz of [-.02,2.02]){
+ w325box(-11.51,2.1,zz,.09,3.74,1.72,'#C5E6F3');
+ for(let level=0;level<4;level++){
+  const yy=.61+level*.88;w325box(-11.43,yy-.27,zz,.10,.07,1.65,'#E6C99E');
+  for(let j=0;j<3;j++)w325cyl(-11.34,yy,zz-.55+j*.54,.11,.40,['#F4A5BB','#FFE181','#91DCC3','#BDA8EE'][(level+j)%4]);
+ }
+}
+// Domestic appliance counter on the back-left wall; each appliance rests on it.
+w325box(-9.6,.45,-9.35,6.2,.90,1.55,'#FFE2A0');
+w325box(-9.6,.98,-9.35,6.2,.16,1.60,'#FFF9EE');
+w325box(-11.4,1.49,-9.35,1.15,.86,.94,'#E8EBF0');
+w325box(-11.4,1.49,-8.84,.83,.44,.07,'#8CA0AB');
+w325box(-9.8,1.44,-9.35,1.22,.76,.94,'#E8DDF1');
+w325box(-9.8,1.44,-8.84,.87,.42,.07,'#9585A4');
+w325cyl(-7.65,1.45,-9.35,.59,.78,'#9EDC76');
+w325ell(-7.65,1.89,-9.35,.63,.16,.60,'#B5E994');
+// Planters and wall fixtures only; no hanging or floating ceiling pieces.
+for(const [x,z] of [[-11.8,8.4],[11.8,-8.9]]){
+ w325cyl(x,.34,z,.39,.68,'#F6C2A5');w325cyl(x,.89,z,.075,.72,'#95AA7A');
+ for(let k=0;k<6;k++){let a=k*Math.PI/3;w325ell(x+Math.cos(a)*.28,1.37,z+Math.sin(a)*.28,.29,.40,.29,'#83D2A1');}
+}
+// No animated lights, no ceiling geometry, no duplicate floor surface.
+const loungeLight=new THREE.AmbientLight(0xfff3e8,.65);wy325.add(loungeLight);
+function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+10.9,.08,7.3);officeCam.position.set(wy323X+6,12,17);officeOrbit.target.set(wy323X,1,-1);officeOrbit.update();}
 function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update();}
 
 // Warm skirting and picture lights.
@@ -4003,8 +4020,9 @@ function wyElevatorTick(dt){
   if(k.has('arrowup')||k.has('w'))z-=1;
   if(k.has('arrowdown')||k.has('s'))z+=1;
   x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
-   if(wyOfficeFloor===1){const canMove=(xx,zz)=>xx>-12&&xx<12&&zz>-9.5&&zz<10&&!(Math.abs(xx)<7.2&&zz>4.4&&zz<7.6)&&!(Math.abs(xx)<4&&zz>-5.5&&zz<-1.2);if(canMove(nx,p.z))p.x=nx;if(canMove(p.x,nz))p.z=nz;}
-   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(wy323Inside){if(nx>wy323X-15.9&&nx<wy323X+15.9&&nz>-12.8&&nz<12.7){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<25.8&&nz>-8.5&&nz<21.5){p.x=nx;p.z=nz;}
+   if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}
+   else if(wyOfficeFloor===1){const canMove=(xx,zz)=>xx>-12&&xx<12&&zz>-9.5&&zz<10&&!(Math.abs(xx)<7.2&&zz>4.4&&zz<7.6)&&!(Math.abs(xx)<4&&zz>-5.5&&zz<-1.2);if(canMove(nx,p.z))p.x=nx;if(canMove(p.x,nz))p.z=nz;}
+   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<25.8&&nz>-8.5&&nz<21.5){p.x=nx;p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
   }
   const target=wyElevPos(wyOfficeFloor);
