@@ -1241,78 +1241,106 @@ w325box(0,5.97,-10.54,22,.15,.16,'#E5B987');
 // v331: Layout rebalanced; all appliance fronts and doorway access need clear walking space.
 // v330: Entrance-led layout: entry is RIGHT wall x=+13.5, z=7.
 // Guests see upholstery FRONT/side, never a row of sofa backs. The center is a generous promenade.
-w325ell(-6.9,.055,-4.6,4.45,.035,3.75,'#F8DCE8');
-w325ell(5.1,.056,-4.0,4.2,.035,3.65,'#DDF2E9');
-w325ell(-4.9,.057,6.0,3.0,.035,2.7,'#F4E8FA');
-function w328sofa(x,z,w,c,angle){
- const g=w325group(x,z,angle),n=w>=3.8?3:2;
- w326rounded(g,0,.46,0,w,.64,1.60,c,.23);
- w326rounded(g,0,1.18,.61,w,1.47,.44,c,.22);
- for(let i=0;i<n;i++){const cx=(i-(n-1)/2)*(w-.54)/n;
-  w326rounded(g,cx,.82,-.17,(w-.56)/n-.07,.27,1.03,'#FFF4EF',.15);
-  w326rounded(g,cx,1.22,.36,(w-.56)/n-.07,.70,.26,c,.14);
+// v335 — American Grand Estate Glamour: fully modeled Three.js furniture, no generated image.
+// Architectural alignment: rear panoramic window runs along X; the grand island also runs along X.
+function glamCurve(g,x,y,z,w,h,d,color,r=.3){return w326rounded(g,x,y,z,w,h,d,color,r);}
+function glamSofa(x,z,w,color,rotation){
+ const g=w325group(x,z,rotation),n=w>3?3:1;
+ glamCurve(g,0,.48,0,w,.77,1.66,color,.33);
+ glamCurve(g,0,1.22,.67,w,1.44,.43,color,.29);
+ glamCurve(g,0,1.67,.72,w-.34,.18,.20,'#EAC48B',.08);
+ for(let i=0;i<n;i++){
+  const px=(i-(n-1)/2)*(w-.40)/n;
+  glamCurve(g,px,.88,-.25,(w-.48)/n-.04,.24,1.06,'#FFF3E9',.14);
+  glamCurve(g,px,1.26,.36,(w-.52)/n-.07,.75,.24,color,.13);
+  glamCurve(g,px,1.49,.19,.44,.40,.16,['#FFE6A8','#F6D3E8','#D6F4E9'][i%3],.11);
  }
- for(const dx of [-w/2+.20,w/2-.20])w326rounded(g,dx,.90,0,.40,.89,1.58,c,.19);
- for(const dx of [-w/2+.39,w/2-.39])for(const dz of [-.52,.52])w325piece(g,dx,.13,dz,.13,.26,.13,'#D8B37B');
+ for(const dx of [-w/2+.18,w/2-.18]){
+  glamCurve(g,dx,.91,-.03,.45,.93,1.53,color,.19);
+  w325piece(g,dx, .30,0,.16,.16,1.48,'#D8AF6F');
+ }
+ glamCurve(g,0,.19,0,w-.26,.19,1.50,'#D8AF6F',.2);
  return g;
 }
-// Sofa local FRONT is -Z. 2.3 rad turns fronts toward entrance (+X,+Z),
-// while maintaining a diagonal view of the scenic window wall.
-w328sofa(-7.4,-4.0,4.65,'#F5A1BC',-2.10);
-w328sofa(5.0,-4.0,3.65,'#85D8B7',-2.16);
-// Supporting chairs face the group center, not the doorway with their backs.
-// v333: remove yellow chair blocking appliance access; do not relocate it.
-w328sofa(-4.3,-7.0,1.50,'#C8B1EE',.62);
-w328sofa(2.1,-6.6,1.50,'#FFB17F',-.60);
-w328sofa(8.2,-6.8,1.50,'#F4C4DB',.65);
-function w328table(x,z,r){w325cyl(x,.39,z,.18,.76,'#D2AC78');w325cyl(x,.81,z,r,.09,'#FFF8ED');w325cyl(x,.88,z,.23,.045,'#F2C5B4');w325ell(x+.20,.95,z,.12,.08,.12,'#ECA57F');}
-w328table(-7.25,-6.1,.90);w328table(5.0,-6.2,.86);
-// Third intimate lounge group in the formerly empty near-left quadrant.
-w328sofa(-5.2,6.4,2.75,'#D4B6ED',-1.97);
-w328sofa(-8.3,7.6,1.40,'#F7BEA5',-.50);
-w328table(-6.0,4.2,.65);
-// Large full-height luxury curved self-service bar, suitable for standing and talking.
-// Solid cabinetry, accessible guest edge, display and premium equipment.
-const bar=w325group(1.1,3.1,-.12);
-function w328oval(g,y,h,rx,rz,color){const m=new THREE.Mesh(new THREE.CylinderGeometry(1,1,h,56),w326mat(color));m.scale.set(rx,1,rz);m.position.y=y;g.add(m);return m;}
-// v332: actual architectural U-shaped hospitality bar, not an oval table.
-// A broad front and two return wings define a service recess; solid cabinetry rests on floor.
-w326rounded(bar,0,.67,1.05,7.5,1.34,1.16,'#5BCDBB',.36);
-w326rounded(bar,-3.13,.67,-.30,1.24,1.34,3.55,'#F39CC1',.28);
-w326rounded(bar,3.13,.67,-.30,1.24,1.34,3.55,'#A78CE2',.28);
-// Raised stone top and separate gold trim, with distinct elevations to avoid z-fighting.
-w326rounded(bar,0,1.41,1.05,7.72,.14,1.36,'#FFF4DF',.30);
-w326rounded(bar,-3.13,1.41,-.30,1.38,.14,3.75,'#FFF4DF',.26);
-w326rounded(bar,3.13,1.41,-.30,1.38,.14,3.75,'#FFF4DF',.26);
-for(const x of [-2.7,-1.8,-.9,0,.9,1.8,2.7]){
- w325piece(bar,x,.73,1.646,.09,.84,.055,'#FFE5A3');
+// Main sofas: local front -Z, rotate PI so guests look toward rear window (-Z).
+w325ell(-7.6,.052,-5.0,4.55,.035,3.3,'#F7DCEB');
+w325ell(5.1,.052,-5.0,4.35,.035,3.25,'#D9F2E6');
+glamSofa(-8.0,-3.35,4.55,'#F3A1BD',Math.PI);
+glamSofa(5.3,-3.35,4.25,'#7ECFB2',Math.PI);
+// Companion armchairs face inward toward each conversation cluster, not toward walls.
+glamSofa(-4.75,-6.9,1.48,'#C5A8E8',-.55);
+glamSofa(8.65,-6.8,1.48,'#F6B68C',.55);
+function glamTable(x,z){
+ w325cyl(x,.40,z,.30,.75,'#D4AB72');
+ w325cyl(x,.81,z,.95,.12,'#FFF5E9',36);
+ w325cyl(x,.90,z,.81,.055,'#EAC8C2',36);
+ w325ell(x+.23,1.03,z,.21,.10,.17,'#F6D9A4');
 }
-// Bright fixed-light decorative panels, not animated flashing lights.
-w325piece(bar,0,.73,1.657,1.25,.54,.07,'#FFD2E2');
-w325piece(bar,-3.13,.72,-2.10,.82,.48,.06,'#FFE7A0');
-w325piece(bar,3.13,.72,-2.10,.82,.48,.06,'#C4F5E8');
-// Raised presentation ledge, not a flat dining tabletop.
-w325piece(bar,0,1.65,-1.03,4.9,.17,.55,'#FFF8EF');
-w325piece(bar,0,1.54,-1.05,4.75,.11,.48,'#D6B17A');
-w325piece(bar,-2.65,1.85,-.65,1.30,.82,.85,'#DDE4E8');
-w325piece(bar,-2.65,1.94,-.16,.88,.35,.09,'#758A98');
-w325piece(bar,-2.65,2.22,-.13,.65,.12,.11,'#A5B5C0');
-w325piece(bar,-.9,1.76,-.62,.85,.53,.76,'#C9B3EA');
-for(let i=0;i<5;i++){const m=new THREE.Mesh(new THREE.CylinderGeometry(.14,.12,.24,18),w326mat(['#F5B2C7','#FFE08A','#A4E6CB','#C8B2F2','#FFBD96'][i]));m.position.set(.1+i*.39,1.63,-.48);bar.add(m);}
-const w328glass=new THREE.MeshPhysicalMaterial({color:'#E5F8FF',transparent:true,opacity:.28,roughness:.14,depthWrite:false});
-for(const [xx,zz,cc] of [[.2,.60,'#FF9DB3'],[1.55,.54,'#FFE17A'],[2.83,.32,'#BFA7EF']]){
- const plate=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.055,24),w326mat('#D7B17B'));plate.position.set(xx,1.52,zz);bar.add(plate);
- const cake=new THREE.Mesh(new THREE.CylinderGeometry(.23,.27,.21,24),w326mat(cc));cake.position.set(xx,1.67,zz);bar.add(cake);
- const dome=new THREE.Mesh(new THREE.SphereGeometry(1,24,14,0,Math.PI*2,0,Math.PI/2),w328glass);dome.scale.set(.44,.43,.44);dome.position.set(xx,1.57,zz);bar.add(dome);
+glamTable(-7.3,-6.35);glamTable(5.0,-6.4);
+// The old third sofa group is entirely removed; only TWO massage chairs below.
+// Oversized architectural island, zero rotation, aligned with the rear windows.
+// Depth/width intentionally substantial, solid floor-mounted casework.
+const bar=w325group(.45,2.1,0);
+glamCurve(bar,0,.70,0,10.4,1.40,3.45,'#83D8C1',.77);
+glamCurve(bar,0,1.43,0,10.75,.18,3.75,'#FFF2E4',.82);
+glamCurve(bar,0,1.29,0,10.63,.085,3.66,'#D8AE72',.80);
+glamCurve(bar,0,.16,0,10.20,.26,3.20,'#D4A568',.65);
+// Architectural stepped end-panels, no loose columns or floating ornaments.
+for(const [x,col] of [[-4.5,'#F2A9C7'],[4.5,'#C4A8EB']]){
+ glamCurve(bar,x,.73,0,1.25,1.22,3.22,col,.35);
+ glamCurve(bar,x,1.40,0,1.35,.10,3.35,'#FFF4E7',.28);
 }
-// Tall backed stools on the outer guest side, leaving door and promenade clear.
-for(let i=0;i<3;i++){const g=w325group(-1.0+i*2.0,6.15,0);
- w325piece(g,0,.51,0,.16,1.02,.16,'#D4AF7C');
- w326rounded(g,0,1.04,0,.91,.23,.79,['#F5AAC0','#FFE08A','#CBB3EC'][i]);
- w326rounded(g,0,1.58,.35,.89,.91,.22,['#F5AAC0','#FFE08A','#CBB3EC'][i]);
- for(const dx of [-.34,.34])w325piece(g,dx,.42,0,.09,.80,.09,'#D4AF7C');
+for(let i=0;i<9;i++){
+ const x=-3.75+i*.93;
+ glamCurve(bar,x,.75,1.735,.60,.84,.12,['#F8BDD0','#FBE2A0','#B2E5D3','#D6C2EF'][i%4],.06);
 }
-// Legacy massage object retained hidden for compatibility with old scene references.
+// The front guest edge stays clear for serving and conversation.
+// Tall recognizable espresso machine and tea brewer at the rear half of the counter.
+const coffee=new THREE.Group();coffee.position.set(-3.15,1.56,-.70);bar.add(coffee);
+glamCurve(coffee,0,.66,0,1.85,1.28,1.12,'#D9E0E5',.17);
+glamCurve(coffee,0,1.21,-.06,1.55,.22,.90,'#7D8D9C',.12);
+w325piece(coffee,0,.84,.57,1.28,.47,.075,'#263B57');
+for(const x of [-.48,0,.48]){
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(.105,.105,.16,18),w326mat('#D8AF72'));m.position.set(x,.84,.64);coffee.add(m);
+}
+w325piece(coffee,0,.20,.62,1.3,.11,.34,'#B7BEC8');
+for(const x of [-.32,.32]){
+ w325piece(coffee,x,.45,.63,.13,.36,.13,'#555F67');
+ const cup=new THREE.Mesh(new THREE.CylinderGeometry(.16,.12,.23,18),w326mat('#FFF5E9'));cup.position.set(x,.24,.79);coffee.add(cup);
+}
+const tea=new THREE.Group();tea.position.set(-.72,1.56,-.65);bar.add(tea);
+glamCurve(tea,0,.50,0,1.28,.96,1.10,'#E1C8EE',.19);
+glamCurve(tea,0,.95,0,1.16,.14,1.0,'#FFF3D9',.16);
+w325piece(tea,0,.56,.57,.80,.30,.07,'#263B57');
+for(const x of [-.34,.34]){
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.40,20),w326mat('#F7E5C3'));m.position.set(x,1.16,-.05);tea.add(m);
+}
+// Integrated sculptural sweets and snack pavilion at the RIGHT end of the SAME island.
+// Multiple tiered trays with substantial supports; not a single line of jars.
+const sweets=new THREE.Group();sweets.position.set(3.15,1.53,-.30);bar.add(sweets);
+for(const [y,rad] of [[.12,1.13],[.57,.85],[1.01,.59]]){
+ const p=new THREE.Mesh(new THREE.CylinderGeometry(rad,rad,.10,32),w326mat('#FFF1E5'));p.position.y=y;sweets.add(p);
+ const edge=new THREE.Mesh(new THREE.TorusGeometry(rad-.04,.043,8,36),w326mat('#D7AC6F'));edge.rotation.x=Math.PI/2;edge.position.y=y+.06;sweets.add(edge);
+}
+const stem=new THREE.Mesh(new THREE.CylinderGeometry(.10,.16,1.03,20),w326mat('#D7AC6F'));stem.position.y=.58;sweets.add(stem);
+for(let i=0;i<14;i++){
+ const tier=i<7?0:i<12?1:2,rad=[.78,.54,.27][tier],theta=i*2.4;
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(.15,.17,.17,16),w326mat(['#F3A5BF','#E9C875','#B3E2C7','#C8A9E9'][i%4]));m.position.set(Math.cos(theta)*rad,[.27,.72,1.16][tier],Math.sin(theta)*rad);sweets.add(m);
+}
+// Boutique snack jars arranged in an offset cluster around the dessert pavilion.
+for(const [x,z,y,col] of [[1.55,-1.0,1.85,'#F9C5D7'],[1.68,.63,1.85,'#F9D18D'],[4.60,-1.0,1.85,'#C1E9D7'],[4.63,.60,1.85,'#D4B9F1']]){
+ const jar=new THREE.Mesh(new THREE.CylinderGeometry(.28,.29,.56,18),new THREE.MeshPhysicalMaterial({color:col,transparent:true,opacity:.75,roughness:.22,depthWrite:false}));jar.position.set(x,y,z);bar.add(jar);
+ const lid=new THREE.Mesh(new THREE.CylinderGeometry(.31,.31,.085,18),w326mat('#D5AB6D'));lid.position.set(x,y+.32,z);bar.add(lid);
+}
+// Three luxurious backed stools, all consistently facing the island (toward -Z).
+for(let i=0;i<3;i++){
+ const g=w325group(-2.6+i*2.05,5.58,0),c=['#F4B1CA','#D5B7EC','#A8DCCB'][i];
+ for(const x of [-.32,.32])for(const z of [-.27,.27])w325piece(g,x,.50,z,.10,1.0,.10,'#CFA86B');
+ glamCurve(g,0,1.07,0,.92,.23,.79,c,.16);
+ glamCurve(g,0,1.55,.34,.91,.91,.25,c,.17);
+ w325piece(g,0,.32,0,.68,.09,.12,'#D3B079');
+}
+// Retain no legacy massage furniture in the previous entrance strip.
 const mc=w325group(10.7,1.1,2.5);mc.visible=false;
 // v330 enlarged unmistakable illuminated double-door fridge fascia on the left wall.
 w325box(-12.60,2.45,1.0,1.40,4.90,4.75,'#F8F5F0');
@@ -1379,59 +1407,61 @@ for(const [x,z] of [[-6.1,-6.65],[5.7,-6.45]]){
  w325cyl(x+.29,.98,z,.15,.15,'#E8B67B',18);
  w325ell(x+.29,1.08,z,.10,.04,.10,'#FFF4E5');
 }
-// Two premium massage chairs with recognizable reclining backs, headrests, arm pods and leg boots.
-function w329Massage(x,z,angle,c){
+// v335: two separate luxury semi-open massage cocoons in the former third-sofa area.
+function glamMassage(x,z,angle,color){
  const g=w325group(x,z,angle);
- w326rounded(g,0,.42,0,1.38,.70,1.52,'#F1E9F9',.25);
- w326rounded(g,0,1.37,.43,1.35,1.93,.55,c,.26);
- w326rounded(g,0,2.24,.51,1.19,.40,.42,'#F5E9FB',.18);
- w326rounded(g,0,.91,-.14,1.16,.23,1.03,'#F9EFF9',.18);
+ glamCurve(g,0,.43,0,1.47,.72,1.58,'#F5ECF9',.26);
+ glamCurve(g,0,1.43,.48,1.42,2.08,.62,color,.32);
+ glamCurve(g,0,2.38,.49,1.21,.40,.43,'#FFF4F8',.19);
+ glamCurve(g,0,.92,-.20,1.18,.28,1.0,'#FFF6F6',.17);
  for(const dx of [-.69,.69]){
-  w326rounded(g,dx,.95,-.06,.31,.83,1.25,c,.14);
-  w326rounded(g,dx*.50,.29,-1.13,.44,.49,.94,'#E7D9F7',.14);
+  glamCurve(g,dx,.94,-.05,.33,.83,1.30,color,.16);
+  glamCurve(g,dx*.50,.36,-1.10,.45,.56,.99,'#E6D5F5',.15);
  }
- w325piece(g,0,.14,.45,1.10,.28,1.35,'#B9A6CF');
-}
-// Replace the original block-like massage chair with a more legible second premium unit.
-// Place both on right-side relaxation strip, away from entrance opening at x=13.5,z=7.
-mc.visible=false;
-w329Massage(7.0,8.6,-.65,'#BFA8E8');
-w329Massage(4.6,8.6,-.65,'#D3B7EE');
-// Soft freestanding planters and a low side console make seating feel curated rather than empty.
-for(const [x,z] of [[-1.0,-8.7],[10.8,-8.6]]){
- w325cyl(x,.29,z,.31,.58,'#FFD4A8');
- for(let j=0;j<5;j++){let a=j*1.2566;w325ell(x+Math.cos(a)*.23,1.04,z+Math.sin(a)*.23,.27,.38,.27,'#8CD6AD');}
-}
-// v331: semi-private lounge partitions, low planters + framed reeded panels.
-// Short isolated segments only; never span the main door-to-bar, fridge or appliance routes.
-function w331Screen(x,z,angle,width){
- const g=w325group(x,z,angle);
- // stable floor-supported plinth, panel posts and inset frosted strips (not coplanar)
- w325piece(g,0,.20,0,width,.40,.38,'#FFF2DF');
- for(const px of [-width/2+.12,width/2-.12])w325piece(g,px,1.23,0,.13,2.05,.15,'#D7AF76');
- w325piece(g,0,2.27,0,width,.12,.17,'#D7AF76');
- // Single broad translucent reeded-glass panel, not individual vertical bars.
- // The glass is inset into the frame, with no overlapping coplanar strips.
- const glass=new THREE.Mesh(new THREE.BoxGeometry(width-.34,1.72,.075),
-   new THREE.MeshPhysicalMaterial({color:0xCDEBE7,transparent:true,opacity:.66,roughness:.34,metalness:0,depthWrite:false}));
- glass.position.set(0,1.25,0);g.add(glass);
- // Champagne-gold lower rail, held above the substantial floor plinth.
- w325piece(g,0,.43,.025,width-.22,.09,.11,'#D7AF76');
+ glamCurve(g,0,.15,.44,1.16,.29,1.3,'#B9A6CF',.16);
  return g;
 }
-// Partitions screen sofa backs from entry without enclosing the seating clusters.
-w331Screen(-4.1,-2.3,.38,2.45);
-w331Screen(8.4,-2.0,-.35,2.35);
-w331Screen(-3.9,8.8,.30,1.85);
-function w331Planter(x,z){
- w325piece(w325group(x,z),0,.30,0,1.35,.60,.50,'#F9E5D5');
- for(const dx of [-.40,0,.40]){
-  w325cyl(x+dx,.87,z,.075,.65,'#83A988');
-  w325ell(x+dx,1.32,z,.24,.36,.24,'#8BCFA9');
+function glamPod(x,z,color,seat){
+ const g=w325group(x,z,0);
+ // Open FRONT (-Z), no ceiling. Continuous curved rear/side privacy shell.
+ const shellMat=new THREE.MeshStandardMaterial({color,roughness:.56,side:THREE.DoubleSide});
+ const goldMat=w326mat('#D4AD74');
+ for(const [radius,height,mat,yy] of [[2.06,2.9,shellMat,1.55],[2.12,.12,goldMat,2.93]]){
+  const geom=new THREE.CylinderGeometry(radius,radius,height,36,1,true,Math.PI*.08,Math.PI*.84);
+  const mesh=new THREE.Mesh(geom,mat);mesh.rotation.y=Math.PI*.08;mesh.position.set(0,yy,.34);g.add(mesh);
+ }
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.05,.17,40,1,false,0,Math.PI*2),w326mat('#F8E9EE'));
+ base.position.set(0,.085,.34);g.add(base);
+ glamCurve(g,0,.30,1.98,2.3,.60,.38,'#D4AD74',.16);
+ // Decorative side table physically supported by its stem.
+ const tx=1.52,tz=-.70;
+ const post=new THREE.Mesh(new THREE.CylinderGeometry(.10,.13,.62,16),goldMat);post.position.set(tx,.46,tz);g.add(post);
+ const top=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,.08,24),w326mat('#FFF5E8'));top.position.set(tx,.80,tz);g.add(top);
+ glamMassage(x,z-.15,0,seat);
+}
+glamPod(-9.0,6.7,'#E9D4F0','#C3A7E7');
+glamPod(-4.15,6.7,'#F7D8E4','#E4B5D7');
+// Real curved glass screens with integral floor-supported floral planters, no loose pillars.
+function glamGlassScreen(x,z,rotation,radius){
+ const g=w325group(x,z,rotation);
+ const a0=.18,aLen=1.18;
+ const glass=new THREE.Mesh(new THREE.CylinderGeometry(radius,radius,1.72,32,1,true,a0,aLen),new THREE.MeshPhysicalMaterial({color:'#D9F6F4',transparent:true,opacity:.28,roughness:.12,side:THREE.DoubleSide,depthWrite:false}));
+ glass.position.y=1.53;g.add(glass);
+ for(const [y,tube] of [[.65,.065],[2.40,.065]]){
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(radius,tube,8,32,aLen),w326mat('#D7B075'));
+  ring.rotation.x=Math.PI/2;ring.rotation.z=a0;ring.position.y=y;g.add(ring);
+ }
+ const planter=new THREE.Mesh(new THREE.CylinderGeometry(radius+.12,radius+.12,.54,32,1,true,a0,aLen),w326mat('#FFF1E5'));
+ planter.position.y=.33;g.add(planter);
+ for(let i=0;i<9;i++){
+  const a=a0+.09+i*(aLen-.18)/8,xx=Math.cos(a)*radius,zz=Math.sin(a)*radius;
+  const leaf=new THREE.Mesh(new THREE.SphereGeometry(1,10,8),w326mat(i%2?'#81C5A3':'#A4D9AF'));
+  leaf.position.set(xx,.87+(i%3)*.09,zz);leaf.scale.set(.23,.35,.20);g.add(leaf);
+  if(i%2===0){const bloom=new THREE.Mesh(new THREE.SphereGeometry(1,12,8),w326mat(i%4?'#F6A6C4':'#E7C8EF'));bloom.position.set(xx,1.12,zz);bloom.scale.set(.19,.18,.19);g.add(bloom);}
  }
 }
-w331Planter(-3.9,-1.3);
-w331Planter(8.5,-1.0);
+glamGlassScreen(-10.6,-1.0,-.75,2.15);
+glamGlassScreen(7.2,-.75,1.2,2.0);
 // Fixed wall-mounted decorative lights: no flicker animation and no floating lamps.
 for(const zz of [-5.8,4.8]){
  w325box(-13.25,3.8,zz,.15,.95,.42,'#F4DDB5');
