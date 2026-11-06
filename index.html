@@ -1200,8 +1200,8 @@ wy345SignCtx.fillStyle='#263B57';wy345SignCtx.fillRect(0,0,768,160);
 wy345SignCtx.strokeStyle='#DCC18C';wy345SignCtx.lineWidth=8;wy345SignCtx.strokeRect(8,8,752,144);
 wy345SignCtx.fillStyle='#EFD9A5';wy345SignCtx.textAlign='center';wy345SignCtx.textBaseline='middle';wy345SignCtx.font='bold 80px sans-serif';wy345SignCtx.fillText('員工自由心證',384,84);
 const wy345SignTex=new THREE.CanvasTexture(wy345SignCanvas);wy345SignTex.colorSpace=THREE.SRGBColorSpace;
-const wy345EntrySign=new THREE.Mesh(new THREE.PlaneGeometry(4.15,.86),new THREE.MeshBasicMaterial({map:wy345SignTex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}));
-wy345EntrySign.position.set(-12.7,7.35,17.3);wy345EntrySign.renderOrder=95;roomRoot.add(wy345EntrySign);
+const wy345EntrySign=new THREE.Mesh(new THREE.PlaneGeometry(4.65,1.02),new THREE.MeshBasicMaterial({map:wy345SignTex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}));
+wy345EntrySign.position.set(-12.7,7.48,17.3);wy345EntrySign.renderOrder=95;roomRoot.add(wy345EntrySign);
 // Entirely separate spatial island, 110+ units away from original office.
 // It is not attached to the office footprint and contains NO furnishings.
 const wy323Room=new THREE.Group();officeScene.add(wy323Room);wy323Room.visible=false;
@@ -1395,12 +1395,17 @@ for(const [x,c] of [[1.00,pal.pink],[3.12,pal.lav],[5.25,pal.mint]])luxStool(x,5
 // TWO separate spa cocoons at left-front; no extra armchair or third sofa.
 function luxMassagePod(x,z,col,chairColor){
  const g=luxG(x,z,Math.PI),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
- // Half-open back-and-sides curved shell, front toward -Z; no ceiling.
- const shell=new THREE.Mesh(new THREE.CylinderGeometry(1.90,1.90,2.82,36,1,true,.20,Math.PI*1.12),mat);
- shell.rotation.y=Math.PI*.02;shell.position.set(0,1.52,2.35);g.add(shell);
+ // v348: U-shaped privacy screen enclosing the chair's back and BOTH sides.
+ // Chair orientation remains exactly as in v347. Entrance is left open on the -Z side.
+ const screenRadius=1.87,screenCenterZ=.05,screenStart=.08,screenSpan=Math.PI*1.82;
+ const shell=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius,screenRadius,2.95,64,1,true,screenStart,screenSpan),mat);
+ shell.position.set(0,1.56,screenCenterZ);g.add(shell);
  luxC(g,0,.10,.26,1.88,.20,pal.ivory,36);
- // Upper gold rim is a curved vertical band attached to shell, not a floating torus.
- const rim=new THREE.Mesh(new THREE.CylinderGeometry(1.94,1.94,.12,36,1,true,.20,Math.PI*1.12),w326mat(pal.gold));rim.position.set(0,2.86,2.35);rim.rotation.y=Math.PI*.02;g.add(rim);
+ const rim=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius+.035,screenRadius+.035,.11,64,1,true,screenStart,screenSpan),w326mat(pal.gold));
+ rim.position.set(0,3.08,screenCenterZ);g.add(rim);
+ // Narrow metallic base rim follows the entire screen, leaving the entrance clear.
+ const baseRim=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius+.035,screenRadius+.035,.10,64,1,true,screenStart,screenSpan),w326mat(pal.gold));
+ baseRim.position.set(0,.12,screenCenterZ);g.add(baseRim);
  // Tall massage chair with padded back, arm supports, articulated leg rest.
  luxB(g,0,.48,.08,1.20,.76,1.42,chairColor,.23);
  luxB(g,0,1.43,.65,1.30,2.05,.58,chairColor,.28);
@@ -1460,7 +1465,7 @@ function wy337Plaque(key,label,x,y,z){
  ctx.fillStyle='#EFD9A5';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 66px sans-serif';ctx.fillText(label,320,74);
  const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
  const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false});
- const m=new THREE.Mesh(new THREE.PlaneGeometry(3.10,.68),mat);m.position.set(wy323X+x,y,z);m.renderOrder=0;m.userData.wy337=key;wy325.add(m);wy337Targets.push(m);wy338BillboardPlaques.push(m);
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(4.65,1.02),mat);m.position.set(wy323X+x,y,z);m.renderOrder=0;m.userData.wy337=key;wy325.add(m);wy337Targets.push(m);wy338BillboardPlaques.push(m);
 }
 for(const [key,label,,x,y,z] of wy337Labels)wy337Plaque(key,label,x,y,z);
 // Actual furniture is clickable, not only its label.
@@ -4414,7 +4419,36 @@ function wyElevatorTick(dt){
 
 const wyLobbyDialog=document.createElement('section');wyLobbyDialog.id='wyLobbyDialog';
 wyLobbyDialog.style.cssText='display:none;position:fixed;z-index:90;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,440px);max-height:80dvh;overflow:auto;padding:20px;background:#faf7f0;border:2px solid #385c77;border-radius:16px;color:#263b52;font:15px/1.6 system-ui;box-shadow:0 12px 55px #15293a77';document.body.append(wyLobbyDialog);
-function wyLobbyOpen(action){
+
+// v348: 1F reception sofa (20 firm profiles) and tea bar (30 short observations).
+const wy348Sofa=[["法律問題，不一定要等到法院才開始解決。","從企業法律顧問到訴訟爭議，這裡提供的不只是開庭服務。"],["坐在企業決策桌前，是另一種法律訓練。","林柏均律師曾任揚智科技法務長，熟悉企業經營與法律風險的交會。"],["一位律師，兩種法律制度的視野。","具備台灣及美國紐約州律師資格，為跨國法律問題帶來不同思考角度。"],["科技產業的法律問題，不能只看法條。","從科技公司法務實務出發，更能理解商業交易與企業決策的需求。"],["醫藥產業的專業，不只存在實驗室。","曾任藥華醫藥資深法務，累積醫藥產業的法律實務經驗。"],["一份合約，值得從交易開始前就仔細思考。","契約審閱、責任分配與商務風險評估，都是企業法律服務的重要工作。"],["跨國合作，法律不能只看眼前這一份文件。","結合台美法律背景，從交易架構到爭議處理思考跨國商務問題。"],["企業需要法律顧問，不只是為了處理麻煩。","從日常營運、契約到重大決策，提供事前法律風險分析。"],["從企業內部到律師事務所，思考角度更加完整。","林律師的企業法務經歷，讓法律建議也能考慮實際營運情境。"],["訴訟不是只有寫狀紙和出庭。","事實整理、證據分析、法律研究與程序規劃，都是案件的重要環節。"],["民事爭議，重點不只是誰對誰錯。","從契約、損害賠償到強制執行，重視權利如何實際實現。"],["刑事案件，每一個程序都值得謹慎面對。","從偵查到法院審理，協助當事人理解程序、證據與法律風險。"],["家庭案件，需要的不只是法律條文。","離婚、親權與財產爭議，還需要兼顧家庭關係與未來安排。"],["醫療爭議，專業分析從細節開始。","病歷、診療過程及相關證據，是釐清醫療法律責任的重要基礎。"],["勞資問題，往往同時牽涉法律與管理。","結合企業法務背景，協助分析解僱、勞動契約與職場爭議。"],["行政機關的決定，也可能需要法律檢視。","從行政處分、申訴到行政訴訟，協助當事人釐清救濟途徑。"],["專業經歷，不只累積在同一個產業。","科技、醫藥及跨國企業的法律工作經驗，形成多面向的實務視野。"],["律師的工作，也可以走進社區。","參與婦女、家庭及社會公益相關法律服務，讓法律知識走出辦公室。"],["一間律師事務所，為什麼還有自己的漫畫？","《德威陽｜有法度》用不同的創意方式，讓法律與專業團隊更容易被認識。"],["從迎賓沙發開始，走進真正的德威陽。","二樓認識團隊與工作日常，三樓探索林柏均律師的專業背景。"]];
+const wy348Tea=["☕ 咖啡可以續杯，法律期限可不能隨便延長。","🍪 餅乾可以分享，當事人的秘密不行。","☕ 律師的咖啡可能會冷，重要的案件期限不能忘。","🍰 甜點可以分層，法律責任也要分清楚。","☕ 咖啡有濃淡，法律分析不能只憑感覺。","🍪 餅乾碎了可以再拿，證據遺失可就麻煩了。","☕ 一杯咖啡的時間，可能足夠發現合約裡的一個問題。","🍰 甜點講究比例，損害賠償也講究依據。","☕ 咖啡要選豆，律師要先看證據。","🍪 零食有保存期限，法律上的請求權也可能有時效。","☕ 咖啡可以外帶，法律責任不會因為出國就自動消失。","🍰 蛋糕切得漂亮，不代表財產分割就容易。","☕ 有些問題，比咖啡還需要時間慢慢釐清。","🍪 餅乾少了一塊，先別急著指認嫌疑人。","☕ 咖啡可以加糖，契約條款不能只挑甜的看。","🍰 甜點可以試吃，合約可不能隨便試簽。","☕ 律師最熟悉的味道，可能是開庭前的第一杯咖啡。","🍪 零食可以先拿，別人的文件不能先翻。","☕ 一杯拿鐵有配方，一份法律意見也需要事實基礎。","🍰 甜點吃完會留下盤子，重要交易最好也留下紀錄。","☕ 咖啡機可以重新啟動，錯過的法定期限未必能重來。","🍪 包裝上寫著限量，合約上寫著限制，兩種都要看清楚。","☕ 今天適合喝咖啡，不一定適合衝動提告。","🍰 甜點可以選自己喜歡的，法律策略要選適合案件的。","☕ 咖啡香會散，電子證據也可能隨時間消失。","🍪 誰拿了最後一塊餅乾？先確認事實，再談責任。","☕ 咖啡可以慢慢品，法院通知可別慢慢看。","🍰 甜點有菜單，法律服務也需要先確認需求。","☕ 有些合約比黑咖啡還苦，簽之前最好先看懂。","🍪 歡迎來到德威陽，茶點先享用，法律問題交給專業來討論。"];
+const wy348State={lounge:0,tea:0};
+function wy348Open(action){
+ const isTea=action==='tea',arr=isTea?wy348Tea:wy348Sofa,idx=wy348State[action]%arr.length;
+ const heading=isTea?'☕ 法律人的咖啡時間':'坐一下，認識德威陽。';
+ const title=isTea?arr[idx]:arr[idx][0],detail=isTea?'':arr[idx][1];
+ wyLobbyDialog.classList.remove('wy228Elevator');
+ wyLobbyDialog.replaceChildren();
+ const h=document.createElement('h3');h.textContent=heading;h.style.cssText='color:#263B57;margin:0 0 12px;font-size:19px';wyLobbyDialog.append(h);
+ const counter=document.createElement('p');counter.textContent=(isTea?'茶點小語 ':'迎賓故事 ')+(idx+1)+' / '+arr.length;counter.style.cssText='color:#8D7045;font-size:12px;margin:0 0 9px';wyLobbyDialog.append(counter);
+ const panel=document.createElement('div');panel.style.cssText='background:#263B57;color:#fff;border:1px solid #DCC18C;border-radius:12px;padding:18px 15px;min-height:125px';
+ const big=document.createElement('div');big.textContent=title;big.style.cssText='font-size:17px;font-weight:750;line-height:1.65';
+ panel.append(big);
+ if(detail){const sub=document.createElement('p');sub.textContent=detail;sub.style.cssText='color:#F6DDAF;font-size:14px;line-height:1.65;margin:12px 0 0';panel.append(sub)}
+ wyLobbyDialog.append(panel);
+ const nav=document.createElement('div');nav.style.cssText='display:flex;gap:10px;margin-top:12px';
+ for(const [label,delta] of [['← 上一則',-1],['下一則 →',1]]){
+  const b=document.createElement('button');b.textContent=label;b.style.cssText='flex:1;min-width:0;padding:12px 5px;background:#263B57;color:#F6DDAF;border:1px solid #DCC18C;border-radius:10px;font-weight:700;touch-action:manipulation';
+  b.onclick=()=>{wy348State[action]=(idx+delta+arr.length)%arr.length;wy348Open(action)};nav.append(b);
+ }
+ wyLobbyDialog.append(nav);
+ const close=document.createElement('button');close.textContent='返回迎賓大廳';close.style.cssText='width:100%;margin-top:10px;padding:11px;background:#E9D6B7;color:#263B57;border:0;border-radius:10px;font-weight:700';
+ close.onclick=()=>wyLobbyDialog.style.display='none';wyLobbyDialog.append(close);
+ wyLobbyDialog.style.display='block';
+}
+
+function wyLobbyOpen(action){ if(action==='tea'||action==='lounge'){wy348Open(action);return;}
  const head={tea:'迎賓茶點區',lounge:'三層樓探索',elevator:'電梯｜選擇樓層'}[action]||'德威陽';
  let html='';
  if(action==='tea')html='<p>歡迎來到迎賓茶點區！這裡有咖啡機、飲水機、茶壺、茶杯與麵包點心。</p><p>二樓還有員工茶水間，藏著可以探索的互動小遊戲。想去看看嗎？</p><button data-lb="floor2">前往2樓員工辦公室</button>';
@@ -4597,7 +4631,7 @@ const familyGuideAgain=document.createElement('button');familyGuideAgain.textCon
 // v138: same modal layout and reopening behavior as the medical-island entry guide.
 const wyMainGuide=document.createElement('aside');wyMainGuide.id='wyMainGuide';
 wyMainGuide.style.cssText=medGuide.style.cssText+';background:#f8f5eb;border-color:#c6a365;color:#203858';
-wyMainGuide.innerHTML="<h3>歡迎來到德威陽城堡｜探索指南！</h3><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索「老闆今天在嗎？」。</p><button>開始探索</button>";
+wyMainGuide.innerHTML="<h3>歡迎來到德威陽｜有法度</h3><p>這裡不只有法律，還有你意想不到的律師事務所日常。從迎賓大廳出發，認識林柏均律師、專業團隊與法律工作的不同面貌。</p><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索「老闆今天在嗎？」。</p><button>開始探索</button>";
 document.body.append(wyMainGuide);wyMainGuide.querySelector('button').onclick=()=>{wyMainGuide.style.display='none';wyMainGuideSeen=true;try{localStorage.setItem('wy-guide-castle-v196','yes')}catch(e){}};
 const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';wyMainGuideAgain.id='wyMainGuideAgain';
 wyMainGuideAgain.style.cssText=medGuideAgain.style.cssText;document.body.append(wyMainGuideAgain);
