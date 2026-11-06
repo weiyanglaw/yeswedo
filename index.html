@@ -1374,7 +1374,7 @@ function luxStool(x,z,c){const g=luxG(x,z,0);for(const dx of [-.30,.30])for(cons
 for(const [x,c] of [[1.00,pal.pink],[3.12,pal.lav],[5.25,pal.mint]])luxStool(x,5.00,c);
 // TWO separate spa cocoons at left-front; no extra armchair or third sofa.
 function luxMassagePod(x,z,col,chairColor){
- const g=luxG(x,z,0),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
+ const g=luxG(x,z,-Math.PI/2),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
  // Half-open back-and-sides curved shell, front toward -Z; no ceiling.
  const shell=new THREE.Mesh(new THREE.CylinderGeometry(1.90,1.90,2.82,36,1,true,.20,Math.PI*1.12),mat);
  shell.rotation.y=Math.PI*.02;shell.position.set(0,1.52,.26);g.add(shell);
