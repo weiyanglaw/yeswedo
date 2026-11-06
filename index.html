@@ -1193,6 +1193,15 @@ const wy323Arch=new THREE.Mesh(new THREE.TorusGeometry(1.68,.16,12,48,Math.PI),w
 wy323Mesh(new THREE.SphereGeometry(.18,18,12),wy323Gold,-12.85,2.05,16.02);
 const wy323DoorClick=wy323Mesh(new THREE.BoxGeometry(.50,5.65,4.15),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-12.65,2.80,17.30);
 wy323EntranceHits.push(wy323DoorClick,wy323Leaf);
+// v345: single-line entrance sign, matching existing navy-and-champagne-gold plaques.
+const wy345SignCanvas=document.createElement('canvas');wy345SignCanvas.width=768;wy345SignCanvas.height=160;
+const wy345SignCtx=wy345SignCanvas.getContext('2d');
+wy345SignCtx.fillStyle='#263B57';wy345SignCtx.fillRect(0,0,768,160);
+wy345SignCtx.strokeStyle='#DCC18C';wy345SignCtx.lineWidth=8;wy345SignCtx.strokeRect(8,8,752,144);
+wy345SignCtx.fillStyle='#EFD9A5';wy345SignCtx.textAlign='center';wy345SignCtx.textBaseline='middle';wy345SignCtx.font='bold 80px sans-serif';wy345SignCtx.fillText('員工自由心證',384,84);
+const wy345SignTex=new THREE.CanvasTexture(wy345SignCanvas);wy345SignTex.colorSpace=THREE.SRGBColorSpace;
+const wy345EntrySign=new THREE.Mesh(new THREE.PlaneGeometry(4.15,.86),new THREE.MeshBasicMaterial({map:wy345SignTex,transparent:true,side:THREE.DoubleSide,depthWrite:false}));
+wy345EntrySign.position.set(-12.7,6.20,17.3);roomRoot.add(wy345EntrySign);
 // Entirely separate spatial island, 110+ units away from original office.
 // It is not attached to the office footprint and contains NO furnishings.
 const wy323Room=new THREE.Group();officeScene.add(wy323Room);wy323Room.visible=false;
@@ -1377,10 +1386,10 @@ function luxMassagePod(x,z,col,chairColor){
  const g=luxG(x,z,Math.PI),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
  // Half-open back-and-sides curved shell, front toward -Z; no ceiling.
  const shell=new THREE.Mesh(new THREE.CylinderGeometry(1.90,1.90,2.82,36,1,true,.20,Math.PI*1.12),mat);
- shell.rotation.y=Math.PI*.02;shell.position.set(0,1.52,.26);g.add(shell);
+ shell.rotation.y=Math.PI*.02;shell.position.set(0,1.52,-2.95);g.add(shell);
  luxC(g,0,.10,.26,1.88,.20,pal.ivory,36);
  // Upper gold rim is a curved vertical band attached to shell, not a floating torus.
- const rim=new THREE.Mesh(new THREE.CylinderGeometry(1.94,1.94,.12,36,1,true,.20,Math.PI*1.12),w326mat(pal.gold));rim.position.set(0,2.86,.26);rim.rotation.y=Math.PI*.02;g.add(rim);
+ const rim=new THREE.Mesh(new THREE.CylinderGeometry(1.94,1.94,.12,36,1,true,.20,Math.PI*1.12),w326mat(pal.gold));rim.position.set(0,2.86,-2.95);rim.rotation.y=Math.PI*.02;g.add(rim);
  // Tall massage chair with padded back, arm supports, articulated leg rest.
  luxB(g,0,.48,.08,1.20,.76,1.42,chairColor,.23);
  luxB(g,0,1.43,.65,1.30,2.05,.58,chairColor,.28);
@@ -1516,7 +1525,27 @@ function wy337Sofa(key){
  root.querySelector('#wy339Next').onclick=()=>{playing=false;step=Math.min(arr[idx].length-1,step+1);show()};
  root.querySelector('#wy337Again').onclick=()=>{playing=true;idx=wy337StoryIndex[key]++%arr.length;step=0;show()};show();
 }
-function wy337Coffee(){const b=wy337Overlay('皇家咖啡調製師');const drinks=[['冰拿鐵','咖啡','牛奶','冰塊'],['熱拿鐵','咖啡','牛奶','無冰'],['冰美式','咖啡','水','冰塊'],['熱美式','咖啡','水','無冰'],['香草拿鐵','咖啡','牛奶','香草']];let score=0,round=0;function draw(){if(round===5){b.innerHTML='<h2>完成挑戰</h2><p>總分 '+score+' / 500</p>';b.append(wy337Button('再玩一次',wy337Coffee));return;}const order=drinks[Math.floor(Math.random()*drinks.length)];b.innerHTML='<p>第 '+(round+1)+' / 5 杯　目前 '+score+' 分</p><h2>客人點了 '+order[0]+'</h2><p>選擇配方</p>';let picks=[];for(const opts of [['咖啡','茶'],['牛奶','水'],['冰塊','無冰','香草']]){const sel=document.createElement('select');sel.style.cssText='display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px';for(const o of opts)sel.add(new Option(o,o));b.append(sel);picks.push(sel);}b.append(wy337Button('送出咖啡',()=>{const correct=picks.every((s,i)=>s.value===order[i+1]);score+=correct?100:0;round++;draw();const msg=document.createElement('p');msg.textContent=correct?'配方正確 +100':'配方不符 再接再厲';b.prepend(msg);}));}draw();}
+const wy346Drinks=[
+ ['冰拿鐵','咖啡','牛奶','冰塊'],['熱拿鐵','咖啡','牛奶','無冰'],['冰美式','咖啡','水','冰塊'],['熱美式','咖啡','水','無冰'],['香草拿鐵','咖啡','牛奶','香草'],
+ ['冰燕麥拿鐵','咖啡','燕麥奶','冰塊'],['熱燕麥拿鐵','咖啡','燕麥奶','無冰'],['冰焦糖拿鐵','咖啡','牛奶','焦糖'],['熱榛果拿鐵','咖啡','牛奶','榛果'],['冰抹茶拿鐵','抹茶','牛奶','冰塊']
+];
+let wy346CoffeeQueue=[];
+function wy346Shuffle(a){const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;}
+function wy337Coffee(){
+ const b=wy337Overlay('皇家咖啡調製師');let score=0,round=0;
+ if(wy346CoffeeQueue.length<5)wy346CoffeeQueue=wy346Shuffle(wy346Drinks.map((_,i)=>i));
+ const orders=wy346CoffeeQueue.splice(0,5).map(i=>wy346Drinks[i]);
+ function draw(){
+  if(round===5){b.innerHTML='<h2>完成挑戰</h2><p>總分 '+score+' / 500</p><p>本局5杯不重複，下一局挑戰其他5種飲品。</p>';b.append(wy337Button('再玩一次',wy337Coffee));return;}
+  const order=orders[round];b.innerHTML='<p>第 '+(round+1)+' / 5 杯　目前 '+score+' 分</p><h2>客人點了 '+order[0]+'</h2><p>選擇配方</p>';
+  const picks=[];for(const opts of [['咖啡','抹茶'],['牛奶','水','燕麥奶'],['冰塊','無冰','香草','焦糖','榛果']]){
+   const sel=document.createElement('select');sel.style.cssText='display:block;width:100%;margin:8px 0;padding:10px;border-radius:8px';
+   for(const o of opts)sel.add(new Option(o,o));b.append(sel);picks.push(sel);
+  }
+  b.append(wy337Button('送出咖啡',()=>{const correct=picks.every((v,i)=>v.value===order[i+1]);score+=correct?100:0;round++;draw();const msg=document.createElement('p');msg.textContent=correct?'配方正確 +100':'配方不符，再接再厲';b.prepend(msg);}));
+ }draw();
+}
+let wy346FridgeQueue=[];
 function wy337Fridge(){
  const b=wy337Overlay('德威陽冰箱懸案');
  const cases=[
@@ -1524,9 +1553,14 @@ function wy337Fridge(){
  {name:'午夜蛋糕事件',missing:'蛋糕',culprit:'夢奇奇',clues:['蛋糕盒貼著白色便利貼','冰箱旁找到白色髮圈','有人留下「幫大家分裝」的字條'],testimony:{'夢奇奇':'我只是把蛋糕分裝好','哈姆太郎':'我看到有人拿著小盤子','薪水掌門人':'我今天只拿了鮮奶'},ending:'原來夢奇奇把蛋糕分成小份，還先試吃了一口。林律師：分裝也要留紀錄！'},
  {name:'神祕飲料交換案',missing:'咖啡',culprit:'薪水掌門人',clues:['飲料杯貼著銀行號碼牌','冰箱裡多了一瓶鮮奶','收據背面寫著「咖啡先借我」'],testimony:{'夢奇奇':'我只負責訂飲料','哈姆太郎':'我看到有人趕著出門','薪水掌門人':'我去銀行前真的很需要咖啡'},ending:'薪水掌門人趕銀行，拿錯了老闆咖啡。林律師：銀行比我還急嗎？'},
  {name:'冰箱神祕便當',missing:'便當',culprit:'哈姆太郎',clues:['便當盒旁有黑色耳機收納袋','有人拍了便當特寫','便當被移到最上層'],testimony:{'夢奇奇':'我看到便當還在冰箱裡','哈姆太郎':'我只是借它拍照','薪水掌門人':'我完全沒碰便當'},ending:'哈姆太郎把便當移去拍照，忘了放回原位。夢奇奇：便當也要拍形象照？'},
- {name:'最後一瓶鮮奶',missing:'鮮奶',culprit:'夢奇奇',clues:['咖啡杯旁有白色牛奶痕','桌上留下白T同款小貼紙','咖啡機旁找到空鮮奶瓶'],testimony:{'夢奇奇':'我只是想做拿鐵','哈姆太郎':'我喝的是美式','薪水掌門人':'我正在整理發票'},ending:'夢奇奇做拿鐵用完鮮奶，忘記補貨。哈姆太郎：下次要寫進庫存系統！'}
+ {name:'最後一瓶鮮奶',missing:'鮮奶',culprit:'夢奇奇',clues:['咖啡杯旁有白色牛奶痕','桌上留下白T同款小貼紙','咖啡機旁找到空鮮奶瓶'],testimony:{'夢奇奇':'我只是想做拿鐵','哈姆太郎':'我喝的是美式','薪水掌門人':'我正在整理發票'},ending:'夢奇奇做拿鐵用完鮮奶，忘記補貨。哈姆太郎：下次要寫進庫存系統！'},
+ {name:'消失的芒果優格',missing:'芒果優格',culprit:'薪水掌門人',clues:['優格蓋上貼著報帳便條','影印機旁出現黃色小湯匙','銀行收據夾著冷藏提醒'],testimony:{'夢奇奇':'我只幫忙把食物放進冰箱','哈姆太郎':'我在剪影片，沒吃優格','薪水掌門人':'我整理發票時順手帶去會議室'},ending:'薪水掌門人把優格當成加班點心，忙到忘記歸還。林律師：連優格都要列入帳嗎？'},
+ {name:'草莓三明治疑雲',missing:'草莓三明治',culprit:'夢奇奇',clues:['餐盒旁留下白色髮圈','桌上有拍攝限時動態的便條','餐巾紙寫著「先借去拍照」'],testimony:{'夢奇奇':'我想拍一張下午茶照片','哈姆太郎':'我只負責修圖','薪水掌門人':'我沒有離開會計桌'},ending:'夢奇奇借走三明治拍照，放在茶水間桌上忘了放回去。哈姆太郎：照片先吃飽了！'},
+ {name:'起司蛋糕去哪了',missing:'起司蛋糕',culprit:'哈姆太郎',clues:['蛋糕盒上有攝影燈反光','垃圾桶裡有黑色包裝紙','電腦旁留著蛋糕叉'],testimony:{'夢奇奇':'我看見有人在拍開箱','哈姆太郎':'我只是想測試補光燈','薪水掌門人':'我下午都在跑銀行'},ending:'哈姆太郎拍完蛋糕開箱，順手把試吃變成完食。夢奇奇：這叫證據滅失！'},
+ {name:'氣泡水離奇蒸發',missing:'氣泡水',culprit:'薪水掌門人',clues:['空瓶旁放著零用金清單','杯墊壓著銀行號碼牌','有人在瓶身寫「會議用」'],testimony:{'夢奇奇':'我今天喝的是茶','哈姆太郎':'我在剪音效，沒有拿飲料','薪水掌門人':'臨時會議需要飲料，我忘了補貨'},ending:'薪水掌門人把氣泡水拿去臨時會議，忘記補回冰箱。林律師：下次會議先申請飲料預算！'},
+ {name:'失蹤的抹茶泡芙',missing:'抹茶泡芙',culprit:'夢奇奇',clues:['泡芙盒留下白色貼紙','桌上出現抹茶粉痕','手機記事本寫著「大家分一半」'],testimony:{'夢奇奇':'我只是想幫大家分點心','哈姆太郎':'我還沒拍到泡芙','薪水掌門人':'我看到有人端著小盤子'},ending:'夢奇奇把泡芙分到小盤子裡，忘記通知大家。哈姆太郎：失蹤的是整盒，不是證物！'}
  ];
- const c=cases[Math.floor(Math.random()*cases.length)];let found=[];let phase='search';
+ if(!wy346FridgeQueue.length)wy346FridgeQueue=wy346Shuffle(cases.map((_,i)=>i));const c=cases[wy346FridgeQueue.shift()];let found=[];let phase='search';
  function draw(){b.innerHTML='';const heading=document.createElement('h3');heading.textContent=c.name;b.append(heading);
  const info=document.createElement('p');info.textContent='失蹤證物：'+c.missing+'　｜　線索 '+found.length+'/3';b.append(info);
  if(phase==='search'){
@@ -1542,7 +1576,27 @@ function wy337Fridge(){
  }
  }draw();
 }
-function wy337Memory(){const b=wy337Overlay('零食記憶挑戰');const items=['餅乾','巧克力','洋芋片','糖果','蛋糕','布丁','果凍','堅果'];let level=4;function begin(){const seq=items.slice().sort(()=>Math.random()-.5).slice(0,level);b.innerHTML='<h3>記住以下零食順序</h3><p style="font-size:23px">'+seq.join('　')+'</p><p>3秒後開始作答</p>';wy337Timer=setTimeout(()=>{let i=0;b.innerHTML='<p>依照剛才順序選出零食</p>';const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(2,1fr)';function draw(){grid.innerHTML='';items.slice().sort(()=>Math.random()-.5).forEach(item=>grid.append(wy337Button(item,()=>{if(item!==seq[i]){b.innerHTML='<h3>順序不正確</h3><p>答對 '+i+' 個</p>';b.append(wy337Button('重新挑戰',begin));return;}i++;if(i===seq.length){b.innerHTML='<h3>全部答對</h3>';b.append(wy337Button('下一關',()=>{level=Math.min(8,level+1);begin()}));}else draw();})));}b.append(grid);draw();},3000);}begin();}
+function wy337Memory(){
+ const b=wy337Overlay('零食記憶挑戰');
+ const items=['餅乾','巧克力','洋芋片','糖果','蛋糕','布丁','果凍','堅果','爆米花','米果','棉花糖','仙貝','水果乾'];
+ let level=1;
+ function begin(){
+  const count=level+3,seq=wy346Shuffle(items).slice(0,count);
+  b.innerHTML='<h3>第 '+level+' / 10 關</h3><p>記住以下 '+count+' 種零食順序</p><p style="font-size:20px;line-height:1.8">'+seq.join('　')+'</p><p>3秒後開始作答</p>';
+  wy337Timer=setTimeout(()=>{
+   let i=0;b.innerHTML='<p>第 '+level+' / 10 關：依照剛才順序選出零食（'+count+' 種）</p>';
+   const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px';
+   function draw(){grid.innerHTML='';for(const item of wy346Shuffle(items))grid.append(wy337Button(item,()=>{
+    if(item!==seq[i]){b.innerHTML='<h3>順序不正確</h3><p>答對 '+i+' / '+count+' 個</p>';b.append(wy337Button('重新挑戰本關',begin));return;}
+    i++;if(i===seq.length){b.innerHTML='<h3>第 '+level+' 關挑戰成功！</h3>';
+     if(level===10)b.append(wy337Button('10關全破！重新挑戰',()=>{level=1;begin()}));
+     else b.append(wy337Button('下一關',()=>{level++;begin()}));
+    }else{b.querySelector('p').textContent='第 '+level+' / 10 關：已答對 '+i+' / '+count+' 個';draw();}
+   }));}
+   b.append(grid);draw();
+  },3000);
+ }begin();
+}
 function wy337Spa(key){
  wy337Close();
  const isSea=key==='spaA';
@@ -1575,7 +1629,29 @@ function wy337Spa(key){
 }
 function wy337Open(key){if(key==='pink'||key==='mint')wy337Sofa(key);else if(key==='coffee')wy337Coffee();else if(key==='fridge')wy337Fridge();else if(key==='snacks')wy337Memory();else wy337Spa(key);}
 
-function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+10.9,.08,7.3);officeCam.position.set(wy323X+8.4,9.0,15.3);officeOrbit.target.set(wy323X,1.6,-1.3);officeOrbit.update();}
+// v345: first-entry welcome for each distinct 2F area. Uses the 3F modal styling.
+const wy345IntroKeys={office:'weiyang-2f-office-intro-v345',lounge:'weiyang-2f-lounge-intro-v345'};
+const wy345Intro=document.createElement('div');wy345Intro.id='wy3Intro';
+// The 3F modal has this id already: use a separate id and reuse the exact same CSS rules by cloning their selectors.
+wy345Intro.id='wy345Intro';
+const wy345Style=document.createElement('style');
+wy345Style.textContent=Array.from(document.styleSheets).flatMap(sheet=>{try{return Array.from(sheet.cssRules||[]).filter(rule=>rule.cssText&&rule.cssText.includes('#wy3Intro')).map(rule=>rule.cssText.replaceAll('#wy3Intro','#wy345Intro'))}catch(e){return []}}).join('\n');
+if(!wy345Style.textContent)wy345Style.textContent='#wy345Intro{position:fixed;inset:0;z-index:115;display:none;align-items:center;justify-content:center;padding:16px;background:#111a20c9;font-family:system-ui,sans-serif}#wy345Intro .wy3Card{position:relative;width:min(92vw,520px);padding:27px;background:linear-gradient(145deg,#33281f,#211d1b);border:1px solid #91724a;border-radius:15px;text-align:center;color:#f3e6d1;box-shadow:0 18px 55px #0009}#wy345Intro h2{color:#f6e9cf;font-size:clamp(20px,5vw,28px)}#wy345Intro p{line-height:1.7}#wy345Intro button{padding:12px 19px;background:#8b683c;color:#fff8e7;border:1px solid #d9b77d;border-radius:10px;font-weight:800}';
+document.head.append(wy345Style);document.body.append(wy345Intro);
+const wy345IntroContent={
+ office:{title:'歡迎來到老闆的視線範圍',subtitle:'二樓辦公室｜員工生存觀察區',body:'案件認真辦，日常不一定正經。來看看德威陽團隊都在忙什麼！',button:'開始巡視辦公室'},
+ lounge:{title:'老闆不在，快樂無限',subtitle:'二樓茶水間｜合法摸魚休息區',body:'咖啡、零食、八卦與按摩椅都在這裡。休息一下，靈魂才跟得上薪水！',button:'開始合法摸魚'}
+};
+function wy345ShowIntro(area){
+ if(!insideOffice||wyOfficeFloor!==2||!wy345IntroContent[area])return;
+ try{if(localStorage.getItem(wy345IntroKeys[area])==='yes')return}catch(e){}
+ const c=wy345IntroContent[area];wy345Intro.style.display='flex';
+ wy345Intro.innerHTML='<div class="wy3Card"><i class="wy3Edge left"></i><i class="wy3Edge right"></i><small>WEIYANG · 2F</small><h2></h2><div class="wy345Sub" style="color:#d6b782"></div><p></p><button type="button"></button></div>';
+ wy345Intro.querySelector('h2').textContent=c.title;wy345Intro.querySelector('.wy345Sub').textContent=c.subtitle;wy345Intro.querySelector('p').textContent=c.body;
+ const button=wy345Intro.querySelector('button');button.textContent=c.button;
+ button.onclick=()=>{try{localStorage.setItem(wy345IntroKeys[area],'yes')}catch(e){}wy345Intro.style.display='none'};
+}
+function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+10.9,.08,7.3);officeCam.position.set(wy323X+8.4,9.0,15.3);officeOrbit.target.set(wy323X,1.6,-1.3);officeOrbit.update();wy345ShowIntro('lounge');}
 function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update();}
 
 // Warm skirting and picture lights.
@@ -3986,7 +4062,7 @@ let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
 const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(wyElev2.position.x-2.15,0,wyElev2.position.z),wyElev3Pos=new THREE.Vector3(7.75,0,6.45);const wyElevPos=f=>f===1?wyElev1Pos:f===2?wyElev2Pos:wyElev3Pos;
 
 // v165: globally suppress movement controls while any interaction panel is visible.
-const wy165ModalIds=['dialog','wyLobbyDialog','wyMainGuide','wyFamilyGuide','wyMedicalGuide','wy3Intro','wy3MovieModal','wy260Modal','wyInfo'];
+const wy165ModalIds=['dialog','wyLobbyDialog','wyMainGuide','wyFamilyGuide','wyMedicalGuide','wy3Intro','wy345Intro','wy3MovieModal','wy260Modal','wyInfo'];
 function wy165SyncControls(){const open=wy165ModalIds.some(id=>{const e=document.getElementById(id);return e&&getComputedStyle(e).display!=='none'&&getComputedStyle(e).visibility!=='hidden'&&(!e.classList.contains('open')?id!=='wyInfo':true)})||document.querySelector('#wyInfo.open');if(document.body.classList.contains('wy165-dialog-open')!==!!open)document.body.classList.toggle('wy165-dialog-open',!!open);if(open&&typeof wyJoyReset==='function')wyJoyReset();}
 new MutationObserver(wy165SyncControls).observe(document.body,{subtree:true,attributes:true,attributeFilter:['style','class']});wy165SyncControls();
 
@@ -4311,7 +4387,7 @@ function wyElevatorTick(dt){
     wyRide=null;wyDoorOpen=0;wyLiftPrompt.style.display='none';
     if(r.dest===3){wy3ArrivalPlayed=true;try{localStorage.setItem(wy3ArrivalKey,'yes')}catch(e){}wy3PlayArrival();}
     // Restore the standard floor overview after the temporary ride follow camera.
-    if(r.dest!==3){wyResetIndoorRideCamera(r.dest);if(wyIndoorActor)wyIndoorActor.visible=true;}
+    if(r.dest!==3){wyResetIndoorRideCamera(r.dest);if(wyIndoorActor)wyIndoorActor.visible=true;if(r.dest===2)wy345ShowIntro('office');}
    }
   }
  }
@@ -4706,7 +4782,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());if(wyOfficeFloor===2)wy300SyncCaption();renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();if(wy323Inside){for(const plaque of wy338BillboardPlaques)plaque.quaternion.copy(officeCam.quaternion);}renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
+previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());if(wyOfficeFloor===2)wy300SyncCaption();renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();if(wy323Inside){for(const plaque of wy338BillboardPlaques)plaque.quaternion.copy(officeCam.quaternion);}else{wy345EntrySign.quaternion.copy(officeCam.quaternion);}renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="credits.html" target="_blank">模型授權</a></div>
 
