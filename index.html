@@ -1374,7 +1374,7 @@ function luxStool(x,z,c){const g=luxG(x,z,0);for(const dx of [-.30,.30])for(cons
 for(const [x,c] of [[1.00,pal.pink],[3.12,pal.lav],[5.25,pal.mint]])luxStool(x,5.00,c);
 // TWO separate spa cocoons at left-front; no extra armchair or third sofa.
 function luxMassagePod(x,z,col,chairColor){
- const g=luxG(x,z,-Math.PI/2),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
+ const g=luxG(x,z,Math.PI),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
  // Half-open back-and-sides curved shell, front toward -Z; no ceiling.
  const shell=new THREE.Mesh(new THREE.CylinderGeometry(1.90,1.90,2.82,36,1,true,.20,Math.PI*1.12),mat);
  shell.rotation.y=Math.PI*.02;shell.position.set(0,1.52,.26);g.add(shell);
@@ -1547,32 +1547,29 @@ function wy337Spa(key){
  wy337Close();
  const isSea=key==='spaA';
  const title=isSea?'老闆我在海邊':'花開老闆不在';
- const sources=isSea?['wy341_sea.mp4']:['wy341_flower1.mp4','wy341_flower2.mp4'];
- let index=0,closed=false,playing=true,showControls=true,audioContext=null,audioNodes=[],audioTimer=null,soundOn=false,hideTimer=null;
+ const sources=isSea?['wy344_sea.mp4']:['wy344_flower.mp4'];
+ let index=0,closed=false,playing=true,soundOn=false,hideTimer=null;
  const root=document.createElement('div');root.id='wy341Immersive';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',title);
  root.style.cssText='position:fixed;inset:0;z-index:99999;background:#050b13;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden';document.body.append(root);
- const video=document.createElement('video');video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');video.preload='auto';video.muted=true;video.loop=isSea;video.autoplay=true;video.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#050b13';root.append(video);
+ const video=document.createElement('video');video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');video.preload='auto';video.muted=true;video.loop=true;video.autoplay=true;video.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#050b13';root.append(video);
  const head=document.createElement('div');head.style.cssText='position:absolute;top:0;left:0;right:0;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 18px;background:linear-gradient(#07182bdf,transparent);display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:2;transition:opacity .4s';root.append(head);
  const heading=document.createElement('strong');heading.textContent=title;heading.style.cssText='color:#efd39b;font-size:clamp(18px,4.6vw,23px);text-shadow:0 2px 5px #000';head.append(heading);
  function btn(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='background:#263B57e8;color:#fff6df;border:1px solid #dfc18a;border-radius:12px;padding:12px 13px;min-height:45px;font-size:15px;font-weight:700;cursor:pointer';b.onclick=e=>{e.stopPropagation();fn()};return b}
  head.append(btn('✕ 返回茶水間',close));
  const footer=document.createElement('div');footer.style.cssText='position:absolute;bottom:0;left:0;right:0;padding:18px 12px calc(22px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#07182be9);display:flex;justify-content:center;gap:10px;align-items:center;z-index:2;transition:opacity .4s';root.append(footer);
- const playBtn=btn('暫停',togglePlay),soundBtn=btn('開啟音樂',toggleSound);footer.append(playBtn,soundBtn);
+ const playBtn=btn('暫停',togglePlay),soundBtn=btn('開啟影片原聲',toggleSound);footer.append(playBtn,soundBtn);
  const status=document.createElement('div');status.style.cssText='position:absolute;left:12px;right:12px;bottom:calc(98px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff4d7;text-shadow:0 2px 5px #000;font-size:13px;pointer-events:none';root.append(status);
  const intro=document.createElement('div');intro.textContent=title;intro.style.cssText='position:absolute;left:0;right:0;top:44%;text-align:center;font-weight:800;font-size:clamp(27px,7vw,40px);color:#f4dcaa;text-shadow:0 3px 16px #000;pointer-events:none;transition:opacity 1.2s';root.append(intro);
  setTimeout(()=>{if(!closed)intro.style.opacity='0'},2000);
- function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':('花園漫遊 '+(i+1)+' / '+sources.length);if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
- video.addEventListener('ended',()=>{if(!isSea&&!closed)load((index+1)%sources.length)});
+ function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'花園沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
+ 
  video.addEventListener('error',()=>{if(!closed)status.textContent='影片無法載入，請確認影片檔案已上傳至網站根目錄'});
  function togglePlay(){playing=video.paused;if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請再次點擊播放'})}else video.pause();playBtn.textContent=playing?'暫停':'播放';scheduleHide()}
- // Original, softly synthesized ambient tones: no third-party music files or licensing assumptions.
- function stopSound(){if(audioTimer)clearInterval(audioTimer);audioTimer=null;for(const node of audioNodes){try{node.stop()}catch(e){}try{node.disconnect()}catch(e){}}audioNodes=[];if(audioContext){audioContext.close().catch(()=>{});audioContext=null}}
- function tone(freq,duration,when,volume){if(!audioContext)return;const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.type='sine';osc.frequency.value=freq;gain.gain.setValueAtTime(0,when);gain.gain.linearRampToValueAtTime(volume,when+.28);gain.gain.exponentialRampToValueAtTime(.0001,when+duration);osc.connect(gain);gain.connect(audioContext.destination);osc.start(when);osc.stop(when+duration+.02);audioNodes.push(osc);if(audioNodes.length>48)audioNodes.splice(0,24)}
- let note=0;function musicStep(){if(!audioContext)return;const now=audioContext.currentTime+.03;const seq=isSea?[220,261.63,329.63,293.66,246.94,196,261.63,220]:[261.63,329.63,392,349.23,293.66,329.63,261.63,220];tone(seq[note%seq.length],2.9,now,.028);if(note%2===0)tone(seq[note%seq.length]/2,3.4,now,.012);note++}
- function toggleSound(){soundOn=!soundOn;if(soundOn){try{const C=window.AudioContext||window.webkitAudioContext;audioContext=new C();audioContext.resume();musicStep();audioTimer=setInterval(musicStep,2100);soundBtn.textContent='關閉音樂'}catch(e){soundOn=false;stopSound();soundBtn.textContent='音樂不可用'}}else{stopSound();soundBtn.textContent='開啟音樂'}scheduleHide()}
+ // Play only the audio embedded in the user's own MP4; no synthesized soundtrack.
+ function toggleSound(){soundOn=!soundOn;video.muted=!soundOn;soundBtn.textContent=soundOn?'關閉影片原聲':'開啟影片原聲';scheduleHide()}
  function scheduleHide(){clearTimeout(hideTimer);head.style.opacity='1';footer.style.opacity='1';head.style.pointerEvents='auto';footer.style.pointerEvents='auto';hideTimer=setTimeout(()=>{if(!closed){head.style.opacity='0';footer.style.opacity='0';head.style.pointerEvents='none';footer.style.pointerEvents='none'}},5500)}
  root.addEventListener('click',e=>{if(e.target===video||e.target===root)scheduleHide()});
- function close(){if(closed)return;closed=true;clearTimeout(hideTimer);stopSound();video.pause();video.removeAttribute('src');video.load();root.remove();document.removeEventListener('keydown',esc)}
+ function close(){if(closed)return;closed=true;clearTimeout(hideTimer);video.pause();video.removeAttribute('src');video.load();root.remove();document.removeEventListener('keydown',esc)}
  function esc(e){if(e.key==='Escape')close()}document.addEventListener('keydown',esc);
  load(0);scheduleHide();
 }
