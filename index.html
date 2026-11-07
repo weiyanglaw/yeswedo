@@ -2865,8 +2865,8 @@ function wyUpdateGlassCabin(f,dt){
  }
 }
 // Same small text-only floating interaction labels as 2F, never icons or large explainer boards.
-lbText('迎賓茶點區',-8.7,4.15,-4.0,3.3,.68,'tea');
-lbText('三層樓探索',0,2.0,-2.6,3.3,.68,'lounge');
+lbText('法律也能加點糖',-8.7,4.15,-4.0,3.3,.68,'tea');
+lbText('有法可聊不無聊',0,2.0,-2.6,3.3,.68,'lounge');
 
 
 // v159: independent walkable 3F private office, with no changes to 1F or 2F geometry.
@@ -4112,8 +4112,6 @@ wy300Caption.id='wy300Caption';
 wy300Caption.textContent='德威陽的日常，精彩輪番登場。';
 wy300Caption.style.cssText='border-bottom:1px solid rgba(188,156,101,.48);padding:0 5px 7px;position:fixed;top:calc(235px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:7;max-width:calc(100vw - 22px);white-space:nowrap;font-size:clamp(19px,5.3vw,24px);font-weight:700;letter-spacing:-.025em;color:#263B57;text-shadow:0 1px 2px #f3f7f7a8;pointer-events:none;text-align:center;display:none';
 document.body.appendChild(wy300Caption);
-// v350: distinct 1F welcome subtitle.
-const wy350Subtitle=document.createElement('div');wy350Subtitle.textContent='律師的專業與日常，比你想的更精彩。';wy350Subtitle.style.cssText='position:fixed;z-index:8;top:calc(188px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);max-width:94vw;width:max-content;text-align:center;pointer-events:none;color:#263B57;font-weight:700;font-size:clamp(13px,3.5vw,17px);background:#fff8edee;border:1px solid #DCC18C;border-radius:12px;padding:7px 10px;display:none';document.body.append(wy350Subtitle);
 function wy300SyncCaption(){
  const visible=insideOffice&&!activeIslandRoom&&wyOfficeFloor===2;
  if(!visible){wy300Caption.style.display='none';return;}
@@ -4136,7 +4134,7 @@ function wy300SyncCaption(){
  const textBottom=y+Math.max(38,wy300Caption.offsetHeight);
  wy300Caption.style.display=officeTop<textBottom+8?'none':'block';
 }
-function wySetFloor(n){if(wy323Inside)wy323Leave();wy350Subtitle.style.display=n===1?'block':'none';wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
+function wySetFloor(n){if(wy323Inside)wy323Leave();wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'歡迎光臨，這裡很有法度':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update()}
@@ -4261,10 +4259,30 @@ function wy245RideFollow(dt){
  }
 }
 
+let wy351LoungeTransfer=false;
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
- if(wy323Inside)wy323Leave();
-  if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
+ if(wy323Inside){
+  // v351: prevent the lounge camera / actor teleport from being rendered as a flash.
+  // Transition first to the 2F corridor, then start the ordinary physical elevator walk.
+  if(wy351LoungeTransfer)return;
+  wy351LoungeTransfer=true;
+  const veil=document.createElement('div');
+  veil.style.cssText='position:fixed;inset:0;z-index:110;background:#172c43;opacity:0;transition:opacity .32s ease;pointer-events:all';
+  document.body.appendChild(veil);
+  requestAnimationFrame(()=>{veil.style.opacity='1';});
+  setTimeout(()=>{
+   wy323Leave();
+   // Hold the curtain until the scene and camera are at the corridor.
+   requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+    wyStartRide(dest);
+    veil.style.opacity='0';
+    setTimeout(()=>{veil.remove();wy351LoungeTransfer=false;},380);
+   });});
+  },370);
+  return;
+ }
+ if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
  wyIndoorMakeActor();
  const source=wyOfficeFloor,approach=source===3&&wy180AtOffice?new THREE.Vector3(8.65,.08,5.55):wyElevPos(source);
  const current=wyIndoorActor.position;
@@ -4591,7 +4609,7 @@ function enterOffice(){
  document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
  if(!wyMainGuideSeen){wyMainGuide.style.display='block';}document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
-function leaveOffice(){wy350Subtitle.style.display='none';if(wy323Inside)wy323Leave();
+function leaveOffice(){if(wy323Inside)wy323Leave();
  for(const item of Object.values(wy175ExtraGuides)){item.button.style.display='none';item.guide.style.display='none';}
  closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
