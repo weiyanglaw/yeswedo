@@ -1194,14 +1194,14 @@ wy323Mesh(new THREE.SphereGeometry(.18,18,12),wy323Gold,-12.85,2.05,16.02);
 const wy323DoorClick=wy323Mesh(new THREE.BoxGeometry(.50,5.65,4.15),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-12.65,2.80,17.30);
 wy323EntranceHits.push(wy323DoorClick,wy323Leaf);
 // v345: single-line entrance sign, matching existing navy-and-champagne-gold plaques.
-const wy345SignCanvas=document.createElement('canvas');wy345SignCanvas.width=768;wy345SignCanvas.height=160;
+const wy345SignCanvas=document.createElement('canvas');wy345SignCanvas.width=640;wy345SignCanvas.height=140;
 const wy345SignCtx=wy345SignCanvas.getContext('2d');
-wy345SignCtx.fillStyle='#263B57';wy345SignCtx.fillRect(0,0,768,160);
-wy345SignCtx.strokeStyle='#DCC18C';wy345SignCtx.lineWidth=8;wy345SignCtx.strokeRect(8,8,752,144);
-wy345SignCtx.fillStyle='#EFD9A5';wy345SignCtx.textAlign='center';wy345SignCtx.textBaseline='middle';wy345SignCtx.font='bold 80px sans-serif';wy345SignCtx.fillText('員工自由心證',384,84);
+wy345SignCtx.fillStyle='#263B57';wy345SignCtx.fillRect(0,0,640,140);
+wy345SignCtx.strokeStyle='#DCC18C';wy345SignCtx.lineWidth=8;wy345SignCtx.strokeRect(8,8,624,124);
+wy345SignCtx.fillStyle='#EFD9A5';wy345SignCtx.textAlign='center';wy345SignCtx.textBaseline='middle';wy345SignCtx.font='bold 66px sans-serif';wy345SignCtx.fillText('員工自由心證',320,74);
 const wy345SignTex=new THREE.CanvasTexture(wy345SignCanvas);wy345SignTex.colorSpace=THREE.SRGBColorSpace;
-const wy345EntrySign=new THREE.Mesh(new THREE.PlaneGeometry(4.65,1.02),new THREE.MeshBasicMaterial({map:wy345SignTex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}));
-wy345EntrySign.position.set(-12.7,7.48,17.3);wy345EntrySign.renderOrder=95;roomRoot.add(wy345EntrySign);
+const wy345EntrySign=new THREE.Mesh(new THREE.PlaneGeometry(4.65,1.02),new THREE.MeshBasicMaterial({map:wy345SignTex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
+wy345EntrySign.position.set(-12.7,7.48,17.3);wy345EntrySign.renderOrder=0;roomRoot.add(wy345EntrySign);
 // Entirely separate spatial island, 110+ units away from original office.
 // It is not attached to the office footprint and contains NO furnishings.
 const wy323Room=new THREE.Group();officeScene.add(wy323Room);wy323Room.visible=false;
@@ -1395,17 +1395,23 @@ for(const [x,c] of [[1.00,pal.pink],[3.12,pal.lav],[5.25,pal.mint]])luxStool(x,5
 // TWO separate spa cocoons at left-front; no extra armchair or third sofa.
 function luxMassagePod(x,z,col,chairColor){
  const g=luxG(x,z,Math.PI),mat=new THREE.MeshStandardMaterial({color:col,side:THREE.DoubleSide,roughness:.55});
- // v348: U-shaped privacy screen enclosing the chair's back and BOTH sides.
- // Chair orientation remains exactly as in v347. Entrance is left open on the -Z side.
- const screenRadius=1.87,screenCenterZ=.05,screenStart=.08,screenSpan=Math.PI*1.82;
- const shell=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius,screenRadius,2.95,64,1,true,screenStart,screenSpan),mat);
+ // v349: maintain chair direction. Solid wraparound behind chair, open lattice near the door-facing front.
+ // Local -Z faces the room entrance (the pod group is rotated by PI).
+ const screenRadius=1.87,screenCenterZ=.05;
+ const backStart=-2.30,backSpan=4.60; // opaque back and sides, no opaque panel across entrance
+ const shell=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius,screenRadius,2.95,64,1,true,backStart,backSpan),mat);
  shell.position.set(0,1.56,screenCenterZ);g.add(shell);
- luxC(g,0,.10,.26,1.88,.20,pal.ivory,36);
- const rim=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius+.035,screenRadius+.035,.11,64,1,true,screenStart,screenSpan),w326mat(pal.gold));
- rim.position.set(0,3.08,screenCenterZ);g.add(rim);
- // Narrow metallic base rim follows the entire screen, leaving the entrance clear.
- const baseRim=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius+.035,screenRadius+.035,.10,64,1,true,screenStart,screenSpan),w326mat(pal.gold));
- baseRim.position.set(0,.12,screenCenterZ);g.add(baseRim);
+ // Front shoulder portions use slim champagne-gold vertical bars instead of a solid wall.
+ const latticeAngles=[-2.77,-2.64,-2.51,-2.38,2.38,2.51,2.64,2.77];
+ for(const theta of latticeAngles){
+  const bar=new THREE.Mesh(new THREE.CylinderGeometry(.033,.033,2.84,10),w326mat(pal.gold));
+  bar.position.set(screenRadius*Math.sin(theta),1.58,screenCenterZ+screenRadius*Math.cos(theta));g.add(bar);
+ }
+ // Top and bottom rails trace the solid portion only; entrance stays open and walkable.
+ for(const [height,thick] of [[3.08,.09],[.12,.09]]){
+  const rail=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius+.035,screenRadius+.035,thick,64,1,true,backStart,backSpan),w326mat(pal.gold));
+  rail.position.set(0,height,screenCenterZ);g.add(rail);
+ }
  // Tall massage chair with padded back, arm supports, articulated leg rest.
  luxB(g,0,.48,.08,1.20,.76,1.42,chairColor,.23);
  luxB(g,0,1.43,.65,1.30,2.05,.58,chairColor,.28);
@@ -4448,7 +4454,8 @@ function wy348Open(action){
  wyLobbyDialog.style.display='block';
 }
 
-function wyLobbyOpen(action){ if(action==='tea'||action==='lounge'){wy348Open(action);return;}
+function wyLobbyOpen(action){
+ if(action==='tea'||action==='lounge'){wy348Open(action);return;}
  const head={tea:'迎賓茶點區',lounge:'三層樓探索',elevator:'電梯｜選擇樓層'}[action]||'德威陽';
  let html='';
  if(action==='tea')html='<p>歡迎來到迎賓茶點區！這裡有咖啡機、飲水機、茶壺、茶杯與麵包點心。</p><p>二樓還有員工茶水間，藏著可以探索的互動小遊戲。想去看看嗎？</p><button data-lb="floor2">前往2樓員工辦公室</button>';
