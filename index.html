@@ -1201,7 +1201,7 @@ wy345SignCtx.strokeStyle='#DCC18C';wy345SignCtx.lineWidth=8;wy345SignCtx.strokeR
 wy345SignCtx.fillStyle='#EFD9A5';wy345SignCtx.textAlign='center';wy345SignCtx.textBaseline='middle';wy345SignCtx.font='bold 66px sans-serif';wy345SignCtx.fillText('員工自由心證',320,74);
 const wy345SignTex=new THREE.CanvasTexture(wy345SignCanvas);wy345SignTex.colorSpace=THREE.SRGBColorSpace;
 const wy345EntrySign=new THREE.Mesh(new THREE.PlaneGeometry(4.65,1.02),new THREE.MeshBasicMaterial({map:wy345SignTex,transparent:true,side:THREE.DoubleSide,depthTest:true,depthWrite:false}));
-wy345EntrySign.position.set(-12.7,7.48,17.3);wy345EntrySign.renderOrder=0;roomRoot.add(wy345EntrySign);
+wy345EntrySign.position.set(-12.7,9.15,17.3);wy345EntrySign.renderOrder=95;wy345EntrySign.material.depthTest=false;roomRoot.add(wy345EntrySign);
 // Entirely separate spatial island, 110+ units away from original office.
 // It is not attached to the office footprint and contains NO furnishings.
 const wy323Room=new THREE.Group();officeScene.add(wy323Room);wy323Room.visible=false;
@@ -1674,7 +1674,7 @@ function wy345ShowIntro(area){
  button.onclick=()=>{try{localStorage.setItem(wy345IntroKeys[area],'yes')}catch(e){}wy345Intro.style.display='none'};
 }
 function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+10.9,.08,7.3);officeCam.position.set(wy323X+8.4,9.0,15.3);officeOrbit.target.set(wy323X,1.6,-1.3);officeOrbit.update();wy345ShowIntro('lounge');}
-function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update();}
+function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);wyIndoorPath=[];wy244FollowOffset=null;officeOrbit.enabled=true;officeOrbit.enableRotate=true;officeOrbit.enablePan=true;officeOrbit.enableZoom=true;officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeCam.lookAt(officeOrbit.target);officeOrbit.update();}
 
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
@@ -4112,6 +4112,8 @@ wy300Caption.id='wy300Caption';
 wy300Caption.textContent='德威陽的日常，精彩輪番登場。';
 wy300Caption.style.cssText='border-bottom:1px solid rgba(188,156,101,.48);padding:0 5px 7px;position:fixed;top:calc(235px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:7;max-width:calc(100vw - 22px);white-space:nowrap;font-size:clamp(19px,5.3vw,24px);font-weight:700;letter-spacing:-.025em;color:#263B57;text-shadow:0 1px 2px #f3f7f7a8;pointer-events:none;text-align:center;display:none';
 document.body.appendChild(wy300Caption);
+// v350: distinct 1F welcome subtitle.
+const wy350Subtitle=document.createElement('div');wy350Subtitle.textContent='律師的專業與日常，比你想的更精彩。';wy350Subtitle.style.cssText='position:fixed;z-index:8;top:calc(188px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);max-width:94vw;width:max-content;text-align:center;pointer-events:none;color:#263B57;font-weight:700;font-size:clamp(13px,3.5vw,17px);background:#fff8edee;border:1px solid #DCC18C;border-radius:12px;padding:7px 10px;display:none';document.body.append(wy350Subtitle);
 function wy300SyncCaption(){
  const visible=insideOffice&&!activeIslandRoom&&wyOfficeFloor===2;
  if(!visible){wy300Caption.style.display='none';return;}
@@ -4134,8 +4136,8 @@ function wy300SyncCaption(){
  const textBottom=y+Math.max(38,wy300Caption.offsetHeight);
  wy300Caption.style.display=officeTop<textBottom+8?'none':'block';
 }
-function wySetFloor(n){if(wy323Inside)wy323Leave();wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
- document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'德威陽｜1F 智慧迎賓大廳':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
+function wySetFloor(n){if(wy323Inside)wy323Leave();wy350Subtitle.style.display=n===1?'block':'none';wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
+ document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'歡迎光臨，這裡很有法度':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
  if(wyOfficeFloor===2){officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update()}
  else if(wyOfficeFloor===3){wy3Cam.position.set(7.15,2.4,6.7);wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.lookAt(wy3Orbit.target)}
@@ -4261,6 +4263,7 @@ function wy245RideFollow(dt){
 
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
+ if(wy323Inside)wy323Leave();
   if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
  wyIndoorMakeActor();
  const source=wyOfficeFloor,approach=source===3&&wy180AtOffice?new THREE.Vector3(8.65,.08,5.55):wyElevPos(source);
@@ -4432,7 +4435,7 @@ const wy348Tea=["☕ 咖啡可以續杯，法律期限可不能隨便延長。",
 const wy348State={lounge:0,tea:0};
 function wy348Open(action){
  const isTea=action==='tea',arr=isTea?wy348Tea:wy348Sofa,idx=wy348State[action]%arr.length;
- const heading=isTea?'☕ 法律人的咖啡時間':'坐一下，認識德威陽。';
+ const heading=isTea?'這杯咖啡，有點法律味':'這張沙發，有點法律背景';
  const title=isTea?arr[idx]:arr[idx][0],detail=isTea?'':arr[idx][1];
  wyLobbyDialog.classList.remove('wy228Elevator');
  wyLobbyDialog.replaceChildren();
@@ -4588,7 +4591,7 @@ function enterOffice(){
  document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
  if(!wyMainGuideSeen){wyMainGuide.style.display='block';}document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
-function leaveOffice(){if(wy323Inside)wy323Leave();
+function leaveOffice(){wy350Subtitle.style.display='none';if(wy323Inside)wy323Leave();
  for(const item of Object.values(wy175ExtraGuides)){item.button.style.display='none';item.guide.style.display='none';}
  closeWyInfo();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
@@ -4638,7 +4641,7 @@ const familyGuideAgain=document.createElement('button');familyGuideAgain.textCon
 // v138: same modal layout and reopening behavior as the medical-island entry guide.
 const wyMainGuide=document.createElement('aside');wyMainGuide.id='wyMainGuide';
 wyMainGuide.style.cssText=medGuide.style.cssText+';background:#f8f5eb;border-color:#c6a365;color:#203858';
-wyMainGuide.innerHTML="<h3>歡迎來到德威陽｜有法度</h3><p>這裡不只有法律，還有你意想不到的律師事務所日常。從迎賓大廳出發，認識林柏均律師、專業團隊與法律工作的不同面貌。</p><p><b>點擊接待區：</b>認識德威陽與迎賓互動。</p><p><b>點擊茶點區：</b>辦公室趣味互動。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索「老闆今天在嗎？」。</p><button>開始探索</button>";
+wyMainGuide.innerHTML="<h3>歡迎光臨，這裡很有法度</h3><p>律師的專業與日常，比你想的更精彩。從迎賓大廳出發，認識林柏均律師、專業團隊與法律工作的不同面貌。</p><p><b>點擊迎賓沙發：</b>這張沙發，有點法律背景（20則）。</p><p><b>點擊迎賓茶點區：</b>這杯咖啡，有點法律味（30則）。</p><p><b>點擊半圓形玻璃電梯：</b>選擇一、二、三樓。</p><p><b>點擊二樓影印機：</b>綠色乖乖及辦公室趣味對話。</p><p><b>點擊二樓員工：</b>員工專屬對話。</p><p><b>點擊三樓豪華大門：</b>探索「老闆今天在嗎？」。</p><button>開始探索</button>";
 document.body.append(wyMainGuide);wyMainGuide.querySelector('button').onclick=()=>{wyMainGuide.style.display='none';wyMainGuideSeen=true;try{localStorage.setItem('wy-guide-castle-v196','yes')}catch(e){}};
 const wyMainGuideAgain=document.createElement('button');wyMainGuideAgain.textContent='主島指南';wyMainGuideAgain.id='wyMainGuideAgain';
 wyMainGuideAgain.style.cssText=medGuideAgain.style.cssText;document.body.append(wyMainGuideAgain);
