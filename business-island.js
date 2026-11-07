@@ -1,92 +1,73 @@
-// WEIYANG v190 — pointed crystal crown, refined side towers and flush entry; isolated to business island.
-// Clean non-coplanar geometry, no nested overlapping facade shells.
+// WEIYANG business island v353 — Manhattan-inspired compact skyline, opaque static facades.
+// Independent island module. No animated lights, coplanar glazing, transparent glass or dense window grids.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V190_SPIRE';
+  root.name = 'WEIYANG_BUSINESS_V353_MANHATTAN';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
-  const basic = (c) => new THREE.MeshStandardMaterial({color:c,roughness:.42,metalness:.14,side:THREE.FrontSide});
-  const ivory=basic(0xf5f0fb), lavender=basic(0xcfc1e8), violet=basic(0x8066ad), deep=basic(0x544477), silver=basic(0xdadce7), pearl=basic(0xeeeaf5), mist=basic(0xaaa2c5), gold=new THREE.MeshStandardMaterial({color:0xe1ba75,metalness:.68,roughness:.24});
-  const glow=new THREE.MeshBasicMaterial({color:0xc9a3ff});
-  const green=basic(0x638b76), trunk=basic(0x786451);
-  const add=(geom,material,x,y,z,parent=root)=>{const mesh=new THREE.Mesh(geom,material);mesh.position.set(x,y,z);parent.add(mesh);return mesh;};
-  const cube=(w,h,d,x,y,z,material,parent=root)=>add(new THREE.BoxGeometry(w,h,d),material,x,y,z,parent);
-  const cyl=(rt,rb,h,r,x,y,z,material,parent=root)=>add(new THREE.CylinderGeometry(rt,rb,h,r),material,x,y,z,parent);
-  const tube=(coords,r,material,closed=false)=>{
-    const path=new THREE.CatmullRomCurve3(coords.map(p=>new THREE.Vector3(...p)),closed);
-    return add(new THREE.TubeGeometry(path,Math.max(28,coords.length*14),r,8,closed),material,0,0,0);
-  };
-  // Single ground plane, no stacked plaza slabs or coplanar surfaces.
-  cube(28.6,.20,22.0,0,.20,0,ivory);
-  // Landmark central tower: a single structural body, with facade pieces placed outside its envelope.
-  cube(7.6,20.8,6.0,0,10.7,-4.8,silver);
-  // Vertical window panels are proud of the front surface by 0.13 units; no shared planes.
-  for(const x of [-2.55,-.85,.85,2.55]){
-    cube(1.25,17.9,.12,x,11.15,-1.66,x<0?violet:mist);
-    cube(.12,18.7,.22,x+.69,11.15,-1.51,gold);
+  const mat=(c,metalness=.12,roughness=.68)=>new THREE.MeshStandardMaterial({color:c,metalness,roughness,side:THREE.FrontSide});
+  const pearl=mat(0xf2edf5), ivory=mat(0xf9f2e8), lavender=mat(0xb9a6d6), violet=mat(0x7864a9), midnight=mat(0x364767), plum=mat(0x4f497a), slate=mat(0x7087ad), silver=mat(0xc7c9d8,.28), gold=mat(0xd5b779,.32), darkGold=mat(0xa98557,.28), green=mat(0x56836d), trunk=mat(0x756654);
+  const add=(geo,m,x,y,z,p=root)=>{const a=new THREE.Mesh(geo,m);a.position.set(x,y,z);p.add(a);return a;};
+  const box=(w,h,d,x,y,z,m,p=root)=>add(new THREE.BoxGeometry(w,h,d),m,x,y,z,p);
+  const cyl=(rt,rb,h,n,x,y,z,m,p=root)=>add(new THREE.CylinderGeometry(rt,rb,h,n),m,x,y,z,p);
+  // One ground slab. No transparent architectural glazing.
+  box(28.6,.22,22,0,.18,0,ivory);
+  // Three distinct buildings, each with a real side depth. Central tower is slim but not a needle.
+  // Tower front at z=-1.75. All decorative strips stand in front of this plane.
+  box(7.2,17.5,6.1,0,9.20,-4.8,midnight);
+  // Large color-block bays instead of tiny windows / nine-square grids.
+  for(const [x,m] of [[-2.20,slate],[-.74,lavender],[.74,violet],[2.20,slate]]) {
+    box(1.15,15.7,.16,x,9.25,-1.63,m);
   }
-  // No repeated floor-by-floor horizontal facade strips: preserve vertical zoning.
-  // Crown has clear vertical separation from tower roof.
-  cube(8.6,.62,7.0,0,21.43,-4.8,ivory);
-  cube(7.5,.26,6.3,0,21.91,-4.8,gold);
-  // Mobile-readable pointed crown. No thin circular rings, coplanar layers or rooftop stairs.
-  const crystal=new THREE.MeshStandardMaterial({color:0xa98ce6,metalness:.18,roughness:.24,emissive:0x35215b,emissiveIntensity:.25});
-  const crownGroup=new THREE.Group();root.add(crownGroup);
-  crownGroup.position.set(0,22.12,-4.8);
-  // A broad central tapered silhouette and two gold flanking blades are legible at phone scale.
-  const spire=cyl(0,1.85,5.1,4,0,2.55,0,crystal,crownGroup);spire.rotation.y=Math.PI/4;
-  for(const side of [-1,1]){
-    const blade=cube(.40,3.35,.48,side*2.25,1.65,.08,gold,crownGroup);
-    blade.rotation.z=side*.22;
+  // Four substantial vertical fins are deliberately readable at phone scale.
+  for(const x of [-2.93,-1.46,0,1.46,2.93])box(.19,16.15,.30,x,9.28,-1.43,x===0?gold:silver);
+  // Offset side-facing color band adds dimensionality without floating polygon fragments.
+  box(.28,15.8,4.4,3.74,9.23,-4.65,plum);
+  box(.30,15.8,4.4,-3.74,9.23,-4.65,lavender);
+  // Compact chamfer-inspired crown: stepped silhouette, no tall spire.
+  box(7.65,.55,6.45,0,18.18,-4.8,silver);
+  box(6.15,.64,5.25,0,18.78,-4.8,violet);
+  box(4.25,.55,4.15,.38,19.36,-4.8,gold);
+  // Left: elegant taller side office, right: lower cool-blue wing. No cylinders.
+  const wings=[{x:-9.3,h:11.3,w:5.7,m:plum,bay:lavender,accent:gold},{x:9.4,h:9.2,w:5.6,m:slate,bay:violet,accent:silver}];
+  for(const w of wings){
+    const cy=.40+w.h/2, front=-2.18;
+    box(w.w,w.h,5.55,w.x,cy,-5.03,w.m);
+    // Three continuous tall bays; no repeated horizontal floor grids.
+    for(const dx of [-1.58,0,1.58])box(1.12,w.h-1.3,.17,w.x+dx,cy,front+.10,w.bay);
+    for(const dx of [-2.35,-.79,.79,2.35])box(.15,w.h-1.05,.31,w.x+dx,cy,front+.27,w.accent);
+    box(w.w+.38,.44,5.9,w.x,.40+w.h+.20,-5.03,pearl);
+    // Distinct roof silhouette, not factory-style pillars.
+    box(w.w-1.45,.60,4.65,w.x+.30,.40+w.h+.72,-5.03,w.accent);
+    // Bold side accent, offset from side wall.
+    box(.26,w.h-1.8,3.9,w.x+Math.sign(w.x)*(w.w/2+.18),cy,-5.05,silver);
   }
-  cube(5.8,.46,2.4,0,.2,.1,gold,crownGroup);
-  // Two freestanding curved towers: no underlying rectangular towers occupying the same space.
-  for(const side of [-1,1]){
-    const x=side*9.4;
-    const body=cyl(2.75,3.10,12.6,40,x,7.1,-5.0,side<0?pearl:lavender);
-    body.scale.z=.82;
-    // Vertical front glazing provides visible purple glass architecture without overlapping transparent shells.
-    for(const dx of [-1.3,0,1.3])cube(.9,9.7,.12,x+dx,7.3,-7.69,dx===0?violet:mist);
-    // Gold accents stay entirely in front of the opaque tower, not intersecting the curved shell.
-    // No repetitive horizontal bands on side towers.
-    // No overlapping rib shells: purple and ivory material contrast is built into independent facade fins.
-    for(const dx of [-1.55,1.55])cube(.13,10.0,.13,x+dx,7.2,-7.81,side<0?violet:silver);
-    const roof=cyl(3.10,3.10,.35,40,x,13.65,-5.0,ivory);roof.scale.z=.85;
-  }
-  // Skybridges: slim separate elements with no embedded coplanar facades.
-  for(const side of [-1,1]){
-    const bridge=cube(5.1,.60,1.85,side*5.7,12.2,-5.0,ivory);
-    cube(5.0,.12,1.96,side*5.7,12.61,-5.0,gold);
-  }
-  // Distinct low-rise entrance podium, entirely in front of tower footprint.
-  cube(10.8,4.6,4.5,0,2.6,1.0,ivory);
-  cube(8.4,3.6,.14,0,2.55,3.35,mist);
-  // Purple entry portal, with separate door panels and no overlaid parallel planes.
-  for(const side of [-1,1]){
-    cube(2.15,3.05,.15,side*1.17,2.35,3.50,violet);
-    cube(.075,2.6,.11,side*.16,2.35,3.64,gold);
-  }
-  cube(10.95,.28,4.8,0,5.05,1.0,gold);
-  // Entrance canopy / sculptural arch in front of the doors.
-  tube([[-5.1,4.8,4.4],[-3.8,6.1,4.4],[0,6.8,4.4],[3.8,6.1,4.4],[5.1,4.8,4.4]],.20,ivory);
-  tube([[-4.8,4.75,4.53],[-3.5,5.9,4.53],[0,6.55,4.53],[3.5,5.9,4.53],[4.8,4.75,4.53]],.07,gold);
-  // High-contrast luxury violet promenade, no overlapping floor layers.
+  // Architectural connectors are visibly behind the forward entrance podium.
+  for(const s of [-1,1])box(2.65,.65,2.0,s*5.35,7.2,-5.0,pearl);
+  // International headquarters: broad entrance, dimensional canopy and no glass alpha stacking.
+  box(11.8,4.4,4.7,0,2.58,1.05,pearl);
+  box(9.9,3.32,.18,0,2.48,3.51,midnight);
+  for(const x of [-3.30,0,3.30])box(.30,3.52,.32,x,2.52,3.75,gold);
+  for(const x of [-1.60,1.60])box(2.70,2.90,.16,x,2.30,3.75,plum);
+  box(12.45,.38,5.30,0,4.98,1.1,gold);
+  // Distinct flat angled-look luxury canopy, simple robust shapes.
+  box(11.2,.28,2.15,0,5.40,4.25,ivory);
+  box(11.25,.19,.32,0,5.33,5.38,darkGold);
+  // Raised sign remains readable at a distance, and uses the original supplied logo texture.
+  box(5.3,3.9,.25,0,8.45,4.7,midnight);
+  const logoTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261029-v187');
+  logoTex.colorSpace=THREE.SRGBColorSpace;
+  add(new THREE.PlaneGeometry(3.30,3.30),new THREE.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false,side:THREE.FrontSide}),0,8.47,4.86);
+  // Fixed outdoor details, no flashing or animated emissive lighting.
   for(const x of [-5.7,5.7]){
-    cube(2.9,.26,3.5,x,.44,8.5,lavender);
-    cyl(1.05,1.05,.32,28,x,.65,8.5,gold);
-    cyl(.82,.82,.10,28,x,.88,8.5,violet);
+    box(2.75,.28,3.35,x,.47,8.5,lavender);
+    cyl(1.0,1.0,.28,16,x,.73,8.5,gold);
+    cyl(.75,.75,.15,16,x,.96,8.5,violet);
   }
-  // No intersecting ribbon meshes on the tower corners: keep a clean futuristic silhouette.
-  // Official supplied logo, untouched original texture, mounted on its own freestanding sign.
-  cube(5.4,4.1,.22,0,9.0,4.5,deep);
-  const texture=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261029-v187');
-  texture.colorSpace=THREE.SRGBColorSpace;
-  const logo=add(new THREE.PlaneGeometry(3.35,3.35),new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.FrontSide}),0,9.05,4.625);
-  // Trees are separate, clean low-poly shapes.
-  for(const [x,z] of [[-12.4,4.5],[12.4,4.5],[-12.2,10.1],[12.2,10.1]]){
-    cyl(.23,.32,1.7,8,x,1.17,z,trunk);
-    add(new THREE.IcosahedronGeometry(1.32,1),green,x,2.7,z);
+  for(const [x,z] of [[-12.2,4.5],[12.2,4.5],[-12.0,10],[12.0,10]]){
+    cyl(.23,.31,1.6,8,x,1.13,z,trunk);
+    add(new THREE.IcosahedronGeometry(1.24,1),green,x,2.52,z);
   }
   return root;
 }
