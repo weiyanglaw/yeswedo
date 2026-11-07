@@ -1,8 +1,8 @@
-// WEIYANG business island v353 — Manhattan-inspired compact skyline, opaque static facades.
+// WEIYANG business island v354 — Manhattan-inspired compact skyline, opaque static facades.
 // Independent island module. No animated lights, coplanar glazing, transparent glass or dense window grids.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V353_MANHATTAN';
+  root.name = 'WEIYANG_BUSINESS_V354_MANHATTAN';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
@@ -59,11 +59,38 @@ export function createBusinessHeadquarters(island, THREE) {
   const logoTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261029-v187');
   logoTex.colorSpace=THREE.SRGBColorSpace;
   add(new THREE.PlaneGeometry(3.30,3.30),new THREE.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false,side:THREE.FrontSide}),0,8.47,4.86);
-  // Fixed outdoor details, no flashing or animated emissive lighting.
-  for(const x of [-5.7,5.7]){
-    box(2.75,.28,3.35,x,.47,8.5,lavender);
-    cyl(1.0,1.0,.28,16,x,.73,8.5,gold);
-    cyl(.75,.75,.15,16,x,.96,8.5,violet);
+  // Two premium landscape planters replacing the former purple-and-gold discs.
+  // Opaque, bold shapes; no thin petals, transparency, animated lights, or coplanar layers.
+  // Kept to either side of the central pedestrian path and below the entrance signage.
+  const burgundy=mat(0x8b234c), magenta=mat(0xc33476), fuchsia=mat(0xdf4b91),
+        orchid=mat(0x8d4bb2), royalPurple=mat(0x6c3c99), creamBloom=mat(0xf4ddc7),
+        leafDeep=mat(0x275b48), leafBright=mat(0x438568), soil=mat(0x41374b);
+  for(const side of [-1,1]){
+    const x=side*7.15, z=8.6;
+    // Wide, low architectural elliptical trough: pearl stone + champagne-gold rim.
+    const plinth=cyl(1,1,.44,32,x,.65,z,pearl);plinth.scale.set(3.30,1,1.54);
+    const rim=cyl(1,1,.13,32,x,.93,z,gold);rim.scale.set(3.39,1,1.62);
+    const bed=cyl(1,1,.14,32,x,1.025,z,soil);bed.scale.set(3.03,1,1.35);
+    // Distinct sculptural foliage volumes, clearly readable at iPhone scale.
+    const stems=[[-2.12,-.35,1.50],[-1.22,.34,1.80],[-.24,-.28,1.65],[.78,.33,1.86],[1.92,-.22,1.55]];
+    for(let i=0;i<stems.length;i++){
+      const [dx,dz,h]=stems[i];
+      const foliage=add(new THREE.IcosahedronGeometry(.67,1),i%2?leafDeep:leafBright,x+dx,1.36,z+dz);
+      foliage.scale.set(1.10,.62,.80);
+      const bloomColor=side<0?[orchid,magenta,royalPurple,fuchsia,burgundy][i]:[burgundy,fuchsia,magenta,creamBloom,orchid][i];
+      const bloom=add(new THREE.IcosahedronGeometry(.67,1),bloomColor,x+dx, h+.24,z+dz);
+      bloom.scale.set(1.03,.87,.90);
+      // A few large petal-like sculptural lobes, never a cartoon daisy or dense petals.
+      for(const dir of [-1,1]){
+        const lobe=add(new THREE.SphereGeometry(.36,8,6),bloomColor,x+dx+dir*.48,h+.10,z+dz+.05);
+        lobe.scale.set(.90,1.14,.78);
+      }
+    }
+    // Broad architectural evergreen foliage gives color and texture without tiny geometry.
+    for(const [dx,dz] of [[-2.55,.57],[-1.65,-.67],[-.55,.68],[.44,-.70],[1.44,.62],[2.48,.48]]){
+      const shrub=add(new THREE.IcosahedronGeometry(.48,1),leafDeep,x+dx,1.32,z+dz);
+      shrub.scale.set(1.22,.65,1.0);
+    }
   }
   for(const [x,z] of [[-12.2,4.5],[12.2,4.5],[-12.0,10],[12.0,10]]){
     cyl(.23,.31,1.6,8,x,1.13,z,trunk);
