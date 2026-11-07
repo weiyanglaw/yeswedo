@@ -1,8 +1,8 @@
-// WEIYANG business island v355 — Manhattan-inspired compact skyline, opaque static facades.
+// WEIYANG business island v356 — Manhattan-inspired compact skyline, opaque static facades.
 // Independent island module. No animated lights, coplanar glazing, transparent glass or dense window grids.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V355_MANHATTAN';
+  root.name = 'WEIYANG_BUSINESS_V356_MANHATTAN';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
@@ -31,17 +31,20 @@ export function createBusinessHeadquarters(island, THREE) {
   box(4.25,.55,4.15,.38,19.36,-4.8,gold);
   const logoTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261029-v187');
   logoTex.colorSpace=THREE.SRGBColorSpace;
-  // V355: same rooftop flag concept as the other islands; purple flag field.
-  // Mounted on the highest central tower, with the untouched official logo image.
-  const flagPurple=mat(0x713b9d,.08,.62);
+  // V356: front-facing, high-visibility purple rooftop flag, raised above the crown.
+  // Position towards the visitor-facing roof edge to avoid occlusion by crown blocks.
+  const flagPurple=mat(0x7235ad,.08,.58);
   const flagPole=mat(0xc9b18a,.42,.35);
-  cyl(.075,.075,5.5,10,1.18,22.32,-4.35,flagPole);
-  add(new THREE.SphereGeometry(.16,12,8),gold,1.18,25.18,-4.35);
-  // A single opaque panel, offset from the pole so it reads clearly on iPhone.
-  box(3.25,2.05,.10,2.88,23.47,-4.35,flagPurple);
+  const flagZ=-1.62;
+  cyl(.095,.095,6.6,12,-1.30,22.75,flagZ,flagPole);
+  add(new THREE.SphereGeometry(.20,12,10),gold,-1.30,26.12,flagZ);
+  // Larger purple flag, clearly above the tower roof and readable on iPhone.
+  box(4.65,2.72,.15,1.08,24.48,flagZ,flagPurple);
+  // Logo on both sides; front surface is toward positive Z (entrance side).
   const flagLogoMaterial=new THREE.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false,side:THREE.DoubleSide});
-  // Logo texture is loaded below for the main entrance too; see shared declaration.
-  add(new THREE.PlaneGeometry(1.77,1.77),flagLogoMaterial,2.88,23.47,-4.28);
+  add(new THREE.PlaneGeometry(2.28,2.28),flagLogoMaterial,1.08,24.48,flagZ+.10);
+  const rearLogo=add(new THREE.PlaneGeometry(2.28,2.28),flagLogoMaterial,1.08,24.48,flagZ-.10);
+  rearLogo.rotation.y=Math.PI;
   // Left: elegant taller side office, right: lower cool-blue wing. No cylinders.
   const wings=[{x:-9.3,h:11.3,w:5.7,m:plum,bay:lavender,accent:gold},{x:9.4,h:9.2,w:5.6,m:slate,bay:violet,accent:silver}];
   for(const w of wings){

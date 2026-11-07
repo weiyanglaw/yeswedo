@@ -618,9 +618,9 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   c.fillStyle='#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='900 '+fontSize+'px sans-serif';
   c.fillText(text,width/2,88);
   const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:true,depthWrite:false}));
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false,depthWrite:false}));
   sprite.center.set(.5,.5);sprite.position.set(x,y,z);sprite.scale.set(Math.min(6.1,width/176*1.12),1.12,1);
-  sprite.userData.baseY=y;root.add(sprite);register(sprite,action);labels.push(sprite);return sprite;
+  sprite.renderOrder=80;sprite.userData.baseY=y;root.add(sprite);register(sprite,action);labels.push(sprite);return sprite;
  }
  // Staff identity sign only; not a sixth interaction zone.
  let staffNameLabel=null;
