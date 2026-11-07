@@ -1439,7 +1439,7 @@ function luxMassagePod(x,z,col,chairColor){
  for(const dx of [-.62,.62])luxB(g,dx,.94,-.12,.31,.90,1.18,chairColor,.16);
  luxB(g,0,.37,-1.00,1.00,.59,.90,'#E9D6F2',.18);
  // Side table with real support, placed outside chair footprint.
- luxC(g,1.46,.40,-.65,.10,.75,pal.gold);luxC(g,1.46,.81,-.65,.32,.08,pal.ivory);
+ luxC(g,1.12,.40,.12,.10,.75,pal.gold);luxC(g,1.12,.81,.12,.32,.08,pal.ivory);
 }
 luxMassagePod(-9.00,6.55,'#E5CBEF','#BCA0E2');
 luxMassagePod(-4.40,6.55,'#F5D2E2','#E8AFCB');
@@ -1899,7 +1899,7 @@ roomBox(4.85,1.23,1.15,.5,.13,.40,'#efb7c8');
 },2.4);
 // v359: printer near the entrance-side of the comic workstation, with aisle clearance.
 // Move the existing Kuai Kuai bag together with the printer; preserve all 20 jokes.
-const wyPrinterX=2.20, wyPrinterZ=6.10;
+const wyPrinterX=3.65, wyPrinterZ=8.10;
 const wyCopier=(dx,y,dz,w,h,d,mat,interactive=false)=>{
  const mesh=roomBox(wyPrinterX+dx,y,wyPrinterZ+dz,w,h,d,mat);
  if(interactive)registerOffice(mesh,9);
@@ -1917,7 +1917,7 @@ wyCopier(0,1.59,.735,1.10,.12,.13,'#151E27',true); // output slot
 wyCopier(.67,1.66,.80,.53,.42,.12,'#1A2634',true); // control console
 wyCopier(.67,1.67,.875,.39,.29,.04,'#78C5DC',true); // lit touchscreen
 wyCopier(-.72,1.30,.76,.12,.34,.07,'#C5D0D8',true);
-officeSign('影印機｜事務所今天又怎麼了？',2.20,3.70,6.10,4.4,'#263b51',9);
+officeSign('影印機｜事務所今天又怎麼了？',4.15,3.12,8.85,4.4,'#263b51',9);
 // Preserve the original green Kuai Kuai artwork and 3D snack-bag model.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
 kuaiTexture.colorSpace=THREE.SRGBColorSpace;
@@ -5055,6 +5055,9 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
  #wyInfo p,#wyInfo li,#wyInfo .wyTile{font-size:20px!important}
  #wyInfo .wyContactGrid a{min-width:0;overflow-wrap:anywhere}
 }
+/* v361: firm-introduction masthead stays one line and is fitted to available width. */
+.wy334-logo-head{width:100%;min-width:0}
+.wy334-logo-caption{display:block;flex:1 1 auto;min-width:0;white-space:nowrap!important;overflow-wrap:normal!important;word-break:keep-all!important;overflow:hidden;text-overflow:clip;letter-spacing:0!important}
 </style>
 <script id="wy334OfficeLogoPatch">
 (()=>{
@@ -5079,6 +5082,24 @@ function add(container){
  const img=document.createElement('img');img.src=src;img.alt='德威陽國際法律事務所官方 Logo';img.loading='eager';tile.append(img);
  const caption=document.createElement('span');caption.className='wy334-logo-caption';caption.textContent='WEIYANG · 德威陽國際法律事務所';
  head.append(tile,caption);container.prepend(head);
+ // Fit the exact single-line masthead to the available iPhone width; no wrapping or clipping.
+ function fitCaption(){
+  const width=caption.clientWidth;
+  if(!width)return;
+  const canvas=fitCaption.canvas||(fitCaption.canvas=document.createElement('canvas'));
+  const ctx=canvas.getContext('2d');
+  const family=getComputedStyle(caption).fontFamily;
+  let low=9,high=28;
+  for(let i=0;i<14;i++){
+   const mid=(low+high)/2;
+   ctx.font=`800 ${mid}px ${family}`;
+   if(ctx.measureText(caption.textContent).width<=width-2)low=mid;else high=mid;
+  }
+  caption.style.setProperty('font-size',`${Math.min(low,28).toFixed(2)}px`,'important');
+ }
+ const resizeObserver=new ResizeObserver(fitCaption);
+ resizeObserver.observe(caption);
+ requestAnimationFrame(fitCaption);
 }
 let running=false;
 function sync(){
