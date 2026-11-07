@@ -269,7 +269,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261107-label-restore';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261107-label-restore';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261107-v358';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261107-v358';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -1878,31 +1878,41 @@ desk(3.6,.65,3.45,'#C3DFED',8);
 officeSign('薪水掌門人｜事務所今天又怎麼了？',3.6,3.1,1.05,4.5,'#3b3546',8);
 roomBox(4.85,1.23,1.15,.5,.13,.40,'#efb7c8');
 },2.4);
-// Printer station: visible office equipment and comic easter egg.
-roomBox(6.7,.78,-2.8,1.8,1.55,1.3,'#9bb9bb');
-registerOffice(roomBox(6.7,1.64,-2.8,1.62,.56,1.16,'#e6e9e8'),9);
-registerOffice(roomBox(6.7,1.99,-2.8,1.65,.17,1.25,'#394a55'),9);
-registerOffice(roomBox(6.7,1.38,-2.13,1.18,.13,.12,'#37444e'),9);
-roomBox(6.7,1.27,-2.09,1.0,.06,.32,'#ffffff');
-// v308: printer label on the visitor-facing/right side, away from the rear WEIYANG logo; printer itself remains unobstructed.
-officeSign('影印機｜事務所今天又怎麼了？',3.55,3.70,-1.10,4.4,'#263b51',9);
-// v103: intentionally oversized bright-green Kuai Kuai snack bag on the printer.
-// One large texture makes the brand readable instead of dozens of tiny 3D pieces.
+// Printer station v358: graphite/silver premium copier beside Hamutaro, across an open aisle.
+// Hamutaro workstation is at the far left; keep a clear walkable gap between them.
+const wyPrinterX=-3.15, wyPrinterZ=5.10;
+const wyCopier=(dx,y,dz,w,h,d,mat,interactive=false)=>{
+ const mesh=roomBox(wyPrinterX+dx,y,wyPrinterZ+dz,w,h,d,mat);
+ if(interactive)registerOffice(mesh,9);
+ return mesh;
+};
+wyCopier(0,.90,0,1.90,1.76,1.42,'#505963',true); // dark graphite cabinet
+wyCopier(0,.32,.04,1.74,.42,1.34,'#737F89',true);
+for(const yy of [.47,.78,1.08]){
+ wyCopier(0,yy,.725,1.57,.045,.055,'#B8C3CB',true); // three drawer edges
+ wyCopier(0,yy+.10,.755,.47,.055,.045,'#303B46',true);
+}
+wyCopier(0,1.84,-.05,2.04,.22,1.54,'#222C35',true); // scanner lid
+wyCopier(0,1.99,-.09,1.77,.10,1.34,'#9EAAB3',true);
+wyCopier(0,1.59,.735,1.10,.12,.13,'#151E27',true); // output slot
+wyCopier(.67,1.66,.80,.53,.42,.12,'#1A2634',true); // control console
+wyCopier(.67,1.67,.875,.39,.29,.04,'#78C5DC',true); // lit touchscreen
+wyCopier(-.72,1.30,.76,.12,.34,.07,'#C5D0D8',true);
+officeSign('影印機｜事務所今天又怎麼了？',-3.15,3.70,5.10,4.4,'#263b51',9);
+// Preserve the original green Kuai Kuai artwork and 3D snack-bag model.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
 kuaiTexture.colorSpace=THREE.SRGBColorSpace;
-const kuaiBag=new THREE.Group();
-roomRoot.add(kuaiBag);kuaiBag.position.set(3.2,2.08,-2.8);
+const kuaiBag=new THREE.Group();roomRoot.add(kuaiBag);
+kuaiBag.position.set(wyPrinterX,2.10,wyPrinterZ-.12);
 const kuaiGreen=new THREE.MeshBasicMaterial({color:'#24C93D',side:THREE.DoubleSide});
 const kuaiFront=new THREE.MeshBasicMaterial({map:kuaiTexture,transparent:true,side:THREE.DoubleSide});
-const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.65,1.70,.34),kuaiGreen);
-kuaiBack.position.y=.81;kuaiBag.add(kuaiBack);
-const kuaiFace=new THREE.Mesh(new THREE.PlaneGeometry(1.64,1.68),kuaiFront);
-kuaiFace.position.set(0,.81,.18);kuaiBag.add(kuaiFace);
-// Slightly angled towards the main office camera, without changing any collision geometry.
+const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.24,1.26,.26),kuaiGreen);
+kuaiBack.position.y=.63;kuaiBag.add(kuaiBack);
+const kuaiFace=new THREE.Mesh(new THREE.PlaneGeometry(1.23,1.25),kuaiFront);
+kuaiFace.position.set(0,.63,.14);kuaiBag.add(kuaiFace);
 kuaiBag.rotation.y=-.12;
-// Clearly readable snack-bag silhouette from mobile overview.
-const kuaiSeal=new THREE.Mesh(new THREE.BoxGeometry(1.65,.13,.36),new THREE.MeshBasicMaterial({color:'#A8F189'}));
-kuaiSeal.position.set(0,1.70,0);kuaiBag.add(kuaiSeal);
+const kuaiSeal=new THREE.Mesh(new THREE.BoxGeometry(1.24,.10,.28),new THREE.MeshBasicMaterial({color:'#A8F189'}));
+kuaiSeal.position.set(0,1.28,0);kuaiBag.add(kuaiSeal);
 
 // v285: The separate comic workstation is removed; the LEFT screen of Hamutaro's
 // The comic link is retained on its separate floating nameplate (zone 3);
@@ -2131,7 +2141,7 @@ const wyJokes={
 6:['律師說他今天行程不多。嗯……只有三個庭、兩場會議。','我問老闆今天會不會進辦公室，他說：看法院放不放人。','老闆說他五分鐘後到。請問是地球時間嗎？','我今天的工作目標：在印表機罷工前把書狀印完。','老闆說這份文件不急。下一句是：今天下班前給我。','這裡是事務所，不是健身房，但每天追著文件跑也很有運動量。','我們的老闆很愛工作。至於為什麼……這題目前無解。','律師今天終於坐在辦公室了！等等，他又要出門了。','我剛泡好茶，老闆說要去開庭，茶都比他待得久。','辦公室最神秘的東西？老闆的空閒時間。','剛整理完桌子，新的卷宗就來報到了。','我不是在發呆，我是在等印表機吐出最後一頁。','今天誰先下班？這個問題很有法律爭議。','我跟行事曆說拜託留一格空白，它完全不理我。','老闆說今天要準時吃飯，現在是下午三點。','今天最熱門的辦公室話題是：午餐到底要吃什麼？','每次說快結束了，通常代表下一件事要開始了。','我有一個夢想，就是書狀自己排版。','同事問我有沒有休息，我說我剛剛眨眼了。','如果找不到老闆，請先看看法院的開庭表。'],
 7:['印表機今天沒有卡紙。我懷疑它是不是有什麼陰謀。','電腦轉圈圈的時候，我也會跟著思考人生。','有人問我事務所最忙的是誰。我看了一眼印表機。','老闆說：這很簡單。我就知道事情不簡單了。','這不是桌面凌亂，這叫案件資料的立體展示。','今天的辦公室很安靜，安靜到我開始懷疑是不是停電。','我跟印表機的關係，目前處於需要第三方調解的階段。','你以為我們每天都在討論法律？其實有時候在討論午餐。','我剛把紙補滿，印表機又說它缺碳粉。','如果檔案會自己命名，我的人生會少很多問號。','今天電腦跑得很快，快到我不敢更新系統。','別問我為什麼盯著螢幕，我在等它願意合作。','我沒有對印表機生氣，我只是語氣比較有證據力。','每個資料夾都說自己很重要，我該相信誰？','辦公室的科技進步，主要表現在錯誤訊息越來越精美。','當老闆說「幫我看一下」時，我的滑鼠就開始緊張。','我今天最大的成就：成功找到昨天存的檔案。','列印前先祈禱，這不是迷信，是經驗。','電腦說正在處理中，我說我也是。','如果印表機有律師，我們可能已經開庭了。'],
 8:['大家都說錢不是萬能的。但月底對帳的時候，我覺得它很重要。','老闆說辦公室可以添購設備。我已經打開預算表了。','誰說數字不會說話？它每天都在提醒我還有帳沒對完。','我不是在盯著你，我是在確認這筆支出有沒有憑證。','我們這裡最有紀律的是誰？可能是我的 Excel。','今天有人說只花一點點。請問「一點點」有發票嗎？','我的超能力是什麼？在一堆數字裡找到少掉的那一塊錢。','別人看到購物車會開心，我看到購物車會先問預算。','我喜歡驚喜，但不喜歡月底突然出現的支出。','有人說這個不貴，我說請先定義不貴。','表格不會騙人，除非有人忘記存檔。','買咖啡可以，記得拿發票。','預算不是用來阻止快樂，是用來延長快樂。','我最常說的四個字：憑證在哪？','今天的算式都對了，我要先慶祝三秒。','誰動了我的計算機？它可是辦公室重要資產。','我的電腦桌面很乾淨，因為混亂都在試算表裡。','月底最浪漫的事，就是每筆帳都對得起來。','同事說想換椅子，我先問椅子能不能報帳。','如果預算會自己增加，我願意每天加班五分鐘。']};
-wyJokes[9]=["綠色乖乖今天準時上班，影印機也乖乖沒卡紙。", "影印機上的綠色乖乖不見了，今天誰都不敢按列印。", "林律師要印開庭資料，綠色乖乖今天責任重大。", "綠色乖乖站在影印機上，比我們的行事曆還忙。", "哈姆太郎說只吃一口乖乖，影印機立刻發出警告。", "影印機連印三百頁，綠色乖乖獲選本月最佳員工。", "誰把綠色乖乖換成別的口味？影印機表示需要冷靜。", "乖乖還在、紙張也滿了，今天應該可以順利下班吧？", "綠色乖乖過期了，影印機要求更新設備守護員。", "乖乖不能代替保養，但可以安撫正在趕書狀的小編。", "影印機卡紙時，綠色乖乖也救不了沒放好的紙。", "薪水掌門人提醒：買綠色乖乖也要記得拿發票。", "綠色乖乖今天沒被偷吃，這算辦公室重大勝利。", "乖乖站崗，影印機上班；希望今天不要加班。", "最後一頁總是最考驗影印機與人類的耐心。", "林律師的開庭資料準備好了，大家終於鬆一口氣。", "影印機說：我負責列印，法律問題請問林律師。", "今天的書狀比午餐菜單還長，先補紙再說。", "印表機不會保守秘密，機密文件請記得收好。", "有人說影印機很安靜，下一秒它就開始卡紙。"];
+wyJokes[9]=["這包綠色乖乖不是零食，是影印機的精神支柱。請勿擅自拆封。", "律師可以下班，影印機可以休息，但綠色乖乖必須堅守崗位。", "為什麼影印機上要放綠色乖乖？因為我們希望它乖乖印，不要在開庭前突然卡紙。", "明天早上九點開庭，今晚還有三百頁要印。全辦公室最被寄予厚望的，就是這包綠色乖乖。", "有人問這包乖乖能不能吃。可以是可以，但影印機明天願不願意工作，就沒人敢保證了。", "影印機負責印文件，律師負責處理案件，綠色乖乖負責維持辦公室的信心。", "影印機突然卡紙，大家第一個檢查的不是紙匣，而是綠色乖乖還在不在。", "乖乖有很多口味，但這裡只認綠色。畢竟我們希望機器一路綠燈，不要亮紅燈。", "綠色乖乖從不請假、不抱怨、不開會，卻是影印機旁最受尊敬的存在。", "今天影印機印了五百頁都沒卡紙。有人說是保養得好，也有人默默看向那包綠色乖乖。", "影印機可以定期保養，綠色乖乖也要記得檢查有效期限。畢竟守護神也需要定期換班。", "重要文件可以交給影印機，重要案件交給專業律師。至於影印機能不能乖乖工作，就交給綠色乖乖了。", "最後一頁總是最考驗影印機與人類的耐心。", "林律師的開庭資料準備好了，大家終於鬆一口氣。", "影印機說：我負責列印，法律問題請問林律師。", "今天的書狀比午餐菜單還長，先補紙再說。", "印表機不會保守秘密，機密文件請記得收好。", "有人說影印機很安靜，下一秒它就開始卡紙。", "影印機剛補好紙，下一位同事就帶來一整疊卷宗。", "影印機最怕聽到的一句話：這份文件只要再印二十份就好。"];
 const wyDecks={};function nextWyJoke(i){let deck=wyDecks[i];if(!deck||!deck.length){deck=wyJokes[i].map((_,n)=>n);for(let n=deck.length-1;n>0;n--){const j=Math.floor(Math.random()*(n+1));[deck[n],deck[j]]=[deck[j],deck[n]]}wyDecks[i]=deck}return wyJokes[i][wyDecks[i].pop()]}
 
 const zones=[

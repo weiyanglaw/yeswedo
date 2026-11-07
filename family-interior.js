@@ -22,7 +22,7 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  ac.fillStyle='#214A4B';ac.font='bold 85px sans-serif';ac.textAlign='center';ac.textBaseline='middle';ac.fillText('認識德威陽',480,92);
  const aboutTexture=new THREE.CanvasTexture(aboutCanvas);aboutTexture.colorSpace=THREE.SRGBColorSpace;
  const aboutSign=new THREE.Sprite(new THREE.SpriteMaterial({map:aboutTexture,transparent:true,depthTest:false,depthWrite:false}));
- aboutSign.position.set(0,9.10,-8.45);aboutSign.scale.set(5.5,1.03,1);aboutSign.renderOrder=100;aboutSign.userData.familyAction='logo';root.add(aboutSign);targets.push(aboutSign);
+ aboutSign.position.set(0,10.20,-8.45);aboutSign.scale.set(5.5,1.03,1);aboutSign.renderOrder=100;aboutSign.userData.familyAction='logo';root.add(aboutSign);targets.push(aboutSign);
  // Marriage kitchen, left rear.
  box(8,.25,1.5,-7.0,.9,-7.8,cream);for(const x of [-10,-8,-6,-4.4])box(1.7,2.3,1,-x+(-14),2.4,-8.1,cream);
  box(5.4,1.45,2.35,-6.6,.73,-3.7,pink,'kitchen');box(5.7,.18,2.55,-6.6,1.54,-3.7,white,'kitchen');

@@ -604,6 +604,18 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
  const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
+ // v358: raised floating '認識德威陽' sign above the existing rear logo; same logo interaction.
+ const wyAboutCanvas=document.createElement('canvas');wyAboutCanvas.width=960;wyAboutCanvas.height=184;
+ const wyAboutCtx=wyAboutCanvas.getContext('2d');
+ wyAboutCtx.fillStyle='#FFF8ED';wyAboutCtx.beginPath();wyAboutCtx.roundRect(8,8,944,168,46);wyAboutCtx.fill();
+ wyAboutCtx.strokeStyle='#D9B779';wyAboutCtx.lineWidth=10;wyAboutCtx.stroke();
+ wyAboutCtx.fillStyle='#214A4B';wyAboutCtx.font='bold 85px sans-serif';wyAboutCtx.textAlign='center';wyAboutCtx.textBaseline='middle';
+ wyAboutCtx.fillText('認識德威陽',480,92);
+ const wyAboutTex=new THREE.CanvasTexture(wyAboutCanvas);wyAboutTex.colorSpace=THREE.SRGBColorSpace;
+ const wyAboutSign=new THREE.Sprite(new THREE.SpriteMaterial({map:wyAboutTex,transparent:true,depthTest:false,depthWrite:false}));
+ wyAboutSign.position.set(0,10.20,-8.18);wyAboutSign.scale.set(5.5,1.06,1);wyAboutSign.renderOrder=100;
+ root.add(wyAboutSign);register(wyAboutSign,'logo');
+
  if(guide){guide.traverse(o=>{if(o.isMesh)register(o,'staff')});}
  const labels=[];
  function hint(text,x,y,z,action){
