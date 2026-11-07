@@ -1,8 +1,8 @@
-// WEIYANG business island v354 — Manhattan-inspired compact skyline, opaque static facades.
+// WEIYANG business island v355 — Manhattan-inspired compact skyline, opaque static facades.
 // Independent island module. No animated lights, coplanar glazing, transparent glass or dense window grids.
 export function createBusinessHeadquarters(island, THREE) {
   const root = new THREE.Group();
-  root.name = 'WEIYANG_BUSINESS_V354_MANHATTAN';
+  root.name = 'WEIYANG_BUSINESS_V355_MANHATTAN';
   root.userData.islandType = 'business';
   root.userData.entryLabel = '企業商務島｜點擊大樓進入主題館';
   island.add(root);
@@ -29,6 +29,19 @@ export function createBusinessHeadquarters(island, THREE) {
   box(7.65,.55,6.45,0,18.18,-4.8,silver);
   box(6.15,.64,5.25,0,18.78,-4.8,violet);
   box(4.25,.55,4.15,.38,19.36,-4.8,gold);
+  const logoTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261029-v187');
+  logoTex.colorSpace=THREE.SRGBColorSpace;
+  // V355: same rooftop flag concept as the other islands; purple flag field.
+  // Mounted on the highest central tower, with the untouched official logo image.
+  const flagPurple=mat(0x713b9d,.08,.62);
+  const flagPole=mat(0xc9b18a,.42,.35);
+  cyl(.075,.075,5.5,10,1.18,22.32,-4.35,flagPole);
+  add(new THREE.SphereGeometry(.16,12,8),gold,1.18,25.18,-4.35);
+  // A single opaque panel, offset from the pole so it reads clearly on iPhone.
+  box(3.25,2.05,.10,2.88,23.47,-4.35,flagPurple);
+  const flagLogoMaterial=new THREE.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false,side:THREE.DoubleSide});
+  // Logo texture is loaded below for the main entrance too; see shared declaration.
+  add(new THREE.PlaneGeometry(1.77,1.77),flagLogoMaterial,2.88,23.47,-4.28);
   // Left: elegant taller side office, right: lower cool-blue wing. No cylinders.
   const wings=[{x:-9.3,h:11.3,w:5.7,m:plum,bay:lavender,accent:gold},{x:9.4,h:9.2,w:5.6,m:slate,bay:violet,accent:silver}];
   for(const w of wings){
@@ -56,8 +69,6 @@ export function createBusinessHeadquarters(island, THREE) {
   box(11.25,.19,.32,0,5.33,5.38,darkGold);
   // Raised sign remains readable at a distance, and uses the original supplied logo texture.
   box(5.3,3.9,.25,0,8.45,4.7,midnight);
-  const logoTex=new THREE.TextureLoader().load('office-logo-transparent.png?v=20261029-v187');
-  logoTex.colorSpace=THREE.SRGBColorSpace;
   add(new THREE.PlaneGeometry(3.30,3.30),new THREE.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false,side:THREE.FrontSide}),0,8.47,4.86);
   // Two premium landscape planters replacing the former purple-and-gold discs.
   // Opaque, bold shapes; no thin petals, transparency, animated lights, or coplanar layers.
