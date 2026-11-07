@@ -269,7 +269,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261107-v358';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261107-v358';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261107-v360-logo-click';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261107-v358';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -1401,11 +1401,37 @@ function luxMassagePod(x,z,col,chairColor){
  const backStart=-2.30,backSpan=4.60; // opaque back and sides, no opaque panel across entrance
  const shell=new THREE.Mesh(new THREE.CylinderGeometry(screenRadius,screenRadius,2.95,64,1,true,backStart,backSpan),mat);
  shell.position.set(0,1.56,screenCenterZ);g.add(shell);
- // Front shoulder portions use slim champagne-gold vertical bars instead of a solid wall.
- const latticeAngles=[-2.77,-2.64,-2.51,-2.38,2.38,2.51,2.64,2.77];
- for(const theta of latticeAngles){
-  const bar=new THREE.Mesh(new THREE.CylinderGeometry(.033,.033,2.84,10),w326mat(pal.gold));
-  bar.position.set(screenRadius*Math.sin(theta),1.58,screenCenterZ+screenRadius*Math.cos(theta));g.add(bar);
+ // v359: organic floral shoulders instead of prison-like vertical bars.
+ // Large curved vines and widely spaced blossoms leave the entrance visually open.
+ const vineMat=w326mat('#B49A70');
+ for(const side of [-1,1]){
+  const pts=[];
+  for(let j=0;j<=18;j++){
+   const t=j/18,theta=side*(2.32+.46*t);
+   pts.push(new THREE.Vector3(screenRadius*Math.sin(theta),.55+2.35*t,screenCenterZ+screenRadius*Math.cos(theta)));
+  }
+  const vine=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),32,.037,7,false),vineMat);g.add(vine);
+ }
+ // A full floral crown along the upper curved rim, with sculpted petals and foliage.
+ const flowerColors=['#FFF4E6','#F1B9CC','#E4D2F5','#F8DFD2'];
+ const petalGeo=new THREE.SphereGeometry(.13,9,7);
+ const leafGeo=new THREE.SphereGeometry(.16,8,6);
+ for(let i=0;i<29;i++){
+  const theta=backStart+(backSpan*i/28);
+  const px=(screenRadius+.07)*Math.sin(theta),pz=screenCenterZ+(screenRadius+.07)*Math.cos(theta);
+  const flower=new THREE.Group();flower.position.set(px,3.14+(i%3)*.045,pz);g.add(flower);
+  const petalMat=w326mat(flowerColors[i%flowerColors.length]);
+  for(let j=0;j<5;j++){
+   const a=j*Math.PI*2/5;
+   const petal=new THREE.Mesh(petalGeo,petalMat);
+   petal.position.set(Math.cos(a)*.17,Math.sin(a)*.15,0);
+   petal.scale.set(1.05,.85,.52);flower.add(petal);
+  }
+  const heart=new THREE.Mesh(new THREE.SphereGeometry(.075,9,7),w326mat('#D4AD6D'));heart.position.z=.045;flower.add(heart);
+  for(const dir of [-1,1]){
+   const leaf=new THREE.Mesh(leafGeo,w326mat('#6E9679'));
+   leaf.position.set(dir*.29,-.07,-.03);leaf.scale.set(1.15,.46,.52);flower.add(leaf);
+  }
  }
  // Top and bottom rails trace the solid portion only; entrance stays open and walkable.
  for(const [height,thick] of [[3.08,.09],[.12,.09]]){
@@ -1878,9 +1904,9 @@ desk(3.6,.65,3.45,'#C3DFED',8);
 officeSign('薪水掌門人｜事務所今天又怎麼了？',3.6,3.1,1.05,4.5,'#3b3546',8);
 roomBox(4.85,1.23,1.15,.5,.13,.40,'#efb7c8');
 },2.4);
-// Printer station v358: graphite/silver premium copier beside Hamutaro, across an open aisle.
-// Hamutaro workstation is at the far left; keep a clear walkable gap between them.
-const wyPrinterX=-3.15, wyPrinterZ=5.10;
+// v359: printer near the entrance-side of the comic workstation, with aisle clearance.
+// Move the existing Kuai Kuai bag together with the printer; preserve all 20 jokes.
+const wyPrinterX=2.20, wyPrinterZ=6.10;
 const wyCopier=(dx,y,dz,w,h,d,mat,interactive=false)=>{
  const mesh=roomBox(wyPrinterX+dx,y,wyPrinterZ+dz,w,h,d,mat);
  if(interactive)registerOffice(mesh,9);
@@ -1898,7 +1924,7 @@ wyCopier(0,1.59,.735,1.10,.12,.13,'#151E27',true); // output slot
 wyCopier(.67,1.66,.80,.53,.42,.12,'#1A2634',true); // control console
 wyCopier(.67,1.67,.875,.39,.29,.04,'#78C5DC',true); // lit touchscreen
 wyCopier(-.72,1.30,.76,.12,.34,.07,'#C5D0D8',true);
-officeSign('影印機｜事務所今天又怎麼了？',-3.15,3.70,5.10,4.4,'#263b51',9);
+officeSign('影印機｜事務所今天又怎麼了？',2.20,3.70,6.10,4.4,'#263b51',9);
 // Preserve the original green Kuai Kuai artwork and 3D snack-bag model.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
 kuaiTexture.colorSpace=THREE.SRGBColorSpace;
@@ -4845,7 +4871,7 @@ window.wy318MeetingVideoActive=()=>insideOffice&&wyOfficeFloor===2&&!activeIslan
 let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStart={x:e.clientX,y:e.clientY};});renderer.domElement.addEventListener('pointerup',e=>{if(tapStart&&Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>12)return;wy211LabelsTick();if(insideOffice){if(activeIslandRoom){
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){const action=hit[0].object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
  const objects=themeRooms[2].medicalRoom?.interactionTargets||[];
- const hit=ray.intersectObjects(objects,true);if(hit.length){const target=hit[0].object;if(target.userData.medicalAction==='logo'){openWyInfo('company');return;}medicalExperience.open(target.userData.medicalAction||'staff');return;}
+ const hit=ray.intersectObjects(objects,true);const targetHit=hit.find(h=>h.object.userData.medicalAction||h.object.parent?.userData.medicalAction);if(targetHit){const target=targetHit.object;const action=target.userData.medicalAction||target.parent?.userData.medicalAction;if(action==='logo'){openWyInfo('company');return;}medicalExperience.open(action);return;}
  return;}talk(names[activeIslandRoom]);return;}pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);if(wyOfficeFloor===1){ray.setFromCamera(pointer,lobbyCam);const hit=ray.intersectObjects(lobbyTargets);if(hit.length){if(hit[0].object.userData.lobbyAction==='elevator')wyElevatorOpen();wyLobbyOpen(hit[0].object.userData.lobbyAction)}return;}if(wyOfficeFloor===3){ray.setFromCamera(pointer,wy3Cam);const h=ray.intersectObjects(wy3Targets,true);const hit3=h.find(item=>{const a=item.object.userData.wy3Action||item.object.parent?.userData.wy3Action;return a&&a!=='elevator'})||h.find(item=>(item.object.userData.wy3Action||item.object.parent?.userData.wy3Action)==='elevator');if(hit3){wy3Interact(hit3.object.userData.wy3Action||hit3.object.parent?.userData.wy3Action);return;}/* v278: wall-tap camera movement disabled */return;}ray.setFromCamera(pointer,officeCam);
  if(wy323Inside){const hits337=ray.intersectObjects(wy337Targets,false);if(hits337.length){wy337Open(hits337[0].object.userData.wy337);return;}if(ray.intersectObject(wy323ExitHit,false).length||ray.intersectObject(wy347ExitSign,false).length)wy323Leave();return;}
  if(ray.intersectObjects(wy323EntranceHits,false).length){wy323Enter();return;}

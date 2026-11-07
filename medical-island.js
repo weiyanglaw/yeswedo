@@ -486,7 +486,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Display zones: gold-edged touch panels at accessible height, not covering the emblem.
  const interactionTargets=[];
  const interactionMap=new Map();
- const register=(object,action)=>{if(!['mediation','records','forensics','ecg','computer'].includes(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
+ const register=(object,action)=>{if(!['mediation','records','forensics','ecg','computer','logo'].includes(action))return object;object.userData.medicalAction=action;interactionTargets.push(object);interactionMap.set(object.uuid,action);return object};
  const display=(x,z,w,title)=>{
   box(w+0.2,2.35,.18,gold,x,3.15,z);
   box(w,2.17,.20,navy,x,3.15,z+.12);
@@ -604,7 +604,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const deskHit=box(6.25,.25,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),7.1,1.65,5.75);register(deskHit,'computer');
  const bookHit=box(4.45,6.65,.40,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-8.05,4.1,-6.17);register(bookHit,'books');register(caseFile,'case');register(evidenceBody,'evidence');register(evidenceTop,'evidence');
  const logoHit=add(new THREE.PlaneGeometry(5.9,5.9),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}),0,4.85,-8.32);register(logoHit,'logo');
- // v358: raised floating '認識德威陽' sign above the existing rear logo; same logo interaction.
+ // v360: raised floating '認識德威陽' sign above the existing rear logo; same logo interaction.
  const wyAboutCanvas=document.createElement('canvas');wyAboutCanvas.width=960;wyAboutCanvas.height=184;
  const wyAboutCtx=wyAboutCanvas.getContext('2d');
  wyAboutCtx.fillStyle='#FFF8ED';wyAboutCtx.beginPath();wyAboutCtx.roundRect(8,8,944,168,46);wyAboutCtx.fill();
