@@ -1642,7 +1642,7 @@ function wy337Spa(key){
  wy337Close();
  const isSea=key==='spaA';
  const title=isSea?'老闆我在海邊':'本庭准予放空';
- const sources=isSea?['wy344_sea.mp4']:['wy370_flight.mp4'];
+ const sources=isSea?['wy344_sea.mp4']:['wy372_flight.mp4'];
  let index=0,closed=false,playing=true,soundOn=false,hideTimer=null;
  const root=document.createElement('div');root.id='wy341Immersive';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',title);
  root.style.cssText='position:fixed;inset:0;z-index:99999;background:#050b13;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden';document.body.append(root);
@@ -1656,7 +1656,7 @@ function wy337Spa(key){
  const status=document.createElement('div');status.style.cssText='position:absolute;left:12px;right:12px;bottom:calc(98px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff4d7;text-shadow:0 2px 5px #000;font-size:13px;pointer-events:none';root.append(status);
  const intro=document.createElement('div');intro.textContent=title;intro.style.cssText='position:absolute;left:0;right:0;top:44%;text-align:center;font-weight:800;font-size:clamp(27px,7vw,40px);color:#f4dcaa;text-shadow:0 3px 16px #000;pointer-events:none;transition:opacity 1.2s';root.append(intro);
  setTimeout(()=>{if(!closed)intro.style.opacity='0'},2000);
- function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'雲端飛行沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
+ function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'花園沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
  
  video.addEventListener('error',()=>{if(!closed)status.textContent='影片無法載入，請確認影片檔案已上傳至網站根目錄'});
  function togglePlay(){playing=video.paused;if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請再次點擊播放'})}else video.pause();playBtn.textContent=playing?'暫停':'播放';scheduleHide()}
@@ -1922,13 +1922,12 @@ wyCopier(0,1.59,.735,1.10,.12,.13,'#151E27',true); // output slot
 wyCopier(.67,1.66,.80,.53,.42,.12,'#1A2634',true); // control console
 wyCopier(.67,1.67,.875,.39,.29,.04,'#78C5DC',true); // lit touchscreen
 wyCopier(-.72,1.30,.76,.12,.34,.07,'#C5D0D8',true);
-officeSign('影印機｜事務所今天又怎麼了？',4.15,4.45,8.85,4.4,'#263b51',9);
+officeSign('影印機｜事務所今天又怎麼了？',4.15,3.12,8.85,4.4,'#263b51',9);
 // Preserve the original green Kuai Kuai artwork and 3D snack-bag model.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
 kuaiTexture.colorSpace=THREE.SRGBColorSpace;
 const kuaiBag=new THREE.Group();roomRoot.add(kuaiBag);
 kuaiBag.position.set(wyPrinterX,2.10,wyPrinterZ-.12);
-kuaiBag.scale.setScalar(1.48); // v369: enlarge green Kuai Kuai for mobile visibility
 const kuaiGreen=new THREE.MeshBasicMaterial({color:'#24C93D',side:THREE.DoubleSide});
 const kuaiFront=new THREE.MeshBasicMaterial({map:kuaiTexture,transparent:true,side:THREE.DoubleSide});
 const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.24,1.26,.26),kuaiGreen);
@@ -2110,26 +2109,39 @@ function wyVideoTitleSprite(text){
  meeting(20.80,33.08,3.60,15.40,false);
  // v364: common solid partition; no open slot between adjacent meeting rooms.
  roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
- // v371: C-style sculptural curved cut-out partition, one extruded solid.
- // Actual through-openings (not transparent overlays or overlapping planes).
- // It meets the Logo wall at z=-11.6 and the floor at y=0.
- const wy371Shape=new THREE.Shape();
- wy371Shape.moveTo(0,0);wy371Shape.lineTo(28.2,0);wy371Shape.lineTo(28.2,5.68);
- wy371Shape.lineTo(0,5.68);wy371Shape.closePath();
- for(let k=0;k<5;k++){
-  const x=1.05+k*5.43, w=4.25;
-  const hole=new THREE.Path();
-  hole.moveTo(x,.60);hole.lineTo(x+w,.60);hole.lineTo(x+w,3.60);
-  hole.bezierCurveTo(x+w,5.15,x+w*.74,5.18,x+w*.50,4.75);
-  hole.bezierCurveTo(x+w*.22,4.28,x,4.90,x,3.60);
-  hole.closePath();wy371Shape.holes.push(hole);
+ // v372: D-style fully opaque sculptural arch partition.
+ // Built directly on the user-supplied HTML. One solid navy core, with
+ // ivory inset reliefs on its face: NO openings, glass, or transparency.
+ const wy372Screen=new THREE.Group();roomRoot.add(wy372Screen);
+ const wy372Navy=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.84,metalness:.05,side:THREE.DoubleSide});
+ const wy372Ivory=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.91,metalness:0,side:THREE.DoubleSide});
+ const wy372Gold=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.55,metalness:.32,side:THREE.DoubleSide});
+ function wy372Solid(x,y,z,w,h,d,material){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+  m.position.set(x,y,z);wy372Screen.add(m);return m;
  }
- const wy371Geo=new THREE.ExtrudeGeometry(wy371Shape,{depth:.34,bevelEnabled:false,curveSegments:14,steps:1});
- // Local X becomes world Z. One continuous navy volume with five large curved voids.
- wy371Geo.rotateY(Math.PI/2);
- const wy371Screen=new THREE.Mesh(wy371Geo,new THREE.MeshStandardMaterial({color:'#263B57',metalness:.08,roughness:.83,side:THREE.FrontSide}));
- wy371Screen.position.set(15.95,0,16.60);roomRoot.add(wy371Screen);
- // No coplanar metallic skins, second walls, glass layers, or z-fighting trim.
+ // Same main wall footprint as the supplied version, floor to ceiling.
+ wy372Solid(15.80,2.78,4.15,.66,5.56,18.30,wy372Navy);
+ wy372Solid(15.80,5.60,4.15,.74,.08,18.30,wy372Gold);
+ // Decorative arch-shaped SOLID panels, flush with the wall's outside face.
+ // Each gold outline and ivory face occupies a distinct depth: no z-fighting.
+ function wy372ArchShape(width,bottom,top){
+  const sh=new THREE.Shape();
+  sh.moveTo(-width/2,bottom);sh.lineTo(width/2,bottom);
+  sh.lineTo(width/2,top-width/2);
+  sh.absarc(0,top-width/2,width/2,0,Math.PI,false);
+  sh.lineTo(-width/2,bottom);sh.closePath();return sh;
+ }
+ for(let k=0;k<4;k++){
+  const zz=-2.65+k*4.48;
+  const gold=new THREE.Mesh(new THREE.ShapeGeometry(wy372ArchShape(3.84,.28,5.22),24),wy372Gold);
+  gold.rotation.y=Math.PI/2;gold.position.set(16.139,0,zz);wy372Screen.add(gold);
+  const ivory=new THREE.Mesh(new THREE.ShapeGeometry(wy372ArchShape(3.68,.39,5.12),24),wy372Ivory);
+  ivory.rotation.y=Math.PI/2;ivory.position.set(16.153,0,zz);wy372Screen.add(ivory);
+ }
+ // Preserve the original angled solid end return and its connection.
+ const wy372Return=wy372Solid(16.36,2.78,14.98,.66,5.56,3.80,wy372Ivory);
+ wy372Return.rotation.y=-.30;
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2876,16 +2888,18 @@ const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry
 if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // The cloned 1F facade was built at a different origin; translate it back
 // toward the cabin as one unit, preserving all internal parts and labels.
-// v371: remove the redundant opaque facade board, not the functional glass doors.
-// Keep all elevator coordinates unchanged; no more backward shifting.
+// Remove broad opaque facade sheet(s) from the cloned 1F facade only.
+// Keep the original 2F elevator position, doors, glass, numeral and controls.
 for(const part of [...wy309Portal.children]){
  if(!part.isMesh || part.geometry?.type!=='BoxGeometry')continue;
  const d=part.geometry.parameters;
- if(d.width>=3.0 && d.height>=3.0 && d.depth<=.65){wy309Portal.remove(part);}
+ if(d.width>=3.0 && d.height>=3.0 && d.depth<=.65){
+  wy309Portal.remove(part);
+ }
 }
-wy309Portal.position.z=-3.12; // retain v370 geometry position, do not move elevator
+wy309Portal.position.z=-1.42;
 // Back panel x after rotation = group x + 1.58*1.15.
-const wy366BackWallX=33.10; // inside face of east exterior wall x=33.3
+const wy366BackWallX=33.10;
 wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
 wyElev2.updateMatrixWorld(true);
 // Remove only exterior torus trim that extends beyond the building perimeter.
