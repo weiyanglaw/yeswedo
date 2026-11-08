@@ -1656,7 +1656,7 @@ function wy337Spa(key){
  const status=document.createElement('div');status.style.cssText='position:absolute;left:12px;right:12px;bottom:calc(98px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff4d7;text-shadow:0 2px 5px #000;font-size:13px;pointer-events:none';root.append(status);
  const intro=document.createElement('div');intro.textContent=title;intro.style.cssText='position:absolute;left:0;right:0;top:44%;text-align:center;font-weight:800;font-size:clamp(27px,7vw,40px);color:#f4dcaa;text-shadow:0 3px 16px #000;pointer-events:none;transition:opacity 1.2s';root.append(intro);
  setTimeout(()=>{if(!closed)intro.style.opacity='0'},2000);
- function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'花園沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
+ function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'飛機窗外海岸與藍天沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
  
  video.addEventListener('error',()=>{if(!closed)status.textContent='影片無法載入，請確認影片檔案已上傳至網站根目錄'});
  function togglePlay(){playing=video.paused;if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請再次點擊播放'})}else video.pause();playBtn.textContent=playing?'暫停':'播放';scheduleHide()}
@@ -1922,21 +1922,30 @@ wyCopier(0,1.59,.735,1.10,.12,.13,'#151E27',true); // output slot
 wyCopier(.67,1.66,.80,.53,.42,.12,'#1A2634',true); // control console
 wyCopier(.67,1.67,.875,.39,.29,.04,'#78C5DC',true); // lit touchscreen
 wyCopier(-.72,1.30,.76,.12,.34,.07,'#C5D0D8',true);
-officeSign('影印機｜事務所今天又怎麼了？',4.15,3.12,8.85,4.4,'#263b51',9);
-// Preserve the original green Kuai Kuai artwork and 3D snack-bag model.
-const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
-kuaiTexture.colorSpace=THREE.SRGBColorSpace;
+officeSign('影印機｜事務所今天又怎麼了？',4.15,5.85,8.85,4.4,'#263b51',9);
+// v374: self-contained enlarged green Kuai Kuai bag; readable 乖乖 without external image dependency.
+const kuaiCanvas=document.createElement('canvas');kuaiCanvas.width=1024;kuaiCanvas.height=1024;
+const kc=kuaiCanvas.getContext('2d');
+const kg=kc.createLinearGradient(0,0,1024,0);kg.addColorStop(0,'#13872D');kg.addColorStop(.18,'#42D84B');kg.addColorStop(.5,'#1DB83D');kg.addColorStop(.82,'#45D64A');kg.addColorStop(1,'#117C2B');
+kc.fillStyle=kg;kc.fillRect(0,0,1024,1024);
+kc.strokeStyle='#E8FF8D';kc.lineWidth=24;kc.strokeRect(30,30,964,964);
+kc.textAlign='center';kc.textBaseline='middle';
+kc.font='900 330px "Noto Sans TC","Microsoft JhengHei",sans-serif';
+kc.lineWidth=24;kc.strokeStyle='#12652A';kc.strokeText('乖乖',512,490,930);
+kc.fillStyle='#FFFDE6';kc.fillText('乖乖',512,490,930);
+kc.font='bold 70px "Noto Sans TC",sans-serif';kc.fillStyle='#FFF9B0';kc.fillText('影印機守護神',512,795,920);
+const kuaiTexture=new THREE.CanvasTexture(kuaiCanvas);kuaiTexture.colorSpace=THREE.SRGBColorSpace;
 const kuaiBag=new THREE.Group();roomRoot.add(kuaiBag);
 kuaiBag.position.set(wyPrinterX,2.10,wyPrinterZ-.12);
-const kuaiGreen=new THREE.MeshBasicMaterial({color:'#24C93D',side:THREE.DoubleSide});
-const kuaiFront=new THREE.MeshBasicMaterial({map:kuaiTexture,transparent:true,side:THREE.DoubleSide});
-const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.24,1.26,.26),kuaiGreen);
-kuaiBack.position.y=.63;kuaiBag.add(kuaiBack);
-const kuaiFace=new THREE.Mesh(new THREE.PlaneGeometry(1.23,1.25),kuaiFront);
-kuaiFace.position.set(0,.63,.14);kuaiBag.add(kuaiFace);
+const kuaiGreen=new THREE.MeshBasicMaterial({color:'#22C73F',side:THREE.DoubleSide});
+const kuaiFront=new THREE.MeshBasicMaterial({map:kuaiTexture,side:THREE.DoubleSide});
+const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.96,1.94,.29),kuaiGreen);
+kuaiBack.position.y=.97;kuaiBag.add(kuaiBack);
+const kuaiFace=new THREE.Mesh(new THREE.PlaneGeometry(1.95,1.93),kuaiFront);
+kuaiFace.position.set(0,.97,.157);kuaiBag.add(kuaiFace);
 kuaiBag.rotation.y=-.12;
-const kuaiSeal=new THREE.Mesh(new THREE.BoxGeometry(1.24,.10,.28),new THREE.MeshBasicMaterial({color:'#A8F189'}));
-kuaiSeal.position.set(0,1.28,0);kuaiBag.add(kuaiSeal);
+const kuaiSeal=new THREE.Mesh(new THREE.BoxGeometry(1.96,.12,.31),new THREE.MeshBasicMaterial({color:'#A8F189'}));
+kuaiSeal.position.set(0,1.94,0);kuaiBag.add(kuaiSeal);
 
 // v285: The separate comic workstation is removed; the LEFT screen of Hamutaro's
 // The comic link is retained on its separate floating nameplate (zone 3);
@@ -2905,6 +2914,11 @@ for(const part of wy309Portal.children){
   part.position.z=-.16;
  }
 }
+// v375: Keep the existing glass elevator and its wall-anchored position untouched.
+// The cloned 1F portal was wider than the 2F wall bay, leaving detached tall
+// columns visible outside the wall. Fit ONLY the decorative facade to the
+// cabin's wall bay; do not move the glass cabin, door, or floor routing.
+wy309Portal.scale.x=.76;
 wy309Portal.position.z=-1.42;
 // Back panel x after rotation = group x + 1.58*1.15.
 const wy366BackWallX=33.10;
