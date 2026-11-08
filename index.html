@@ -2906,10 +2906,10 @@ const wy2Digit=wyLiftNumeral('2',wy1Digit.position.x-wyLiftX,
 wyElev2ClickTargets.push(wy2Digit);
 // The second-floor room has been expanded: scale ALL elevator components
 // together 1.5x. Rotate the entrance toward the walkable interior (-X).
-// Rear glass radius 1.61*1.5 ends at x=32.965, inside rear wall x=33.10.
+// v387: align the rear-most copied facade z=-0.86 (after 90-degree rotation and 1.10 scale) to the east wall inner face x=33.02: 32.07 + .946 = 33.016. Move only the entire 2F group.
 wyElev2.scale.setScalar(1.10);
 wyElev2.rotation.y=-Math.PI/2;
-wyElev2.position.set(31.87,0,19.80);
+wyElev2.position.set(32.07,0,19.80);
 wyElev2.updateMatrixWorld(true);
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
