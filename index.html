@@ -2868,6 +2868,12 @@ const wy2CabinRoot=wy1Cabin.root.clone(true);
 // the entire 2F elevator. -PI/2 maps local negative Z toward east (+X).
 // The 1F original remains untouched.
 wy2CabinRoot.position.set(0,0,-0.86);
+// v389: the open 2F cabin must not carry the 1F interior gold handrail
+// beyond the exterior wall. Keep the curved roof rim and vertical posts.
+for(const piece of wy2CabinRoot.children){
+ if(piece.isMesh && piece.geometry?.type==='TorusGeometry' &&
+    Math.abs(piece.geometry.parameters.radius-1.42)<.005)piece.visible=false;
+}
 // v384: delete the 2F-only opaque rectangular backing panel. Preserve child
 // indexes for animated door pivots, ring, and light by using visibility.
 const wy384CabinPanel=wy2CabinRoot.children.find(o=>o.isMesh &&
@@ -2902,16 +2908,25 @@ for(const original of wy290FirstFloorLiftParts){
      (Math.abs(g.width-3.80)<.001 && Math.abs(g.height-6.12)<.001 && Math.abs(g.depth-.12)<.001))continue;
  }
  const part=original.clone();
- part.position.set(original.position.x-wyLiftX,original.position.y,original.position.z-(-9.48));
+ // v389: align the BACK surface of each copied facade element with
+ // the same wall-facing plane as the 2F glass cabin (local z=-0.86).
+ // The old facade retained 1F depths, leaving its door surround floating.
+ // Decorations remain layered forward by their own physical thickness.
+ const localX=original.position.x-wyLiftX;
+ const geo=part.geometry;
+ const depth=geo?.type==='BoxGeometry' ? geo.parameters.depth :
+   geo?.type==='CylinderGeometry' ? geo.parameters.height : .08;
+ part.position.set(localX,original.position.y,-.86+depth*.5);
  part.userData={};wy2Facade.add(part);
 }
 // Numeral is the sole change to the 1F appearance: 1 -> 2.
 const wy2Digit=wyLiftNumeral('2',wy1Digit.position.x-wyLiftX,
- wy1Digit.position.y,wy1Digit.position.z-(-9.48),1.18,.57,wyElev2);
+ wy1Digit.position.y,-.86+.25,1.18,.57,wyElev2);
 wyElev2ClickTargets.push(wy2Digit);
 // The second-floor room has been expanded: scale ALL elevator components
 // together 1.5x. Rotate the entrance toward the walkable interior (-X).
-// v388: cabin back and facade rear both local z=-0.86, mapping to x=33.016 near the east wall inner face x=33.02.
+// v389: all facade parts and glass back reference the same local z=-0.86 plane.
+// 2F-only modification; the original 1F meshes remain unchanged.
 wyElev2.scale.setScalar(1.10);
 wyElev2.rotation.y=-Math.PI/2;
 wyElev2.position.set(32.07,0,19.80);
