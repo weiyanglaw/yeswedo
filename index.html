@@ -2860,76 +2860,49 @@ wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 // v381: All previous second-floor lift meshes, floating wall, and half-round
 // glass were removed from the build. Copy the original 1F cabin and facade
 // without altering any first-floor geometry, coordinates, or interaction.
+// v390: rebuild 2F elevator as a faithful, single-coordinate-system copy of 1F.
+// All original 1F components are untouched. The original facade has its
+// deepest back face at local z=-1.05 relative to the 1F glass cabin center.
+// A -90 degree Y rotation maps local -Z to the east (+X) wall.
 const wy1Cabin=wyGlassCabins[1];
 const wy2CabinRoot=wy1Cabin.root.clone(true);
-// v388: 1F glass cabin was cloned with its local back plane at z=0,
-// while the copied 1F facade has its rear plane at local z=-0.86.
-// Align BOTH rear planes to the same wall-facing depth before rotating
-// the entire 2F elevator. -PI/2 maps local negative Z toward east (+X).
-// The 1F original remains untouched.
-wy2CabinRoot.position.set(0,0,-0.86);
-// v389: the open 2F cabin must not carry the 1F interior gold handrail
-// beyond the exterior wall. Keep the curved roof rim and vertical posts.
-for(const piece of wy2CabinRoot.children){
- if(piece.isMesh && piece.geometry?.type==='TorusGeometry' &&
-    Math.abs(piece.geometry.parameters.radius-1.42)<.005)piece.visible=false;
-}
-// v384: delete the 2F-only opaque rectangular backing panel. Preserve child
-// indexes for animated door pivots, ring, and light by using visibility.
-const wy384CabinPanel=wy2CabinRoot.children.find(o=>o.isMesh &&
- o.geometry?.type==='BoxGeometry' &&
- Math.abs(o.geometry.parameters.width-3.22)<.001 &&
- Math.abs(o.geometry.parameters.height-5.25)<.001 &&
- Math.abs(o.geometry.parameters.depth-.11)<.001);
-if(wy384CabinPanel)wy384CabinPanel.visible=false;
+// Clone the 1F glass cabin into elevator-local coordinates WITHOUT independently
+// pushing it back: this was the root cause of the separated door surround.
+wy2CabinRoot.position.set(0,0,0);
 wyElev2.add(wy2CabinRoot);
 const wy2Doors=wy1Cabin.doors.map(d=>{
  const pivot=wy2CabinRoot.children[wy1Cabin.root.children.indexOf(d.pivot)];
- const glassDoor=pivot.children[0];
- glassDoor.userData={};
+ const glassDoor=pivot.children[0];glassDoor.userData={};
  wyElev2ClickTargets.push(glassDoor);
  return {pivot,sign:d.sign};
 });
 const wy2Ring=wy2CabinRoot.children[wy1Cabin.root.children.indexOf(wy1Cabin.ring)];
-wy2Ring.material=wy2Ring.material.clone(); // avoid sharing animation material with 1F
+wy2Ring.material=wy2Ring.material.clone();
 const wy2Welcome=wy2CabinRoot.children[wy1Cabin.root.children.indexOf(wy1Cabin.welcome)];
 wyGlassCabins[2]={root:wy2CabinRoot,doors:wy2Doors,ring:wy2Ring,welcome:wy2Welcome};
-// Clone the entire original first-floor facade, including its original
-// frame, trim, and proportions. Opaque doors are hidden on 1F too.
+// Restore the entire 1F architectural facade with its ORIGINAL front/back
+// offsets. Do not flatten every mesh to one z plane (v389's main defect).
 const wy2Facade=new THREE.Group();wyElev2.add(wy2Facade);
 for(const original of wy290FirstFloorLiftParts){
  if(!original.isMesh || original===wy1Digit || wyElevDoors1.includes(original))continue;
- // v384: exclude the two solid cream/gold backboards cloned from 1F.
- // These are freestanding opaque slabs in front of the 2F glass assembly
- // after the 90-degree rotation; 1F originals remain completely unchanged.
- if(original.geometry?.type==='BoxGeometry'){
-  const g=original.geometry.parameters;
-  if((Math.abs(g.width-4.15)<.001 && Math.abs(g.height-6.45)<.001 && Math.abs(g.depth-.38)<.001) ||
-     (Math.abs(g.width-3.80)<.001 && Math.abs(g.height-6.12)<.001 && Math.abs(g.depth-.12)<.001))continue;
- }
  const part=original.clone();
- // v389: align the BACK surface of each copied facade element with
- // the same wall-facing plane as the 2F glass cabin (local z=-0.86).
- // The old facade retained 1F depths, leaving its door surround floating.
- // Decorations remain layered forward by their own physical thickness.
- const localX=original.position.x-wyLiftX;
- const geo=part.geometry;
- const depth=geo?.type==='BoxGeometry' ? geo.parameters.depth :
-   geo?.type==='CylinderGeometry' ? geo.parameters.height : .08;
- part.position.set(localX,original.position.y,-.86+depth*.5);
+ part.position.set(original.position.x-wyLiftX,original.position.y,
+                   original.position.z-(-9.48));
  part.userData={};wy2Facade.add(part);
 }
-// Numeral is the sole change to the 1F appearance: 1 -> 2.
-const wy2Digit=wyLiftNumeral('2',wy1Digit.position.x-wyLiftX,
- wy1Digit.position.y,-.86+.25,1.18,.57,wyElev2);
+// Numeral 2 replaces numeral 1 without touching the first floor.
+const wy2Digit=wyLiftNumeral('2',0,wy1Digit.position.y,
+                           wy1Digit.position.z-(-9.48),1.18,.57,wyElev2);
 wyElev2ClickTargets.push(wy2Digit);
-// The second-floor room has been expanded: scale ALL elevator components
-// together 1.5x. Rotate the entrance toward the walkable interior (-X).
-// v389: all facade parts and glass back reference the same local z=-0.86 plane.
-// 2F-only modification; the original 1F meshes remain unchanged.
 wyElev2.scale.setScalar(1.10);
 wyElev2.rotation.y=-Math.PI/2;
-wyElev2.position.set(32.07,0,19.80);
+// East decorative inner wall: x=33.09-0.10-0.06=32.93.
+// 1F rear architectural slab: z=(-10.34+9.48)-.38/2=-1.05.
+// With 1.10 scaling, its world rear face is x=center+1.155.
+// Set the rear face at 32.93, touching the wall without crossing it.
+const wy390WallInnerX=33.09-.10-.06;
+const wy390LiftBackDepth=1.05;
+wyElev2.position.set(wy390WallInnerX-1.10*wy390LiftBackDepth,0,19.80);
 wyElev2.updateMatrixWorld(true);
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
