@@ -2902,24 +2902,25 @@ const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry
 if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // The cloned 1F facade was built at a different origin; translate it back
 // toward the cabin as one unit, preserving all internal parts and labels.
-// v373: preserve the original 2F lift/cabin placement. Move only the broad
-// opaque facade backing sheet(s) back against the elevator instead of removing them.
-// The portal is a child of wyElev2, so all positions below are elevator-local.
-for(const part of wy309Portal.children){
- if(!part.isMesh || part.geometry?.type!=='BoxGeometry')continue;
- const d=part.geometry.parameters;
- if(d.width>=3.0 && d.height>=3.0 && d.depth<=.65){
-  // Place the rear face close to the cabin back panel (local z=-1.58).
-  // The sheet is behind the transparent front entrance and cannot float ahead.
-  part.position.z=-.16;
+// v377: original elevator root and cabin remain exactly as in user-supplied HTML.
+// Shift ONLY the cloned front facade (including its curved upper trim) toward the rear wall.
+wy309Portal.position.z=-1.84;
+// Keep the numeral attached to the dark-blue crown after the facade shifts.
+wy2Digit.position.z-=.42;
+// Move the translucent half-round glass enclosure and its matching gold trim
+// rearward in elevator-local space; do NOT move the cabin's back wall, floor,
+// elevator root, or route/camera anchors.
+const wy377Glass=wyGlassCabins[2];
+for(const item of wy377Glass.root.children){
+ if(!item.isMesh)continue;
+ const type=item.geometry?.type;
+ if(type==='CylinderGeometry' && (item.geometry.parameters?.height||0)>5){
+  item.position.z-=.32;
+ } else if(type==='TorusGeometry' && item.position.y>1.5){
+  item.position.z-=.32;
  }
 }
-// v375: Keep the existing glass elevator and its wall-anchored position untouched.
-// The cloned 1F portal was wider than the 2F wall bay, leaving detached tall
-// columns visible outside the wall. Fit ONLY the decorative facade to the
-// cabin's wall bay; do not move the glass cabin, door, or floor routing.
-wy309Portal.scale.x=.76;
-wy309Portal.position.z=-1.42;
+for(const door of wy377Glass.doors)door.pivot.position.z-=.32;
 // Back panel x after rotation = group x + 1.58*1.15.
 const wy366BackWallX=33.10;
 wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
