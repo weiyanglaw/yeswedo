@@ -2151,7 +2151,8 @@ function wyVideoTitleSprite(text){
   ivory.rotation.y=Math.PI/2;ivory.position.set(16.153,0,zz);wy372Screen.add(ivory);
  }
  // Preserve the original angled solid end return and its connection.
- // v383: removed the detached ivory return panel in front of the 2F elevator.
+ const wy372Return=wy372Solid(16.36,2.78,14.98,.66,5.56,3.80,wy372Ivory);
+ wy372Return.rotation.y=-.30;
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2859,9 +2860,14 @@ wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 const wy1Cabin=wyGlassCabins[1];
 const wy2CabinRoot=wy1Cabin.root.clone(true);
 wy2CabinRoot.position.set(0,0,0);
-// v383: keep child indices intact for door/ring references; remove only the 2F opaque panel visually.
-const wy2BackPanel=wy2CabinRoot.children.find(o=>o.isMesh && o.geometry?.type==='BoxGeometry' && Math.abs(o.geometry.parameters.width-3.22)<.001 && Math.abs(o.geometry.parameters.height-5.25)<.001 && Math.abs(o.geometry.parameters.depth-.11)<.001);
-if(wy2BackPanel)wy2BackPanel.visible=false;
+// v384: delete the 2F-only opaque rectangular backing panel. Preserve child
+// indexes for animated door pivots, ring, and light by using visibility.
+const wy384CabinPanel=wy2CabinRoot.children.find(o=>o.isMesh &&
+ o.geometry?.type==='BoxGeometry' &&
+ Math.abs(o.geometry.parameters.width-3.22)<.001 &&
+ Math.abs(o.geometry.parameters.height-5.25)<.001 &&
+ Math.abs(o.geometry.parameters.depth-.11)<.001);
+if(wy384CabinPanel)wy384CabinPanel.visible=false;
 wyElev2.add(wy2CabinRoot);
 const wy2Doors=wy1Cabin.doors.map(d=>{
  const pivot=wy2CabinRoot.children[wy1Cabin.root.children.indexOf(d.pivot)];
@@ -2879,6 +2885,14 @@ wyGlassCabins[2]={root:wy2CabinRoot,doors:wy2Doors,ring:wy2Ring,welcome:wy2Welco
 const wy2Facade=new THREE.Group();wyElev2.add(wy2Facade);
 for(const original of wy290FirstFloorLiftParts){
  if(!original.isMesh || original===wy1Digit || wyElevDoors1.includes(original))continue;
+ // v384: exclude the two solid cream/gold backboards cloned from 1F.
+ // These are freestanding opaque slabs in front of the 2F glass assembly
+ // after the 90-degree rotation; 1F originals remain completely unchanged.
+ if(original.geometry?.type==='BoxGeometry'){
+  const g=original.geometry.parameters;
+  if((Math.abs(g.width-4.15)<.001 && Math.abs(g.height-6.45)<.001 && Math.abs(g.depth-.38)<.001) ||
+     (Math.abs(g.width-3.80)<.001 && Math.abs(g.height-6.12)<.001 && Math.abs(g.depth-.12)<.001))continue;
+ }
  const part=original.clone();
  part.position.set(original.position.x-wyLiftX,original.position.y,original.position.z-(-9.48));
  part.userData={};wy2Facade.add(part);
@@ -3645,7 +3659,7 @@ wy180Welcome.visible=false; // v206: no interior sign or replay click target
 // v208: same clickable label only on 1F and 2F elevator (NOT 3F elevator).
 const wy208LiftSign1=wy208MakeSign(lobbyRoot,new THREE.Vector3(8.4,9.15,-7.75),.78,'elevator');
 wy208LiftSign1.scale.setScalar(1);wy208LiftSign1.geometry.dispose();wy208LiftSign1.geometry=new THREE.PlaneGeometry(3.25,.74);wy208LiftSign1.material.depthTest=true;wy208LiftSign1.userData.lobbyAction='elevator';lobbyTargets.push(wy208LiftSign1);
-const wy208LiftSign2=wy208MakeSign(wyElev2,new THREE.Vector3(0,7.05,.38),.78,'elevator');
+const wy208LiftSign2=wy208MakeSign(wyElev2,new THREE.Vector3(0,9.25,.38),.78,'elevator');
 wy208LiftSign2.scale.setScalar(1);wy208LiftSign2.geometry.dispose();wy208LiftSign2.geometry=new THREE.PlaneGeometry(4.45,1.02);wy208LiftSign2.material.depthTest=false;wy208LiftSign2.renderOrder=30;wyElev2ClickTargets.push(wy208LiftSign2);
 const wy180OfficeContents=wy3Root.children.slice(wy180HallStart+wy180HallObjects.length).filter(o=>o!==wy180OfficePortal&&!wy198SlideDoors.some(d=>d.group===o));
 wy180SetOfficeView(false);
