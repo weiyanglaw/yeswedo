@@ -2109,60 +2109,27 @@ function wyVideoTitleSprite(text){
  meeting(20.80,33.08,3.60,15.40,false);
  // v364: common solid partition; no open slot between adjacent meeting rooms.
  roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
- // v362: Double-sided large-scale curved architectural divider, not display shelves.
- // Wide matte gold edges and bold ivory/navy panels remain legible on iPhone.
- // Every surface has a separate depth; no coplanar faces or flickering z-fighting.
- const navyWall=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.88,metalness:0,side:THREE.DoubleSide});
- const ivoryWall=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.9,metalness:0,side:THREE.DoubleSide});
- const goldWall=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.76,metalness:0,side:THREE.DoubleSide});
- const darkGold=new THREE.MeshStandardMaterial({color:'#977447',roughness:.87,metalness:0,side:THREE.DoubleSide});
- const wallGroup=new THREE.Group();roomRoot.add(wallGroup);
- // Straight portion is long, while elevator-facing southern end sweeps softly toward the corridor.
- const centers=[];
- for(let i=0;i<=36;i++){
-   const t=i/36,z=-5.0+21.2*t;
-   const x=15.8+2.2*Math.pow(Math.max(0,(t-.72)/.28),2);
-   centers.push(new THREE.Vector3(x,0,z));
+ // v366: FULL REBUILD. The entire previous 42-bay flickering screen is removed.
+ // Opaque, contiguous solid geometry with NO overlapping skins, face decals or
+ // coplanar surfaces. Logo-side end runs all the way down to the floor.
+ const wy366Screen=new THREE.Group();roomRoot.add(wy366Screen);
+ const wy366Navy=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.94,metalness:0});
+ const wy366Ivory=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.95,metalness:0});
+ const wy366Gold=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.9,metalness:0});
+ function wy366Solid(x,y,z,w,h,d,material){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+  m.position.set(x,y,z);wy366Screen.add(m);return m;
  }
- const path=new THREE.CatmullRomCurve3(centers,false,'centripetal');
- // v365: Stable opaque solid architecture, no triangulated curved ribbons or
- // superimposed single-sided decorative sheets. Each bay has a small physical
- // separation from its neighbours, preventing coplanar triangles on iPhone.
- function stableBay(material,t0,t1,y,height,thickness,sideOffset=0){
-   const p0=path.getPoint(t0),p1=path.getPoint(t1);
-   const mid=p0.clone().add(p1).multiplyScalar(.5);
-   const dx=p1.x-p0.x,dz=p1.z-p0.z;
-   const length=Math.hypot(dx,dz);
-   const normalX=dz/length,normalZ=-dx/length;
-   const mesh=new THREE.Mesh(new THREE.BoxGeometry(thickness,height,Math.max(.04,length-.018)),material);
-   mesh.position.set(mid.x+normalX*sideOffset,y+height/2,mid.z+normalZ*sideOffset);
-   mesh.rotation.y=Math.atan2(-dx,dz);
-   wallGroup.add(mesh);
-   return mesh;
- }
- const wy365Bays=42;
- for(let j=0;j<wy365Bays;j++){
-   const t0=j/wy365Bays,t1=(j+1)/wy365Bays,t=(t0+t1)/2;
-   // A single structural navy core, with non-coplanar gold base and crown.
-   stableBay(navyWall,t0,t1,.27,5.10,.52);
-   stableBay(goldWall,t0,t1,.05,.20,.72);
-   stableBay(goldWall,t0,t1,5.38,.25,.72);
-   // Thick, opaque inlaid finishes, mounted outside the structural face.
-   // No transparent panels, no z-fighting-prone 2D planes.
-   if(t>.15&&t<.76){
-     stableBay(ivoryWall,t0,t1,1.72,3.18,.13,-.34);
-     stableBay(navyWall,t0,t1,.54,1.05,.14,-.34);
-   }
-   if((t>.12&&t<.29)||(t>.77&&t<.92))
-     stableBay(ivoryWall,t0,t1,.54,4.47,.14,.34);
-   else if(t>=.29&&t<=.77)
-     stableBay(navyWall,t0,t1,.54,4.47,.14,.34);
- }
- // Large structural champagne-gold columns: visible even without specular lighting.
- function goldPost(t){const p=path.getPoint(t);const m=new THREE.Mesh(new THREE.BoxGeometry(.52,4.9,.66),goldWall);m.position.set(p.x,2.78,p.z);m.rotation.y=-Math.atan2(path.getTangent(t).x,path.getTangent(t).z);wallGroup.add(m)}
- for(const t of [.13,.32,.76,.91])goldPost(t);
- // Broad end caps, no floating elements or overlapping transparent planes.
- for(const t of [0,1]){const p=path.getPoint(t),m=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,5.6,20),darkGold);m.position.set(p.x,2.86,p.z);wallGroup.add(m)}
+ // Two physically separate, end-to-end wall runs: no decorative coplanar skins.
+ // Main continuous screen is solid from floor to top, including the Logo-wall end.
+ wy366Solid(15.80,2.78,4.15,.66,5.56,18.30,wy366Navy);
+ // Solid champagne-gold structural band on the exposed top, not on the wall face.
+ wy366Solid(15.80,5.60,4.15,.74,.08,18.30,wy366Gold);
+ // Southern return bends gently toward the lift. Ends meet without overlap.
+ const wy366Return=new THREE.Mesh(new THREE.BoxGeometry(.66,5.56,3.80),wy366Ivory);
+ wy366Return.position.set(16.36,2.78,14.98);wy366Return.rotation.y=-.30;
+ wy366Screen.add(wy366Return);
+ // No added floor or coincident golden base layers; bottom is flush at y=0.
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2900,35 +2867,25 @@ wy2Digit.position.set(wy1Digit.position.x-wyLiftX,wy1Digit.position.y,
 wy2Digit.rotation.set(0,0,0);
 wy2Digit.renderOrder=16;
 wyElev2.scale.setScalar(1.15);
-// Align the complete elevator architectural footprint to the office walls.
-// Use actual model geometry, NOT just the group origin. Preserve the original
-// glass/door and all navigation logic. No freestanding gap-cover panels.
+// v366: POSITION BY THE ACTUAL CABIN BACK PANEL, not by the bounding box.
+// The flat back panel is local -Z (east after the -90 degree rotation).
+// Move that original panel to the cabin rear. The original facade panel is
+// likewise brought back against the cabin, and the ENTIRE assembly is anchored
+// at the right rear wall without any detached floating wall panel.
+const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry?.type==='BoxGeometry'&&o.geometry.parameters.width>3&&o.geometry.parameters.height>5);
+if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
+// The cloned 1F facade was built at a different origin; translate it back
+// toward the cabin as one unit, preserving all internal parts and labels.
+wy309Portal.position.z=-1.42;
+// Back panel x after rotation = group x + 1.58*1.15.
+const wy366BackWallX=33.10;
+wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
 wyElev2.updateMatrixWorld(true);
-const wy309Bound=new THREE.Box3().setFromObject(wy309Portal);
-// v365: align the ENTIRE elevator (cabin + backing board + facade) to the east/rear exterior walls.
-// Previous 26.60 placed the lift in front of the meeting-room frontage.
-const wy309WallX=33.06,wy309FloorZ=21.94;
-// v365: facade, original rear backing board, and glass cabin move together as one group.
-const wy364LiftBounds=new THREE.Box3().setFromObject(wyElev2);
-wyElev2.position.x+=wy309WallX-wy364LiftBounds.max.x;
-wyElev2.position.z+=wy309FloorZ-wy364LiftBounds.max.z;
-wyElev2.updateMatrixWorld(true);
-const wy309PortalBounds=new THREE.Box3().setFromObject(wy309Portal);
-const wy309CabinBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
-// v310: remove ONLY non-interactive curved trim that penetrates the outer wall.
-// Do not touch glass panels, moving doors, their click targets, or the elevator shell.
-const wy310ExteriorWallX=33.10,wy310ExteriorWallZ=22.00;
+// Remove only exterior torus trim that extends beyond the building perimeter.
 for(const ornament of [...wyGlassCabins[2].root.children]){
- if(!ornament.isMesh || ornament.geometry?.type!=='TorusGeometry')continue;
- const b=new THREE.Box3().setFromObject(ornament);
- if(b.max.x>wy310ExteriorWallX+.015 || b.max.z>wy310ExteriorWallZ+.015){
-  wyGlassCabins[2].root.remove(ornament);
- }
-}
-
-if(Math.abs(new THREE.Box3().setFromObject(wyElev2).max.x-wy309WallX)>.025 ||
-   Math.abs(new THREE.Box3().setFromObject(wyElev2).max.z-wy309FloorZ)>.025){
- console.error('v309 2F portal perimeter not aligned');
+ if(!ornament.isMesh||ornament.geometry?.type!=='TorusGeometry')continue;
+ const bb=new THREE.Box3().setFromObject(ornament);
+ if(bb.max.x>33.25||bb.max.z>22.00)wyGlassCabins[2].root.remove(ornament);
 }
 // Preserve original 1F geometry and numeral, including its navy crown.
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
