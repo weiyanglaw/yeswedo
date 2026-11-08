@@ -2106,7 +2106,9 @@ function wyVideoTitleSprite(text){
  // West entrance corridor is 14.30-11.90 = 2.40 units, uninterrupted.
  const wy362MeetingStart=roomRoot.children.length;
  meeting(20.80,33.08,-10.00,3.60,true);
- meeting(20.80,33.08,4.40,17.20,false);
+ meeting(20.80,33.08,3.60,15.40,false);
+ // v364: common solid partition; no open slot between adjacent meeting rooms.
+ roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
  // v362: Double-sided large-scale curved architectural divider, not display shelves.
  // Wide matte gold edges and bold ivory/navy panels remain legible on iPhone.
  // Every surface has a separate depth; no coplanar faces or flickering z-fighting.
@@ -2134,8 +2136,9 @@ function wyVideoTitleSprite(text){
    }
    for(let j=0;j<steps;j++){
      const a=j*4,b=(j+1)*4;
-     for(const [q,r,u,v] of [[0,1,1,0],[2,3,3,2],[0,2,2,0],[1,3,3,1]]){
-       idx.push(a+q,a+r,b+u,a+q,b+u,b+v);
+     // v364: four proper quads; old index pattern created zero-area triangles.
+     for(const [q,r] of [[0,1],[2,3],[0,2],[1,3]]){
+       idx.push(a+q,a+r,b+q, a+r,b+r,b+q);
      }
    }
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vs,3));g.setIndex(idx);g.computeVertexNormals();
@@ -2149,7 +2152,7 @@ function wyVideoTitleSprite(text){
  function faceSegment(a,b,y,h,material,side){
    const verts=[],indices=[],steps=24;
    for(let k=0;k<=steps;k++){
-     const t=a+(b-a)*k,p=path.getPoint(t),d=path.getTangent(t),sg=side*.275;
+     const t=a+(b-a)*k,p=path.getPoint(t),d=path.getTangent(t),sg=side*.405;
      verts.push(p.x+d.z*sg,y,p.z-d.x*sg,p.x+d.z*sg,y+h,p.z-d.x*sg);
      if(k<steps){let i=k*2;indices.push(i,i+1,i+2,i+1,i+3,i+2)}
    }
@@ -2910,15 +2913,18 @@ wyElev2.scale.setScalar(1.15);
 // glass/door and all navigation logic. No freestanding gap-cover panels.
 wyElev2.updateMatrixWorld(true);
 const wy309Bound=new THREE.Box3().setFromObject(wy309Portal);
-const wy309WallX=26.60,wy309FloorZ=22.00;
-wyElev2.position.x+=wy309WallX-wy309Bound.max.x;
-wyElev2.position.z+=wy309FloorZ-wy309Bound.max.z;
+// v364: align the ENTIRE elevator (cabin + facade) to the east/rear exterior walls.
+// Previous 26.60 placed the lift in front of the meeting-room frontage.
+const wy309WallX=32.90,wy309FloorZ=21.75;
+const wy364LiftBounds=new THREE.Box3().setFromObject(wyElev2);
+wyElev2.position.x+=wy309WallX-wy364LiftBounds.max.x;
+wyElev2.position.z+=wy309FloorZ-wy364LiftBounds.max.z;
 wyElev2.updateMatrixWorld(true);
 const wy309PortalBounds=new THREE.Box3().setFromObject(wy309Portal);
 const wy309CabinBounds=new THREE.Box3().setFromObject(wyGlassCabins[2].root);
 // v310: remove ONLY non-interactive curved trim that penetrates the outer wall.
 // Do not touch glass panels, moving doors, their click targets, or the elevator shell.
-const wy310ExteriorWallX=26.60,wy310ExteriorWallZ=22.00;
+const wy310ExteriorWallX=33.10,wy310ExteriorWallZ=22.00;
 for(const ornament of [...wyGlassCabins[2].root.children]){
  if(!ornament.isMesh || ornament.geometry?.type!=='TorusGeometry')continue;
  const b=new THREE.Box3().setFromObject(ornament);
@@ -2927,8 +2933,8 @@ for(const ornament of [...wyGlassCabins[2].root.children]){
  }
 }
 
-if(Math.abs(wy309PortalBounds.max.x-wy309WallX)>.025 ||
-   Math.abs(wy309PortalBounds.max.z-wy309FloorZ)>.025){
+if(Math.abs(new THREE.Box3().setFromObject(wyElev2).max.x-wy309WallX)>.025 ||
+   Math.abs(new THREE.Box3().setFromObject(wyElev2).max.z-wy309FloorZ)>.025){
  console.error('v309 2F portal perimeter not aligned');
 }
 // Preserve original 1F geometry and numeral, including its navy crown.
