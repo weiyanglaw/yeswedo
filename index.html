@@ -2110,14 +2110,26 @@ function wyVideoTitleSprite(text){
  meeting(20.80,33.08,3.60,15.40,false);
  // v364: common solid partition; no open slot between adjacent meeting rooms.
  roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
- // v368: completely replace previous divider with ONE opaque solid mesh.
- // Extend to the rear Logo wall at z=-11; zero transparent surfaces,
- // face overlays, intersecting panels, or second wall. Floor-to-top solid.
- const wy368ScreenMaterial=new THREE.MeshStandardMaterial({color:'#263B57',roughness:1,metalness:0,side:THREE.FrontSide});
- const wy368Screen=new THREE.Mesh(new THREE.BoxGeometry(.76,5.68,28.20),wy368ScreenMaterial);
- wy368Screen.position.set(15.80,2.84,2.50); // v369: solid from z=-11.60 into rear Logo wall to z=16.60
- roomRoot.add(wy368Screen);
- // One single solid volume: no separate gold skin or cap to cause Z-fighting.
+ // v371: C-style sculptural curved cut-out partition, one extruded solid.
+ // Actual through-openings (not transparent overlays or overlapping planes).
+ // It meets the Logo wall at z=-11.6 and the floor at y=0.
+ const wy371Shape=new THREE.Shape();
+ wy371Shape.moveTo(0,0);wy371Shape.lineTo(28.2,0);wy371Shape.lineTo(28.2,5.68);
+ wy371Shape.lineTo(0,5.68);wy371Shape.closePath();
+ for(let k=0;k<5;k++){
+  const x=1.05+k*5.43, w=4.25;
+  const hole=new THREE.Path();
+  hole.moveTo(x,.60);hole.lineTo(x+w,.60);hole.lineTo(x+w,3.60);
+  hole.bezierCurveTo(x+w,5.15,x+w*.74,5.18,x+w*.50,4.75);
+  hole.bezierCurveTo(x+w*.22,4.28,x,4.90,x,3.60);
+  hole.closePath();wy371Shape.holes.push(hole);
+ }
+ const wy371Geo=new THREE.ExtrudeGeometry(wy371Shape,{depth:.34,bevelEnabled:false,curveSegments:14,steps:1});
+ // Local X becomes world Z. One continuous navy volume with five large curved voids.
+ wy371Geo.rotateY(Math.PI/2);
+ const wy371Screen=new THREE.Mesh(wy371Geo,new THREE.MeshStandardMaterial({color:'#263B57',metalness:.08,roughness:.83,side:THREE.FrontSide}));
+ wy371Screen.position.set(15.95,0,16.60);roomRoot.add(wy371Screen);
+ // No coplanar metallic skins, second walls, glass layers, or z-fighting trim.
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2864,7 +2876,14 @@ const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry
 if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // The cloned 1F facade was built at a different origin; translate it back
 // toward the cabin as one unit, preserving all internal parts and labels.
-wy309Portal.position.z=-3.12; // v369: move original facade/board rearward as a unit
+// v371: remove the redundant opaque facade board, not the functional glass doors.
+// Keep all elevator coordinates unchanged; no more backward shifting.
+for(const part of [...wy309Portal.children]){
+ if(!part.isMesh || part.geometry?.type!=='BoxGeometry')continue;
+ const d=part.geometry.parameters;
+ if(d.width>=3.0 && d.height>=3.0 && d.depth<=.65){wy309Portal.remove(part);}
+}
+wy309Portal.position.z=-3.12; // retain v370 geometry position, do not move elevator
 // Back panel x after rotation = group x + 1.58*1.15.
 const wy366BackWallX=33.10; // inside face of east exterior wall x=33.3
 wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
