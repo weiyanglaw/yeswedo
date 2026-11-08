@@ -2904,23 +2904,24 @@ if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // toward the cabin as one unit, preserving all internal parts and labels.
 // v377: original elevator root and cabin remain exactly as in user-supplied HTML.
 // Shift ONLY the cloned front facade (including its curved upper trim) toward the rear wall.
-wy309Portal.position.z=-1.84;
+wy309Portal.position.z=-2.84; // v378: move the complete floating front facade 1.00m toward the rear wall
 // Keep the numeral attached to the dark-blue crown after the facade shifts.
 wy2Digit.position.z-=.42;
-// Move the translucent half-round glass enclosure and its matching gold trim
-// rearward in elevator-local space; do NOT move the cabin's back wall, floor,
-// elevator root, or route/camera anchors.
-const wy377Glass=wyGlassCabins[2];
-for(const item of wy377Glass.root.children){
- if(!item.isMesh)continue;
- const type=item.geometry?.type;
- if(type==='CylinderGeometry' && (item.geometry.parameters?.height||0)>5){
-  item.position.z-=.32;
- } else if(type==='TorusGeometry' && item.position.y>1.5){
-  item.position.z-=.32;
- }
+// v378: Move the *entire visible semicircular enclosure* toward the back wall.
+// v377 only shifted the tall cylinders and upper torus by .32; its curved FLOOR,
+// gold floor rings, vertical posts, and the door pivots stayed forward.
+// All those visible pieces must move together, not just the tall glass sheets.
+// The existing elevator root, fixed rear wall panel, and navigation anchors stay put.
+const wy378Glass=wyGlassCabins[2];
+const wy378Retreat=1.12;
+for(const item of wy378Glass.root.children){
+ if(item===wy366CabinBack)continue; // keep the correct rear wall flush
+ if(item.isMesh) item.position.z-=wy378Retreat;
+ else if(item.isGroup) item.position.z-=wy378Retreat; // curved door pivots
+ else if(item.isLight) item.position.z-=wy378Retreat;
 }
-for(const door of wy377Glass.doors)door.pivot.position.z-=.32;
+// The cabin's own glass sliding doors remain clickable because their mesh
+// identities are unchanged; only their parent pivot location has changed.
 // Back panel x after rotation = group x + 1.58*1.15.
 const wy366BackWallX=33.10;
 wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
