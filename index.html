@@ -2118,41 +2118,69 @@ function wyVideoTitleSprite(text){
  meeting(20.80,33.08,3.60,15.40,false);
  // v364: common solid partition; no open slot between adjacent meeting rooms.
  roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
- // v372: D-style fully opaque sculptural arch partition.
- // Built directly on the user-supplied HTML. One solid navy core, with
- // ivory inset reliefs on its face: NO openings, glass, or transparency.
- const wy372Screen=new THREE.Group();roomRoot.add(wy372Screen);
- // v373: reposition the whole solid arch screen toward the rear wall.
- wy372Screen.position.x=1.35;
- const wy372Navy=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.84,metalness:.05,side:THREE.DoubleSide});
- const wy372Ivory=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.91,metalness:0,side:THREE.DoubleSide});
- const wy372Gold=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.55,metalness:.32,side:THREE.DoubleSide});
- function wy372Solid(x,y,z,w,h,d,material){
-  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
-  m.position.set(x,y,z);wy372Screen.add(m);return m;
+ // v391: Boutique hotel curved privacy screen — solid, symmetrical on both sides.
+ // Single watertight sculpted wall mesh: front/back reliefs are part of the
+ // geometry itself, not stacked coplanar decorative planes (avoids Z-fighting).
+ const wy391Screen=new THREE.Group();roomRoot.add(wy391Screen);
+ const wy391Sage=new THREE.MeshStandardMaterial({color:'#456E65',roughness:.79,metalness:.07,side:THREE.FrontSide});
+ const wy391Bronze=new THREE.MeshStandardMaterial({color:'#BC9560',roughness:.49,metalness:.48});
+ const wy391Height=5.56,wy391Start=-5.0,wy391End=16.60,wy391Steps=216;
+ function wy391Profile(t){
+  const z=wy391Start+(wy391End-wy391Start)*t;
+  const turn=Math.max(0,Math.min(1,(z-12.6)/4.0));
+  const ease=turn*turn*(3-2*turn);
+  // Main span tracks the conference room; final portion softly curves inward.
+  const x=17.15+0.88*ease;
+  // Large rounded recesses repeat identically on front and back.
+  const wave=Math.pow(.5+.5*Math.cos((z+3.10)*Math.PI*2/4.65),2);
+  const depth=.355+.115*wave;
+  return {x,z,depth};
  }
- // Same main wall footprint as the supplied version, floor to ceiling.
- wy372Solid(15.80,2.78,4.15,.66,5.56,18.30,wy372Navy);
- wy372Solid(15.80,5.60,4.15,.74,.08,18.30,wy372Gold);
- // Decorative arch-shaped SOLID panels, flush with the wall's outside face.
- // Each gold outline and ivory face occupies a distinct depth: no z-fighting.
- function wy372ArchShape(width,bottom,top){
-  const sh=new THREE.Shape();
-  sh.moveTo(-width/2,bottom);sh.lineTo(width/2,bottom);
-  sh.lineTo(width/2,top-width/2);
-  sh.absarc(0,top-width/2,width/2,0,Math.PI,false);
-  sh.lineTo(-width/2,bottom);sh.closePath();return sh;
+ const wy391Verts=[],wy391Indices=[];
+ // Four perimeter vertices per cross-section: front/bottom, front/top,
+ // back/bottom, back/top. Top, bottom and ends are sealed by distinct faces.
+ for(let i=0;i<=wy391Steps;i++){
+  const q=wy391Profile(i/wy391Steps);
+  for(const side of [1,-1])for(const y of [0,wy391Height])
+   wy391Verts.push(q.x+side*q.depth,y,q.z);
  }
+ function wy391Quad(a,b,c,d){wy391Indices.push(a,b,c,a,c,d)}
+ for(let i=0;i<wy391Steps;i++){
+  const j=4*i,k=j+4;
+  wy391Quad(j,k,k+1,j+1);          // front
+  wy391Quad(j+2,j+3,k+3,k+2);    // back
+  wy391Quad(j+1,k+1,k+3,j+3);    // top
+  wy391Quad(j+2,k+2,k,j);        // bottom
+ }
+ wy391Quad(0,1,3,2);
+ const wy391Last=4*wy391Steps;wy391Quad(wy391Last+2,wy391Last+3,wy391Last+1,wy391Last);
+ const wy391Geo=new THREE.BufferGeometry();
+ wy391Geo.setAttribute('position',new THREE.Float32BufferAttribute(wy391Verts,3));
+ wy391Geo.setIndex(wy391Indices);wy391Geo.computeVertexNormals();
+ const wy391Body=new THREE.Mesh(wy391Geo,wy391Sage);
+ wy391Body.material.side=THREE.DoubleSide;wy391Screen.add(wy391Body);
+ // Bronze trim is physically outside the wall and has no shared planar faces.
+ // Curved top rail and bottom plinth follow the actual profile on both faces.
+ function wy391Rail(y,r,side){
+  const pts=[];
+  for(let i=0;i<=wy391Steps;i+=3){const q=wy391Profile(i/wy391Steps);
+   pts.push(new THREE.Vector3(q.x+side*(q.depth+r+.025),y,q.z));}
+  const curve=new THREE.CatmullRomCurve3(pts);
+  wy391Screen.add(new THREE.Mesh(new THREE.TubeGeometry(curve,Math.max(80,pts.length*3),r,8,false),wy391Bronze));
+ }
+ for(const side of [-1,1]){wy391Rail(5.45,.060,side);wy391Rail(.14,.052,side);}
+ // Full-height, broad bronze accents, set off the sculpted faces by a real gap.
+ // No transparent material, animated light, emissive pulse or overlay polygons.
  for(let k=0;k<4;k++){
-  const zz=-2.65+k*4.48;
-  const gold=new THREE.Mesh(new THREE.ShapeGeometry(wy372ArchShape(3.84,.28,5.22),24),wy372Gold);
-  gold.rotation.y=Math.PI/2;gold.position.set(16.139,0,zz);wy372Screen.add(gold);
-  const ivory=new THREE.Mesh(new THREE.ShapeGeometry(wy372ArchShape(3.68,.39,5.12),24),wy372Ivory);
-  ivory.rotation.y=Math.PI/2;ivory.position.set(16.153,0,zz);wy372Screen.add(ivory);
+  const z=-2.0+k*4.65;
+  if(z>wy391End-.4)continue;
+  const t=(z-wy391Start)/(wy391End-wy391Start),q=wy391Profile(t);
+  for(const side of [-1,1]){
+   const trim=new THREE.Mesh(new THREE.CylinderGeometry(.066,.066,4.88,10),wy391Bronze);
+   trim.position.set(q.x+side*(q.depth+.095),2.79,z);
+   wy391Screen.add(trim);
+  }
  }
- // Preserve the original angled solid end return and its connection.
- const wy372Return=wy372Solid(16.36,2.78,14.98,.66,5.56,3.80,wy372Ivory);
- wy372Return.rotation.y=-.30;
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -4135,6 +4163,7 @@ document.body.appendChild(floorBtn);
 let wyRide=null,wyDoorOpen=0,wyIndoorActor=null,wyIndoorPath=[],wyIndoorFloor=1;
 const wyElev1Pos=new THREE.Vector3(8.4,0,-7.85),wyElev2Pos=new THREE.Vector3(wyElev2.position.x-2.15,0,wyElev2.position.z),wyElev3Pos=new THREE.Vector3(7.75,0,6.45);const wyElevPos=f=>f===1?wyElev1Pos:f===2?wyElev2Pos:wyElev3Pos;
 
+// v392: repair 2F navigation extents and 1F/2F camera follow.
 // v165: globally suppress movement controls while any interaction panel is visible.
 const wy165ModalIds=['dialog','wyLobbyDialog','wyMainGuide','wyFamilyGuide','wyMedicalGuide','wy3Intro','wy345Intro','wy3MovieModal','wy260Modal','wyInfo'];
 function wy165SyncControls(){const open=wy165ModalIds.some(id=>{const e=document.getElementById(id);return e&&getComputedStyle(e).display!=='none'&&getComputedStyle(e).visibility!=='hidden'&&(!e.classList.contains('open')?id!=='wyInfo':true)})||document.querySelector('#wyInfo.open');if(document.body.classList.contains('wy165-dialog-open')!==!!open)document.body.classList.toggle('wy165-dialog-open',!!open);if(open&&typeof wyJoyReset==='function')wyJoyReset();}
@@ -4152,6 +4181,7 @@ wyJoyBase.addEventListener('pointermove',e=>{if(e.pointerId===wyJoyPointer){e.pr
 for(const ev of ['pointerup','pointercancel','lostpointercapture'])wyJoyBase.addEventListener(ev,e=>{if(e.pointerId===wyJoyPointer)wyJoyReset()});
 addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){if(insideOffice&&!activeIslandRoom){e.preventDefault();wyMoveKeys.add(e.key.toLowerCase())}}});
 addEventListener('keyup',e=>wyMoveKeys.delete(e.key.toLowerCase()));
+addEventListener('blur',()=>{wyMoveKeys.clear();wyJoyReset();});
 const wyLiftPrompt=document.createElement('button');wyLiftPrompt.id='wyLiftPrompt';wyLiftPrompt.textContent='開啟電梯門・走進電梯';wyLiftPrompt.style.cssText='display:none;position:fixed;z-index:50;bottom:138px;right:12px;background:#203e5a;color:white;border:2px solid #d5e7f0;border-radius:12px;padding:9px;font-size:12px;font-weight:700';document.body.append(wyLiftPrompt);
 const wyRideShade=document.createElement('div');wyRideShade.id='wyRideShade';wyRideShade.style.cssText='display:none;position:fixed;inset:0;z-index:95;background:#172c43ee;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:10px;font:700 21px system-ui;text-align:center';wyRideShade.innerHTML='<div>德威陽｜有法度</div><div id="wyRideProgress">電梯門關閉中…</div><div id="wyRideFloor" style="font-size:46px">1F</div>';document.body.append(wyRideShade);
 function wyIndoorMakeActor(){if(wyIndoorActor)return;wyIndoorActor=makeChibi(getAvatarSettings());wyIndoorActor.scale.setScalar(.75);wyIndoorActor.position.set(0,.08,10.85);lobbyRoot.add(wyIndoorActor)}
@@ -4196,10 +4226,10 @@ function wySetFloor(n){if(wy323Inside)wy323Leave();wyOfficeFloor=[1,2,3].include
 function wyElevatorOpen(){if(wyRide)return;wyDoorOpen=0;wyLiftPrompt.textContent='走進電梯，選擇樓層';wyLiftPrompt.style.display='none';}
 function wyFindLiftPath(from,to,floor){
  // 0.6-unit A* grid, with clearance around the existing major furniture islands.
- const step=.6, x0=-12,z0=-9.2,nx=65,nz=52;
+ const step=.6, x0=-12,z0=-9.2,nx=78,nz=54;
  const key=(x,z)=>x+','+z;
  const blocked=(x,z)=>{
-  if(x<-11.7||x>(floor===2?25.3:11.65)||z<-9.0||z>(floor===2?20.3:10))return true;
+  if(x<-11.7||x>(floor===2?32.35:11.65)||z<-9.0||z>(floor===2?20.3:10))return true;
   if(floor===1){
    if(Math.abs(x)<7.35&&z>4.05&&z<7.85)return true; // reception
    if(Math.abs(x)<4.3&&z>-5.8&&z<-1.0)return true; // central furniture
@@ -4442,8 +4472,17 @@ function wyElevatorTick(dt){
   x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
    if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}
    else if(wyOfficeFloor===1){const canMove=(xx,zz)=>xx>-12&&xx<12&&zz>-9.5&&zz<10&&!(Math.abs(xx)<7.2&&zz>4.4&&zz<7.6)&&!(Math.abs(xx)<4&&zz>-5.5&&zz<-1.2);if(canMove(nx,p.z))p.x=nx;if(canMove(p.x,nz))p.z=nz;}
-   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<25.8&&nz>-8.5&&nz<21.5){p.x=nx;p.z=nz;}
+   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<32.3&&nz>-8.5&&nz<21.5){p.x=nx;p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
+   // v392: keep the moving avatar in view on 1F/2F, preserving orbit angle.
+   // The 3F guided first-person camera is deliberately left untouched.
+   if(wyOfficeFloor===1||wyOfficeFloor===2){
+    const ctl=wyOfficeFloor===1?lobbyOrbit:officeOrbit;
+    const cam=wyOfficeFloor===1?lobbyCam:officeCam;
+    const desired=new THREE.Vector3(p.x,1.3,p.z);
+    const shift=desired.clone().sub(ctl.target).multiplyScalar(Math.min(1,dt*2.6));
+    ctl.target.add(shift);cam.position.add(shift);
+   }
   }
   const target=wyElevPos(wyOfficeFloor);
   const dist=Math.hypot(wyIndoorActor.position.x-target.x,wyIndoorActor.position.z-target.z);
