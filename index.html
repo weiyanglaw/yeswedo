@@ -1160,17 +1160,17 @@ function wyBuildOriginalOfficeFloor(addBox){
 // All existing furniture, elevator, signs and their interaction coordinates remain unchanged.
 // Extend usable floor to the east (right) and south, preserving original furniture and elevator coordinates.
 // The right exterior wall moves outward; the existing elevator model and travel routes stay unchanged.
-roomBox(6.75,-.24,5.5,40.5,.48,33,'#EADDCB');
-for(let x=-12.5;x<=26.25;x+=3.6)roomBox(x,.009,5.5,.014,.012,32.6,'#E1D8CA');
-for(let z=-9.7;z<=21.7;z+=6.0)roomBox(6.75,.012,z,40,.012,.012,'#E1D8CA');
-roomBox(6.75,4.255,-10.75,40.5,8.51,.40,'#F8F4EB');
+roomBox(10.0,-.24,5.5,47.0,.48,33,'#EADDCB');
+for(let x=-12.5;x<=32.75;x+=3.6)roomBox(x,.009,5.5,.014,.012,32.6,'#E1D8CA');
+for(let z=-9.7;z<=21.7;z+=6.0)roomBox(10.0,.012,z,46.5,.012,.012,'#E1D8CA');
+roomBox(10.0,4.255,-10.75,47.0,8.51,.40,'#F8F4EB');
 // v324: widened entrance on the SAME left wall marked by the user.
 // Opening spans z=15.55..19.05 (3.5m wide) and rises to y=5.35.
 roomBox(-13.3,4.255,2.275,.40,8.51,26.55,'#F7F2E9'); // -11..15.55
 roomBox(-13.3,4.255,20.525,.40,8.51,2.95,'#F7F2E9'); // 19.05..22
 roomBox(-13.3,6.93,17.30,.40,3.16,3.5,'#F7F2E9'); // lintel
 
-roomBox(26.8,4.255,5.5,.40,8.51,33,'#F7F2E9');
+roomBox(33.3,4.255,5.5,.40,8.51,33,'#F7F2E9');
 
 // v323 — stage one only: correctly placed doorway and a genuinely separate EMPTY room.
 // Pantry furnishings added in v325; no bottom entry button.
@@ -1693,7 +1693,7 @@ function wy345ShowIntro(area){
  button.onclick=()=>{try{localStorage.setItem(wy345IntroKeys[area],'yes')}catch(e){}wy345Intro.style.display='none'};
 }
 function wy323Enter(){if(!insideOffice||wyOfficeFloor!==2||wy323Inside)return;wy323Inside=true;roomRoot.visible=false;wy323Room.visible=true;if(wyIndoorActor.parent!==wy323Room){wyIndoorActor.parent.remove(wyIndoorActor);wy323Room.add(wyIndoorActor);}wyIndoorActor.position.set(wy323X+10.9,.08,7.3);officeCam.position.set(wy323X+8.4,9.0,15.3);officeOrbit.target.set(wy323X,1.6,-1.3);officeOrbit.update();wy345ShowIntro('lounge');}
-function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);wyIndoorPath=[];wy244FollowOffset=null;officeOrbit.enabled=true;officeOrbit.enableRotate=true;officeOrbit.enablePan=true;officeOrbit.enableZoom=true;officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeCam.lookAt(officeOrbit.target);officeOrbit.update();}
+function wy323Leave(){if(!wy323Inside)return;wy323Inside=false;wy323Room.visible=false;roomRoot.visible=true;if(wyIndoorActor.parent!==roomRoot){wyIndoorActor.parent.remove(wyIndoorActor);roomRoot.add(wyIndoorActor);}wyIndoorActor.position.set(-11.6,.08,17.3);wyIndoorPath=[];wy244FollowOffset=null;officeOrbit.enabled=true;officeOrbit.enableRotate=true;officeOrbit.enablePan=true;officeOrbit.enableZoom=true;officeCam.position.set(53,48,68);officeOrbit.target.set(10,1.3,5.5);officeCam.lookAt(officeOrbit.target);officeOrbit.update();}
 
 // Warm skirting and picture lights.
 roomBox(0,.30,-10.48,26.5,.20,.15,'#c7a269');
@@ -1749,6 +1749,9 @@ logoOffice.position.y=4.30;
 logoFrame.position.y=4.28;logoTrim.position.y=4.28;logoInner.position.y=4.28;
 logoFrame.scale.y=1.52;logoTrim.scale.y=1.52;logoInner.scale.y=1.52;
 logoOffice.position.z=-9.18;
+// v362: horizontal-only logo move; original official image and rear depth are unchanged.
+for(const o of [logoFrame,logoTrim,logoInner,logoOffice,logoLight])o.position.x+=4.0;
+wy214AboutSign.position.x+=4.0;wy304PlaqueBack.position.x+=4.0;
 logoLight.position.y*=1.15;
 // Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
 wy214AboutSign.position.y=11.25; // v306: raised clear of 8.51m wall crown
@@ -2099,25 +2102,71 @@ function wyVideoTitleSprite(text){
  // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
  // East sides align with existing office wall; elevator at far south-east remains clear.
  // West entrance corridor is 14.30-11.90 = 2.40 units, uninterrupted.
- meeting(14.30,26.58,-10.00,3.60,true);
- meeting(14.30,26.58,4.40,17.20,false);
- // F matte steel-blue, single solid privacy screen. Leave the official logo at x=6.75,z=-9.18 fully visible.
- // The screen is shifted away from the logo wall; both Z ends remain open for walkways.
- const sx=11.90,zMid=3.35,screenLength=13.70;
- {
-  // Single extruded silhouette with rounded upper corners; one material and no coplanar overlays.
-  const L=screenLength/2, H=5.16, r=.72;
-  const sh=new THREE.Shape();
-  sh.moveTo(-L,0);sh.lineTo(L,0);sh.lineTo(L,H-r);
-  sh.quadraticCurveTo(L,H,L-r,H);sh.lineTo(-L+r,H);
-  sh.quadraticCurveTo(-L,H,-L,H-r);sh.closePath();
-  const mesh=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.50,bevelEnabled:false,curveSegments:10}),mat(screen));
-  // Shape XY maps to office Z/Y; depth maps to X. Position centered on X=sx.
-  mesh.rotation.y=Math.PI/2;mesh.position.set(sx-.25,0,zMid);roomRoot.add(mesh);
+ const wy362MeetingStart=roomRoot.children.length;
+ meeting(20.80,33.08,-10.00,3.60,true);
+ meeting(20.80,33.08,4.40,17.20,false);
+ // v362: Double-sided large-scale curved architectural divider, not display shelves.
+ // Wide matte gold edges and bold ivory/navy panels remain legible on iPhone.
+ // Every surface has a separate depth; no coplanar faces or flickering z-fighting.
+ const navyWall=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.88,metalness:0,side:THREE.DoubleSide});
+ const ivoryWall=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.9,metalness:0,side:THREE.DoubleSide});
+ const goldWall=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.76,metalness:0,side:THREE.DoubleSide});
+ const darkGold=new THREE.MeshStandardMaterial({color:'#977447',roughness:.87,metalness:0,side:THREE.DoubleSide});
+ const wallGroup=new THREE.Group();roomRoot.add(wallGroup);
+ // Straight portion is long, while elevator-facing southern end sweeps softly toward the corridor.
+ const centers=[];
+ for(let i=0;i<=36;i++){
+   const t=i/36,z=-5.0+21.2*t;
+   const x=15.8+2.2*Math.pow(Math.max(0,(t-.72)/.28),2);
+   centers.push(new THREE.Vector3(x,0,z));
  }
- // No top crossbeam or stacked plates; continuous opaque main panel.
- // Screen body is continuous, opaque, and seam-free. Rounded ends are built into the silhouette.
- // LEFT/RIGHT passage gaps are at the two z ends, never filled by collision props.
+ const path=new THREE.CatmullRomCurve3(centers,false,'centripetal');
+ function ribbon(material,height,offset,thickness,from=0,to=1){
+   const vs=[],idx=[],steps=72;
+   for(let j=0;j<=steps;j++){
+     const t=from+(to-from)*j,p=path.getPoint(t),d=path.getTangent(t);
+     const nx=d.z,nz=-d.x;
+     for(const y of [offset,offset+height])for(const side of [-1,1]){
+       vs.push(p.x+nx*thickness*side/2,y,p.z+nz*thickness*side/2);
+     }
+   }
+   for(let j=0;j<steps;j++){
+     const a=j*4,b=(j+1)*4;
+     for(const [q,r,u,v] of [[0,1,1,0],[2,3,3,2],[0,2,2,0],[1,3,3,1]]){
+       idx.push(a+q,a+r,b+u,a+q,b+u,b+v);
+     }
+   }
+   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vs,3));g.setIndex(idx);g.computeVertexNormals();
+   const m=new THREE.Mesh(g,material);wallGroup.add(m);return m;
+ }
+ // Single continuous navy core with wide gold top/bottom caps.
+ ribbon(navyWall,5.15,.23,.50);
+ ribbon(goldWall,.29,.06,.72);
+ ribbon(goldWall,.30,5.36,.72);
+ // Two distinct premium faces: large ivory fields, navy accents, no thin ribs or lighting illusions.
+ function faceSegment(a,b,y,h,material,side){
+   const verts=[],indices=[],steps=24;
+   for(let k=0;k<=steps;k++){
+     const t=a+(b-a)*k,p=path.getPoint(t),d=path.getTangent(t),sg=side*.275;
+     verts.push(p.x+d.z*sg,y,p.z-d.x*sg,p.x+d.z*sg,y+h,p.z-d.x*sg);
+     if(k<steps){let i=k*2;indices.push(i,i+1,i+2,i+1,i+3,i+2)}
+   }
+   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));geo.setIndex(indices);geo.computeVertexNormals();
+   wallGroup.add(new THREE.Mesh(geo,material));
+ }
+ // Office face: generous ivory main panel and bold navy lower plinth.
+ faceSegment(.15,.76,1.68,3.34,ivoryWall,-1);
+ faceSegment(.15,.76,.52,1.02,navyWall,-1);
+ // Meeting/Logo face: broad navy centerpiece with ivory bookends.
+ faceSegment(.12,.29,.52,4.48,ivoryWall,1);
+ faceSegment(.29,.77,.52,4.48,navyWall,1);
+ faceSegment(.77,.92,.52,4.48,ivoryWall,1);
+ // Large structural champagne-gold columns: visible even without specular lighting.
+ function goldPost(t){const p=path.getPoint(t);const m=new THREE.Mesh(new THREE.BoxGeometry(.52,4.9,.66),goldWall);m.position.set(p.x,2.78,p.z);m.rotation.y=-Math.atan2(path.getTangent(t).x,path.getTangent(t).z);wallGroup.add(m)}
+ for(const t of [.13,.32,.76,.91])goldPost(t);
+ // Broad end caps, no floating elements or overlapping transparent planes.
+ for(const t of [0,1]){const p=path.getPoint(t),m=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,5.6,20),darkGold);m.position.set(p.x,2.86,p.z);wallGroup.add(m)}
+
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
 // printer, reception, official logos, clickable targets, NPC and routes intact.
@@ -2189,23 +2238,23 @@ for(const x of [-11.0,-5.6,11.0]){
  v44Box(x,4.1,-10.25,1.92,4.62,.11,v44Wall);
 }
 // Wall-attached pilasters: large architectural masses, not freestanding columns.
-for(const x of [-12.9,26.45]){
+for(const x of [-12.9,32.95]){
  v44Box(x,3.7,-10.44,.64,6.7,.42,v44Wall);
  v44Box(x,6.85,-10.41,.94,.36,.58,v44Inset);
 }
 // Side walls have only two broad inset panels each; no dense tiny gold strokes.
-for(const x of [-13.09,26.59])for(const z of [-5.0,4.5]){
+for(const x of [-13.09,33.09])for(const z of [-5.0,4.5]){
  v44Box(x,3.9,z,.14,5.6,4.5,v44Inset);
  v44Box(x+(x<0?.10:-.10),3.9,z,.12,5.13,4.05,v44Wall);
 }
 // v293: fill extended perimeter with repeated original moulding modules.
-for(const x of [15.2,19.2,23.2]){
+for(const x of [19.2,23.2,27.2,31.2]){
  v44Box(x,4.1,-10.44,2.8,5.7,.19,v44Wall);
  v44Box(x,4.1,-10.32,2.25,4.95,.10,v44Inset);
  v44Box(x,4.1,-10.25,1.92,4.62,.11,v44Wall);
 }
 for(const z of [12.0,18.0]){
- for(const x of (z===18.0?[26.59]:[-13.09,26.59])){
+ for(const x of (z===18.0?[26.59]:[-13.09,33.09])){
   v44Box(x,3.9,z,.14,5.6,4.5,v44Inset);
   v44Box(x+(x<0?.10:-.10),3.9,z,.12,5.13,4.05,v44Wall);
  }
@@ -2221,12 +2270,12 @@ for(const x of [2.95,10.55]){
  const band=new THREE.Mesh(new THREE.BoxGeometry(.24,5.2,.13),royalGold);band.position.set(x,3.6,-9.82);roomRoot.add(band);
 }
 // Large futuristic legal display attached to side wall, not blocking walking paths.
-roomBox(26.54,4.10,-3.1,.19,2.7,4.3,'#345779');
-roomBox(26.40,4.10,-3.1,.05,2.35,3.93,'#C5EAF5');
-roomBox(26.34,4.10,-3.1,.05,2.06,3.62,'#345779');
-const officeCam=new THREE.PerspectiveCamera(innerWidth<700?70:55,innerWidth/innerHeight,.1,300);officeCam.position.set(47,46,62);officeCam.lookAt(6.75,1.3,5.5);
+roomBox(33.04,4.10,-3.1,.19,2.7,4.3,'#345779');
+roomBox(32.90,4.10,-3.1,.05,2.35,3.93,'#C5EAF5');
+roomBox(32.84,4.10,-3.1,.05,2.06,3.62,'#345779');
+const officeCam=new THREE.PerspectiveCamera(innerWidth<700?70:55,innerWidth/innerHeight,.1,300);officeCam.position.set(53,48,68);officeCam.lookAt(10,1.3,5.5);
 const officeOrbit=new OrbitControls(officeCam,renderer.domElement);
-officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=7;officeOrbit.maxDistance=150;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(6.75,1.3,5.5);
+officeOrbit.enabled=false;officeOrbit.enableDamping=true;officeOrbit.minDistance=7;officeOrbit.maxDistance=150;officeOrbit.maxPolarAngle=Math.PI*.48;officeOrbit.target.set(10,1.3,5.5);
 // v36: match the medical office's iPhone touch gestures inside the main castle office.
 // One finger moves the view; two fingers pinch to zoom or pan together.
 officeOrbit.enablePan=true;
@@ -4166,7 +4215,7 @@ function wy300SyncCaption(){
 function wySetFloor(n){if(wy323Inside)wy323Leave();wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'歡迎光臨，這裡很有法度':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
- if(wyOfficeFloor===2){officeCam.position.set(47,46,62);officeOrbit.target.set(6.75,1.3,5.5);officeOrbit.update()}
+ if(wyOfficeFloor===2){officeCam.position.set(53,48,68);officeOrbit.target.set(10,1.3,5.5);officeOrbit.update()}
  else if(wyOfficeFloor===3){wy3Cam.position.set(7.15,2.4,6.7);wy3Orbit.target.set(wy178DoorX,2.55,wy178DoorZ);wy3Cam.lookAt(wy3Orbit.target)}
  else{lobbyCam.position.set(20,20,27);lobbyOrbit.target.set(0,1.2,-1);lobbyOrbit.update()}
  wyLobbyDialog.style.display='none';if(wyOfficeFloor===3){wy3Enter();if(!wyRide)wy3PlayArrival();}else{wy3WallPrompt.style.display='none';wy3DoorPrompt.style.display='none';wy3Intro.style.display='none';}}
