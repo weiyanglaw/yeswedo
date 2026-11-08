@@ -2151,8 +2151,7 @@ function wyVideoTitleSprite(text){
   ivory.rotation.y=Math.PI/2;ivory.position.set(16.153,0,zz);wy372Screen.add(ivory);
  }
  // Preserve the original angled solid end return and its connection.
- const wy372Return=wy372Solid(16.36,2.78,14.98,.66,5.56,3.80,wy372Ivory);
- wy372Return.rotation.y=-.30;
+ // v383: removed the detached ivory return panel in front of the 2F elevator.
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2860,11 +2859,9 @@ wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 const wy1Cabin=wyGlassCabins[1];
 const wy2CabinRoot=wy1Cabin.root.clone(true);
 wy2CabinRoot.position.set(0,0,0);
-// v382: remove ONLY the copied 2F cabin's large opaque cream back panel.
-// This is the rectangular board directly behind the semicircular glass,
-// generated inside wyBuildGlassCabin (3.22 x 5.25 x .11).
-const wy2FloatingBackPanel=wy2CabinRoot.children.find(o=>o.isMesh && o.geometry?.type==='BoxGeometry' && Math.abs(o.geometry.parameters.width-3.22)<.001 && Math.abs(o.geometry.parameters.height-5.25)<.001 && Math.abs(o.geometry.parameters.depth-.11)<.001);
-if(wy2FloatingBackPanel){wy2CabinRoot.remove(wy2FloatingBackPanel);}
+// v383: keep child indices intact for door/ring references; remove only the 2F opaque panel visually.
+const wy2BackPanel=wy2CabinRoot.children.find(o=>o.isMesh && o.geometry?.type==='BoxGeometry' && Math.abs(o.geometry.parameters.width-3.22)<.001 && Math.abs(o.geometry.parameters.height-5.25)<.001 && Math.abs(o.geometry.parameters.depth-.11)<.001);
+if(wy2BackPanel)wy2BackPanel.visible=false;
 wyElev2.add(wy2CabinRoot);
 const wy2Doors=wy1Cabin.doors.map(d=>{
  const pivot=wy2CabinRoot.children[wy1Cabin.root.children.indexOf(d.pivot)];
@@ -2895,7 +2892,7 @@ wyElev2ClickTargets.push(wy2Digit);
 // Rear glass radius 1.61*1.5 ends at x=32.965, inside rear wall x=33.10.
 wyElev2.scale.setScalar(1.10);
 wyElev2.rotation.y=-Math.PI/2;
-wyElev2.position.set(31.20,0,19.80);
+wyElev2.position.set(31.30,0,19.80);
 wyElev2.updateMatrixWorld(true);
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
