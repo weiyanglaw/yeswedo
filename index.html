@@ -1480,7 +1480,7 @@ const wy337Labels=[
  ['fridge','證物失蹤中',fridge,-11.15,5.98,.65],
  ['snacks','零食誰偷吃',snacks,4.12,4.05,.10],
  ['spaA','老闆我在海邊',null,-9.0,4.28,6.55],
- ['spaB','花開老闆不在',null,-4.4,4.28,6.55],
+ ['spaB','本庭准予放空',null,-4.4,4.28,6.55],
  ['pink','老闆來了快閃',null,-7.10,3.70,-3.70],
  ['mint','八卦不算加班',null,5.40,3.70,-3.70]
 ];
@@ -1641,8 +1641,8 @@ function wy337Memory(){
 function wy337Spa(key){
  wy337Close();
  const isSea=key==='spaA';
- const title=isSea?'老闆我在海邊':'花開老闆不在';
- const sources=isSea?['wy344_sea.mp4']:['wy344_flower.mp4'];
+ const title=isSea?'老闆我在海邊':'本庭准予放空';
+ const sources=isSea?['wy344_sea.mp4']:['wy370_flight.mp4'];
  let index=0,closed=false,playing=true,soundOn=false,hideTimer=null;
  const root=document.createElement('div');root.id='wy341Immersive';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',title);
  root.style.cssText='position:fixed;inset:0;z-index:99999;background:#050b13;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden';document.body.append(root);
@@ -1656,7 +1656,7 @@ function wy337Spa(key){
  const status=document.createElement('div');status.style.cssText='position:absolute;left:12px;right:12px;bottom:calc(98px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff4d7;text-shadow:0 2px 5px #000;font-size:13px;pointer-events:none';root.append(status);
  const intro=document.createElement('div');intro.textContent=title;intro.style.cssText='position:absolute;left:0;right:0;top:44%;text-align:center;font-weight:800;font-size:clamp(27px,7vw,40px);color:#f4dcaa;text-shadow:0 3px 16px #000;pointer-events:none;transition:opacity 1.2s';root.append(intro);
  setTimeout(()=>{if(!closed)intro.style.opacity='0'},2000);
- function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'花園沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
+ function load(i){index=i;video.src=sources[i];video.load();status.textContent=isSea?'海景沉浸體驗':'雲端飛行沉浸體驗';if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請點擊播放開始體驗';playBtn.textContent='播放'})}}
  
  video.addEventListener('error',()=>{if(!closed)status.textContent='影片無法載入，請確認影片檔案已上傳至網站根目錄'});
  function togglePlay(){playing=video.paused;if(playing){const p=video.play();if(p&&p.catch)p.catch(()=>{status.textContent='請再次點擊播放'})}else video.pause();playBtn.textContent=playing?'暫停':'播放';scheduleHide()}
@@ -1922,12 +1922,13 @@ wyCopier(0,1.59,.735,1.10,.12,.13,'#151E27',true); // output slot
 wyCopier(.67,1.66,.80,.53,.42,.12,'#1A2634',true); // control console
 wyCopier(.67,1.67,.875,.39,.29,.04,'#78C5DC',true); // lit touchscreen
 wyCopier(-.72,1.30,.76,.12,.34,.07,'#C5D0D8',true);
-officeSign('影印機｜事務所今天又怎麼了？',4.15,3.12,8.85,4.4,'#263b51',9);
+officeSign('影印機｜事務所今天又怎麼了？',4.15,4.45,8.85,4.4,'#263b51',9);
 // Preserve the original green Kuai Kuai artwork and 3D snack-bag model.
 const kuaiTexture=new THREE.TextureLoader().load('kuai-kuai-green-v103.png?v=20261027-v105');
 kuaiTexture.colorSpace=THREE.SRGBColorSpace;
 const kuaiBag=new THREE.Group();roomRoot.add(kuaiBag);
 kuaiBag.position.set(wyPrinterX,2.10,wyPrinterZ-.12);
+kuaiBag.scale.setScalar(1.48); // v369: enlarge green Kuai Kuai for mobile visibility
 const kuaiGreen=new THREE.MeshBasicMaterial({color:'#24C93D',side:THREE.DoubleSide});
 const kuaiFront=new THREE.MeshBasicMaterial({map:kuaiTexture,transparent:true,side:THREE.DoubleSide});
 const kuaiBack=new THREE.Mesh(new THREE.BoxGeometry(1.24,1.26,.26),kuaiGreen);
@@ -2109,27 +2110,14 @@ function wyVideoTitleSprite(text){
  meeting(20.80,33.08,3.60,15.40,false);
  // v364: common solid partition; no open slot between adjacent meeting rooms.
  roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
- // v366: FULL REBUILD. The entire previous 42-bay flickering screen is removed.
- // Opaque, contiguous solid geometry with NO overlapping skins, face decals or
- // coplanar surfaces. Logo-side end runs all the way down to the floor.
- const wy366Screen=new THREE.Group();roomRoot.add(wy366Screen);
- const wy366Navy=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.94,metalness:0});
- const wy366Ivory=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.95,metalness:0});
- const wy366Gold=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.9,metalness:0});
- function wy366Solid(x,y,z,w,h,d,material){
-  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
-  m.position.set(x,y,z);wy366Screen.add(m);return m;
- }
- // Two physically separate, end-to-end wall runs: no decorative coplanar skins.
- // Main continuous screen is solid from floor to top, including the Logo-wall end.
- wy366Solid(15.80,2.78,4.15,.66,5.56,18.30,wy366Navy);
- // Solid champagne-gold structural band on the exposed top, not on the wall face.
- wy366Solid(15.80,5.60,4.15,.74,.08,18.30,wy366Gold);
- // Southern return bends gently toward the lift. Ends meet without overlap.
- const wy366Return=new THREE.Mesh(new THREE.BoxGeometry(.66,5.56,3.80),wy366Ivory);
- wy366Return.position.set(16.36,2.78,14.98);wy366Return.rotation.y=-.30;
- wy366Screen.add(wy366Return);
- // No added floor or coincident golden base layers; bottom is flush at y=0.
+ // v368: completely replace previous divider with ONE opaque solid mesh.
+ // Extend to the rear Logo wall at z=-11; zero transparent surfaces,
+ // face overlays, intersecting panels, or second wall. Floor-to-top solid.
+ const wy368ScreenMaterial=new THREE.MeshStandardMaterial({color:'#263B57',roughness:1,metalness:0,side:THREE.FrontSide});
+ const wy368Screen=new THREE.Mesh(new THREE.BoxGeometry(.76,5.68,28.20),wy368ScreenMaterial);
+ wy368Screen.position.set(15.80,2.84,2.50); // v369: solid from z=-11.60 into rear Logo wall to z=16.60
+ roomRoot.add(wy368Screen);
+ // One single solid volume: no separate gold skin or cap to cause Z-fighting.
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2876,9 +2864,9 @@ const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry
 if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // The cloned 1F facade was built at a different origin; translate it back
 // toward the cabin as one unit, preserving all internal parts and labels.
-wy309Portal.position.z=-1.42;
+wy309Portal.position.z=-3.12; // v369: move original facade/board rearward as a unit
 // Back panel x after rotation = group x + 1.58*1.15.
-const wy366BackWallX=33.10;
+const wy366BackWallX=33.10; // inside face of east exterior wall x=33.3
 wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
 wyElev2.updateMatrixWorld(true);
 // Remove only exterior torus trim that extends beyond the building perimeter.
