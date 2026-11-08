@@ -2902,26 +2902,30 @@ const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry
 if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // The cloned 1F facade was built at a different origin; translate it back
 // toward the cabin as one unit, preserving all internal parts and labels.
-// v377: original elevator root and cabin remain exactly as in user-supplied HTML.
-// Shift ONLY the cloned front facade (including its curved upper trim) toward the rear wall.
-wy309Portal.position.z=-2.84; // v378: move the complete floating front facade 1.00m toward the rear wall
-// Keep the numeral attached to the dark-blue crown after the facade shifts.
-wy2Digit.position.z-=.42;
-// v378: Move the *entire visible semicircular enclosure* toward the back wall.
-// v377 only shifted the tall cylinders and upper torus by .32; its curved FLOOR,
-// gold floor rings, vertical posts, and the door pivots stayed forward.
-// All those visible pieces must move together, not just the tall glass sheets.
-// The existing elevator root, fixed rear wall panel, and navigation anchors stay put.
-const wy378Glass=wyGlassCabins[2];
-const wy378Retreat=1.12;
-for(const item of wy378Glass.root.children){
- if(item===wy366CabinBack)continue; // keep the correct rear wall flush
- if(item.isMesh) item.position.z-=wy378Retreat;
- else if(item.isGroup) item.position.z-=wy378Retreat; // curved door pivots
- else if(item.isLight) item.position.z-=wy378Retreat;
+// v380: START FROM v377, preserve the elevator root, flat cabin rear wall,
+// 2F glass elevator floor disks, its existing placement, and elevator interaction.
+// Only two user-confirmed objects are shifted rearward in LOCAL -Z:
+// (1) the forward semicircular GLASS enclosure, including curved glass,
+//     gold posts, handrail, upper curved frame, and moving glass doors;
+// (2) the suspended WHITE facade wall in front of the elevator.
+// The 2F numeral retains exactly its v377 location.
+wy309Portal.position.z=-2.74; // v377 -1.84: white floating facade ONLY
+wy2Digit.position.z-=.42; // unchanged v377 numeral placement
+const wy380Glass=wyGlassCabins[2];
+for(const item of wy380Glass.root.children){
+ if(!item.isMesh)continue;
+ const type=item.geometry?.type;
+ const p=item.geometry?.parameters||{};
+ // Glass curved panels (5.5m high), gold upright posts (5.7m high),
+ // the upper gold curved rail and middle handrail; no cabin wall/floor.
+ const isTallCurvedGlass=type==='CylinderGeometry' && p.openEnded===true && p.height>5;
+ const isGoldPost=type==='CylinderGeometry' && p.height>5.6 && p.radiusTop<.1;
+ const isCurvedRail=type==='TorusGeometry' && item.position.y>1.5;
+ if(isTallCurvedGlass||isGoldPost||isCurvedRail)item.position.z-=1.22; // additional from v377
 }
-// The cabin's own glass sliding doors remain clickable because their mesh
-// identities are unchanged; only their parent pivot location has changed.
+for(const door of wy380Glass.doors)door.pivot.position.z-=1.22;
+// Do NOT alter wyElev2.position, wyElev2.rotation, wyElev2.scale,
+// wy366CabinBack, any of the three floor disks, or any camera anchor.
 // Back panel x after rotation = group x + 1.58*1.15.
 const wy366BackWallX=33.10;
 wyElev2.position.set(wy366BackWallX-1.58*1.15,0,19.80);
