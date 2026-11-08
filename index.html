@@ -2240,8 +2240,11 @@ for(const x of [19.2,23.2,27.2,31.2]){
  v44Box(x,4.1,-10.32,2.25,4.95,.10,v44Inset);
  v44Box(x,4.1,-10.25,1.92,4.62,.11,v44Wall);
 }
+// v385: the z=18.0 decorative panel was incorrectly placed at x=26.59,
+// floating in the corridor directly in front of the 2F elevator.
+// Restore it to the actual east perimeter wall x=33.09.
 for(const z of [12.0,18.0]){
- for(const x of (z===18.0?[26.59]:[-13.09,33.09])){
+ for(const x of [-13.09,33.09]){
   v44Box(x,3.9,z,.14,5.6,4.5,v44Inset);
   v44Box(x+(x<0?.10:-.10),3.9,z,.12,5.13,4.05,v44Wall);
  }
@@ -2906,7 +2909,7 @@ wyElev2ClickTargets.push(wy2Digit);
 // Rear glass radius 1.61*1.5 ends at x=32.965, inside rear wall x=33.10.
 wyElev2.scale.setScalar(1.10);
 wyElev2.rotation.y=-Math.PI/2;
-wyElev2.position.set(31.30,0,19.80);
+wyElev2.position.set(31.39,0,19.80);
 wyElev2.updateMatrixWorld(true);
 // 3F cabin: rotate its glass entrance from +Z to -X, against the east wall.
 
