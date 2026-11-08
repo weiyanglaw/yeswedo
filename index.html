@@ -2862,7 +2862,12 @@ wyGlassCabins[1]=wyBuildGlassCabin(lobbyRoot,8.4,-9.48,true);
 // without altering any first-floor geometry, coordinates, or interaction.
 const wy1Cabin=wyGlassCabins[1];
 const wy2CabinRoot=wy1Cabin.root.clone(true);
-wy2CabinRoot.position.set(0,0,0);
+// v388: 1F glass cabin was cloned with its local back plane at z=0,
+// while the copied 1F facade has its rear plane at local z=-0.86.
+// Align BOTH rear planes to the same wall-facing depth before rotating
+// the entire 2F elevator. -PI/2 maps local negative Z toward east (+X).
+// The 1F original remains untouched.
+wy2CabinRoot.position.set(0,0,-0.86);
 // v384: delete the 2F-only opaque rectangular backing panel. Preserve child
 // indexes for animated door pivots, ring, and light by using visibility.
 const wy384CabinPanel=wy2CabinRoot.children.find(o=>o.isMesh &&
@@ -2906,7 +2911,7 @@ const wy2Digit=wyLiftNumeral('2',wy1Digit.position.x-wyLiftX,
 wyElev2ClickTargets.push(wy2Digit);
 // The second-floor room has been expanded: scale ALL elevator components
 // together 1.5x. Rotate the entrance toward the walkable interior (-X).
-// v387: align the rear-most copied facade z=-0.86 (after 90-degree rotation and 1.10 scale) to the east wall inner face x=33.02: 32.07 + .946 = 33.016. Move only the entire 2F group.
+// v388: cabin back and facade rear both local z=-0.86, mapping to x=33.016 near the east wall inner face x=33.02.
 wyElev2.scale.setScalar(1.10);
 wyElev2.rotation.y=-Math.PI/2;
 wyElev2.position.set(32.07,0,19.80);
