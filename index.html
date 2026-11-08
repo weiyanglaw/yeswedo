@@ -1480,7 +1480,7 @@ const wy337Labels=[
  ['fridge','證物失蹤中',fridge,-11.15,5.98,.65],
  ['snacks','零食誰偷吃',snacks,4.12,4.05,.10],
  ['spaA','老闆我在海邊',null,-9.0,4.28,6.55],
- ['spaB','花開老闆不在',null,-4.4,4.28,6.55],
+ ['spaB','本庭准予放空',null,-4.4,4.28,6.55],
  ['pink','老闆來了快閃',null,-7.10,3.70,-3.70],
  ['mint','八卦不算加班',null,5.40,3.70,-3.70]
 ];
@@ -1641,8 +1641,8 @@ function wy337Memory(){
 function wy337Spa(key){
  wy337Close();
  const isSea=key==='spaA';
- const title=isSea?'老闆我在海邊':'花開老闆不在';
- const sources=isSea?['wy344_sea.mp4']:['wy344_flower.mp4'];
+ const title=isSea?'老闆我在海邊':'本庭准予放空';
+ const sources=isSea?['wy344_sea.mp4']:['wy373_flight.mp4'];
  let index=0,closed=false,playing=true,soundOn=false,hideTimer=null;
  const root=document.createElement('div');root.id='wy341Immersive';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label',title);
  root.style.cssText='position:fixed;inset:0;z-index:99999;background:#050b13;color:#fff;font-family:system-ui,-apple-system,sans-serif;overflow:hidden';document.body.append(root);
@@ -2109,27 +2109,41 @@ function wyVideoTitleSprite(text){
  meeting(20.80,33.08,3.60,15.40,false);
  // v364: common solid partition; no open slot between adjacent meeting rooms.
  roomBox(26.94,2.70,3.60,12.28,5.40,.28,'#F2E9DA');
- // v366: FULL REBUILD. The entire previous 42-bay flickering screen is removed.
- // Opaque, contiguous solid geometry with NO overlapping skins, face decals or
- // coplanar surfaces. Logo-side end runs all the way down to the floor.
- const wy366Screen=new THREE.Group();roomRoot.add(wy366Screen);
- const wy366Navy=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.94,metalness:0});
- const wy366Ivory=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.95,metalness:0});
- const wy366Gold=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.9,metalness:0});
- function wy366Solid(x,y,z,w,h,d,material){
+ // v372: D-style fully opaque sculptural arch partition.
+ // Built directly on the user-supplied HTML. One solid navy core, with
+ // ivory inset reliefs on its face: NO openings, glass, or transparency.
+ const wy372Screen=new THREE.Group();roomRoot.add(wy372Screen);
+ // v373: reposition the whole solid arch screen toward the rear wall.
+ wy372Screen.position.x=1.35;
+ const wy372Navy=new THREE.MeshStandardMaterial({color:'#263B57',roughness:.84,metalness:.05,side:THREE.DoubleSide});
+ const wy372Ivory=new THREE.MeshStandardMaterial({color:'#F2E7D5',roughness:.91,metalness:0,side:THREE.DoubleSide});
+ const wy372Gold=new THREE.MeshStandardMaterial({color:'#C6A064',roughness:.55,metalness:.32,side:THREE.DoubleSide});
+ function wy372Solid(x,y,z,w,h,d,material){
   const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
-  m.position.set(x,y,z);wy366Screen.add(m);return m;
+  m.position.set(x,y,z);wy372Screen.add(m);return m;
  }
- // Two physically separate, end-to-end wall runs: no decorative coplanar skins.
- // Main continuous screen is solid from floor to top, including the Logo-wall end.
- wy366Solid(15.80,2.78,4.15,.66,5.56,18.30,wy366Navy);
- // Solid champagne-gold structural band on the exposed top, not on the wall face.
- wy366Solid(15.80,5.60,4.15,.74,.08,18.30,wy366Gold);
- // Southern return bends gently toward the lift. Ends meet without overlap.
- const wy366Return=new THREE.Mesh(new THREE.BoxGeometry(.66,5.56,3.80),wy366Ivory);
- wy366Return.position.set(16.36,2.78,14.98);wy366Return.rotation.y=-.30;
- wy366Screen.add(wy366Return);
- // No added floor or coincident golden base layers; bottom is flush at y=0.
+ // Same main wall footprint as the supplied version, floor to ceiling.
+ wy372Solid(15.80,2.78,4.15,.66,5.56,18.30,wy372Navy);
+ wy372Solid(15.80,5.60,4.15,.74,.08,18.30,wy372Gold);
+ // Decorative arch-shaped SOLID panels, flush with the wall's outside face.
+ // Each gold outline and ivory face occupies a distinct depth: no z-fighting.
+ function wy372ArchShape(width,bottom,top){
+  const sh=new THREE.Shape();
+  sh.moveTo(-width/2,bottom);sh.lineTo(width/2,bottom);
+  sh.lineTo(width/2,top-width/2);
+  sh.absarc(0,top-width/2,width/2,0,Math.PI,false);
+  sh.lineTo(-width/2,bottom);sh.closePath();return sh;
+ }
+ for(let k=0;k<4;k++){
+  const zz=-2.65+k*4.48;
+  const gold=new THREE.Mesh(new THREE.ShapeGeometry(wy372ArchShape(3.84,.28,5.22),24),wy372Gold);
+  gold.rotation.y=Math.PI/2;gold.position.set(16.139,0,zz);wy372Screen.add(gold);
+  const ivory=new THREE.Mesh(new THREE.ShapeGeometry(wy372ArchShape(3.68,.39,5.12),24),wy372Ivory);
+  ivory.rotation.y=Math.PI/2;ivory.position.set(16.153,0,zz);wy372Screen.add(ivory);
+ }
+ // Preserve the original angled solid end return and its connection.
+ const wy372Return=wy372Solid(16.36,2.78,14.98,.66,5.56,3.80,wy372Ivory);
+ wy372Return.rotation.y=-.30;
 
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
@@ -2864,6 +2878,9 @@ for(const original of wy290FirstFloorLiftParts){
 // v310: match the original 1F numeral exactly in the cloned crown coordinate system.
 wy2Digit.position.set(wy1Digit.position.x-wyLiftX,wy1Digit.position.y,
  wy1Digit.position.z-(-9.48)+1.00);
+// v373: the dark-blue crown face is at elevator-local z about -.52.
+// Numeral is placed just in front of it rather than floating forward.
+wy2Digit.position.z=-.505;
 wy2Digit.rotation.set(0,0,0);
 wy2Digit.renderOrder=16;
 wyElev2.scale.setScalar(1.15);
@@ -2876,6 +2893,18 @@ const wy366CabinBack=wyGlassCabins[2].root.children.find(o=>o.isMesh&&o.geometry
 if(wy366CabinBack)wy366CabinBack.position.z=-1.58;
 // The cloned 1F facade was built at a different origin; translate it back
 // toward the cabin as one unit, preserving all internal parts and labels.
+// v373: preserve the original 2F lift/cabin placement. Move only the broad
+// opaque facade backing sheet(s) back against the elevator instead of removing them.
+// The portal is a child of wyElev2, so all positions below are elevator-local.
+for(const part of wy309Portal.children){
+ if(!part.isMesh || part.geometry?.type!=='BoxGeometry')continue;
+ const d=part.geometry.parameters;
+ if(d.width>=3.0 && d.height>=3.0 && d.depth<=.65){
+  // Place the rear face close to the cabin back panel (local z=-1.58).
+  // The sheet is behind the transparent front entrance and cannot float ahead.
+  part.position.z=-.16;
+ }
+}
 wy309Portal.position.z=-1.42;
 // Back panel x after rotation = group x + 1.58*1.15.
 const wy366BackWallX=33.10;
