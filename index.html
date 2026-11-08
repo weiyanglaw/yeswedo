@@ -1751,7 +1751,7 @@ logoFrame.scale.y=1.52;logoTrim.scale.y=1.52;logoInner.scale.y=1.52;
 logoOffice.position.z=-9.18;
 // v362: horizontal-only logo move; original official image and rear depth are unchanged.
 for(const o of [logoFrame,logoTrim,logoInner,logoOffice,logoLight])o.position.x+=4.0;
-wy214AboutSign.position.x+=4.0;wy304PlaqueBack.position.x+=4.0;
+wy214AboutSign.position.x+=4.0;
 logoLight.position.y*=1.15;
 // Sign: slightly higher than the raised wall, facing the room only (no mirrored reverse text).
 wy214AboutSign.position.y=11.25; // v306: raised clear of 8.51m wall crown
@@ -1767,6 +1767,8 @@ wy304PlaqueBack.position.copy(wy214AboutSign.position);
 wy304PlaqueBack.position.z-=.012;
 wy304PlaqueBack.position.y=wy214AboutSign.position.y;
 roomRoot.add(wy304PlaqueBack);
+// v363: move plaque only after construction; avoids fatal initialization ReferenceError.
+wy304PlaqueBack.position.x+=4.0;
 // Executive suite: distinguished from the staff workstations by dark walnut, brass,
 // a dedicated raised rug, privacy glass, leather lounge chairs and layered ceiling lighting.
 // v282: pale blue-gray luxury rug contrasts with the ivory wooden floor and navy desk.
