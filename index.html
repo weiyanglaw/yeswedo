@@ -4708,8 +4708,8 @@ function leaveOffice(){if(wy323Inside)wy323Leave();
 }
 document.getElementById('officeExit').onclick=leaveOffice;
 
-// v400: entire business-island interior replaced with seven integrated luxury legal contexts.
-function wy400BusinessInterior(root,THREE){
+// v401: targeted replacement of the technology workstation; remaining business-island interior retained with seven integrated luxury legal contexts.
+function wy401BusinessInterior(root,THREE){
  const M=(hex,metalness=0,roughness=.84)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness,side:THREE.FrontSide});
  const stone=M('#DCD1DB'),wall=M('#E9E1EB'),pearl=M('#F0E8DE'),cream=M('#F5EDE3'),lilac=M('#BBA9C9'),mauve=M('#A797B5'),plum=M('#493657'),gold=M('#C7B18D',.18,.73),oak=M('#C7B3A3'),sage=M('#A3B5A5'),sageSoft=M('#C0CDBF'),blue=M('#AABCC9'),ink=M('#505466'),warm=M('#D9C8BC');
  const mesh=(geo,mat,x,y,z,parent=root)=>{let o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
@@ -4766,12 +4766,50 @@ function wy400BusinessInterior(root,THREE){
  round(4.15,.25,1.38,.62,0,1.13,0,wood,hr);round(3.89,.12,1.19,.56,0,1.38,0,ivory,hr);
  for(let x of [-1.30,1.30])box(.70,.96,.66,x,.55,0,wood,hr);
  executiveChair(7.52,-2.55,0,violet);clubChair(6.45,.35,Math.PI,cream);clubChair(8.55,.35,Math.PI,cream);
- // ⑥ IP & TECH: a single bespoke tech bench with two distinct high-end monitors.
- const tech=group(7.58,4.42);
- round(4.75,.26,1.46,.67,0,1.05,0,blue,tech);round(4.50,.10,1.23,.57,0,1.29,0,ivory,tech);
- for(let x of [-1.50,1.50])box(.90,.95,.69,x,.57,0,wood,tech);
- screen(6.48,4.19,0,1.30);screen(8.64,4.19,0,1.30);
- executiveChair(6.48,6.18,Math.PI,cream);executiveChair(8.64,6.18,Math.PI,cream);
+ // ⑥ INTELLECTUAL PROPERTY & TECHNOLOGY: C — bespoke museum-grade patent alcove.
+ // The entire former two-monitor desk, both chairs and all desk legs are REMOVED.
+ // Single independent structural solids, deliberate physical gaps, no coplanar decorative overlays.
+ const gallery=group(10.48,4.35,-Math.PI/2);
+ const satin=M('#F6EFE7',.04,.87), champagne=M('#BDA378',.36,.55), amethyst=M('#806A94',.10,.78), pearlLavender=M('#D9CBDD',.02,.88), innerShadow=M('#51465C',.05,.83), sculptureGold=M('#D2B786',.30,.56);
+ // Architectural alcove: deep full-height carved frame with actual negative-space opening.
+ // Frame pieces are separated by clear joints; no transparent planes or thin coplanar trims.
+ box(5.65,.34,1.02,0,.17,0,champagne,gallery); // grounded plinth
+ box(5.55,4.72,.68,0,2.67,-.15,pearlLavender,gallery); // structural backing
+ box(4.42,3.72,.20,0,2.73,.29,innerShadow,gallery); // recessed dark interior
+ for(let side of [-1,1]){
+   box(.46,4.63,.93,side*2.57,2.66,.29,satin,gallery);
+   box(.16,4.26,.98,side*2.21,2.65,.34,champagne,gallery);
+ }
+ box(5.64,.52,1.00,0,5.10,.28,satin,gallery);
+ box(5.40,.17,1.05,0,4.78,.35,champagne,gallery);
+ // Architectural curved crown: distinct solid curved molding with visible thickness.
+ const crown=mesh(new THREE.TorusGeometry(1.99,.125,12,60,Math.PI),champagne,0,4.22,.49,gallery);
+ crown.rotation.z=0;
+ // Integrated deep exhibition pedestal: one single continuous cabinet volume, no tabletop overlays.
+ round(3.62,.64,1.03,.32,0,.47,.95,plum2,gallery);
+ box(2.82,.10,.77,0,.89,.99,champagne,gallery);
+ // Central three-dimensional patent invention: a recognisable precision-engineered
+ // architectural polyhedron, not a computer or generic box ornament.
+ const art=new THREE.Group();art.position.set(0,2.61,.80);gallery.add(art);
+ const outer=mesh(new THREE.IcosahedronGeometry(.89,0),amethyst,0,0,0,art);
+ outer.rotation.set(.20,.43,.12);
+ const wire=new THREE.LineSegments(new THREE.EdgesGeometry(outer.geometry),new THREE.LineBasicMaterial({color:'#E8D3A9',depthTest:true}));
+ wire.rotation.copy(outer.rotation);wire.scale.setScalar(1.025);art.add(wire);
+ // A separate mechanical core and symmetric sculptural brackets with clear depth offsets.
+ const core=mesh(new THREE.OctahedronGeometry(.38,0),sculptureGold,0,0,.94,art);
+ core.rotation.y=.35;
+ for(let side of [-1,1]){
+   const ring=mesh(new THREE.TorusGeometry(.48,.075,10,36),champagne,side*1.43,-.04,.08,art);
+   ring.rotation.y=Math.PI/2;
+   cylinder(.10,.10,.70,side*1.43,-.72,.06,champagne,art);
+ }
+ // Broad sculptural lighting niches, made from opaque matte geometry rather than stacked glass.
+ for(let side of [-1,1]){
+   box(.30,1.20,.17,side*1.82,2.62,.53,satin,gallery);
+   ell(.29,.33,.19,side*1.82,3.22,.68,sculptureGold,gallery);
+ }
+ // A single unobstructed interaction hotspot stays in the same topic slot.
+ // Do not attach additional unrequested screens, chairs, desks, or animated effects.
  // ⑦ COMPLIANCE: separate executive curved desk and high back chair; anchored by luxury library.
  const exec=group(7.58,-6.02);
  round(4.60,.30,1.62,.76,0,1.15,0,wood,exec);round(4.32,.12,1.40,.69,0,1.43,0,ivory,exec);
@@ -4801,7 +4839,7 @@ function wy400BusinessInterior(root,THREE){
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
  const pts=[[-7.5,-5.95],[0,.65],[-7.35,4.3],[-8,-1.1],[7.52,-1.1],[7.58,4.42],[7.58,-6.02]];
  root.userData.businessTopics=topics.map((name,i)=>({name,x:pts[i][0],z:pts[i][1]}));
- return {departments:topics,version:'v400',design:'Seven integrated legal contexts, luxury reception at entrance'};
+ return {departments:topics,version:'v401',design:'Seven integrated legal contexts, C patent art alcove replacing flickering tech workstation'};
 }
 
 // Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
@@ -4826,7 +4864,7 @@ for(let i=1;i<6;i++){
  }
  const cam=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,120);cam.position.set(13,11,19);cam.lookAt(0,2,-2);
  const control=new OrbitControls(cam,renderer.domElement);control.enabled=false;control.enableDamping=true;control.target.set(0,2,-2);control.minDistance=7;control.maxDistance=36;
- if(i===4){wy400BusinessInterior(root,THREE);cam.fov=innerWidth<700?69:58;cam.updateProjectionMatrix();cam.position.set(3,23,33);control.target.set(0,1.1,0);control.minDistance=7;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.update();}
+ if(i===4){wy401BusinessInterior(root,THREE);cam.fov=innerWidth<700?69:58;cam.updateProjectionMatrix();cam.position.set(3,23,33);control.target.set(0,1.1,0);control.minDistance=7;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.update();}
  const medicalRoom=i===2?createMedicalInterior({scene:sc},THREE,makeStaffChibi,GLTFLoader):null;const familyRoom=i===3?createFamilyInterior(sc,THREE,makeStaffChibi):null;
  if(i===3){cam.fov=innerWidth<700?65:55;cam.updateProjectionMatrix();control.target.set(0,2,0);cam.position.set(5,27,38);control.minDistance=10;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.screenSpacePanning=true;control.update();}
  if(i===2){
