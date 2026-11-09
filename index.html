@@ -1994,8 +1994,8 @@ function wyVideoTitleSprite(text){
  const texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;
  // Plane is fully opaque; no translucent sprite blending or ghosted backing.
  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(5.8,1.68),
-   new THREE.MeshBasicMaterial({map:texture,transparent:false,side:THREE.FrontSide,depthTest:true,depthWrite:true}));
- mesh.renderOrder=6;mesh.userData.wyMeetingPlaque=true;return mesh;
+   new THREE.MeshBasicMaterial({map:texture,transparent:false,side:THREE.FrontSide,depthTest:false,depthWrite:false}));
+ mesh.renderOrder=100;mesh.userData.wyMeetingPlaque=true;return mesh;
 }
 // v316: rebuild ONLY the second-floor meeting rooms and the freestanding privacy screen.
 // Clear, single-layer glass, physically separate blinds, no coplanar floor or decorative layers.
@@ -2107,7 +2107,7 @@ function wyVideoTitleSprite(text){
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoScreen);
   // Gold headline sits above the screen, using existing geometry (no video texture).
   const videoLabel=wyVideoTitleSprite(isLarge?'事務所今天又開講了':'律師說這有詐！');
-  videoLabel.position.set(west-.95,8.20,cz);videoLabel.rotation.y=-Math.PI/2;videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
+  videoLabel.position.set(cx,7.75,z0+.82);videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoLabel);
  }
  // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
@@ -4931,7 +4931,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  if(wy323Inside){const hits337=ray.intersectObjects(wy337Targets,false);if(hits337.length){wy337Open(hits337[0].object.userData.wy337);return;}if(ray.intersectObject(wy323ExitHit,false).length||ray.intersectObject(wy347ExitSign,false).length)wy323Leave();return;}
  if(ray.intersectObjects(wy323EntranceHits,false).length){wy323Enter();return;}
  for(const sign of (window.wyVideoScreens||[])){
-  if(sign.userData.wyMeetingPlaque)sign.visible=(officeCam.position.x<sign.position.x-.25);
+  if(sign.userData.wyMeetingPlaque)sign.visible=(officeCam.position.z>sign.position.z+0.12);
  }
  const wyVideoHit=ray.intersectObjects(window.wyVideoScreens||[],false);
  if(wyVideoHit.length&&typeof window.wy317OpenVideo==='function'){
@@ -4951,8 +4951,8 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
 // v176: no repeated global material mutations; preserve each island's original materials.
 previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());if(wyOfficeFloor===2)wy300SyncCaption();renderer.render(r.scene,r.camera)}else{if(wyOfficeFloor===1){if(!(wyRide&&wyRide.source===1&&['walk','enter'].includes(wyRide.phase)))lobbyOrbit.update();wyLobbyAnimate(performance.now());wyReceptionAnimate(performance.now());renderer.render(lobbyScene,lobbyCam)}else if(wyOfficeFloor===2){if(!(wyRide&&wyRide.source===2&&['walk','enter'].includes(wyRide.phase)))officeOrbit.update();if(wy323Inside){for(const plaque of wy338BillboardPlaques)plaque.quaternion.copy(officeCam.quaternion);wy347ExitSign.quaternion.copy(officeCam.quaternion);}else{wy345EntrySign.quaternion.copy(officeCam.quaternion);}for(const sign of (window.wyVideoScreens||[])){
  if(sign.userData.wyMeetingPlaque){
-  // The office-side (-X) is the only readable face. Hide on the meeting-room side.
-  sign.visible=(officeCam.position.x<sign.position.x-.25);
+  // The screenshot camera is on the +X side: front face +X, hidden on -X side.
+  sign.visible=(officeCam.position.z>sign.position.z+0.12);
  }
 }renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(document.getElementById('creator').style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
 (async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
