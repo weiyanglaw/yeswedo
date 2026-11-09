@@ -4708,7 +4708,7 @@ function leaveOffice(){if(wy323Inside)wy323Leave();
 }
 document.getElementById('officeExit').onclick=leaveOffice;
 
-// v401: targeted replacement of the technology workstation; remaining business-island interior retained with seven integrated luxury legal contexts.
+// v402: targeted premium layout improvements; remaining business-island interior retained with seven integrated luxury legal contexts.
 function wy401BusinessInterior(root,THREE){
  const M=(hex,metalness=0,roughness=.84)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness,side:THREE.FrontSide});
  const stone=M('#DCD1DB'),wall=M('#E9E1EB'),pearl=M('#F0E8DE'),cream=M('#F5EDE3'),lilac=M('#BBA9C9'),mauve=M('#A797B5'),plum=M('#493657'),gold=M('#C7B18D',.18,.73),oak=M('#C7B3A3'),sage=M('#A3B5A5'),sageSoft=M('#C0CDBF'),blue=M('#AABCC9'),ink=M('#505466'),warm=M('#D9C8BC');
@@ -4746,20 +4746,29 @@ function wy401BusinessInterior(root,THREE){
  // A recognisable low floral arrangement with substantial petals; no mysterious box.
  const flowers=(x,z,y=1.45)=>{cylinder(.30,.23,.28,x,y,z,ivory);for(let i=0;i<5;i++){let t=i*Math.PI*2/5;ell(.26,.16,.22,x+Math.cos(t)*.24,y+.26,z+Math.sin(t)*.24,cream)}ell(.20,.20,.20,x,y+.27,z,gold)};
  flowers(-7.5,-5.95,1.52);
- // ④ PRIVATE NEGOTIATION: two substantial upholstered armchairs around an elegant elliptical table.
- clubChair(-9.30,-1.10,Math.PI/2,cream);clubChair(-6.70,-1.10,-Math.PI/2,violet);
- ell(1.46,.18,1.02,-8.00,.59,-1.10,ivory);cylinder(.45,.54,.50,-8.00,.29,-1.10,wood);
- // ③ OEM/ODM PROCUREMENT: curved shared project table and premium ultrathin dual display, no HR-like twin cubicles.
- const proj=group(-7.35,4.30);
- round(4.9,.25,1.55,.68,0,1.03,0,wood,proj);round(4.60,.11,1.33,.59,0,1.27,0,ivory,proj);
- for(let x of [-1.48,1.48]){box(.92,.95,.68,x,.56,0,wood,proj);executiveChair(-7.35+x,6.15,Math.PI,cream)}
+ // ④ PRIVATE NEGOTIATION: clear the former cramped small table and chairs entirely.
+ // Its legal interaction is preserved at a dedicated discreet consultation marker near the boardroom.
+ // ③ OEM/ODM PROCUREMENT: bespoke semicircular international negotiation salon.
+ // Entire former two-monitor workstation is gone; no coincident stacked tabletops.
+ const neg=group(-7.35,4.15);
+ const shell=mesh(new THREE.CylinderGeometry(2.22,2.05,.87,64,1,false,0,Math.PI),plum2,0,.57,0,neg);
+ shell.rotation.y=Math.PI/2;
+ const negotiationTop=mesh(new THREE.CylinderGeometry(2.38,2.38,.25,64,1,false,0,Math.PI),ivory,0,1.12,0,neg);
+ negotiationTop.rotation.y=Math.PI/2;
+ // broad separated champagne-metal side pillars; single continuous top, not overlays.
+ for(let s of [-1,1])cylinder(.14,.16,.80,s*1.90,.52,.18,brass,neg);
+ // A clear signed contract on an inclined document stand, rather than a monitor.
+ const contract=group(-7.35,3.87);
+ let paper=box(.76,.055,.55,0,1.40,0,cream,contract);paper.rotation.x=-.17;
+ cylinder(.08,.08,.12,0,1.32,.28,brass,contract);
+ clubChair(-8.50,5.95,Math.PI,cream);clubChair(-6.22,5.95,Math.PI,violet);
  // screen stands are thick separated volumes; matte metal and a visible screen front.
  const screen=(x,z,rot=0,w=1.06)=>{let g=group(x,z,rot);box(w,.65,.085,0,1.80,0,deep,g);box(w-.11,.53,.025,0,1.80,.061,blue,g);box(.13,.34,.14,0,1.34,-.015,wood,g);box(.48,.07,.26,0,1.16,-.04,brass,g);return g};
- screen(-8.20,4.15,0,1.0);screen(-6.50,4.15,0,1.0);
+
  // ② INTERNATIONAL VIP SALON: sculptural residential furniture and a single generous rug.
  round(7.20,.065,5.35,.90,0,.05,.65,soft);
  sofa(-2.35,.58,Math.PI/2,cream);sofa(2.35,.58,-Math.PI/2,sage);
- clubChair(-.85,2.95,Math.PI,cream);clubChair(.85,2.95,Math.PI,violet);
+ clubChair(-.85,2.95,0,cream);clubChair(.85,2.95,0,violet);
  ell(1.83,.20,1.30,0,.58,.63,ivory);cylinder(.55,.66,.46,0,.29,.63,wood);flowers(0,.63,.75);
  // ⑤ HR: dedicated executive interview desk + two facing guest armchairs; unlike procurement collaborative workbench.
  const hr=group(7.52,-1.10);
@@ -4769,7 +4778,7 @@ function wy401BusinessInterior(root,THREE){
  // ⑥ INTELLECTUAL PROPERTY & TECHNOLOGY: C — bespoke museum-grade patent alcove.
  // The entire former two-monitor desk, both chairs and all desk legs are REMOVED.
  // Single independent structural solids, deliberate physical gaps, no coplanar decorative overlays.
- const gallery=group(10.48,4.35,-Math.PI/2);
+ const gallery=group(8.25,-8.02,0);
  const satin=M('#F6EFE7',.04,.87), champagne=M('#BDA378',.36,.55), amethyst=M('#806A94',.10,.78), pearlLavender=M('#D9CBDD',.02,.88), innerShadow=M('#51465C',.05,.83), sculptureGold=M('#D2B786',.30,.56);
  // Architectural alcove: deep full-height carved frame with actual negative-space opening.
  // Frame pieces are separated by clear joints; no transparent planes or thin coplanar trims.
@@ -4811,18 +4820,35 @@ function wy401BusinessInterior(root,THREE){
  // A single unobstructed interaction hotspot stays in the same topic slot.
  // Do not attach additional unrequested screens, chairs, desks, or animated effects.
  // ⑦ COMPLIANCE: separate executive curved desk and high back chair; anchored by luxury library.
- const exec=group(7.58,-6.02);
+ const exec=group(4.45,-4.95);
  round(4.60,.30,1.62,.76,0,1.15,0,wood,exec);round(4.32,.12,1.40,.69,0,1.43,0,ivory,exec);
  for(let x of [-1.48,1.48])box(.82,.98,.72,x,.55,0,wood,exec);
- executiveChair(7.58,-7.60,0,cream);screen(7.58,-6.30,0,1.25);
- // Executive library, integrated into rear-right wall, leaving the central official logo unobstructed.
- const lib=group(7.75,-8.12);
- box(5.15,3.65,.56,0,1.86,0,wood,lib);
- box(4.83,1.10,.66,0,.70,.38,ivory,lib);
- for(let x of [-1.52,0,1.52])box(1.41,.89,.09,x,.73,.76,cream,lib);
- for(let y of [2.00,3.20])box(4.72,.17,.71,0,y,.38,ivory,lib);
- for(let x of [-2.33,2.33])box(.18,2.32,.68,x,2.82,.38,ivory,lib);
- for(let x of [-1.55,0,1.55])for(let j=0;j<3;j++)box(.19,.56,.35,x-.30+j*.27,2.48,.77,j===1?violet:deep,lib);
+ executiveChair(4.45,-6.42,0,cream);screen(4.45,-5.19,0,1.25);
+ // Former rear-right library and its small chairs removed: the C patent alcove now anchors this wall.
+ // ② GLOBAL BUSINESS LANDMARK: a freestanding globe and airplane, not a wall decoration.
+ // All pieces are opaque and spaced in depth to avoid z-fighting on iPhone.
+ const travel=group(8.45,4.45,-.36);
+ const globeBlue=M('#A8B9C9',.12,.78),continent=M('#E3D6C6',.06,.88),flightGold=M('#C7AB78',.35,.58);
+ cylinder(1.34,1.44,.27,0,.22,0,plum2,travel,48);
+ cylinder(1.15,1.25,.16,0,.43,0,brass,travel,48);
+ cylinder(.15,.22,.80,0,.91,0,flightGold,travel,20);
+ const earth=mesh(new THREE.SphereGeometry(1.10,36,24),globeBlue,0,2.03,0,travel);
+ earth.rotation.z=.18;
+ // Large raised continental shapes: separated radial surfaces, not flickering map overlays.
+ for(const [lon,lat,rx,ry] of [[-.5,.4,.48,.27],[.65,.65,.32,.35],[1.8,-.3,.36,.26],[-1.5,-.4,.26,.42]]){
+   const patch=mesh(new THREE.SphereGeometry(1.122,12,8,lon,rx,lat+1.57-ry/2,ry),continent,0,2.03,0,travel);
+   patch.rotation.z=.18;
+ }
+ // Wide solid orbital route and miniature aircraft, clearly floating outside the globe.
+ const orbit=mesh(new THREE.TorusGeometry(1.47,.065,10,72),flightGold,0,2.06,0,travel);
+ orbit.rotation.x=.43;orbit.rotation.z=-.52;
+ const jet=new THREE.Group();jet.position.set(1.22,3.00,.72);jet.rotation.set(-.17,-.50,-.23);travel.add(jet);
+ const jetWhite=M('#F9F4ED',.16,.70);
+ const fuselage=mesh(new THREE.CapsuleGeometry(.115,.85,5,12),jetWhite,0,0,0,jet);fuselage.rotation.z=Math.PI/2;
+ const wing=box(.60,.065,.90,0,0,0,jetWhite,jet);wing.rotation.y=.20;
+ const tail=box(.25,.055,.34,-.48,.03,0,jetWhite,jet);
+ const fin=box(.18,.29,.055,-.49,.17,0,flightGold,jet);
+ // Keep the freestanding landmark distinct from the ⑥ patent installation.
  // Reception is exactly opposite the main entry on +Z, close enough to greet visitors but not blocking the entrance.
  const rec=group(0,6.64);
  round(5.35,.30,1.38,.69,0,1.26,0,ivory,rec);
@@ -4837,9 +4863,9 @@ function wy401BusinessInterior(root,THREE){
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
- const pts=[[-7.5,-5.95],[0,.65],[-7.35,4.3],[-8,-1.1],[7.52,-1.1],[7.58,4.42],[7.58,-6.02]];
+ const pts=[[-7.5,-5.95],[8.45,4.45],[-7.35,4.15],[-8,-1.1],[7.52,-1.1],[8.25,-8.02],[4.45,-4.95]];
  root.userData.businessTopics=topics.map((name,i)=>({name,x:pts[i][0],z:pts[i][1]}));
- return {departments:topics,version:'v401',design:'Seven integrated legal contexts, C patent art alcove replacing flickering tech workstation'};
+ return {departments:topics,version:'v402',design:'Luxury negotiation salon, relocated patent alcove, freestanding global aviation landmark'};
 }
 
 // Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
