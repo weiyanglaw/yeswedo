@@ -4708,80 +4708,87 @@ function leaveOffice(){if(wy323Inside)wy323Leave();
 }
 document.getElementById('officeExit').onclick=leaveOffice;
 
-// v398 Manhattan flagship headquarters: integrated, no exhibition booths or floor grids.
-function wy398BusinessInterior(root,THREE){
- const mat=(c,m=0,r=.78)=>new THREE.MeshStandardMaterial({color:c,metalness:m,roughness:r});
- const floor=mat('#8D819C'), wall=mat('#D6C9DF'), accent=mat('#51405F'),gold=mat('#BE9D6D',.42,.43), walnut=mat('#594338'),ivory=mat('#E7DCCF'),plum=mat('#554465'),sage=mat('#829B8A'),sageLite=mat('#ADC4B3'),blue=mat('#8BAABD'),dark=mat('#29374A'),leather=mat('#A99BB6');
- const add=(geo,m,x,y,z,g=root)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);g.add(o);return o};
- const box=(w,h,d,x,y,z,m,g=root)=>add(new THREE.BoxGeometry(w,h,d),m,x,y,z,g);
- const cyl=(r1,r2,h,x,y,z,m,g=root,n=28)=>add(new THREE.CylinderGeometry(r1,r2,h,n),m,x,y,z,g);
- const oval=(w,h,d,x,y,z,m,g=root)=>{let o=add(new THREE.SphereGeometry(1,20,12),m,x,y,z,g);o.scale.set(w/2,h/2,d/2);return o};
- const rounded=(w,h,d,r,x,y,z,m,g=root)=>{const s=new THREE.Shape(),a=w/2,b=d/2,R=Math.min(r,a,b);s.moveTo(-a+R,-b);s.lineTo(a-R,-b);s.quadraticCurveTo(a,-b,a,-b+R);s.lineTo(a,b-R);s.quadraticCurveTo(a,b,a-R,b);s.lineTo(-a+R,b);s.quadraticCurveTo(-a,b,-a,b-R);s.lineTo(-a,-b+R);s.quadraticCurveTo(-a,-b,-a+R,-b);let geo=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:true,bevelSize:.045,bevelThickness:.045,bevelSegments:2,curveSegments:6});geo.rotateX(-Math.PI/2);return add(geo,m,x,y+h/2,z,g)};
- const chair=(x,z,rotation=0,color=leather)=>{let g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rotation;root.add(g);rounded(.78,.16,.72,.25,0,.62,0,color,g);oval(.82,1.06,.25,0,1.21,-.36,color,g);for(let xx of [-.37,.37]){oval(.13,.16,.54,xx,.88,-.04,color,g);box(.07,.43,.07,xx,.55,0,gold,g)}cyl(.09,.12,.46,0,.31,0,dark,g);for(let i=0;i<5;i++){let a=i*Math.PI*2/5;box(.11,.09,.48,Math.sin(a)*.19,.09,Math.cos(a)*.19,dark,g)}return g};
- const sofa=(x,z,rotation=0)=>{let g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rotation;root.add(g);rounded(3.7,.30,1.53,.63,0,.47,0,sage,g);oval(3.7,1.17,.48,0,1.05,-.60,sage,g);for(let xx of [-.92,.92])oval(1.68,.30,1.12,xx,.79,.13,sageLite,g);for(let xx of [-1.65,1.65])oval(.46,.75,1.45,xx,.86,-.02,sage,g);for(let xx of [-1.28,1.28])cyl(.07,.08,.15,xx,.14,0,gold,g)};
- const plant=(x,z)=>{cyl(.39,.32,.64,x,.33,z,ivory);cyl(.42,.42,.08,x,.67,z,gold);for(let i=0;i<5;i++){let a=i*Math.PI*2/5;oval(.65,1.35,.66,x+Math.cos(a)*.26,1.39,z+Math.sin(a)*.26,sage)}};
- // A single sophisticated continuous stone floor; no stripes, grids or booth partitions.
- box(24,.32,19,0,-.22,0,floor);
- // Back-wall architecture: plum feature wall, warm timber bookcase, understated brass detailing.
- box(23.35,6.4,.12,0,3.2,-8.92,wall);
- box(9.0,6.4,.15,-7.05,3.2,-8.82,accent);
- box(.09,5.6,.20,-2.48,3.1,-8.69,gold);
- // Boardroom at back-left, subtle semi-open privacy screen, no booth walls.
- for(let z of [-8.0,-7.18,-6.36,-5.54])box(.10,2.85,.10,-2.65,1.48,z,gold);
- // Boardroom boat-shaped dark walnut table with gold inset and pedestal.
- rounded(5.6,.22,1.86,.91,-7.15,1.12,-6.55,walnut);
- rounded(5.27,.065,1.60,.76,-7.15,1.29,-6.55,gold);
- rounded(5.12,.08,1.47,.73,-7.15,1.36,-6.55,walnut);
- box(2.25,.95,.77,-7.15,.58,-6.55,accent);
- for(let x of [-9.02,-7.78,-6.53,-5.28]){chair(x,-8.05,0,leather);chair(x,-4.95,Math.PI,leather)}
- // Private client salon at front-left: two generous sofas and curved stone coffee table.
- sofa(-9.15,1.10,Math.PI/2);sofa(-5.10,1.10,-Math.PI/2);
- cyl(.96,.96,.11,-7.14,.52,1.10,ivory);cyl(.72,.80,.48,-7.14,.24,1.10,gold);
- oval(.68,.13,.36,-7.14,.66,1.10,plum);plant(-10.5,3.85);
- // Reception centered towards entrance; curved, low, accessible from both sides.
- rounded(4.5,.23,1.15,.55,0,1.08,5.80,ivory);
- rounded(4.55,.12,1.19,.55,0,.96,5.80,gold);
- rounded(4.30,.91,.94,.49,0,.48,5.80,accent);
- box(1.80,.04,.06,0,.77,6.31,gold);
- // Executive suite back-right, single sculptural walnut desk and two client chairs.
- rounded(4.30,.20,1.55,.64,7.65,1.13,-6.70,walnut);
- rounded(4.40,.07,1.62,.65,7.65,1.30,-6.70,gold);
- rounded(4.13,.09,1.47,.61,7.65,1.37,-6.70,walnut);
- box(1.28,1.03,.80,9.02,.56,-6.7,accent);box(1.20,1.03,.80,6.35,.56,-6.7,accent);
- chair(7.60,-8.22,0,plum);chair(6.7,-4.82,Math.PI,ivory);chair(8.6,-4.82,Math.PI,ivory);
- // Continuous executive library, rather than fake room dividers.
- box(6.4,3.75,.62,7.65,1.94,-8.42,walnut);
- for(let yy of [.65,1.65,2.65,3.62])box(6.12,.08,.69,7.65,yy,-8.05,gold);
- for(let x of [5.3,6.8,8.3,9.8])box(.08,3.55,.68,x,1.94,-8.03,accent);
- // Operations workspace front-right: one restrained shared curved desk with screens.
- rounded(5.2,.19,1.55,.60,7.25,1.10,1.75,blue);
- rounded(5.28,.065,1.61,.61,7.25,1.22,1.75,gold);
- box(2.15,1.00,.73,5.52,.57,1.75,accent);box(2.15,1.00,.73,8.98,.57,1.75,accent);
- for(let x of [5.75,7.25,8.75]){box(1.10,.71,.10,x,2.04,1.32,dark);box(.07,.54,.09,x,1.63,1.33,gold);chair(x,3.24,Math.PI,blue)}
- // Small, sophisticated reading nook links work and lounge; no extra desk.
- rounded(3.15,.10,1.75,.65,2.25,.045,-2.15,plum);
- chair(1.42,-2.15,Math.PI/2,ivory);chair(3.04,-2.15,-Math.PI/2,sage);
- cyl(.47,.48,.08,2.24,.54,-2.15,ivory);cyl(.30,.35,.50,2.24,.28,-2.15,gold);
- plant(10.50,5.4);plant(-1.35,-7.90);
- // Branding: official supplied logo, never redrawn, on a single refined wall plaque.
+// v399 pearl-lavender flagship: full replacement of v398 interior, no coplanar trim or microtextures.
+function wy399BusinessInterior(root,THREE){
+ const M=(hex,metalness=0,roughness=.84)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness,side:THREE.FrontSide});
+ const stone=M('#DCD1DB'),wall=M('#E9E1EB'),pearl=M('#F0E8DE'),cream=M('#F5EDE3'),lilac=M('#BBA9C9'),mauve=M('#A797B5'),plum=M('#493657'),gold=M('#C7B18D',.18,.73),oak=M('#C7B3A3'),sage=M('#A3B5A5'),sageSoft=M('#C0CDBF'),blue=M('#AABCC9'),ink=M('#505466'),warm=M('#D9C8BC');
+ const mesh=(geo,mat,x,y,z,parent=root)=>{let o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);parent.add(o);return o};
+ const box=(w,h,d,x,y,z,m,g=root)=>mesh(new THREE.BoxGeometry(w,h,d),m,x,y,z,g);
+ const ell=(w,h,d,x,y,z,m,g=root)=>{let o=mesh(new THREE.SphereGeometry(1,24,16),m,x,y,z,g);o.scale.set(w/2,h/2,d/2);return o};
+ const cylinder=(r1,r2,h,x,y,z,m,g=root,n=28)=>mesh(new THREE.CylinderGeometry(r1,r2,h,n),m,x,y,z,g);
+ // A real thick rounded tabletop/sofa cushion with bevels; no coincident surfaces.
+ const round=(w,h,d,r,x,y,z,m,g=root)=>{let a=w/2,b=d/2,R=Math.min(r,a,b),s=new THREE.Shape();s.moveTo(-a+R,-b);s.lineTo(a-R,-b);s.quadraticCurveTo(a,-b,a,-b+R);s.lineTo(a,b-R);s.quadraticCurveTo(a,b,a-R,b);s.lineTo(-a+R,b);s.quadraticCurveTo(-a,b,-a,b-R);s.lineTo(-a,-b+R);s.quadraticCurveTo(-a,-b,-a+R,-b);let geo=new THREE.ExtrudeGeometry(s,{depth:h,bevelEnabled:true,bevelSize:.045,bevelThickness:.045,bevelSegments:3,curveSegments:8});geo.rotateX(-Math.PI/2);return mesh(geo,m,x,y+h/2,z,g)};
+ const group=(x,z,rotation=0)=>{let g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rotation;root.add(g);return g};
+ const clubChair=(x,z,rot=0,m=cream)=>{let g=group(x,z,rot);round(1.05,.23,.95,.33,0,.52,0,m,g);ell(1.05,.92,.34,0,1.03,-.41,m,g);for(let s of [-1,1])ell(.28,.55,.92,s*.49,.77,-.04,m,g);round(.83,.13,.76,.29,0,.69,.09,pearl,g);round(.84,.11,.66,.22,0,.16,.02,oak,g);return g};
+ const executiveChair=(x,z,rot=0,m=lilac)=>{let g=group(x,z,rot);round(.92,.22,.88,.26,0,.67,0,m,g);ell(.98,1.50,.31,0,1.52,-.41,m,g);ell(.68,.88,.10,0,1.43,-.24,cream,g);for(let s of [-1,1]){ell(.16,.21,.61,s*.43,.98,-.02,m,g);box(.12,.38,.13,s*.43,.70,-.03,oak,g)}cylinder(.13,.14,.55,0,.34,0,ink,g);for(let i=0;i<5;i++){let t=i*Math.PI*2/5,leg=box(.14,.12,.55,Math.sin(t)*.23,.12,Math.cos(t)*.23,ink,g);leg.rotation.y=t}return g};
+ const sofa=(x,z,rot=0,m=sage)=>{let g=group(x,z,rot);round(3.35,.35,1.56,.56,0,.43,0,m,g);ell(3.38,1.10,.43,0,1.07,-.59,m,g);for(let s of [-1,1]){ell(.50,.84,1.35,s*1.52,.86,-.05,m,g);ell(1.32,.26,1.02,s*.78,.78,.13,sageSoft,g);ell(1.19,.64,.22,s*.79,1.09,-.38,sageSoft,g)}round(3.04,.11,1.18,.43,0,.16,0,oak,g);return g};
+ const plant=(x,z)=>{cylinder(.43,.34,.60,x,.31,z,pearl);ell(.83,1.1,.73,x,1.15,z,sage);ell(.67,.95,.67,x-.24,1.59,z+.15,sageSoft)};
+ // Continuous matte stone floor and light architectural envelope; no grids, reflections or micro lines.
+ box(24,.30,19,0,-.21,0,stone);
+ box(23.5,6.7,.14,0,3.35,-8.98,wall);
+ box(4.65,5.85,.20,0,3.00,-8.79,plum); // dark color only on logo feature wall
+ // Broad cream wall reveals, not thin gold strokes.
+ box(2.65,4.5,.24,-10.18,2.25,-8.69,pearl);box(2.65,4.5,.24,10.18,2.25,-8.69,pearl);
+ // Boardroom back-left: light oak sculptural boat-shaped table, leather seats, discreet architectural separation.
+ round(5.75,.26,2.06,.98,-7.10,1.14,-6.15,oak);
+ round(5.40,.12,1.78,.88,-7.10,1.38,-6.15,pearl);
+ for(let x of [-8.88,-7.66,-6.43,-5.22]){executiveChair(x,-7.82,0,mauve);executiveChair(x,-4.47,Math.PI,mauve)}
+ for(let x of [-8.28,-5.92])round(.84,.94,.72,.28,x,.53,-6.15,oak);
+ // Lounge: residential quality upholstered sofas, full backs, curved armrests, no minimalist benches.
+ round(7.9,.055,5.45,.8,-7.45,.03,1.45,warm);
+ sofa(-9.75,1.45,Math.PI/2,sage);sofa(-5.25,1.45,-Math.PI/2,cream);
+ clubChair(-7.58,4.10,Math.PI,mauve);
+ ell(1.70,.16,1.17,-7.48,.55,1.43,pearl);cylinder(.53,.63,.45,-7.48,.26,1.43,oak);
+ cylinder(.37,.39,.45,-6.0,.27,3.95,pearl);
+ plant(-10.58,4.82);
+ // Reception: clearly recognizable desk with counter height, recessed staff side and a substantial front face.
+ const rec=group(0,6.03,0);
+ round(5.65,.20,1.43,.66,0,1.26,0,cream,rec);
+ round(5.35,.96,1.12,.52,0,.61,.14,lilac,rec);
+ round(4.78,.32,.95,.45,0,.40,.77,pearl,rec); // sculptural front plinth
+ round(4.98,.12,1.20,.50,0,.15,.07,oak,rec);
+ // Two discrete rear work monitors, fully opaque, no coplanar screens.
+ for(let x of [-.95,.95]){box(.74,.46,.09,x,1.71,-.31,ink,rec);box(.12,.29,.12,x,1.42,-.30,oak,rec)}
+ executiveChair(0,4.58,0,cream);
+ // Executive suite: full matching cabinetry, solid desk with curved front and upholstered chair.
+ round(4.55,.28,1.72,.75,7.60,1.13,-5.75,oak);
+ round(4.31,.12,1.50,.68,7.60,1.37,-5.75,cream);
+ for(let x of [6.10,9.12])round(.88,.95,.83,.25,x,.55,-5.75,pearl);
+ executiveChair(7.6,-7.38,0,mauve);
+ clubChair(6.55,-3.78,Math.PI,cream);clubChair(8.68,-3.78,Math.PI,cream);
+ // Built-in library: full height, substantial shelves, broad cupboard doors, no small grids or fake woodgrain.
+ box(6.30,3.85,.62,7.65,1.96,-8.48,oak);
+ for(let y of [.68,2.00,3.32])box(5.82,.16,.71,7.65,y,-8.08,cream);
+ for(let x of [5.65,7.65,9.65])box(.16,3.52,.69,x,1.96,-8.05,pearl);
+ // Closed lower cabinets read as architecture, not a miniature shelf collection.
+ for(let x of [6.65,8.65])round(1.65,.72,.09,.08,x,.67,-7.99,cream);
+ // Library conversational alcove: proper-sized armchairs, comfortable approach from central aisle.
+ clubChair(3.9,-3.65,Math.PI/2,cream);clubChair(5.65,-3.65,-Math.PI/2,mauve);
+ ell(1.20,.14,.94,4.77,.56,-3.65,pearl);cylinder(.38,.45,.43,4.77,.29,-3.65,oak);
+ // Shared operations area: one coherent custom workstation, not a cluster of tiny desks.
+ round(4.85,.24,1.56,.64,8.30,1.09,2.60,blue);
+ for(let x of [6.65,9.90])round(.83,.95,.82,.26,x,.53,2.60,pearl);
+ for(let x of [7.15,9.4]){box(1.02,.67,.10,x,1.90,2.16,ink);box(.15,.42,.14,x,1.48,2.16,oak);executiveChair(x,4.13,Math.PI,cream)}
+ plant(10.40,5.50);
+ // Original brand artwork, displayed without modification. A single non-overlapping transparent plane.
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
- let logoPlane=add(new THREE.PlaneGeometry(2.8,2.8),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.55,-8.62);
- // Seven subjects retained as semantic interactive hotspots, without seven signboards.
+ mesh(new THREE.PlaneGeometry(3.45,3.45),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.70,-8.635);
+ // Preserve all seven semantic topics; actual UI interaction handled by existing application.
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
- const hotspots=[[-7.2,-6.5],[-7.2,1.1],[7.2,1.7],[-7.2,2.5],[7.3,-4.9],[8.7,2.0],[7.7,-6.7]];
- root.userData.businessTopics=topics.map((name,i)=>({name,x:hotspots[i][0],z:hotspots[i][1]}));
- return {departments:topics,version:'v398',design:'Manhattan Executive Headquarters'};
+ const pts=[[-7.1,-6.1],[-7.5,1.4],[8.3,2.6],[-7.5,3.2],[7.2,-3.7],[9.4,2.6],[7.6,-5.7]];
+ root.userData.businessTopics=topics.map((name,i)=>({name,x:pts[i][0],z:pts[i][1]}));
+ return {departments:topics,version:'v399',design:'Pearl Lavender Manhattan Flagship'};
 }
 
 // Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
 let activeIslandRoom=0;const themeRooms=[];
-const roomPalettes=[null,['#f3e6d6','#6d4b3b','#c8a66d'],['#C9D3DC','#426f82','#b7d4d7'],['#fff0ec','#9c6678','#e8b7be'],['#D6C9DF','#51405F','#BE9D6D'],['#f0eee3','#546b55','#b3c3a2']];
+const roomPalettes=[null,['#f3e6d6','#6d4b3b','#c8a66d'],['#C9D3DC','#426f82','#b7d4d7'],['#fff0ec','#9c6678','#e8b7be'],['#E9E1EB','#BBA9C9','#C7B18D'],['#f0eee3','#546b55','#b3c3a2']];
 for(let i=1;i<6;i++){
  const sc=new THREE.Scene();sc.background=new THREE.Color(roomPalettes[i][0]);sc.add(new THREE.HemisphereLight(0xffffff,0xaab3c2,2.5));
  const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(7,12,9);sc.add(light);
  const root=new THREE.Group();sc.add(root);
  const floor=new THREE.Mesh(new THREE.BoxGeometry(24,.35,19),new THREE.MeshStandardMaterial({color:roomPalettes[i][0]}));floor.position.y=-.2;if(i!==2&&i!==3&&i!==4)root.add(floor);
- const wallMat=new THREE.MeshStandardMaterial({color:i===2?0xDCE5DC:i===4?0xD6C9DF:0xfff9ee,roughness:.82});
+ const wallMat=new THREE.MeshStandardMaterial({color:i===2?0xDCE5DC:i===4?0xE9E1EB:0xfff9ee,roughness:.82});
  const back=new THREE.Mesh(new THREE.BoxGeometry(24,9,.35),wallMat);back.position.set(0,4.35,-9.2);root.add(back);
  for(const x of [-11.9,11.9]){const side=new THREE.Mesh(new THREE.BoxGeometry(.3,9,19),wallMat);side.position.set(x,4.35,0);root.add(side);}
  if(i!==2&&i!==3&&i!==4){const carpet=new THREE.Mesh(new THREE.BoxGeometry(9,.06,13),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],roughness:.95}));carpet.position.set(0,.02,0);root.add(carpet);}
@@ -4795,7 +4802,7 @@ for(let i=1;i<6;i++){
  }
  const cam=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,120);cam.position.set(13,11,19);cam.lookAt(0,2,-2);
  const control=new OrbitControls(cam,renderer.domElement);control.enabled=false;control.enableDamping=true;control.target.set(0,2,-2);control.minDistance=7;control.maxDistance=36;
- if(i===4){wy398BusinessInterior(root,THREE);cam.fov=innerWidth<700?69:58;cam.updateProjectionMatrix();cam.position.set(3,23,33);control.target.set(0,1.1,0);control.minDistance=7;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.update();}
+ if(i===4){wy399BusinessInterior(root,THREE);cam.fov=innerWidth<700?69:58;cam.updateProjectionMatrix();cam.position.set(3,23,33);control.target.set(0,1.1,0);control.minDistance=7;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.update();}
  const medicalRoom=i===2?createMedicalInterior({scene:sc},THREE,makeStaffChibi,GLTFLoader):null;const familyRoom=i===3?createFamilyInterior(sc,THREE,makeStaffChibi):null;
  if(i===3){cam.fov=innerWidth<700?65:55;cam.updateProjectionMatrix();control.target.set(0,2,0);cam.position.set(5,27,38);control.minDistance=10;control.maxDistance=90;control.maxPolarAngle=Math.PI*.48;control.enablePan=true;control.screenSpacePanning=true;control.update();}
  if(i===2){
