@@ -1234,7 +1234,7 @@ wy347ExitCtx.fillStyle='#263B57';wy347ExitCtx.fillRect(0,0,1024,192);
 wy347ExitCtx.strokeStyle='#DCC18C';wy347ExitCtx.lineWidth=9;wy347ExitCtx.strokeRect(9,9,1006,174);
 wy347ExitCtx.fillStyle='#EFD9A5';wy347ExitCtx.textAlign='center';wy347ExitCtx.textBaseline='middle';wy347ExitCtx.font='bold 120px sans-serif';wy347ExitCtx.fillText('有法度繼續探索',512,100,965);
 const wy347ExitTex=new THREE.CanvasTexture(wy347ExitCanvas);wy347ExitTex.colorSpace=THREE.SRGBColorSpace;
-const wy347ExitSign=new THREE.Mesh(new THREE.PlaneGeometry(4.65,.88),new THREE.MeshBasicMaterial({map:wy347ExitTex,transparent:true,side:THREE.DoubleSide,depthTest:false,depthWrite:false}));
+const wy347ExitSign=new THREE.Mesh(new THREE.PlaneGeometry(4.65,.88),new THREE.MeshBasicMaterial({map:wy347ExitTex,transparent:true,side:THREE.FrontSide,depthTest:true,depthWrite:true}));
 wy347ExitSign.position.set(wy323X+12.80,6.82,7);wy347ExitSign.renderOrder=95;wy323Room.add(wy347ExitSign);
 
 // No room-level scale: furniture keeps its true dimensions.
@@ -2106,8 +2106,8 @@ function wyVideoTitleSprite(text){
   videoScreen.userData.wyVideoRoom=isLarge?'large':'small';
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoScreen);
   // Gold headline sits above the screen, using existing geometry (no video texture).
-  const videoLabel=wyVideoTitleSprite(isLarge?'企業法律顧問':'專業法律諮詢');
-  videoLabel.position.set(cx,6.35,z0+.82);videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
+  const videoLabel=wyVideoTitleSprite(isLarge?'事務所今天又開講了':'律師說這有詐！');
+  videoLabel.position.set(west-.44,7.10,cz);videoLabel.rotation.y=-Math.PI/2;videoLabel.userData.wyVideoRoom=isLarge?'large':'small';roomRoot.add(videoLabel);
   (window.wyVideoScreens||(window.wyVideoScreens=[])).push(videoLabel);
  }
  // v316: expand BOTH rooms in depth, keeping clearance behind all chairs.
@@ -2122,9 +2122,9 @@ function wyVideoTitleSprite(text){
  // Single watertight sculpted wall mesh: front/back reliefs are part of the
  // geometry itself, not stacked coplanar decorative planes (avoids Z-fighting).
  const wy391Screen=new THREE.Group();roomRoot.add(wy391Screen);
- const wy391Sage=new THREE.MeshStandardMaterial({color:'#456E65',roughness:.79,metalness:.07,side:THREE.FrontSide});
+ const wy391Sage=new THREE.MeshStandardMaterial({color:'#A9C8B5',roughness:.79,metalness:.07,side:THREE.FrontSide});
  const wy391Bronze=new THREE.MeshStandardMaterial({color:'#BC9560',roughness:.49,metalness:.48});
- const wy391Height=5.56,wy391Start=-5.0,wy391End=16.60,wy391Steps=216;
+ const wy391Height=5.56,wy391Start=-9.95,wy391End=16.60,wy391Steps=266;
  function wy391Profile(t){
   const z=wy391Start+(wy391End-wy391Start)*t;
   const turn=Math.max(0,Math.min(1,(z-12.6)/4.0));
@@ -5079,7 +5079,7 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
  const data={small:[{title:'識詐有法｜法律觀點',src:'meeting-small.mp4'}],large:[{title:'臺北醫學大學｜講座紀實',src:'meeting-large-1.mp4'},{title:'法庭內外｜企業法律實務',src:'meeting-large-2.mp4'}]};
  const $=id=>document.getElementById(id),overlay=$('wy317Overlay'),video=$('wy317Video');let current='small',lastFocus=null;
  function clear(){$('wy319VideoError').style.display='none';video.pause();video.removeAttribute('src');video.load();$('wy317Player').style.display='none';$('wy317End').style.display='none';}
- function list(){clear();$('wy317List').style.display='block';$('wy317Heading').textContent=current==='small'?'專業法律諮詢':'企業法律顧問';$('wy317List').replaceChildren();data[current].forEach((v,i)=>{let b=document.createElement('button');b.className='wy317VideoChoice';let p=document.createElement('strong');p.textContent=v.title;let desc=document.createElement('small');desc.textContent='點擊播放影片';let span=document.createElement('span');span.append(p,desc);let play=document.createElement('b');play.className='wy317Play';play.textContent='▶';b.append(play,span);b.onclick=()=>{clear();$('wy317List').style.display='none';$('wy317Player').style.display='block';$('wy317Heading').textContent=v.title;video.src=v.src;video.load();video.play().catch(()=>{});};$('wy317List').append(b);});}
+ function list(){clear();$('wy317List').style.display='block';$('wy317Heading').textContent=current==='small'?'律師說這有詐！':'事務所今天又開講了';$('wy317List').replaceChildren();data[current].forEach((v,i)=>{let b=document.createElement('button');b.className='wy317VideoChoice';let p=document.createElement('strong');p.textContent=v.title;let desc=document.createElement('small');desc.textContent='點擊播放影片';let span=document.createElement('span');span.append(p,desc);let play=document.createElement('b');play.className='wy317Play';play.textContent='▶';b.append(play,span);b.onclick=()=>{clear();$('wy317List').style.display='none';$('wy317Player').style.display='block';$('wy317Heading').textContent=v.title;video.src=v.src;video.load();video.play().catch(()=>{});};$('wy317List').append(b);});}
  function open(room){if(room!=='small'&&room!=='large')return;current=room;lastFocus=document.activeElement;overlay.classList.add('open');document.body.dataset.wyVideoOpen='1';list();if(room==='small')$('wy317List').querySelector('button')?.click();$('wy317Close').focus();}
  function close(){clear();overlay.classList.remove('open');delete document.body.dataset.wyVideoOpen;if(lastFocus?.focus)lastFocus.focus();}
  video.addEventListener('error',()=>{if(overlay.classList.contains('open')&&video.getAttribute('src'))$('wy319VideoError').style.display='block';});
