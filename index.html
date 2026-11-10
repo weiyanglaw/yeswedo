@@ -4852,10 +4852,11 @@ function wy401BusinessInterior(root,THREE){
  const moveIntoVip=(g)=>{root.remove(g);vip.add(g);return g};
  const vs1=moveIntoVip(sofa(-2.28,0,Math.PI/2,cream));
  const vs2=moveIntoVip(sofa(2.28,0,-Math.PI/2,sage));
- // v405: BOTH front VIP armchairs must face the coffee table at local (0,0).
- // Facing -Z is yaw PI; zero yaw had them looking outward toward the entrance.
- const vc1=moveIntoVip(clubChair(-.88,2.10,Math.PI,cream));
- const vc2=moveIntoVip(clubChair(.88,2.10,Math.PI,violet));
+ // v409: BOTH small VIP chairs are on the LOGO side of the coffee table.
+ // Their backs face the rear Logo wall (-Z); their seats face the table and entrance (+Z).
+ // Preserve the two side sofas, table, rug, boardroom and central entrance aisle.
+ const vc1=moveIntoVip(clubChair(-.88,-1.85,0,cream));
+ const vc2=moveIntoVip(clubChair(.88,-1.85,0,violet));
  ell(1.85,.20,1.30,0,.58,0,ivory,vip);
  cylinder(.55,.66,.46,0,.29,0,wood,vip);
  // A restrained central sculptural arrangement, with no coplanar decorative layers.
