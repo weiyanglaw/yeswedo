@@ -52,17 +52,26 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
     shelfBox(.28,.68+(i%3)*.11,.66,x,yy,.24,i%3===0?wine:i%3===1?bookPaper:bookNavy,'heritage');
     shelfBox(.04,.50,.69,x+.07,yy,.25,gold);
   }
- // v82: desk moved 0.65 units toward the unchanged bookshelf; leave an aisle.
- const heritageDeskOffset=-.65;
- // Adjacent desk, chair and clearly visible will document.
- box(3.2,.24,1.65,-6.05,1.33,5.35,white,'heritage');
- for(const x of [-7.37,-4.10])for(const z of [4.77,5.95])box(.16,1.19,.16,x,.63,z,libraryWood);
- box(1.18,.035,.78,-6.35,1.48,5.3,bookPaper,'heritage');
- for(let j=0;j<4;j++)box(.76,.018,.03,-6.35,1.51,5.08+j*.15,libraryWood);
- box(.08,.08,.85,-5.15,1.52,5.18,bookNavy);
- box(1.15,.18,1.1,-5.85,.60,7.1,libraryWood);
- for(const x of [-6.30,-5.40])for(const z of [6.65,7.53])box(.10,.55,.10,x,.28,z,libraryWood);
- box(1.14,1.28,.18,-5.85,1.25,7.62,libraryWood);
+ // v408: refined heirloom writing desk, preserving the original location and interaction.
+ const brass=mat('#D9B982'),ivory=mat('#FFF7ED'),burgundy=mat('#813E50'),rosewood=mat('#6D3949');
+ function roundedSlab(w,d,r,thickness,x,y,z,m,action){
+   const sh=new THREE.Shape();sh.moveTo(-w/2+r,-d/2);sh.lineTo(w/2-r,-d/2);sh.quadraticCurveTo(w/2,-d/2,w/2,-d/2+r);sh.lineTo(w/2,d/2-r);sh.quadraticCurveTo(w/2,d/2,w/2-r,d/2);sh.lineTo(-w/2+r,d/2);sh.quadraticCurveTo(-w/2,d/2,-w/2,d/2-r);sh.lineTo(-w/2,-d/2+r);sh.quadraticCurveTo(-w/2,-d/2,-w/2+r,-d/2);
+   const mesh=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:thickness,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.035,bevelThickness:.025,curveSegments:5}),m);
+   mesh.rotation.x=-Math.PI/2;mesh.position.set(x,y,z);root.add(mesh);if(action){mesh.userData.familyAction=action;targets.push(mesh);}return mesh;
+ }
+ roundedSlab(3.55,1.80,.22,.14,-6.05,1.34,5.35,brass,'heritage');
+ roundedSlab(3.40,1.66,.21,.13,-6.05,1.47,5.35,ivory,'heritage');
+ for(const x of [-7.48,-4.62])for(const z of [4.76,5.94]){box(.16,1.28,.16,x,.65,z,rosewood);box(.21,.055,.21,x,1.13,z,brass);}
+ // A recognizable writing surface: large document, fountain pen and warm brass desk lamp.
+ roundedSlab(1.20,.80,.06,.026,-6.45,1.66,5.28,bookPaper,'heritage');
+ for(let j=0;j<4;j++)box(.82,.013,.025,-6.45,1.71,5.08+j*.15,libraryWood);
+ const pen=box(.055,.05,.83,-5.25,1.72,5.19,bookNavy);pen.rotation.y=-.22;
+ box(.08,.04,.14,-5.35,1.72,4.83,brass);
+ // Upholstered reading chair faces the desk rather than the outer wall.
+ roundedSlab(1.35,1.10,.20,.16,-5.90,.66,7.10,burgundy,'heritage');
+ for(const x of [-6.37,-5.43])for(const z of [6.67,7.53])box(.11,.59,.11,x,.29,z,rosewood);
+ box(1.32,1.35,.23,-5.90,1.37,7.62,burgundy,'heritage');
+ box(1.15,.16,.20,-5.90,1.92,7.49,brass);
  // v67: oversized legible rotary telephone, with receiver and dial facing the visitor.
  box(3.6,1.14,2.8,8.1,.57,4.9,cream,'protect');
  box(2.7,.20,2.0,8.1,1.23,4.9,white,'protect');
@@ -78,10 +87,31 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  const pts=[];for(let i=0;i<=12;i++){const t=i/12;pts.push(new THREE.Vector3(7.0+2.2*t,2.60+.35*Math.sin(Math.PI*t),4.65));}
  const handset=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),20,.16,9,false),wine);root.add(handset);handset.userData.familyAction='protect';targets.push(handset);
  for(const x of [7.0,9.2]){const cup=cyl(.33,.38,x,2.47,4.65,wine);cup.userData.familyAction='protect';targets.push(cup);}
- // Central cream L-shaped sofa and table; single reception interaction.
- box(8.8,.06,6.3,0,.06,1.7,blush);box(6.8,1.15,1.65,-.7,.8,.7,cream,'sofa');box(1.7,1.15,4.5,3.45,.8,2.05,cream,'sofa');box(6.8,1.1,.45,-.7,1.5,-.05,cream);box(.45,1.1,4.5,4.05,1.5,2.05,cream);
- for(const x of [-2.8,-1.1,.6])box(1.75,.18,1.5,x,1.39,.72,white,'sofa');
- box(.9,.25,.8,-1,1.45,.65,wine);box(.9,.25,.8,2.9,1.45,1.5,pink);cyl(1.25,.43,-.4,.35,3.3,walnut);
+ // v408: luxurious family-room L sofa, facing an elevated oval coffee table.
+ // Keep the original footprint, central aisle and 'sofa' interaction intact.
+ box(8.8,.06,6.3,0,.06,1.7,blush);
+ // Deep upholstered seats and generously padded back cushions.
+ roundedSlab(6.85,1.78,.28,.23,-.70,1.18,.75,ivory,'sofa');
+ roundedSlab(1.80,4.35,.27,.23,3.37,1.18,2.05,ivory,'sofa');
+ box(6.85,1.23,.48,-.70,1.50,-.12,burgundy,'sofa');
+ box(.48,1.23,4.35,4.13,1.50,2.05,burgundy,'sofa');
+ // Cushioned burgundy armrests at the exposed ends.
+ box(.50,1.02,1.90,-4.22,1.22,.76,burgundy,'sofa');
+ box(1.78,1.02,.50,3.38,1.22,4.26,burgundy,'sofa');
+ for(const x of [-2.94,-1.30,.34,1.98]){
+   const cushion=box(1.47,.34,1.43,x,1.43,.72,ivory,'sofa');
+   const back=box(1.45,.88,.29,x,1.98,-.01,cream,'sofa');back.rotation.x=-.10;
+ }
+ for(const z of [1.45,2.83,3.55])box(.30,.83,1.06,3.97,1.93,z,cream,'sofa');
+ // Accent cushions: burgundy and dusty rose, intentionally restrained.
+ for(const [x,z,m] of [[-2.9,.55,burgundy],[-.9,.57,pink],[3.35,2.7,burgundy]]){
+   const pillow=box(.72,.46,.20,x,1.83,z,m,'sofa');pillow.rotation.z=.12;
+ }
+ // Raised oval champagne-gold rimmed coffee table, clearly above floor level.
+ const tableBase=cyl(.53,.55,-.40,.38,3.23,rosewood);
+ const tableFoot=cyl(.85,.10,-.40,.10,3.23,brass);
+ const tableTop=cyl(1.28,.13,-.40,.75,3.23,brass);tableTop.scale.set(1.25,1,.82);tableTop.userData.familyAction='sofa';targets.push(tableTop);
+ const tableSurface=cyl(1.20,.055,-.40,.86,3.23,ivory);tableSurface.scale.set(1.25,1,.82);
  // EXACT same shared character constructor as the main office, black T-shirt.
  let walkingNpc=null;
  if(makeStaffChibi){const npc=makeStaffChibi({name:'哈姆太郎',kind:'short',skin:'#E9B79D',hair:'#3C302D',top:'#22242A',bottom:'#32333A'});npc.root.position.set(4.9,.05,1.1);root.add(npc.root);walkingNpc=npc.root;npc.root.traverse(o=>{if(o.isMesh){o.userData.familyAction='staff';targets.push(o);}});}
@@ -126,10 +156,7 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  // Inheritance writing desk lamp, next to the bookcase.
  const lampStem=cyl(.055,.67,-4.2,1.85,5.25,gold);
  const shade=cyl(.34,.22,-4.2,2.24,5.25,white);
- // Softer cushions, clear armrests and low table legs.
- for(const x of [-3.2,-1.5,.2,1.9]){box(1.45,.33,1.34,x,1.45,.65,white);box(1.1,.75,.24,x,1.95,-.01,cream);}
- for(const x of [-1.1,.3])box(.8,.75,.24,x,1.8,.43,pink);
- for(const x of [-1.1,.3])for(const z of [2.55,4.05])cyl(.09,.55,x,.35,z,wood);
+ // v408 upholstery and raised table details are created with the sofa above.
  const labels=[];
  function hint(text,x,y,z,action){
   const canvas=document.createElement('canvas');canvas.width=480;canvas.height=112;
