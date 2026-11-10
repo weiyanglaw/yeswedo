@@ -4966,6 +4966,8 @@ function wy401BusinessInterior(root,THREE){
  // v404: receptionist's high-back chair behind the counter, facing the desk (+Z).
  // Keep enough separation so its seat does not intersect the rear counter face.
  executiveChair(0,5.00,0,leather);
+ // v416: reception has its own themed dialogue and quiz interaction, independent of six departments.
+ const wy416ReceptionHit=new THREE.Mesh(new THREE.BoxGeometry(5.4,1.25,1.5),new THREE.MeshBasicMaterial({visible:false}));wy416ReceptionHit.position.set(0,.75,6.64);wy416ReceptionHit.userData.businessReception=true;root.add(wy416ReceptionHit);
  // No computer on the public-facing side; future interaction remains unassigned.
  // Four large architectural orchid planters, not tiny petals or unrelated freestanding panels.
  const orchid=(x,z)=>{cylinder(.40,.33,.73,x,.39,z,ivory);for(let s of [-1,1])ell(.50,.74,.36,x+s*.25,1.00,z,sage);for(let k=0;k<3;k++){let t=k*2.2;ell(.47,.26,.28,x+Math.cos(t)*.32,1.62+k*.16,z+Math.sin(t)*.20,cream)}};
@@ -4985,7 +4987,7 @@ function wy401BusinessInterior(root,THREE){
  const anchors=[[-7.5,-5.95],[8.45,4.45],[-8,5.00],[-10.45,-.80],[7.45,-7.45],[10.35,-2.20]];
  const heights=[4.55,4.25,4.45,6.20,6.70,6.25];
  const objects=[[-7.5,1.2,-5.95,5.5,1.6,2.3],[8.45,2.2,4.45,4.2,3.6,3.2],[-8,1.2,5.00,4.2,2.6,2.9],[-11.43,2.4,-.80,1.0,4.3,5.7],[8.25,2.5,-8.02,5.4,5.2,2.2],[11.43,2.3,-2.20,1.0,4.5,5.4]];
- const plaqueTargets=[],objectTargets=[wy415AboutHit,wy415Sign],plaques=[];
+ const plaqueTargets=[],objectTargets=[wy415AboutHit,wy415Sign,wy416ReceptionHit],plaques=[];
  const invisible=new THREE.MeshBasicMaterial({visible:false,depthWrite:false});
  labels.forEach((label,i)=>{
    const cv=document.createElement('canvas');cv.width=768;cv.height=152;const c=cv.getContext('2d');
@@ -5235,7 +5237,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   if(model){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,r.camera);
     const hits=ray.intersectObjects([...model.plaqueTargets,...model.objectTargets],false);
     const hit=hits.find(h=>{if(!h.object.visible)return false;const obstacles=ray.intersectObjects(r.scene.children,true).filter(x=>x.distance<h.distance-.06&&x.object.material?.visible!==false&&x.object.geometry?.type==='BoxGeometry'&&x.object.geometry.parameters?.height>=5&&x.object.geometry.parameters?.depth>=.20);return !obstacles.length;});
-    if(hit){if(hit.object.userData.businessAbout){openWyInfo('company');return;}businessExperience.open(hit.object.userData.businessZone);return;}
+    if(hit){if(hit.object.userData.businessAbout){openWyInfo('company');return;}if(hit.object.userData.businessReception){businessExperience.open(7);return;}businessExperience.open(hit.object.userData.businessZone);return;}
   }return;
  }
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){const action=hit[0].object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
@@ -5600,4 +5602,21 @@ observer.observe(document.body,{childList:true,subtree:true});sync();
 #wy410BusinessPanel .wy414Service p{font-size:13px!important;line-height:1.4!important}
 @media(max-height:760px){#wy410BusinessPanel{max-height:calc(100dvh - 155px)!important;bottom:62px!important}}
 </style>
-<script id="wy415NoDecorativeIcons">(()=>{const ids=['wyMedicalExperience','wyFamilyExperience'];const clean=()=>{for(const id of ids){const el=document.getElementById(id);if(!el)continue;const title=el.querySelector(id==='wyMedicalExperience'?'#wyMedTitle':'#wyFamilyTitle');if(title&&/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(title.textContent||''))title.textContent=title.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');const buttons=el.querySelectorAll('button');for(const b of buttons){if(b.id==='wyMedClose'||b.id==='wyFamilyClose')continue;const t=b.textContent||'';if(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(t))b.textContent=t.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');}}};let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;clean()})}).observe(document.body,{childList:true,subtree:true,characterData:true});clean()})();</script></body></html>
+<script id="wy415NoDecorativeIcons">(()=>{const ids=['wyMedicalExperience','wyFamilyExperience'];const clean=()=>{for(const id of ids){const el=document.getElementById(id);if(!el)continue;const title=el.querySelector(id==='wyMedicalExperience'?'#wyMedTitle':'#wyFamilyTitle');if(title&&/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(title.textContent||''))title.textContent=title.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');const buttons=el.querySelectorAll('button');for(const b of buttons){if(b.id==='wyMedClose'||b.id==='wyFamilyClose')continue;const t=b.textContent||'';if(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(t))b.textContent=t.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');}}};let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;clean()})}).observe(document.body,{childList:true,subtree:true,characterData:true});clean()})();</script><style id="wy416MobileAndReception">
+#wy410BusinessPanel{top:max(8px,env(safe-area-inset-top))!important;bottom:max(58px,env(safe-area-inset-bottom))!important;max-height:calc(100dvh - 82px)!important;overflow:hidden!important;width:min(96vw,440px)!important;padding:8px 10px!important;font-size:12px!important;line-height:1.27!important;background:#faf5ff!important;border-color:#b48dc6!important}
+#wy410BusinessPanel .wy414Brand{margin:0 0 3px!important;padding:0 0 3px!important}
+#wy410BusinessPanel h3{font-size:14px!important;margin:3px 0!important}
+#wy410BusinessPanel p{margin:3px 0!important;line-height:1.3!important}
+#wy410BusinessPanel button[data-act]{padding:5px 7px!important;font-size:12px!important;line-height:1.22!important}
+#wy410BusinessPanel .wy414Analysis{margin-top:3px!important;padding:4px 6px!important;font-size:11px!important;line-height:1.25!important}
+#wy410BusinessPanel .wy414Service{margin-top:5px!important;padding:8px!important;border-left:5px solid #c6a25d!important;background:#ead9f4!important}
+#wy410BusinessPanel .wy414Service strong{font-size:16px!important;color:#40165b!important}
+#wy410BusinessPanel .wy414Service p{font-size:12px!important;font-weight:600!important}
+#wy410BusinessPanel .wy416Overline{font-size:11px;color:#714c87}
+#wy410BusinessPanel .wy416Dialogue{font-size:14px!important;line-height:1.75!important;background:#f0e5f7;padding:12px;border-radius:10px}
+#wy410BusinessPanel .wy416Answers{display:grid;gap:7px}
+#wy410BusinessPanel .wy416Answers button,#wy410BusinessPanel .wy416RecFooter button{border:1px solid #bba0cb;border-radius:8px;background:#f2e8f7;color:#4c2862;padding:9px;font-weight:650}
+#wy410BusinessPanel .wy416RecFooter{display:flex;gap:7px;justify-content:space-between;margin-top:10px}
+#wy410BusinessPanel .wy416RecResult{margin:8px 0;padding:9px;border-left:4px solid #c6a25d;background:#f4e9f8}
+@media(max-height:680px){#wy410BusinessPanel{font-size:11px!important;line-height:1.2!important}#wy410BusinessPanel .wy414Service{padding:5px 7px!important}#wy410BusinessPanel .wy414Service strong{font-size:14px!important}}
+</style></body></html>

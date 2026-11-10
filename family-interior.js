@@ -59,19 +59,32 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
    const mesh=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:thickness,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.035,bevelThickness:.025,curveSegments:5}),m);
    mesh.rotation.x=-Math.PI/2;mesh.position.set(x,y,z);root.add(mesh);if(action){mesh.userData.familyAction=action;targets.push(mesh);}return mesh;
  }
- roundedSlab(3.55,1.80,.22,.14,-6.05,1.34,5.35,brass,'heritage');
- roundedSlab(3.40,1.66,.21,.13,-6.05,1.47,5.35,ivory,'heritage');
+ roundedSlab(3.55,1.80,.22,.14,-6.05,1.34,5.35,brass,'familyFun');
+ roundedSlab(3.40,1.66,.21,.13,-6.05,1.47,5.35,ivory,'familyFun');
  for(const x of [-7.48,-4.62])for(const z of [4.76,5.94]){box(.16,1.28,.16,x,.65,z,rosewood);box(.21,.055,.21,x,1.13,z,brass);}
  // A recognizable writing surface: large document, fountain pen and warm brass desk lamp.
- roundedSlab(1.20,.80,.06,.026,-6.45,1.66,5.28,bookPaper,'heritage');
+ roundedSlab(1.20,.80,.06,.026,-6.45,1.66,5.28,bookPaper,'familyFun');
  for(let j=0;j<4;j++)box(.82,.013,.025,-6.45,1.71,5.08+j*.15,libraryWood);
  const pen=box(.055,.05,.83,-5.25,1.72,5.19,bookNavy);pen.rotation.y=-.22;
  box(.08,.04,.14,-5.35,1.72,4.83,brass);
  // Upholstered reading chair faces the desk rather than the outer wall.
- roundedSlab(1.35,1.10,.20,.16,-5.90,.66,7.10,burgundy,'heritage');
+ roundedSlab(1.35,1.10,.20,.16,-5.90,.66,7.10,burgundy,'familyFun');
  for(const x of [-6.37,-5.43])for(const z of [6.67,7.53])box(.11,.59,.11,x,.29,z,rosewood);
- box(1.32,1.35,.23,-5.90,1.37,7.62,burgundy,'heritage');
+ box(1.32,1.35,.23,-5.90,1.37,7.62,burgundy,'familyFun');
  box(1.15,.16,.20,-5.90,1.92,7.49,brass);
+ // v416: luxury desk architectural face, drawer fronts, fluted side panels and champagne handles.
+ const deskLuxury=mat('#67404A'),deskIvory=mat('#FFF5E9'),deskGold=mat('#D4AD71');
+ box(3.12,.54,.15,-6.05,1.02,6.13,deskLuxury,'familyFun');
+ for(const x of [-6.93,-6.05,-5.17]){
+   box(.76,.34,.055,x,1.02,6.23,deskIvory,'familyFun');
+   box(.39,.038,.075,x,1.03,6.28,deskGold,'familyFun');
+ }
+ for(const x of [-7.48,-4.62]){
+   box(.25,1.02,.12,x,.64,6.02,deskGold,'familyFun');
+   for(let k=0;k<3;k++)box(.055,.73,.085,x+(k-1)*.065,.64,6.12,deskLuxury,'familyFun');
+ }
+ roundedSlab(1.28,.73,.11,.045,-6.42,1.74,5.35,burgundy,'familyFun');
+ // Leather desk pad with a gold accent; desk stays in its approved location.
  // v67: oversized legible rotary telephone, with receiver and dial facing the visitor.
  box(3.6,1.14,2.8,8.1,.57,4.9,cream,'protect');
  box(2.7,.20,2.0,8.1,1.23,4.9,white,'protect');
@@ -222,9 +235,16 @@ export function createFamilyExperience(){
   button('A｜'+compactChoice(s.choiceA),()=>outcome(s.a,s,k));
   button('B｜'+compactChoice(s.choiceB),()=>outcome(s.b,s,k));
  }
- function outcome(result,s,k){title.textContent=s.title;body.textContent='結果｜'+compactResult(result);choices.replaceChildren();button('📖 查看法律提醒',()=>{body.textContent='結果｜'+compactResult(result)+'\n\n提醒｜'+short(s.tip,92);});button('下一題 →',()=>{scenarioPosition[k]=(scenarioPosition[k]+1)%scenarios[k].length;quiz(k)});button('返回家事館',()=>el.style.display='none');}
+ function outcome(result,s,k){title.textContent=s.title;body.textContent='結果｜'+compactResult(result);choices.replaceChildren();button('查看法律提醒',()=>{body.textContent='結果｜'+compactResult(result)+'\n\n提醒｜'+short(s.tip,92);});button('下一題 →',()=>{scenarioPosition[k]=(scenarioPosition[k]+1)%scenarios[k].length;quiz(k)});button('返回家事館',()=>el.style.display='none');}
  function contact(){title.textContent='德威陽｜聯絡資訊';body.textContent='點擊即可複製聯絡資料。';choices.replaceChildren();[['LINE','@wylaw'],['官網','weiandyang.com'],['Facebook','weiandyang'],['Instagram','weiyang_ceo']].forEach(([k,v])=>button(k+'｜'+v,()=>{navigator.clipboard?.writeText(v);body.textContent='已選取：'+v+'（可複製使用）';}));button('返回家事諮詢沙發',desk);}
  function desk(){title.textContent='家事法律諮詢沙發｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('婚姻／家庭法律需求',()=>{body.textContent='可先整理事件經過、婚姻及財產相關文件，再由律師評估適用法律與處理方式。';});button('親子／繼承法律需求',()=>{body.textContent='可先整理親權、扶養或繼承關係及相關證明文件，協助釐清案件需求。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contact);}
- let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索書櫃。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('婚姻廚房｜30則',()=>quiz('kitchen'));button('親子生活｜30則',()=>quiz('child'));button('遺囑繼承｜30則',()=>quiz('heritage'));button('家庭守護｜30則',()=>quiz('protect'));button('了解家事法律諮詢',desk);}else quiz(action);}
+ const familyFunLines=[
+ ['離婚協議書真的談好了嗎？','夢奇奇：當事人說離婚條件都談好了。\n哈姆太郎：那還有什麼問題？\n夢奇奇：小孩跟誰住、房子歸誰、財產怎麼分。\n哈姆太郎：所以最重要的還沒談。'],
+ ['遺囑寫在便條紙上？','哈姆太郎：阿公說遺囑寫在紙上就有效。\n夢奇奇：那要先確認是不是符合民法規定的遺囑方式。\n哈姆太郎：原來不是寫了「我決定」就算數。'],
+ ['扶養費可以口頭說好嗎？','薪水掌門人：雙方說扶養費都談妥了。\n夢奇奇：支付金額、時間與方式有沒有寫清楚？\n薪水掌門人：看來不能只靠一句「我會付」。'],
+ ['夫妻財產各自管理？','哈姆太郎：婚後買的東西就一定一人一半嗎？\n夢奇奇：要先看夫妻財產制、財產來源與適用規定。\n哈姆太郎：原來不是直接拿計算機除以二。']
+ ];let familyFunIndex=0;
+ function familyFun(){const item=familyFunLines[familyFunIndex%familyFunLines.length];familyFunIndex++;title.textContent='家庭島書桌｜'+item[0];body.textContent=item[1];choices.replaceChildren();button('再聽一則家庭趣事',familyFun);button('探索遺囑與繼承',()=>quiz('heritage'));button('返回',()=>el.style.display='none');}
+ let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索書櫃。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='familyFun')familyFun();else if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('婚姻廚房｜30則',()=>quiz('kitchen'));button('親子生活｜30則',()=>quiz('child'));button('遺囑繼承｜30則',()=>quiz('heritage'));button('家庭守護｜30則',()=>quiz('protect'));button('了解家事法律諮詢',desk);}else quiz(action);}
  return {open,hide:()=>el.style.display='none'};
 }
