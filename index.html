@@ -5068,12 +5068,12 @@ wyV151Controls.append(medGuideAgain,familyGuideAgain);
 // v175: Guides for the remaining themed islands, preserving existing island mechanics.
 const wy175GuideMap={1:['訴訟法律島','探索訴訟程序、證據與法律爭點，透過島上的互動空間了解案件處理流程。'],4:['企業商務島','探索企業經營、契約、跨國商務及營業秘密等法律主題。'],5:['法律探索島','探索本島的法律知識與互動主題，依照場景提示進行體驗。']};
 // v413: official-logo branded guide headers, same composition across islands.
-const wy413GuideBrand = `<div style="text-align:center;font-size:10px;letter-spacing:1.5px;color:#b18c4e">WEIYANG · PRIVATE EXHIBITION</div><div style="display:flex;align-items:center;justify-content:center;gap:11px;margin:10px 0;border-top:1px solid #d6bb83;border-bottom:1px solid #d6bb83;padding:9px 0"><img src="office-logo-transparent.png" alt="德威陽官方Logo" style="width:65px;height:65px;object-fit:contain;background:white;border-radius:6px;flex-shrink:0"><div style="text-align:left;min-width:0"><b style="display:block;font-size:14px;color:#263B57">德威陽國際法律事務所</b><span style="font-size:9px;color:#a17f4d;overflow-wrap:anywhere">WEI &amp; YANG INTERNATIONAL LAW FIRM</span></div></div>`;
+const wy413GuideBrand = `<div style="display:flex;align-items:center;justify-content:center;gap:11px;margin:10px 0;border-top:1px solid #d6bb83;border-bottom:1px solid #d6bb83;padding:9px 0"><img src="office-logo-transparent.png" alt="德威陽官方Logo" style="width:65px;height:65px;object-fit:contain;background:white;border-radius:6px;flex-shrink:0"><div style="text-align:left;min-width:0"><b style="display:block;font-size:14px;color:#263B57">德威陽國際法律事務所</b><span style="font-size:9px;color:#a17f4d;overflow-wrap:anywhere">WEI &amp; YANG INTERNATIONAL LAW FIRM</span></div></div>`;
 function wy413ApplyBrand(guide){if(!guide||guide.dataset.wy413Brand)return;guide.dataset.wy413Brand='1';guide.insertAdjacentHTML('afterbegin',wy413GuideBrand);}
 const wy175ExtraGuides={};
 for(const [k,data] of Object.entries(wy175GuideMap)){
  const i=Number(k),g=document.createElement('aside');g.className='wy175Guide';g.dataset.island=k;g.style.display='none';
- g.innerHTML=i===4?`<div style="text-align:center;color:#b18c4e;font-size:11px;letter-spacing:2px">WEI & YANG INTERNATIONAL LAW FIRM</div><h3 style="margin:8px 0 10px;text-align:center;color:#263B57;font-size:20px">企業商務島｜探索指南</h3><p style="text-align:center;margin:0 0 12px;color:#6c6171">走進七個互動區，親自找出企業經營中的法律風險。</p><div style="display:grid;gap:6px">${[['公司治理展示區','董事會、股東與公司決策'],['國際商務展示區','跨國交易與OEM／ODM契約'],['合約展示桌','履約、付款與爭議處理'],['勞資管理展示區','聘僱、職場事件與勞動權益'],['智慧財產展示區','商標、著作權與營業秘密'],['企業法遵展示區','個資、內控與危機應變'],['中央 VIP 沙發','挑戰 VIP 商務偵探，找出合約風險']].map((a,n)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 10px;border:1px solid #e8ddc8;border-radius:9px;background:#fff"><b style="color:#a88a56;font-size:13px">${String(n+1).padStart(2,'0')}</b><span style="font-size:13px"><b>點擊${a[0]}：</b><span style="color:#786f76">｜${a[1]}</span></span></div>`).join('')}</div><p style="font-size:11px;text-align:center;margin:12px 0 8px;color:#8b7960">點擊場景物件或浮動標示即可開始，右上角可再次查看指南。</p><button type="button" style="display:block;width:100%;padding:11px;border:0;border-radius:10px;background:#263B57;color:#f0d5a2;font-weight:700">開始探索</button>`:'<h3>'+data[0]+'｜探索指南</h3><p>'+data[1]+'</p><button type="button">開始探索</button>';
+ g.innerHTML=i===4?`<h3 style="margin:8px 0 10px;text-align:center;color:#263B57;font-size:20px">企業商務島｜探索指南</h3><p style="text-align:center;margin:0 0 12px;color:#6c6171">走進七個互動區，親自找出企業經營中的法律風險。</p><div style="display:grid;gap:6px">${[['公司治理展示區','董事會、股東與公司決策'],['國際商務展示區','跨國交易與OEM／ODM契約'],['合約展示桌','履約、付款與爭議處理'],['勞資管理展示區','聘僱、職場事件與勞動權益'],['智慧財產展示區','商標、著作權與營業秘密'],['企業法遵展示區','個資、內控與危機應變'],['中央 VIP 沙發','挑戰 VIP 商務偵探，找出合約風險']].map((a,n)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 10px;border:1px solid #e8ddc8;border-radius:9px;background:#fff"><b style="color:#a88a56;font-size:13px">${String(n+1).padStart(2,'0')}</b><span style="font-size:13px"><b>點擊${a[0]}：</b><span style="color:#786f76">｜${a[1]}</span></span></div>`).join('')}</div><p style="font-size:11px;text-align:center;margin:12px 0 8px;color:#8b7960">點擊場景物件或浮動標示即可開始，右上角可再次查看指南。</p><button type="button" style="display:block;width:100%;padding:11px;border:0;border-radius:10px;background:#263B57;color:#f0d5a2;font-weight:700">開始探索</button>`:'<h3>'+data[0]+'｜探索指南</h3><p>'+data[1]+'</p><button type="button">開始探索</button>';
  if(i===4)g.style.cssText='display:none;position:fixed;z-index:105;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow-y:auto;box-sizing:border-box;background:#fffcf6;border:2px solid #d5b67e;border-radius:17px;padding:17px;box-shadow:0 12px 40px #0005;color:#263B57;font:13px/1.5 system-ui';if(i===4)wy413ApplyBrand(g);document.body.append(g);g.querySelector('button').onclick=()=>{g.style.display='none'};
  const b=document.createElement('button');b.type='button';b.className='wy175GuideAgain';b.textContent=i===4?'商務指南':data[0]+'指南';b.style.display='none';document.body.append(b);b.onclick=()=>{g.style.display='block'};
  wyV151Controls.append(b);if(i===4)b.style.cssText+=';background:#263B57;color:#e9ca90;border:1px solid #d7b77b;border-radius:9px;padding:8px 10px;font-weight:700';
@@ -5089,7 +5089,7 @@ function enterIslandRoom(i){
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
  for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
  document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';
- if(i===2){const r=themeRooms[i];r.camera.position.set(5,21,34);r.orbit.target.set(0,3,-.6);r.orbit.update();}else if(i===3){const r=themeRooms[i];r.camera.position.set(5,27,38);r.orbit.target.set(0,2,0);r.orbit.update();}else talk(names[i]);
+ if(i===2){const r=themeRooms[i];r.camera.position.set(5,21,34);r.orbit.target.set(0,3,-.6);r.orbit.update();}else if(i===3){const r=themeRooms[i];r.camera.position.set(5,27,38);r.orbit.target.set(0,2,0);r.orbit.update();}else if(i!==4) talk(names[i]);
 }
 const originalEnterOffice=enterOffice;
 // Existing direct castle clicking still enters the original office.
@@ -5535,6 +5535,48 @@ function sync(){
 const observer=new MutationObserver(sync);
 observer.observe(document.body,{subtree:true,childList:true});
 sync();
+})();
+</script>
+
+<style id="wy414UnifiedStyle">
+#wyLobbyDialog:before,#wyMainGuide:before,#wyMedicalGuide:before,#wyFamilyGuide:before{content:none!important;display:none!important}
+#wyMainGuide .wy334-logo-head,#wyMedicalGuide .wy334-logo-head,#wyFamilyGuide .wy334-logo-head{display:none!important}
+.wy175Guide[data-island="4"]{background:#f9f5ff!important;border-color:#bda1d1!important}
+#wy410BusinessPanel{background:#f8f3ff!important;border:2px solid #b69ccf!important;color:#332547!important;box-shadow:0 15px 38px #24133155!important}
+#wy410BusinessPanel button[data-act="choice"]{background:#f0e6f7!important;color:#38264d!important;border-color:#c9b3dc!important}
+#wy410BusinessPanel button[data-act="prev"],#wy410BusinessPanel button[data-act="next"],#wy410BusinessPanel button[data-act="reset"]{background:#eee4f5!important;color:#39264d!important;border-color:#c9b3dc!important}
+.wy414Brand{display:flex;align-items:center;gap:10px;padding:0 0 11px;margin:0 0 12px;border-bottom:1px solid #d4b987;min-width:0}
+.wy414Brand img{width:48px;height:48px;object-fit:contain;background:white;border-radius:7px;flex:none}
+.wy414Brand b{font-size:clamp(13px,3.7vw,18px);display:block;line-height:1.4;color:inherit}
+.wy414Brand small{display:block;font-size:clamp(8px,2.1vw,11px);letter-spacing:.02em;line-height:1.4;color:inherit;opacity:.78;overflow-wrap:anywhere}
+.wy414Service{margin-top:12px;padding:12px;background:#e9d9f3;border:1px solid #c7a8db;border-left:4px solid #8b62ac;border-radius:10px;color:#332246}
+.wy414Service strong{display:block;font-size:16px;margin-bottom:6px;color:#4b2770}
+.wy414Service p{margin:0;line-height:1.7}
+.wy414Analysis{margin-top:10px;padding:10px;background:#f2ebf8;border-radius:9px;line-height:1.7}
+@media(max-width:430px){.wy414Brand{gap:8px}.wy414Brand img{width:43px;height:43px}}
+</style>
+<script id="wy414UniversalBrand">
+(()=>{
+'use strict';
+const brand=()=>{const h=document.createElement('div');h.className='wy414Brand';h.innerHTML='<img src="office-logo-transparent.png" alt="德威陽官方原始Logo"><div><b>德威陽國際法律事務所</b><small>WEI &amp; YANG INTERNATIONAL LAW FIRM</small></div>';return h};
+// Only interactive overlays: never alter room scenery or non-dialog controls.
+const ids=['dialog','wyLobbyDialog','wy215ExhibitDialog','wy260Modal','wy265Modal','wy264Modal','wy265Panel','wy3Intro','wy3MovieModal','wy317Overlay','wyInfo','wyContactPanel'];
+const selectors=['[role="dialog"]','.wyFamilyModal','.wyMedicalModal','.family-modal','.medical-modal'];
+let busy=false;
+function sync(){if(busy)return;busy=true;try{
+ const nodes=new Set(ids.map(id=>document.getElementById(id)).filter(Boolean));
+ for(const q of selectors)try{document.querySelectorAll(q).forEach(n=>nodes.add(n))}catch(e){}
+ for(const root of nodes){if(root.id==='wy410BusinessPanel'||root.classList.contains('wy175Guide')||root.id==='wyMainGuide'||root.id==='wyMedicalGuide'||root.id==='wyFamilyGuide')continue;
+  const panel=(root.id==='wy317Overlay'?root.querySelector('#wy317Box'):root.id==='wy260Modal'?root.querySelector('#wy260Card'):root.id==='wyInfo'?root.querySelector('article'):root.id==='wy3Intro'?root.querySelector('.wy3Card'):root.id==='dialog'?root.querySelector('.wy-inner'):root.firstElementChild)||root;
+  if(!panel||panel.tagName==='BUTTON')continue;
+  if(panel.querySelector(':scope > .wy414Brand'))continue;
+  // Existing castle branded heading is replaced, not stacked on top.
+  const old=panel.querySelector(':scope > .wy334-logo-head');if(old)old.style.setProperty('display','none','important');
+  panel.prepend(brand());
+ }
+}finally{busy=false}}
+let pending=false;const observer=new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;sync()})});
+observer.observe(document.body,{childList:true,subtree:true});sync();
 })();
 </script>
 </body></html>
