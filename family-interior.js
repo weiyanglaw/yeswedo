@@ -68,10 +68,10 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  const pen=box(.055,.05,.83,-5.25,1.72,5.19,bookNavy);pen.rotation.y=-.22;
  box(.08,.04,.14,-5.35,1.72,4.83,brass);
  // Upholstered reading chair faces the desk rather than the outer wall.
- roundedSlab(1.35,1.10,.20,.16,-5.90,.66,7.10,burgundy,'familyFun');
- for(const x of [-6.37,-5.43])for(const z of [6.67,7.53])box(.11,.59,.11,x,.29,z,rosewood);
- box(1.32,1.35,.23,-5.90,1.37,7.62,burgundy,'familyFun');
- box(1.15,.16,.20,-5.90,1.92,7.49,brass);
+ roundedSlab(1.45,1.18,.20,.18,-5.90,.66,3.72,burgundy,'familyFun');
+ for(const x of [-6.37,-5.43])for(const z of [3.28,4.16])box(.11,.59,.11,x,.29,z,rosewood);
+ box(1.39,1.62,.26,-5.90,1.53,3.15,burgundy,'familyFun');
+ box(1.23,.12,.23,-5.90,2.28,3.10,brass);
  // v416: luxury desk architectural face, drawer fronts, fluted side panels and champagne handles.
  const deskLuxury=mat('#67404A'),deskIvory=mat('#FFF5E9'),deskGold=mat('#D4AD71');
  box(3.12,.54,.15,-6.05,1.02,6.13,deskLuxury,'familyFun');
@@ -84,6 +84,15 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
    for(let k=0;k<3;k++)box(.055,.73,.085,x+(k-1)*.065,.64,6.12,deskLuxury,'familyFun');
  }
  roundedSlab(1.28,.73,.11,.045,-6.42,1.74,5.35,burgundy,'familyFun');
+ // v417: luxury reception-facing facade and premium finishes; all remain within desk footprint.
+ box(3.28,.10,.19,-6.05,1.30,6.18,deskGold,'familyFun');
+ box(3.18,.10,.20,-6.05,.76,6.18,deskGold,'familyFun');
+ for(const x of [-7.55,-4.55]){box(.16,1.18,.23,x,.70,6.07,deskGold,'familyFun');}
+ for(const x of [-7.05,-6.05,-5.05]){box(.04,.42,.10,x,1.01,6.31,deskGold,'familyFun');}
+ roundedSlab(1.18,.72,.12,.045,-5.9,1.77,5.55,burgundy,'familyFun');
+ const lampStem=cyl(.055,.65,-4.95,1.98,4.92,deskGold);
+ const lampShade=new THREE.Mesh(new THREE.CylinderGeometry(.28,.44,.33,18),ivory);lampShade.position.set(-4.95,2.38,4.92);root.add(lampShade);
+ box(1.25,.18,.20,-5.90,2.10,3.14,ivory,'familyFun');
  // Leather desk pad with a gold accent; desk stays in its approved location.
  // v67: oversized legible rotary telephone, with receiver and dial facing the visitor.
  box(3.6,1.14,2.8,8.1,.57,4.9,cream,'protect');
@@ -183,6 +192,7 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  hint('遺囑繼承',-9.85,5.9,6.15,'heritage');
  hint('家事保護',8.0,3.7,4.6,'protect');
  hint('德威陽諮詢',0,3.15,1.7,'sofa');
+ hint('接待趣味問答',-6.05,3.12,5.35,'familyFun');
  const staffLabelText='哈姆太郎';hint(staffLabelText,4.9,3.45,1.1,'staff');
  // Large invisible tap areas improve mobile touch targeting.
  const invisible=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});

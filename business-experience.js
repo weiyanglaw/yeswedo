@@ -43,11 +43,18 @@ export function createBusinessExperience(){
  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const buttonStyle='border:1px solid #d8c8ab;border-radius:8px;background:#f5efe5;color:#263b57;padding:8px 9px;font:inherit;text-align:left;cursor:pointer';
  const brand=`<div class="wy414Brand"><img src="office-logo-transparent.png" alt="德威陽官方原始Logo"><div style="flex:1;min-width:0"><b>德威陽國際法律事務所</b><small>WEI &amp; YANG INTERNATIONAL LAW FIRM</small></div><button data-act="close" aria-label="關閉" style="border:0;background:transparent;color:#50366b;font-size:22px">×</button></div>`;
- function receptionRender(){const idx=receptionIndex%30,isQuiz=idx>=20;const d=isQuiz?receptionQuiz[idx-20]:receptionTalk[idx];panel.innerHTML=`${brand}<div class="wy416Reception"><div class="wy416Overline">企業商務島｜接待櫃檯　${idx+1} / 30</div><h3>${escape(d[0])}</h3>${isQuiz?`<p>${escape(d[0])}</p><div class="wy416Answers"><button data-act="recAnswer" data-i="0">A｜${escape(d[1])}</button><button data-act="recAnswer" data-i="1">B｜${escape(d[2])}</button></div>${receptionAnswer>=0?`<div class="wy416RecResult">${receptionAnswer===0?'答對了。':'再想想。'} ${escape(d[3])}</div>`:''}`:`<p class="wy416Dialogue">${escape(d[1]).replace(/\n/g,'<br>')}</p>`}<div class="wy416RecFooter"><button data-act="recPrev">上一則</button><button data-act="recNext">下一則</button><button data-act="close">返回</button></div></div>`;fit();}
+ function receptionRender(){const idx=receptionIndex%30,isQuiz=idx>=20;const d=isQuiz?receptionQuiz[idx-20]:receptionTalk[idx];panel.innerHTML=`${brand}<div class="wy416Reception"><div class="wy416Overline">接待櫃檯｜事務所今天又怎麼了？</div><h3>${escape(d[0])}</h3>${isQuiz?`<div class="wy416Answers"><button data-act="recAnswer" data-i="0">A｜${escape(d[1])}</button><button data-act="recAnswer" data-i="1">B｜${escape(d[2])}</button></div>${receptionAnswer>=0?`<div class="wy416RecResult">${receptionAnswer===0?'答對了。':'再想想。'} ${escape(d[3])}</div>`:''}`:`<p class="wy416Dialogue">${escape(d[1]).replace(/\n/g,'<br>')}</p>`}<div class="wy416RecFooter"><button data-act="recNext">再聽一組趣味對話</button></div></div>`;fit();}
  function fit(){
-  panel.style.overflow='hidden';panel.style.top='max(8px,env(safe-area-inset-top))';panel.style.bottom='max(58px,env(safe-area-inset-bottom))';panel.style.maxHeight='calc(100dvh - 82px)';panel.style.height='auto';
-  let inner=panel.querySelector('.wy416Fit');if(!inner){inner=document.createElement('div');inner.className='wy416Fit';while(panel.firstChild)inner.appendChild(panel.firstChild);panel.appendChild(inner);}
-  inner.style.zoom='1';for(let i=0;i<20&&panel.scrollHeight>panel.clientHeight+1;i++){inner.style.zoom=String(Math.max(.60,1-(i+1)*.02));}
+  // Match the other islands' ordinary bottom-anchored dialogue; never stretch a short card.
+  panel.style.top='auto';
+  panel.style.bottom='max(88px,env(safe-area-inset-bottom))';
+  panel.style.height='auto';
+  panel.style.maxHeight='calc(100dvh - 176px)';
+  panel.style.overflowY='auto';
+  panel.style.overflowX='hidden';
+  // v416 wrapped all content in a zoom container, producing blank full-height cards.
+  const wrapper=panel.querySelector('.wy416Fit');
+  if(wrapper){while(wrapper.firstChild)panel.insertBefore(wrapper.firstChild,wrapper);wrapper.remove();}
  }
  function render(){
  if(zone===7){receptionRender();return;}

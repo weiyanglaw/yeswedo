@@ -4976,7 +4976,10 @@ function wy401BusinessInterior(root,THREE){
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
  const wy415AboutHit=new THREE.Mesh(new THREE.PlaneGeometry(4.0,4.0),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));wy415AboutHit.position.set(0,3.64,-8.38);wy415AboutHit.userData.businessAbout=true;root.add(wy415AboutHit);
- const wy415SignCanvas=document.createElement('canvas');wy415SignCanvas.width=512;wy415SignCanvas.height=96;const wy415Ctx=wy415SignCanvas.getContext('2d');wy415Ctx.fillStyle='#263B57';wy415Ctx.fillRect(0,0,512,96);wy415Ctx.strokeStyle='#d9bd86';wy415Ctx.lineWidth=7;wy415Ctx.strokeRect(4,4,504,88);wy415Ctx.fillStyle='#f4d9a6';wy415Ctx.font='bold 49px sans-serif';wy415Ctx.textAlign='center';wy415Ctx.textBaseline='middle';wy415Ctx.fillText('認識德威陽',256,48);const wy415SignTex=new THREE.CanvasTexture(wy415SignCanvas);const wy415Sign=new THREE.Mesh(new THREE.PlaneGeometry(3.6,.68),new THREE.MeshBasicMaterial({map:wy415SignTex,side:THREE.DoubleSide}));wy415Sign.position.set(0,6.2,-8.35);wy415Sign.userData.businessAbout=true;root.add(wy415Sign);
+ const wy415SignCanvas=document.createElement('canvas');wy415SignCanvas.width=960;wy415SignCanvas.height=184;
+ const wy415Ctx=wy415SignCanvas.getContext('2d');wy415Ctx.fillStyle='#FFF8ED';wy415Ctx.beginPath();wy415Ctx.roundRect(8,8,944,168,42);wy415Ctx.fill();wy415Ctx.strokeStyle='#D9B779';wy415Ctx.lineWidth=10;wy415Ctx.stroke();wy415Ctx.fillStyle='#813E50';wy415Ctx.font='bold 85px sans-serif';wy415Ctx.textAlign='center';wy415Ctx.textBaseline='middle';wy415Ctx.fillText('認識德威陽',480,92);
+ const wy415SignTex=new THREE.CanvasTexture(wy415SignCanvas);wy415SignTex.colorSpace=THREE.SRGBColorSpace;
+ const wy415Sign=new THREE.Sprite(new THREE.SpriteMaterial({map:wy415SignTex,transparent:true,depthTest:false,depthWrite:false}));wy415Sign.position.set(0,6.2,-8.35);wy415Sign.scale.set(3.8,.73,1);wy415Sign.renderOrder=100;wy415Sign.userData.businessAbout=true;root.add(wy415Sign);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
  const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,5.00],[-11.51,-.90],[8.25,-8.02],[11.52,-2.40]];
 
@@ -5603,7 +5606,7 @@ observer.observe(document.body,{childList:true,subtree:true});sync();
 @media(max-height:760px){#wy410BusinessPanel{max-height:calc(100dvh - 155px)!important;bottom:62px!important}}
 </style>
 <script id="wy415NoDecorativeIcons">(()=>{const ids=['wyMedicalExperience','wyFamilyExperience'];const clean=()=>{for(const id of ids){const el=document.getElementById(id);if(!el)continue;const title=el.querySelector(id==='wyMedicalExperience'?'#wyMedTitle':'#wyFamilyTitle');if(title&&/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(title.textContent||''))title.textContent=title.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');const buttons=el.querySelectorAll('button');for(const b of buttons){if(b.id==='wyMedClose'||b.id==='wyFamilyClose')continue;const t=b.textContent||'';if(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(t))b.textContent=t.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');}}};let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;clean()})}).observe(document.body,{childList:true,subtree:true,characterData:true});clean()})();</script><style id="wy416MobileAndReception">
-#wy410BusinessPanel{top:max(8px,env(safe-area-inset-top))!important;bottom:max(58px,env(safe-area-inset-bottom))!important;max-height:calc(100dvh - 82px)!important;overflow:hidden!important;width:min(96vw,440px)!important;padding:8px 10px!important;font-size:12px!important;line-height:1.27!important;background:#faf5ff!important;border-color:#b48dc6!important}
+#wy410BusinessPanel{top:auto!important;bottom:max(88px,env(safe-area-inset-bottom))!important;height:auto!important;max-height:calc(100dvh - 176px)!important;overflow-y:auto!important;width:min(90vw,430px)!important;padding:8px 10px!important;font-size:12px!important;line-height:1.27!important;background:#faf5ff!important;border-color:#b48dc6!important}
 #wy410BusinessPanel .wy414Brand{margin:0 0 3px!important;padding:0 0 3px!important}
 #wy410BusinessPanel h3{font-size:14px!important;margin:3px 0!important}
 #wy410BusinessPanel p{margin:3px 0!important;line-height:1.3!important}
@@ -5616,7 +5619,7 @@ observer.observe(document.body,{childList:true,subtree:true});sync();
 #wy410BusinessPanel .wy416Dialogue{font-size:14px!important;line-height:1.75!important;background:#f0e5f7;padding:12px;border-radius:10px}
 #wy410BusinessPanel .wy416Answers{display:grid;gap:7px}
 #wy410BusinessPanel .wy416Answers button,#wy410BusinessPanel .wy416RecFooter button{border:1px solid #bba0cb;border-radius:8px;background:#f2e8f7;color:#4c2862;padding:9px;font-weight:650}
-#wy410BusinessPanel .wy416RecFooter{display:flex;gap:7px;justify-content:space-between;margin-top:10px}
+#wy410BusinessPanel .wy416RecFooter{display:flex;gap:7px;justify-content:flex-end;margin-top:10px}#wy410BusinessPanel .wy416RecFooter button{width:100%;text-align:center;background:#75538c;color:#fff9ef;border-color:#75538c}
 #wy410BusinessPanel .wy416RecResult{margin:8px 0;padding:9px;border-left:4px solid #c6a25d;background:#f4e9f8}
 @media(max-height:680px){#wy410BusinessPanel{font-size:11px!important;line-height:1.2!important}#wy410BusinessPanel .wy414Service{padding:5px 7px!important}#wy410BusinessPanel .wy414Service strong{font-size:14px!important}}
 </style></body></html>
