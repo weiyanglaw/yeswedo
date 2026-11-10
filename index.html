@@ -4708,7 +4708,7 @@ function leaveOffice(){if(wy323Inside)wy323Leave();
 }
 document.getElementById('officeExit').onclick=leaveOffice;
 
-// v405: all four circled guest chairs face their tables; retain v404 cabinet/airplane/reception updates.
+// v406: six accessible legal exhibits; preserve rear boardroom sightline and central circulation.
 function wy401BusinessInterior(root,THREE){
  const M=(hex,metalness=0,roughness=.84)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness,side:THREE.FrontSide});
  const stone=M('#DCD1DB'),wall=M('#E9E1EB'),pearl=M('#F0E8DE'),cream=M('#F5EDE3'),lilac=M('#BBA9C9'),mauve=M('#A797B5'),plum=M('#493657'),gold=M('#C7B18D',.18,.73),oak=M('#C7B3A3'),sage=M('#A3B5A5'),sageSoft=M('#C0CDBF'),blue=M('#AABCC9'),ink=M('#505466'),warm=M('#D9C8BC');
@@ -4748,18 +4748,63 @@ function wy401BusinessInterior(root,THREE){
  flowers(-7.5,-5.95,1.52);
  // v403: Manhattan private-club architectural plan. Seven legal hotspots in five visual compositions.
  // ④ DISPUTE RESOLUTION: secluded legal consultation alcove, no desk or duplicate computers.
- const dispute=group(-8.00,1.15);
+ const dispute=group(-8.00,2.60);
  round(4.45,.10,2.40,.66,0,.055,0,soft,dispute);
  // v405: the two consultation armchairs face IN toward the central table.
  // Chair local front is +Z (backrest is at -Z); derive yaw from chair to table.
  for(const dx of [-1.12,1.12]){
-   const chairX=-8.00+dx,chairZ=1.15;
-   const yaw=Math.atan2(-8.00-chairX,1.15-chairZ);
+   const chairX=-8.00+dx,chairZ=2.60;
+   const yaw=Math.atan2(-8.00-chairX,2.60-chairZ);
    clubChair(chairX,chairZ,yaw,dx<0?cream:lilac);
  }
- cylinder(.57,.67,.65,0,.38,0,brass,dispute);
- round(1.40,.15,1.10,.43,0,.80,0,ivory,dispute);
- const folio=group(-8,1.15);let caseCover=round(.76,.07,.52,.09,0,.94,0,plum2,folio);caseCover.rotation.y=.12;
+ // Enlarged asymmetrical six-sided stone table, sculptural twin supports and gold edge.
+ const tableShape=new THREE.Shape();
+ [[-1.03,-.60],[.78,-.67],[1.13,-.22],[.87,.59],[-.76,.65],[-1.15,.12]].forEach(([x,z],i)=>i?tableShape.lineTo(x,z):tableShape.moveTo(x,z));tableShape.closePath();
+ const tableGeo=new THREE.ExtrudeGeometry(tableShape,{depth:.15,bevelEnabled:true,bevelThickness:.055,bevelSize:.06,bevelSegments:3});tableGeo.rotateX(-Math.PI/2);
+ mesh(tableGeo,brass,0,.78,0,dispute);
+ const topGeo=tableGeo.clone();const top=mesh(topGeo,ivory,0,.845,0,dispute);top.scale.set(.95,.65,.95);
+ for(const dx of [-.43,.43]){let leg=box(.24,.68,.45,dx,.40,0,plum2,dispute);leg.rotation.y=dx>0?.22:-.22;}
+ // Oversized readable business contract as the subject of this consultation table.
+ const contract=group(-8.00,2.60);contract.rotation.y=-.16;
+ round(1.18,.065,.83,.06,0,1.01,0,cream,contract);
+ const inkLine=M('#665875');
+ for(let k=0;k<4;k++)box(.76-k*.09,.009,.018,-.08,1.058,-.20+k*.13,inkLine,contract);
+ box(.29,.008,.018,-.28,1.062,.34,brass,contract);box(.29,.008,.018,.28,1.062,.34,brass,contract);
+ // Face-up bilingual heading is a texture, not a new floating sign.
+ const labelCanvas=document.createElement('canvas');labelCanvas.width=512;labelCanvas.height=160;
+ const ctx=labelCanvas.getContext('2d');ctx.fillStyle='#FCF8F0';ctx.fillRect(0,0,512,160);ctx.fillStyle='#4C365D';ctx.textAlign='center';ctx.font='bold 58px sans-serif';ctx.fillText('商務合約',256,70);ctx.font='bold 31px sans-serif';ctx.fillText('BUSINESS CONTRACT',256,120);
+ const labelTex=new THREE.CanvasTexture(labelCanvas);labelTex.colorSpace=THREE.SRGBColorSpace;
+ const labelMat=new THREE.MeshBasicMaterial({map:labelTex,side:THREE.DoubleSide});
+ const labelMesh=mesh(new THREE.PlaneGeometry(1.05,.35),labelMat,0,1.067,-.24,contract);labelMesh.rotation.x=-Math.PI/2;
+ // ⑤ HR: shallow integrated relief on left wall, people management and payroll, no text.
+ const hr=group(-11.51,-.90,Math.PI/2);
+ box(4.25,3.25,.13,0,2.47,0,plum2,hr);
+ box(4.38,.10,.22,0,4.16,.02,brass,hr);box(4.38,.10,.22,0,.78,.02,brass,hr);
+ for(const side of [-1,1])box(.11,3.37,.22,side*2.16,2.47,.02,brass,hr);
+ const hrFace=M('#E9D8EF'),hrBody=M('#AA87C1'),coin=M('#E5BE79',.35,.48);
+ const person=(x,y,scale)=>{const g=new THREE.Group();g.position.set(x,y,.20);g.scale.setScalar(scale);hr.add(g);ell(.55,.55,.20,0,.32,0,hrFace,g);ell(.96,.70,.20,0,-.30,0,hrBody,g);};
+ person(0,2.63,1.42);for(const [x,y] of [[-1.43,3.05],[1.43,3.05],[-1.43,1.63],[1.43,1.63]])person(x,y,.68);
+ for(const [x,y] of [[-1.43,3.05],[1.43,3.05],[-1.43,1.63],[1.43,1.63]]){let line=mesh(new THREE.CylinderGeometry(.028,.028,Math.hypot(x,y-2.63),8),brass,x/2,(y+2.63)/2,.13,hr);line.rotation.z=-Math.atan2(x,y-2.63);}
+ for(const [x,y,r] of [[1.37,1.33,.38],[1.70,1.05,.25]]){cylinder(r,r,.09,x,y,.40,coin,hr,32).rotation.x=Math.PI/2;}
+ // ⑦ Compliance: recessed-looking right-wall framed relief, company counsel and data protection.
+ const comp=group(11.52,-2.40,-Math.PI/2);
+ box(3.65,3.80,.12,0,2.62,0,plum2,comp);
+ for(const x of [-1.82,1.82])box(.12,3.82,.24,x,2.62,.04,brass,comp);
+ for(const y of [.72,4.52])box(3.76,.12,.24,0,y,.04,brass,comp);
+ const shieldShape=new THREE.Shape();shieldShape.moveTo(0,1.02);shieldShape.lineTo(.95,.64);shieldShape.lineTo(.85,-.36);shieldShape.quadraticCurveTo(.65,-.96,0,-1.22);shieldShape.quadraticCurveTo(-.65,-.96,-.85,-.36);shieldShape.lineTo(-.95,.64);shieldShape.closePath();
+ const shieldGeo=new THREE.ExtrudeGeometry(shieldShape,{depth:.13,bevelEnabled:true,bevelThickness:.04,bevelSize:.04,bevelSegments:2});
+ mesh(shieldGeo,brass,0,2.63,.23,comp);
+ const innerShield=mesh(shieldGeo,hrBody,0,2.63,.39,comp);innerShield.scale.set(.79,.79,.72);
+ // Prominent legal review document, secure lock and cyber alert as distinct sculpted objects.
+ box(.67,1.05,.09,0,2.70,.60,cream,comp);
+ for(let i=0;i<4;i++)box(.44,.045,.06,0,2.99-i*.18,.67,ink,comp);
+ const lock=group(.88,1.55);comp.remove(lock);comp.add(lock);lock.position.z=.32;
+ const lockArch=mesh(new THREE.TorusGeometry(.24,.065,8,24,Math.PI),brass,0,.28,.09,lock);lockArch.rotation.z=0;
+ box(.64,.55,.15,0,0,.12,coin,lock);
+ const alert=group(-1.03,3.58);comp.remove(alert);comp.add(alert);alert.position.z=.28;
+ const warning=mesh(new THREE.ConeGeometry(.46,.85,3),coin,0,0,.10,alert);warning.rotation.z=Math.PI;
+ box(.055,.32,.09,0,.05,.20,plum2,alert);ell(.08,.08,.07,0,-.17,.21,plum2,alert);
+ // All relief elements remain on the side walls, away from the rear meeting area and central path.
  // ③ & ②: one unified aviation-and-supply-chain exhibit; separate, accessible 3D objects.
  // v404: remove the entire right-side HR cabinet, including all doors, base and handles.
  // Preserve topic ⑤ in businessTopics; do not add replacement clutter before labels are designed.
@@ -4892,9 +4937,9 @@ function wy401BusinessInterior(root,THREE){
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
- const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,1.15],[9.90,-2.65],[8.25,-8.02],[3.72,-7.94]];
+ const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,2.60],[-11.51,-.90],[8.25,-8.02],[11.52,-2.40]];
  root.userData.businessTopics=topics.map((name,i)=>({name,x:pts[i][0],z:pts[i][1]}));
- return {departments:topics,version:'v405',design:'Manhattan private club; seven distinct legal hotspots, reserved reception, unified aviation procurement display'};
+ return {departments:topics,version:'v406',design:'Manhattan private club; seven distinct legal hotspots, reserved reception, unified aviation procurement display'};
 }
 
 // Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
