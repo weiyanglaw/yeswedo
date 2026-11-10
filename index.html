@@ -4708,7 +4708,7 @@ function leaveOffice(){if(wy323Inside)wy323Leave();
 }
 document.getElementById('officeExit').onclick=leaveOffice;
 
-// v403: integrated Manhattan private-club renovation, seven legal topics and independent reception.
+// v405: all four circled guest chairs face their tables; retain v404 cabinet/airplane/reception updates.
 function wy401BusinessInterior(root,THREE){
  const M=(hex,metalness=0,roughness=.84)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness,side:THREE.FrontSide});
  const stone=M('#DCD1DB'),wall=M('#E9E1EB'),pearl=M('#F0E8DE'),cream=M('#F5EDE3'),lilac=M('#BBA9C9'),mauve=M('#A797B5'),plum=M('#493657'),gold=M('#C7B18D',.18,.73),oak=M('#C7B3A3'),sage=M('#A3B5A5'),sageSoft=M('#C0CDBF'),blue=M('#AABCC9'),ink=M('#505466'),warm=M('#D9C8BC');
@@ -4750,21 +4750,19 @@ function wy401BusinessInterior(root,THREE){
  // ④ DISPUTE RESOLUTION: secluded legal consultation alcove, no desk or duplicate computers.
  const dispute=group(-8.00,1.15);
  round(4.45,.10,2.40,.66,0,.055,0,soft,dispute);
+ // v405: the two consultation armchairs face IN toward the central table.
+ // Chair local front is +Z (backrest is at -Z); derive yaw from chair to table.
  for(const dx of [-1.12,1.12]){
-   const chair=clubChair(-8.00+dx,1.15,dx<0?-Math.PI/2:Math.PI/2,dx<0?cream:lilac);
+   const chairX=-8.00+dx,chairZ=1.15;
+   const yaw=Math.atan2(-8.00-chairX,1.15-chairZ);
+   clubChair(chairX,chairZ,yaw,dx<0?cream:lilac);
  }
  cylinder(.57,.67,.65,0,.38,0,brass,dispute);
  round(1.40,.15,1.10,.43,0,.80,0,ivory,dispute);
  const folio=group(-8,1.15);let caseCover=round(.76,.07,.52,.09,0,.94,0,plum2,folio);caseCover.rotation.y=.12;
  // ③ & ②: one unified aviation-and-supply-chain exhibit; separate, accessible 3D objects.
- // ⑤ HR: an integrated executive cabinet / document console, no extra office desk.
- const hr=group(9.90,-2.65);
- round(2.45,.14,1.18,.24,0,.20,0,brass,hr);
- round(2.36,2.15,.95,.20,0,1.36,-.05,mauve,hr);
- for(let dx of [-.70,0,.70]){
-   round(.54,1.52,.12,.07,dx,1.48,.51,cream,hr);
-   box(.12,.20,.08,dx,1.33,.61,brass,hr);
- }
+ // v404: remove the entire right-side HR cabinet, including all doors, base and handles.
+ // Preserve topic ⑤ in businessTopics; do not add replacement clutter before labels are designed.
  // Central VIP salon: shift the ENTIRE group toward the rear logo wall,
  // including rug, both sofas, chairs, coffee table and floral centerpiece.
  const vip=group(0,-1.42);
@@ -4773,8 +4771,10 @@ function wy401BusinessInterior(root,THREE){
  const moveIntoVip=(g)=>{root.remove(g);vip.add(g);return g};
  const vs1=moveIntoVip(sofa(-2.28,0,Math.PI/2,cream));
  const vs2=moveIntoVip(sofa(2.28,0,-Math.PI/2,sage));
- const vc1=moveIntoVip(clubChair(-.88,2.10,0,cream));
- const vc2=moveIntoVip(clubChair(.88,2.10,0,violet));
+ // v405: BOTH front VIP armchairs must face the coffee table at local (0,0).
+ // Facing -Z is yaw PI; zero yaw had them looking outward toward the entrance.
+ const vc1=moveIntoVip(clubChair(-.88,2.10,Math.PI,cream));
+ const vc2=moveIntoVip(clubChair(.88,2.10,Math.PI,violet));
  ell(1.85,.20,1.30,0,.58,0,ivory,vip);
  cylinder(.55,.66,.46,0,.29,0,wood,vip);
  // A restrained central sculptural arrangement, with no coplanar decorative layers.
@@ -4824,15 +4824,8 @@ function wy401BusinessInterior(root,THREE){
  }
  // A single unobstructed interaction hotspot stays in the same topic slot.
  // Do not attach additional unrequested screens, chairs, desks, or animated effects.
- // ⑦ COMPLIANCE: architectural executive records wall, no computer workstation.
- const compliance=group(3.72,-7.94);
- round(3.05,.23,1.08,.21,0,.22,0,brass,compliance);
- round(2.93,3.22,.90,.18,0,1.96,-.07,wood,compliance);
- for(let i=0;i<3;i++){
-   const x=-.84+i*.84;
-   round(.63,2.56,.14,.06,x,1.94,.42,i===1?lilac:ivory,compliance);
-   box(.09,.29,.09,x,1.76,.53,brass,compliance);
- }
+ // v404: remove the entire tall compliance records cabinet and every door/pedestal.
+ // Topic ⑦ remains in the metadata, with its physical presentation to be redesigned later.
  // The patent alcove remains exactly as approved, unobstructed.
  // ② GLOBAL BUSINESS LANDMARK: a freestanding globe and airplane, not a wall decoration.
  // All pieces are opaque and spaced in depth to avoid z-fighting on iPhone.
@@ -4848,21 +4841,35 @@ function wy401BusinessInterior(root,THREE){
    const patch=mesh(new THREE.SphereGeometry(1.122,12,8,lon,rx,lat+1.57-ry/2,ry),continent,0,2.03,0,travel);
    patch.rotation.z=.18;
  }
- // Wide solid orbital route and miniature aircraft, clearly floating outside the globe.
+ // v404: prominent detailed ivory jet with readable swept wings, tail and contrast stripes.
+ // Plane is deliberately large enough for iPhone's wide-angle view, without blocking the globe.
  const orbit=mesh(new THREE.TorusGeometry(1.47,.065,10,72),flightGold,0,2.06,0,travel);
  orbit.rotation.x=.43;orbit.rotation.z=-.52;
- const jet=new THREE.Group();jet.position.set(1.22,3.00,.72);jet.rotation.set(-.17,-.50,-.23);travel.add(jet);
- const jetWhite=M('#F9F4ED',.16,.70);
- const fuselage=mesh(new THREE.CapsuleGeometry(.115,.85,5,12),jetWhite,0,0,0,jet);fuselage.rotation.z=Math.PI/2;
- const wing=box(.60,.065,.90,0,0,0,jetWhite,jet);wing.rotation.y=.20;
- const tail=box(.25,.055,.34,-.48,.03,0,jetWhite,jet);
- const fin=box(.18,.29,.055,-.49,.17,0,flightGold,jet);
- // Distinct procurement product prototype on a subsidiary offset stand, within same display ensemble.
- const procurement=group(6.25,5.80);
- cylinder(.58,.67,.25,0,.16,0,brass,procurement);
- const proto=mesh(new THREE.CylinderGeometry(.35,.35,.60,12),ivory,0,.66,0,procurement);
- proto.rotation.z=.12;
- mesh(new THREE.TorusGeometry(.24,.045,8,24),plum2,0,.88,0,procurement).rotation.x=Math.PI/2;
+ const jet=new THREE.Group();jet.position.set(1.23,3.17,.92);jet.rotation.set(-.10,-.42,-.16);jet.scale.setScalar(1.85);travel.add(jet);
+ const jetWhite=M('#FCFAF4',.12,.61),jetStripe=M('#725A89',.15,.64),jetTrim=M('#C7A873',.28,.54),jetWindow=M('#53667C',.08,.44);
+ // Local X is the nose direction; elongated fuselage and shaped swept wings.
+ const fuselage=mesh(new THREE.CapsuleGeometry(.115,.96,6,16),jetWhite,0,0,0,jet);fuselage.rotation.z=Math.PI/2;
+ const nose=mesh(new THREE.ConeGeometry(.115,.31,16),jetWhite,.67,0,0,jet);nose.rotation.z=-Math.PI/2;
+ const wingShape=new THREE.Shape();wingShape.moveTo(.21,-.10);wingShape.lineTo(.03,-.66);wingShape.lineTo(-.25,-.72);wingShape.lineTo(-.13,-.07);wingShape.lineTo(-.25,.72);wingShape.lineTo(.03,.66);wingShape.closePath();
+ const wingGeo=new THREE.ExtrudeGeometry(wingShape,{depth:.045,bevelEnabled:true,bevelSize:.012,bevelThickness:.009,bevelSegments:1});wingGeo.rotateX(-Math.PI/2);
+ const wings=mesh(wingGeo,jetWhite,0,.015,0,jet);
+ // Gold wingtip accents and dark navy sweeping fuselage stripe.
+ for(const side of [-1,1]){
+   box(.15,.045,.085,-.18,.037,side*.65,jetTrim,jet);
+   const engine=mesh(new THREE.CylinderGeometry(.075,.088,.28,12),jetTrim,-.04,-.13,side*.33,jet);engine.rotation.z=Math.PI/2;
+   const intake=mesh(new THREE.CylinderGeometry(.055,.055,.012,12),jetWindow,.11,-.13,side*.33,jet);intake.rotation.z=Math.PI/2;
+ }
+ const stripe=box(.88,.026,.027,-.015,.105,.105,jetStripe,jet);
+ const stripe2=box(.88,.026,.027,-.015,.105,-.105,jetStripe,jet);
+ for(let i=0;i<5;i++)for(const side of [-1,1]){
+   const window=mesh(new THREE.SphereGeometry(.023,8,6),jetWindow,-.26+i*.115,.125,side*.096,jet);
+ }
+ // Tailplane and distinct purple vertical fin.
+ box(.32,.045,.46,-.49,.07,0,jetWhite,jet);
+ const fin=box(.23,.31,.045,-.50,.23,0,jetStripe,jet);fin.rotation.z=-.16;
+ box(.12,.035,.26,-.48,.105,0,jetTrim,jet);
+ // The unrelated small cylindrical prototype and its subsidiary pedestal are removed entirely.
+ // The globe and aircraft remain distinct touchable subjects for topics ② and ③.
  // Keep the freestanding landmark distinct from the ⑥ patent installation.
  // Reception reserved exclusively for a future independent interaction, not one of seven legal topics.
  // Bespoke pearl-lavender countertop, smoky-purple architectural front and matte champagne reveals.
@@ -4874,6 +4881,9 @@ function wy401BusinessInterior(root,THREE){
  // Separate front relief at visibly offset depths (not coincident planes).
  for(let side of [-1,1])round(.19,.61,.19,.07,side*2.16,.66,.66,brass,rec);
  round(4.90,.12,1.06,.48,0,.19,0,brass,rec);
+ // v404: receptionist's high-back chair behind the counter, facing the desk (+Z).
+ // Keep enough separation so its seat does not intersect the rear counter face.
+ executiveChair(0,5.00,0,leather);
  // No computer on the public-facing side; future interaction remains unassigned.
  // Four large architectural orchid planters, not tiny petals or unrelated freestanding panels.
  const orchid=(x,z)=>{cylinder(.40,.33,.73,x,.39,z,ivory);for(let s of [-1,1])ell(.50,.74,.36,x+s*.25,1.00,z,sage);for(let k=0;k<3;k++){let t=k*2.2;ell(.47,.26,.28,x+Math.cos(t)*.32,1.62+k*.16,z+Math.sin(t)*.20,cream)}};
@@ -4882,9 +4892,9 @@ function wy401BusinessInterior(root,THREE){
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
- const pts=[[-7.5,-5.95],[8.45,4.45],[6.25,5.80],[-8,1.15],[9.90,-2.65],[8.25,-8.02],[3.72,-7.94]];
+ const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,1.15],[9.90,-2.65],[8.25,-8.02],[3.72,-7.94]];
  root.userData.businessTopics=topics.map((name,i)=>({name,x:pts[i][0],z:pts[i][1]}));
- return {departments:topics,version:'v403',design:'Manhattan private club; seven distinct legal hotspots, reserved reception, unified aviation procurement display'};
+ return {departments:topics,version:'v405',design:'Manhattan private club; seven distinct legal hotspots, reserved reception, unified aviation procurement display'};
 }
 
 // Each satellite island has a lightweight themed 3D interior; castle office remains unchanged.
