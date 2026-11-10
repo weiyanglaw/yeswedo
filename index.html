@@ -4976,7 +4976,7 @@ function wy401BusinessInterior(root,THREE){
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
  const wy415AboutHit=new THREE.Mesh(new THREE.PlaneGeometry(4.0,4.0),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));wy415AboutHit.position.set(0,3.64,-8.38);wy415AboutHit.userData.businessAbout=true;root.add(wy415AboutHit);
- const wy415SignCanvas=document.createElement('canvas');wy415SignCanvas.width=512;wy415SignCanvas.height=96;const wy415Ctx=wy415SignCanvas.getContext('2d');wy415Ctx.fillStyle='#FFF7E9';wy415Ctx.fillRect(0,0,512,96);wy415Ctx.strokeStyle='#B47B72';wy415Ctx.lineWidth=7;wy415Ctx.strokeRect(4,4,504,88);wy415Ctx.fillStyle='#9A3C4B';wy415Ctx.font='bold 49px sans-serif';wy415Ctx.textAlign='center';wy415Ctx.textBaseline='middle';wy415Ctx.fillText('認識德威陽',256,48);const wy415SignTex=new THREE.CanvasTexture(wy415SignCanvas);const wy415Sign=new THREE.Mesh(new THREE.PlaneGeometry(3.6,.68),new THREE.MeshBasicMaterial({map:wy415SignTex,side:THREE.DoubleSide}));wy415Sign.position.set(0,6.2,-8.35);wy415Sign.userData.businessAbout=true;root.add(wy415Sign);
+ const wy415SignCanvas=document.createElement('canvas');wy415SignCanvas.width=512;wy415SignCanvas.height=96;const wy415Ctx=wy415SignCanvas.getContext('2d');wy415Ctx.fillStyle='#263B57';wy415Ctx.fillRect(0,0,512,96);wy415Ctx.strokeStyle='#d9bd86';wy415Ctx.lineWidth=7;wy415Ctx.strokeRect(4,4,504,88);wy415Ctx.fillStyle='#f4d9a6';wy415Ctx.font='bold 49px sans-serif';wy415Ctx.textAlign='center';wy415Ctx.textBaseline='middle';wy415Ctx.fillText('認識德威陽',256,48);const wy415SignTex=new THREE.CanvasTexture(wy415SignCanvas);const wy415Sign=new THREE.Mesh(new THREE.PlaneGeometry(3.6,.68),new THREE.MeshBasicMaterial({map:wy415SignTex,side:THREE.DoubleSide}));wy415Sign.position.set(0,6.2,-8.35);wy415Sign.userData.businessAbout=true;root.add(wy415Sign);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
  const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,5.00],[-11.51,-.90],[8.25,-8.02],[11.52,-2.40]];
 
@@ -5619,11 +5619,4 @@ observer.observe(document.body,{childList:true,subtree:true});sync();
 #wy410BusinessPanel .wy416RecFooter{display:flex;gap:7px;justify-content:space-between;margin-top:10px}
 #wy410BusinessPanel .wy416RecResult{margin:8px 0;padding:9px;border-left:4px solid #c6a25d;background:#f4e9f8}
 @media(max-height:680px){#wy410BusinessPanel{font-size:11px!important;line-height:1.2!important}#wy410BusinessPanel .wy414Service{padding:5px 7px!important}#wy410BusinessPanel .wy414Service strong{font-size:14px!important}}
-</style><style id="wy419SafeCompact">
-#wy410BusinessPanel{top:auto!important;bottom:max(78px,env(safe-area-inset-bottom))!important;height:auto!important;min-height:0!important;max-height:calc(100dvh - 145px)!important;overflow-y:auto!important;overflow-x:hidden!important;width:min(92vw,430px)!important;padding:10px 12px!important}
-#wy410BusinessPanel .wy416Fit{zoom:1!important}
-#wy410BusinessPanel .wy416Dialogue{padding:9px!important;line-height:1.5!important}
-#wy410BusinessPanel .wy416RecFooter{margin-top:7px!important}
-#wy410BusinessPanel .wy414Service{border-left:5px solid #c6a25d!important;background:#ead9f4!important;padding:9px!important}
-#wy410BusinessPanel .wy414Service strong{font-size:16px!important;font-weight:800!important}
 </style></body></html>
