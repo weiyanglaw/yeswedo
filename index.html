@@ -269,7 +269,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createBusinessExperience} from './business-experience.js?v=411';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261107-v360-logo-click';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261107-v358';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {createBusinessExperience} from './business-experience.js?v=413';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=20261107-v360-logo-click';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=20261107-v358';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[0,-40],[38,-12],[24,33],[-24,33],[-38,-12]];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -4748,13 +4748,13 @@ function wy401BusinessInterior(root,THREE){
  flowers(-7.5,-5.95,1.52);
  // v403: Manhattan private-club architectural plan. Seven legal hotspots in five visual compositions.
  // ④ DISPUTE RESOLUTION: secluded legal consultation alcove, no desk or duplicate computers.
- const dispute=group(-8.00,2.60);
+ const dispute=group(-8.00,5.00);
  round(4.45,.10,2.40,.66,0,.055,0,soft,dispute);
  // v405: the two consultation armchairs face IN toward the central table.
  // Chair local front is +Z (backrest is at -Z); derive yaw from chair to table.
  for(const dx of [-1.12,1.12]){
-   const chairX=-8.00+dx,chairZ=2.60;
-   const yaw=Math.atan2(-8.00-chairX,2.60-chairZ);
+   const chairX=-8.00+dx,chairZ=5.00;
+   const yaw=Math.atan2(-8.00-chairX,5.00-chairZ);
    clubChair(chairX,chairZ,yaw,dx<0?cream:lilac);
  }
  // Enlarged asymmetrical six-sided stone table, sculptural twin supports and gold edge.
@@ -4766,7 +4766,7 @@ function wy401BusinessInterior(root,THREE){
  for(const dx of [-.43,.43]){let leg=box(.24,.68,.45,dx,.40,0,plum2,dispute);leg.rotation.y=dx>0?.22:-.22;}
  // v407: replace unreadable horizontal contract with a large upright angled contract folio.
  // The readable face points toward the island entrance (+Z), not the ceiling.
- const contract=group(-8.00,2.60,-.10);
+ const contract=group(-8.00,5.00,-.10);
  const paper=M('#FFF9ED'),folioGold=M('#D6B477',.32,.48),folioBack=M('#544263');
  // Low rear support and an inclined large display, all safely on the consultation table.
  box(1.74,.075,.35,0,.98,-.25,folioGold,contract);
@@ -4974,15 +4974,15 @@ function wy401BusinessInterior(root,THREE){
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
- const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,2.60],[-11.51,-.90],[8.25,-8.02],[11.52,-2.40]];
+ const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,5.00],[-11.51,-.90],[8.25,-8.02],[11.52,-2.40]];
 
  // v410: Six floating plaques and corresponding 3D display-object interaction targets.
  // Existing furniture stays unchanged. Each invisible proxy follows the display object,
  // not the floor; plaques and objects open exactly the same story set.
  const labels=['公司治理','國際商務','商業爭議','勞資管理','智慧財產','企業法遵'];
- const anchors=[[-7.5,-5.95],[8.45,4.45],[-8,2.60],[-10.70,-.80],[7.45,-7.45],[10.60,-2.20]];
+ const anchors=[[-7.5,-5.95],[8.45,4.45],[-8,5.00],[-10.45,-.80],[7.45,-7.45],[10.35,-2.20]];
  const heights=[4.55,4.25,4.45,6.20,6.70,6.25];
- const objects=[[-7.5,1.2,-5.95,5.5,1.6,2.3],[8.45,2.2,4.45,4.2,3.6,3.2],[-8,1.2,2.60,4.2,2.6,2.9],[-11.43,2.4,-.80,1.0,4.3,5.7],[8.25,2.5,-8.02,5.4,5.2,2.2],[11.43,2.3,-2.20,1.0,4.5,5.4]];
+ const objects=[[-7.5,1.2,-5.95,5.5,1.6,2.3],[8.45,2.2,4.45,4.2,3.6,3.2],[-8,1.2,5.00,4.2,2.6,2.9],[-11.43,2.4,-.80,1.0,4.3,5.7],[8.25,2.5,-8.02,5.4,5.2,2.2],[11.43,2.3,-2.20,1.0,4.5,5.4]];
  const plaqueTargets=[],objectTargets=[],plaques=[];
  const invisible=new THREE.MeshBasicMaterial({visible:false,depthWrite:false});
  labels.forEach((label,i)=>{
@@ -4997,6 +4997,9 @@ function wy401BusinessInterior(root,THREE){
    const [x,y,z,w,h,d]=objects[i];const hit=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),invisible);
    hit.position.set(x,y,z);hit.userData.businessZone=i;root.add(hit);objectTargets.push(hit);
  });
+ // v413: VIP sofa interactive surface and floating plaque, separate from six wall displays.
+ const vipHit=new THREE.Mesh(new THREE.BoxGeometry(5.3,1.6,4.2),new THREE.MeshBasicMaterial({visible:false}));vipHit.position.set(0,1.0,-1.42);vipHit.userData.businessZone=6;root.add(vipHit);objectTargets.push(vipHit);
+ const vipLabelCanvas=document.createElement('canvas');vipLabelCanvas.width=512;vipLabelCanvas.height=112;const vctx=vipLabelCanvas.getContext('2d');vctx.fillStyle='#263B57';vctx.fillRect(0,0,512,112);vctx.strokeStyle='#d7b77b';vctx.lineWidth=8;vctx.strokeRect(4,4,504,104);vctx.fillStyle='#e9ca90';vctx.font='bold 43px sans-serif';vctx.textAlign='center';vctx.fillText('VIP 商務偵探',256,72);const vipTexture=new THREE.CanvasTexture(vipLabelCanvas);vipTexture.colorSpace=THREE.SRGBColorSpace;const vipPlaque=new THREE.Mesh(new THREE.PlaneGeometry(3.8,.83),new THREE.MeshBasicMaterial({map:vipTexture,side:THREE.DoubleSide,depthWrite:false}));vipPlaque.position.set(0,3.4,-1.42);vipPlaque.userData.businessZone=6;root.add(vipPlaque);plaqueTargets.push(vipPlaque);
  root.userData.businessInteraction={plaques,plaqueTargets,objectTargets,anchors,heights,occlusionState:Array(6).fill(null)};
  root.userData.businessTopics=topics.map((name,i)=>({name,x:pts[i][0],z:pts[i][1]}));
  return {departments:topics,version:'v406',design:'Manhattan private club; seven distinct legal hotspots, reserved reception, unified aviation procurement display'};
@@ -5064,20 +5067,24 @@ wyV151Controls.append(medGuideAgain,familyGuideAgain);
 
 // v175: Guides for the remaining themed islands, preserving existing island mechanics.
 const wy175GuideMap={1:['訴訟法律島','探索訴訟程序、證據與法律爭點，透過島上的互動空間了解案件處理流程。'],4:['企業商務島','探索企業經營、契約、跨國商務及營業秘密等法律主題。'],5:['法律探索島','探索本島的法律知識與互動主題，依照場景提示進行體驗。']};
+// v413: official-logo branded guide headers, same composition across islands.
+const wy413GuideBrand = `<div style="text-align:center;font-size:10px;letter-spacing:1.5px;color:#b18c4e">WEIYANG · PRIVATE EXHIBITION</div><div style="display:flex;align-items:center;justify-content:center;gap:11px;margin:10px 0;border-top:1px solid #d6bb83;border-bottom:1px solid #d6bb83;padding:9px 0"><img src="office-logo-transparent.png" alt="德威陽官方Logo" style="width:65px;height:65px;object-fit:contain;background:white;border-radius:6px;flex-shrink:0"><div style="text-align:left;min-width:0"><b style="display:block;font-size:14px;color:#263B57">德威陽國際法律事務所</b><span style="font-size:9px;color:#a17f4d;overflow-wrap:anywhere">WEI &amp; YANG INTERNATIONAL LAW FIRM</span></div></div>`;
+function wy413ApplyBrand(guide){if(!guide||guide.dataset.wy413Brand)return;guide.dataset.wy413Brand='1';guide.insertAdjacentHTML('afterbegin',wy413GuideBrand);}
 const wy175ExtraGuides={};
 for(const [k,data] of Object.entries(wy175GuideMap)){
  const i=Number(k),g=document.createElement('aside');g.className='wy175Guide';g.dataset.island=k;g.style.display='none';
- g.innerHTML='<h3>'+data[0]+'｜探索指南</h3><p>'+data[1]+'</p><button type="button">開始探索</button>';
- document.body.append(g);g.querySelector('button').onclick=()=>{g.style.display='none'};
- const b=document.createElement('button');b.type='button';b.className='wy175GuideAgain';b.textContent=data[0]+'指南';b.style.display='none';document.body.append(b);b.onclick=()=>{g.style.display='block'};
- wyV151Controls.append(b);
+ g.innerHTML=i===4?`<div style="text-align:center;color:#b18c4e;font-size:11px;letter-spacing:2px">WEI & YANG INTERNATIONAL LAW FIRM</div><h3 style="margin:8px 0 10px;text-align:center;color:#263B57;font-size:20px">企業商務島｜探索指南</h3><p style="text-align:center;margin:0 0 12px;color:#6c6171">走進七個互動區，親自找出企業經營中的法律風險。</p><div style="display:grid;gap:6px">${[['公司治理展示區','董事會、股東與公司決策'],['國際商務展示區','跨國交易與OEM／ODM契約'],['合約展示桌','履約、付款與爭議處理'],['勞資管理展示區','聘僱、職場事件與勞動權益'],['智慧財產展示區','商標、著作權與營業秘密'],['企業法遵展示區','個資、內控與危機應變'],['中央 VIP 沙發','挑戰 VIP 商務偵探，找出合約風險']].map((a,n)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 10px;border:1px solid #e8ddc8;border-radius:9px;background:#fff"><b style="color:#a88a56;font-size:13px">${String(n+1).padStart(2,'0')}</b><span style="font-size:13px"><b>點擊${a[0]}：</b><span style="color:#786f76">｜${a[1]}</span></span></div>`).join('')}</div><p style="font-size:11px;text-align:center;margin:12px 0 8px;color:#8b7960">點擊場景物件或浮動標示即可開始，右上角可再次查看指南。</p><button type="button" style="display:block;width:100%;padding:11px;border:0;border-radius:10px;background:#263B57;color:#f0d5a2;font-weight:700">開始探索</button>`:'<h3>'+data[0]+'｜探索指南</h3><p>'+data[1]+'</p><button type="button">開始探索</button>';
+ if(i===4)g.style.cssText='display:none;position:fixed;z-index:105;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow-y:auto;box-sizing:border-box;background:#fffcf6;border:2px solid #d5b67e;border-radius:17px;padding:17px;box-shadow:0 12px 40px #0005;color:#263B57;font:13px/1.5 system-ui';if(i===4)wy413ApplyBrand(g);document.body.append(g);g.querySelector('button').onclick=()=>{g.style.display='none'};
+ const b=document.createElement('button');b.type='button';b.className='wy175GuideAgain';b.textContent=i===4?'商務指南':data[0]+'指南';b.style.display='none';document.body.append(b);b.onclick=()=>{g.style.display='block'};
+ wyV151Controls.append(b);if(i===4)b.style.cssText+=';background:#263B57;color:#e9ca90;border:1px solid #d7b77b;border-radius:9px;padding:8px 10px;font-weight:700';
  wy175ExtraGuides[i]={guide:g,button:b};
 }
 
+wy413ApplyBrand(wyMainGuide);wy413ApplyBrand(medGuide);wy413ApplyBrand(familyGuide);
 function enterIslandRoom(i){
  for(const [key,item] of Object.entries(wy175ExtraGuides)){item.button.style.display=Number(key)===i?'block':'none';item.guide.style.display='none';}
  if(i===0){enterOffice();return;}
- activeIslandRoom=i;insideOffice=true;familyGuideAgain.style.display=i===3?'block':'none';if(i===3&&!familyGuideSeen){familyGuide.style.display='block';familyGuideSeen=true;localStorage.setItem('wy-guide-family-v165','yes');}else familyGuide.style.display='none';medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;localStorage.setItem('wy-guide-medical-v165','yes');}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;businessExperience.hide();medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
+ activeIslandRoom=i;insideOffice=true;if(i===4){try{if(localStorage.getItem('wy-guide-business-v413')!=='yes'){wy175ExtraGuides[4].guide.style.display='block';localStorage.setItem('wy-guide-business-v413','yes');}}catch(e){wy175ExtraGuides[4].guide.style.display='block';}}familyGuideAgain.style.display=i===3?'block':'none';if(i===3&&!familyGuideSeen){familyGuide.style.display='block';familyGuideSeen=true;localStorage.setItem('wy-guide-family-v165','yes');}else familyGuide.style.display='none';medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;localStorage.setItem('wy-guide-medical-v165','yes');}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;businessExperience.hide();medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
  document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent=names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=(i===2||i===3)?'none':'';document.getElementById('wyContactPanel').hidden=true;
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
  for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
@@ -5270,7 +5277,7 @@ previewRenderer.render(previewScene,previewCamera);document.getElementById('crea
    const cast=new THREE.Raycaster();const corner=new THREE.Vector3();
    const right=new THREE.Vector3(1,0,0).applyQuaternion(cam.quaternion);
    const up=new THREE.Vector3(0,1,0).applyQuaternion(cam.quaternion);
-   const offsets=[[0,0],[-1.47,-.30],[1.47,-.30],[-1.47,.30],[1.47,.30]];
+   const offsets=[[0,0]]; // v412: only the plaque center determines wall occlusion
    b.plaques.forEach((sign,i)=>{
      const a=b.anchors[i];sign.position.set(a[0],b.heights[i],a[1]);
      sign.quaternion.copy(cam.quaternion);
