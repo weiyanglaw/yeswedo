@@ -4708,7 +4708,7 @@ function leaveOffice(){if(wy323Inside)wy323Leave();
 }
 document.getElementById('officeExit').onclick=leaveOffice;
 
-// v406: six accessible legal exhibits; preserve rear boardroom sightline and central circulation.
+// v407: rebuilt HR, compliance and entrance-readable contract; preserve rear boardroom sightline and central circulation.
 function wy401BusinessInterior(root,THREE){
  const M=(hex,metalness=0,roughness=.84)=>new THREE.MeshStandardMaterial({color:hex,metalness,roughness,side:THREE.FrontSide});
  const stone=M('#DCD1DB'),wall=M('#E9E1EB'),pearl=M('#F0E8DE'),cream=M('#F5EDE3'),lilac=M('#BBA9C9'),mauve=M('#A797B5'),plum=M('#493657'),gold=M('#C7B18D',.18,.73),oak=M('#C7B3A3'),sage=M('#A3B5A5'),sageSoft=M('#C0CDBF'),blue=M('#AABCC9'),ink=M('#505466'),warm=M('#D9C8BC');
@@ -4764,46 +4764,82 @@ function wy401BusinessInterior(root,THREE){
  mesh(tableGeo,brass,0,.78,0,dispute);
  const topGeo=tableGeo.clone();const top=mesh(topGeo,ivory,0,.845,0,dispute);top.scale.set(.95,.65,.95);
  for(const dx of [-.43,.43]){let leg=box(.24,.68,.45,dx,.40,0,plum2,dispute);leg.rotation.y=dx>0?.22:-.22;}
- // Oversized readable business contract as the subject of this consultation table.
- const contract=group(-8.00,2.60);contract.rotation.y=-.16;
- round(1.18,.065,.83,.06,0,1.01,0,cream,contract);
- const inkLine=M('#665875');
- for(let k=0;k<4;k++)box(.76-k*.09,.009,.018,-.08,1.058,-.20+k*.13,inkLine,contract);
- box(.29,.008,.018,-.28,1.062,.34,brass,contract);box(.29,.008,.018,.28,1.062,.34,brass,contract);
- // Face-up bilingual heading is a texture, not a new floating sign.
- const labelCanvas=document.createElement('canvas');labelCanvas.width=512;labelCanvas.height=160;
- const ctx=labelCanvas.getContext('2d');ctx.fillStyle='#FCF8F0';ctx.fillRect(0,0,512,160);ctx.fillStyle='#4C365D';ctx.textAlign='center';ctx.font='bold 58px sans-serif';ctx.fillText('商務合約',256,70);ctx.font='bold 31px sans-serif';ctx.fillText('BUSINESS CONTRACT',256,120);
- const labelTex=new THREE.CanvasTexture(labelCanvas);labelTex.colorSpace=THREE.SRGBColorSpace;
- const labelMat=new THREE.MeshBasicMaterial({map:labelTex,side:THREE.DoubleSide});
- const labelMesh=mesh(new THREE.PlaneGeometry(1.05,.35),labelMat,0,1.067,-.24,contract);labelMesh.rotation.x=-Math.PI/2;
- // ⑤ HR: shallow integrated relief on left wall, people management and payroll, no text.
- const hr=group(-11.51,-.90,Math.PI/2);
- box(4.25,3.25,.13,0,2.47,0,plum2,hr);
- box(4.38,.10,.22,0,4.16,.02,brass,hr);box(4.38,.10,.22,0,.78,.02,brass,hr);
- for(const side of [-1,1])box(.11,3.37,.22,side*2.16,2.47,.02,brass,hr);
- const hrFace=M('#E9D8EF'),hrBody=M('#AA87C1'),coin=M('#E5BE79',.35,.48);
- const person=(x,y,scale)=>{const g=new THREE.Group();g.position.set(x,y,.20);g.scale.setScalar(scale);hr.add(g);ell(.55,.55,.20,0,.32,0,hrFace,g);ell(.96,.70,.20,0,-.30,0,hrBody,g);};
- person(0,2.63,1.42);for(const [x,y] of [[-1.43,3.05],[1.43,3.05],[-1.43,1.63],[1.43,1.63]])person(x,y,.68);
- for(const [x,y] of [[-1.43,3.05],[1.43,3.05],[-1.43,1.63],[1.43,1.63]]){let line=mesh(new THREE.CylinderGeometry(.028,.028,Math.hypot(x,y-2.63),8),brass,x/2,(y+2.63)/2,.13,hr);line.rotation.z=-Math.atan2(x,y-2.63);}
- for(const [x,y,r] of [[1.37,1.33,.38],[1.70,1.05,.25]]){cylinder(r,r,.09,x,y,.40,coin,hr,32).rotation.x=Math.PI/2;}
- // ⑦ Compliance: recessed-looking right-wall framed relief, company counsel and data protection.
- const comp=group(11.52,-2.40,-Math.PI/2);
- box(3.65,3.80,.12,0,2.62,0,plum2,comp);
- for(const x of [-1.82,1.82])box(.12,3.82,.24,x,2.62,.04,brass,comp);
- for(const y of [.72,4.52])box(3.76,.12,.24,0,y,.04,brass,comp);
- const shieldShape=new THREE.Shape();shieldShape.moveTo(0,1.02);shieldShape.lineTo(.95,.64);shieldShape.lineTo(.85,-.36);shieldShape.quadraticCurveTo(.65,-.96,0,-1.22);shieldShape.quadraticCurveTo(-.65,-.96,-.85,-.36);shieldShape.lineTo(-.95,.64);shieldShape.closePath();
- const shieldGeo=new THREE.ExtrudeGeometry(shieldShape,{depth:.13,bevelEnabled:true,bevelThickness:.04,bevelSize:.04,bevelSegments:2});
- mesh(shieldGeo,brass,0,2.63,.23,comp);
- const innerShield=mesh(shieldGeo,hrBody,0,2.63,.39,comp);innerShield.scale.set(.79,.79,.72);
- // Prominent legal review document, secure lock and cyber alert as distinct sculpted objects.
- box(.67,1.05,.09,0,2.70,.60,cream,comp);
- for(let i=0;i<4;i++)box(.44,.045,.06,0,2.99-i*.18,.67,ink,comp);
- const lock=group(.88,1.55);comp.remove(lock);comp.add(lock);lock.position.z=.32;
- const lockArch=mesh(new THREE.TorusGeometry(.24,.065,8,24,Math.PI),brass,0,.28,.09,lock);lockArch.rotation.z=0;
- box(.64,.55,.15,0,0,.12,coin,lock);
- const alert=group(-1.03,3.58);comp.remove(alert);comp.add(alert);alert.position.z=.28;
- const warning=mesh(new THREE.ConeGeometry(.46,.85,3),coin,0,0,.10,alert);warning.rotation.z=Math.PI;
- box(.055,.32,.09,0,.05,.20,plum2,alert);ell(.08,.08,.07,0,-.17,.21,plum2,alert);
+ // v407: replace unreadable horizontal contract with a large upright angled contract folio.
+ // The readable face points toward the island entrance (+Z), not the ceiling.
+ const contract=group(-8.00,2.60,-.10);
+ const paper=M('#FFF9ED'),folioGold=M('#D6B477',.32,.48),folioBack=M('#544263');
+ // Low rear support and an inclined large display, all safely on the consultation table.
+ box(1.74,.075,.35,0,.98,-.25,folioGold,contract);
+ const folio=new THREE.Group();folio.position.set(0,1.70,-.22);folio.rotation.x=-.14;contract.add(folio);
+ box(1.69,1.36,.075,0,0,-.055,folioBack,folio);
+ box(1.57,1.24,.075,0,0,.008,paper,folio);
+ // One high-resolution canvas gives predictable Chinese glyphs and visible large text.
+ const labelCanvas=document.createElement('canvas');labelCanvas.width=1024;labelCanvas.height=1024;
+ const ctx=labelCanvas.getContext('2d');ctx.fillStyle='#FFF9ED';ctx.fillRect(0,0,1024,1024);
+ ctx.strokeStyle='#B9965D';ctx.lineWidth=24;ctx.strokeRect(30,30,964,964);
+ ctx.fillStyle='#3D2C50';ctx.textAlign='center';ctx.font='bold 132px sans-serif';ctx.fillText('商務合約',512,260);
+ ctx.font='bold 68px sans-serif';ctx.fillText('BUSINESS',512,372);ctx.fillText('CONTRACT',512,460);
+ ctx.strokeStyle='#B9965D';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(160,525);ctx.lineTo(864,525);ctx.stroke();
+ ctx.fillStyle='#786C7E';for(let i=0;i<4;i++){ctx.fillRect(170,600+i*69,684-i*65,15)}
+ ctx.fillStyle='#B9965D';ctx.fillRect(170,908,240,11);ctx.fillRect(615,908,240,11);
+ const labelTex=new THREE.CanvasTexture(labelCanvas);labelTex.colorSpace=THREE.SRGBColorSpace;labelTex.anisotropy=8;
+ const labelMat=new THREE.MeshBasicMaterial({map:labelTex,side:THREE.DoubleSide,depthWrite:true});
+ mesh(new THREE.PlaneGeometry(1.48,1.16),labelMat,0,0,.056,folio);
+ // v407: completely replace both previous reliefs, including all old geometry.
+ const hr=group(-11.43,-.80,Math.PI/2);
+ const hrBg=M('#43314F'),hrGold=M('#D6B476',.32,.46),hrLilac=M('#BE9BD3'),hrCream=M('#E9D3C4'),hrSuit=M('#655080'),hrCoin=M('#F0C66F',.40,.39);
+ // Integrated shallow sculptural gallery: no freestanding wall, no obstruction to boardroom.
+ box(5.60,4.10,.16,0,2.48,0,hrBg,hr);
+ for(let x of [-2.78,2.78])box(.10,4.15,.24,x,2.48,.04,hrGold,hr);
+ for(let y of [.42,4.54])box(5.62,.10,.24,0,y,.04,hrGold,hr);
+ // A recognisable full torso executive figure rather than circles joined by lines.
+ const person3d=(x,y,s,bodyMat)=>{
+  const g=new THREE.Group();g.position.set(x,y,.22);g.scale.setScalar(s);hr.add(g);
+  ell(.66,.78,.38,0,.82,.10,hrCream,g); // face
+  ell(.72,.26,.40,0,1.20,.13,hrSuit,g); // hair
+  const torso=mesh(new THREE.CylinderGeometry(.53,.76,1.27,12),bodyMat,0,-.31,.13,g);
+  torso.rotation.z=0;
+  for(const side of [-1,1]){
+    let arm=ell(.35,1.15,.42,side*.63,-.32,.16,bodyMat,g);arm.rotation.z=side*.24;
+  }
+  // White shirt and contrasting golden necktie make business attire obvious on phone.
+  const shirt=mesh(new THREE.ConeGeometry(.28,.72,3),paper,0,.04,.48,g);shirt.rotation.z=Math.PI;
+  const tie=box(.11,.53,.055,0,-.24,.53,hrGold,g);
+  return g;
+ };
+ person3d(-.85,2.60,1.35,hrSuit);
+ person3d(1.02,2.76,.84,hrLilac);
+ // Separate high-relief gold salary coin, with real thickness and forward-facing currency.
+ const salary=group(0,0);hr.remove(salary);hr.add(salary);salary.position.set(1.65,1.47,.40);
+ const salaryDisk=mesh(new THREE.CylinderGeometry(.72,.72,.22,48),hrCoin,0,0,0,salary);salaryDisk.rotation.x=Math.PI/2;
+ const dollarCanvas=document.createElement('canvas');dollarCanvas.width=256;dollarCanvas.height=256;
+ const dc=dollarCanvas.getContext('2d');dc.fillStyle='#F2CD83';dc.fillRect(0,0,256,256);dc.fillStyle='#64462C';dc.textAlign='center';dc.font='bold 170px sans-serif';dc.fillText('$',128,187);
+ const dollarTex=new THREE.CanvasTexture(dollarCanvas);
+ mesh(new THREE.PlaneGeometry(1.14,1.14),new THREE.MeshBasicMaterial({map:dollarTex,side:THREE.DoubleSide}),0,0,.145,salary);
+ // ⑦: fully rebuilt large laptop, cyber warning and oversized confidential lock.
+ const comp=group(11.43,-2.20,-Math.PI/2);
+ const compBg=M('#35283F'),compGold=M('#D7B477',.33,.48),compLav=M('#C4ACD7'),screenDark=M('#1C3044'),warningGold=M('#F3C76D'),red=M('#B74D60');
+ box(5.35,4.10,.16,0,2.48,0,compBg,comp);
+ for(const x of [-2.64,2.64])box(.11,4.12,.23,x,2.48,.04,compGold,comp);
+ for(const y of [.42,4.54])box(5.40,.11,.23,0,y,.04,compGold,comp);
+ // Raised monitor/laptop display. All layers separated to avoid z-fighting flicker.
+ box(3.44,2.42,.19,-.42,2.79,.32,compGold,comp);
+ box(3.18,2.16,.10,-.42,2.79,.48,screenDark,comp);
+ box(3.86,.16,.72,-.42,1.48,.65,compLav,comp);
+ // Large clear triangular cybersecurity warning.
+ const tri=new THREE.Shape();tri.moveTo(0,.78);tri.lineTo(-.85,-.66);tri.lineTo(.85,-.66);tri.closePath();
+ const triGeo=new THREE.ExtrudeGeometry(tri,{depth:.13,bevelEnabled:true,bevelSize:.035,bevelThickness:.035,bevelSegments:2});
+ mesh(triGeo,warningGold,-.42,2.92,.57,comp);
+ box(.13,.71,.07,-.42,2.97,.77,screenDark,comp);
+ ell(.17,.17,.07,-.42,2.43,.77,screenDark,comp);
+ // Oversized 3D padlock next to the screen: independent solids, unmistakable silhouette.
+ const lk=new THREE.Group();lk.position.set(1.80,2.17,.62);comp.add(lk);
+ const arch=mesh(new THREE.TorusGeometry(.44,.115,12,36,Math.PI),compGold,0,.47,.07,lk);arch.rotation.z=0;
+ box(1.10,1.00,.34,0,-.16,.13,compGold,lk);
+ ell(.16,.16,.05,0,-.08,.34,screenDark,lk);box(.10,.30,.06,0,-.29,.35,screenDark,lk);
+ // Confidential file icon at lower edge: physical folded paper and embossed seal.
+ box(.78,.93,.14,-1.99,1.27,.37,paper,comp);
+ for(let i=0;i<3;i++)box(.48,.045,.05,-1.99,1.44-i*.16,.46,ink,comp);
  // All relief elements remain on the side walls, away from the rear meeting area and central path.
  // ③ & ②: one unified aviation-and-supply-chain exhibit; separate, accessible 3D objects.
  // v404: remove the entire right-side HR cabinet, including all doors, base and handles.
