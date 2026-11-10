@@ -776,7 +776,7 @@ export function createMedicalExperience(){
  };
  const el=document.createElement('section');el.id='wyMedicalExperience';
  el.style.cssText='display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:80;width:min(92vw,440px);background:#FFF9F0;color:#28524D;border:2px solid #C5A875;border-radius:18px;padding:14px;box-shadow:0 14px 36px #14283b66;font:14px/1.6 system-ui,sans-serif;max-height:65dvh;overflow-y:auto';
- el.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
+ el.innerHTML='<div class="wy415Brand"><img src="office-logo-transparent.png" alt="德威陽國際法律事務所官方 Logo"><div><strong>德威陽國際法律事務所</strong><small>WEI &amp; YANG INTERNATIONAL LAW FIRM</small></div></div><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
  document.body.append(el);
  const title=el.querySelector('#wyMedTitle'),body=el.querySelector('#wyMedText'),choices=el.querySelector('#wyMedChoices');
  el.querySelector('#wyMedClose').onclick=()=>el.style.display='none';

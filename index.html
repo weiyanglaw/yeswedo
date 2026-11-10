@@ -4973,6 +4973,8 @@ function wy401BusinessInterior(root,THREE){
  // Official original logo texture: no generated logo, no redrawing.
  const logo=new THREE.TextureLoader().load('office-logo-transparent.png');logo.colorSpace=THREE.SRGBColorSpace;
  mesh(new THREE.PlaneGeometry(3.5,3.5),new THREE.MeshBasicMaterial({map:logo,transparent:true,depthWrite:false,side:THREE.DoubleSide}),0,3.64,-8.47);
+ const wy415AboutHit=new THREE.Mesh(new THREE.PlaneGeometry(4.0,4.0),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));wy415AboutHit.position.set(0,3.64,-8.38);wy415AboutHit.userData.businessAbout=true;root.add(wy415AboutHit);
+ const wy415SignCanvas=document.createElement('canvas');wy415SignCanvas.width=512;wy415SignCanvas.height=96;const wy415Ctx=wy415SignCanvas.getContext('2d');wy415Ctx.fillStyle='#263B57';wy415Ctx.fillRect(0,0,512,96);wy415Ctx.strokeStyle='#d9bd86';wy415Ctx.lineWidth=7;wy415Ctx.strokeRect(4,4,504,88);wy415Ctx.fillStyle='#f4d9a6';wy415Ctx.font='bold 49px sans-serif';wy415Ctx.textAlign='center';wy415Ctx.textBaseline='middle';wy415Ctx.fillText('認識德威陽',256,48);const wy415SignTex=new THREE.CanvasTexture(wy415SignCanvas);const wy415Sign=new THREE.Mesh(new THREE.PlaneGeometry(3.6,.68),new THREE.MeshBasicMaterial({map:wy415SignTex,side:THREE.DoubleSide}));wy415Sign.position.set(0,6.2,-8.35);wy415Sign.userData.businessAbout=true;root.add(wy415Sign);
  const topics=['公司治理與股權','國際商務與貿易','OEM／ODM 與採購','債權與商業爭議','人資與勞資管理','智慧財產與科技','法遵與企業危機'];
  const pts=[[-7.5,-5.95],[8.45,4.45],[9.35,4.45],[-8,5.00],[-11.51,-.90],[8.25,-8.02],[11.52,-2.40]];
 
@@ -4983,7 +4985,7 @@ function wy401BusinessInterior(root,THREE){
  const anchors=[[-7.5,-5.95],[8.45,4.45],[-8,5.00],[-10.45,-.80],[7.45,-7.45],[10.35,-2.20]];
  const heights=[4.55,4.25,4.45,6.20,6.70,6.25];
  const objects=[[-7.5,1.2,-5.95,5.5,1.6,2.3],[8.45,2.2,4.45,4.2,3.6,3.2],[-8,1.2,5.00,4.2,2.6,2.9],[-11.43,2.4,-.80,1.0,4.3,5.7],[8.25,2.5,-8.02,5.4,5.2,2.2],[11.43,2.3,-2.20,1.0,4.5,5.4]];
- const plaqueTargets=[],objectTargets=[],plaques=[];
+ const plaqueTargets=[],objectTargets=[wy415AboutHit,wy415Sign],plaques=[];
  const invisible=new THREE.MeshBasicMaterial({visible:false,depthWrite:false});
  labels.forEach((label,i)=>{
    const cv=document.createElement('canvas');cv.width=768;cv.height=152;const c=cv.getContext('2d');
@@ -5233,7 +5235,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   if(model){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,r.camera);
     const hits=ray.intersectObjects([...model.plaqueTargets,...model.objectTargets],false);
     const hit=hits.find(h=>{if(!h.object.visible)return false;const obstacles=ray.intersectObjects(r.scene.children,true).filter(x=>x.distance<h.distance-.06&&x.object.material?.visible!==false&&x.object.geometry?.type==='BoxGeometry'&&x.object.geometry.parameters?.height>=5&&x.object.geometry.parameters?.depth>=.20);return !obstacles.length;});
-    if(hit){businessExperience.open(hit.object.userData.businessZone);return;}
+    if(hit){if(hit.object.userData.businessAbout){openWyInfo('company');return;}businessExperience.open(hit.object.userData.businessZone);return;}
   }return;
  }
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);if(hit.length){const action=hit[0].object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
@@ -5579,4 +5581,23 @@ let pending=false;const observer=new MutationObserver(()=>{if(pending)return;pen
 observer.observe(document.body,{childList:true,subtree:true});sync();
 })();
 </script>
-</body></html>
+<style id="wy415UnifiedBrandAndCompact">
+#wyMedicalExperience .wy415Brand,#wyFamilyExperience .wy415Brand{display:flex;align-items:center;gap:10px;padding:0 0 9px;margin-bottom:10px;border-bottom:1px solid #d1b17e}
+.wy415Brand img{width:44px;height:44px;flex:none;object-fit:contain;background:#fff;border-radius:7px;padding:2px}
+.wy415Brand strong{display:block;font-size:clamp(13px,3.5vw,17px);line-height:1.3}
+.wy415Brand small{display:block;font-size:clamp(9px,2.2vw,11px);line-height:1.4;opacity:.83}
+#wy410BusinessPanel{padding:10px 12px!important;font-size:clamp(12px,3.25vw,14px)!important;line-height:1.42!important;overscroll-behavior:contain}
+#wy410BusinessPanel .wy414Brand{margin-bottom:5px!important;padding-bottom:5px!important;gap:7px!important}
+#wy410BusinessPanel .wy414Brand img{width:36px!important;height:36px!important}
+#wy410BusinessPanel .wy414Brand b{font-size:13px!important;line-height:1.2!important}
+#wy410BusinessPanel .wy414Brand small{font-size:9px!important}
+#wy410BusinessPanel h3{font-size:16px!important;margin:4px 0!important;line-height:1.25!important}
+#wy410BusinessPanel p{margin:4px 0!important;line-height:1.38!important}
+#wy410BusinessPanel button[data-act]{padding:6px 8px!important;font-size:13px!important;line-height:1.25!important}
+#wy410BusinessPanel .wy414Analysis{margin-top:5px!important;padding:6px 8px!important;line-height:1.35!important}
+#wy410BusinessPanel .wy414Service{margin-top:7px!important;padding:9px 10px!important;background:#e5d0f3!important;border:1px solid #b994d0!important;border-left:5px solid #744096!important}
+#wy410BusinessPanel .wy414Service strong{font-size:16px!important;margin-bottom:3px!important;color:#3b155c!important}
+#wy410BusinessPanel .wy414Service p{font-size:13px!important;line-height:1.4!important}
+@media(max-height:760px){#wy410BusinessPanel{max-height:calc(100dvh - 155px)!important;bottom:62px!important}}
+</style>
+<script id="wy415NoDecorativeIcons">(()=>{const ids=['wyMedicalExperience','wyFamilyExperience'];const clean=()=>{for(const id of ids){const el=document.getElementById(id);if(!el)continue;const title=el.querySelector(id==='wyMedicalExperience'?'#wyMedTitle':'#wyFamilyTitle');if(title&&/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(title.textContent||''))title.textContent=title.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');const buttons=el.querySelectorAll('button');for(const b of buttons){if(b.id==='wyMedClose'||b.id==='wyFamilyClose')continue;const t=b.textContent||'';if(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u.test(t))b.textContent=t.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u,'');}}};let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;clean()})}).observe(document.body,{childList:true,subtree:true,characterData:true});clean()})();</script></body></html>

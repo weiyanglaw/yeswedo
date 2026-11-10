@@ -4,7 +4,7 @@ const DATA = [{"name":"公司治理","stories":[{"title":"董事會桌上的一�
 export function createBusinessExperience(){
  let zone=0,number=0,choice=-1; let vipChoice=-1;
  const panel=document.createElement('aside');panel.id='wy410BusinessPanel';
- panel.style.cssText='display:none;position:fixed;z-index:110;left:50%;bottom:max(78px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(90vw,345px);max-height:min(63dvh,480px);overflow-y:auto;box-sizing:border-box;background:#fffcf6;color:#263b57;border:1.5px solid #c9a76b;border-radius:15px;padding:11px 12px;box-shadow:0 9px 27px #15223966;font:13px/1.5 system-ui,sans-serif';
+ panel.style.cssText='display:none;position:fixed;z-index:110;left:50%;bottom:max(74px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(94vw,430px);max-height:calc(100dvh - 205px);overflow-y:auto;box-sizing:border-box;background:#fffcf6;color:#263b57;border:1.5px solid #c9a76b;border-radius:15px;padding:11px 12px;box-shadow:0 9px 27px #15223966;font:13px/1.5 system-ui,sans-serif';
  document.body.append(panel);
  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const buttonStyle='border:1px solid #d8c8ab;border-radius:8px;background:#f5efe5;color:#263b57;padding:8px 9px;font:inherit;text-align:left;cursor:pointer';
