@@ -104,8 +104,8 @@ export function createLitigationCourthouse(parent,T){
    rim.rotation.x=Math.PI/2;rim.position.set(side*9.85,11.5,5.2);root.add(rim);
  }
  // Wide, entirely flat courtyard: flush level, no slope, no staircase.
- cyl(15.7,15.7,.12,64,0,.065,10.5,ivory);
- cyl(12.7,12.7,.018,64,0,.135,10.5,sand);
+ cyl(10.6,10.6,.12,64,0,.065,4.5,ivory);
+ cyl(9.6,9.6,.018,64,0,.135,4.5,sand);
  // Oversized court entrance framing and shallow relief decoration.
  for(const side of [-1,1]){
   box(.9,3.1,.75,side*8.65,10.0,2.25,ivory);
@@ -116,14 +116,20 @@ export function createLitigationCourthouse(parent,T){
  // Preserve the original 17-unit island radius. Fit the entire courthouse footprint
  // (including the forward ceremonial courtyard) within its unchanged perimeter.
  root.updateMatrixWorld(true);
- const footprint=new T.Box3().setFromObject(root);
- const footprintCorners=[
-  [footprint.min.x,footprint.min.z],[footprint.min.x,footprint.max.z],
-  [footprint.max.x,footprint.min.z],[footprint.max.x,footprint.max.z]
- ];
- const maximumRadius=Math.max(...footprintCorners.map(([x,z])=>Math.hypot(x,z)));
- const safeRadius=16.25; // margin inside the original radius-17 island
- root.scale.setScalar(Math.min(.90,safeRadius/maximumRadius));
+ // Fit real mesh footprints, not the diagonal of a combined bounding rectangle.
+ // The original island radius stays 17; the court is resized separately above.
+ root.updateMatrixWorld(true);
+ let maximumRadius=0;
+ const inv=new T.Matrix4().copy(root.matrixWorld).invert();
+ root.traverse(o=>{if(!o.isMesh||!o.geometry)return;
+  o.geometry.computeBoundingBox();const bb=o.geometry.boundingBox;if(!bb)return;
+  const toLocal=new T.Matrix4().multiplyMatrices(inv,o.matrixWorld);
+  for(const x of [bb.min.x,bb.max.x])for(const y of [bb.min.y,bb.max.y])for(const z of [bb.min.z,bb.max.z]){
+   const v=new T.Vector3(x,y,z).applyMatrix4(toLocal);maximumRadius=Math.max(maximumRadius,Math.hypot(v.x,v.z));
+  }
+ });
+ const safeRadius=16.5;
+ root.scale.setScalar(Math.min(1,safeRadius/Math.max(maximumRadius,.001)));
  // Orange ceremonial flag above central roof, with the unchanged original WEIYANG artwork.
  // Flag is in parent island coordinates, not scaled with the courthouse.
  const banner=new T.Group();banner.name='WEIYANG_LITIGATION_FLAG';parent.add(banner);
