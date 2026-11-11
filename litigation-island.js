@@ -112,20 +112,18 @@ export function createLitigationCourthouse(parent,T){
   box(1.4,.35,1.05,side*8.65,11.73,2.25,orange);
  }
  // Scale every existing court component together, including the side wings and ornament.
- // Maximum forecourt reach 26.2 * .60 = 15.72, inside the radius-17 island.
- root.scale.setScalar(.60);
+ // Courthouse footprint grows to 90%; the litigation island platform is enlarged to radius 27 to keep all components inside.
+ root.scale.setScalar(.90);
  // Orange ceremonial flag above central roof, with the unchanged original WEIYANG artwork.
  // Flag is in parent island coordinates, not scaled with the courthouse.
  const banner=new T.Group();banner.name='WEIYANG_LITIGATION_FLAG';parent.add(banner);
  const pole=new T.Mesh(new T.CylinderGeometry(.09,.09,7.5,12),new T.MeshStandardMaterial({color:'#d8b36c',metalness:.55,roughness:.32}));
  pole.position.set(0,12.5,-2.0);banner.add(pole);
- const cloth=new T.Mesh(new T.PlaneGeometry(3.8,2.45),new T.MeshStandardMaterial({color:'#e58a4c',side:T.DoubleSide,roughness:.82}));
+ const cloth=new T.Mesh(new T.PlaneGeometry(3.8,2.45),new T.MeshStandardMaterial({color:'#D94F32',side:T.DoubleSide,roughness:.82}));
  cloth.position.set(1.95,15.05,-2.0);banner.add(cloth);
- const inset=new T.Mesh(new T.PlaneGeometry(2.15,1.98),new T.MeshBasicMaterial({color:'#fffdf6',side:T.DoubleSide}));
- inset.position.set(1.95,15.05,-1.97);banner.add(inset);
  const logoTexture=new T.TextureLoader().load('office-logo-transparent.png');
  logoTexture.colorSpace=T.SRGBColorSpace;
  const logo=new T.Mesh(new T.PlaneGeometry(1.76,1.76),new T.MeshBasicMaterial({map:logoTexture,transparent:true,side:T.DoubleSide,depthWrite:false}));
- logo.position.set(1.95,15.05,-1.94);banner.add(logo);
+ logo.position.set(1.95,15.05,-1.97);banner.add(logo);
  return root;
 }

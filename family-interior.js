@@ -68,10 +68,12 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  const pen=box(.055,.05,.83,-5.25,1.72,5.19,bookNavy);pen.rotation.y=-.22;
  box(.08,.04,.14,-5.35,1.72,4.83,brass);
  // Upholstered reading chair faces the desk rather than the outer wall.
- roundedSlab(1.35,1.10,.20,.16,-5.90,.66,7.10,burgundy,'familyFun');
- for(const x of [-6.37,-5.43])for(const z of [6.67,7.53])box(.11,.59,.11,x,.29,z,rosewood);
- box(1.32,1.35,.23,-5.90,1.37,7.62,burgundy,'familyFun');
- box(1.15,.16,.20,-5.90,1.92,7.49,brass);
+ roundedSlab(1.35,1.10,.20,.16,-5.90,.66,3.65,burgundy,'familyFun');
+ for(const x of [-6.37,-5.43])for(const z of [3.22,4.08])box(.11,.59,.11,x,.29,z,rosewood);
+ box(1.32,1.35,.23,-5.90,1.37,3.15,burgundy,'familyFun');
+ box(1.15,.16,.20,-5.90,1.92,3.28,brass);
+ // v426: keep visitor-facing (+Z) upholstered chair and approved luxury desk; add premium inset.
+ box(1.05,.92,.035,-5.90,1.37,3.285,mat('#A75F73'),'familyFun');
  // v416: luxury desk architectural face, drawer fronts, fluted side panels and champagne handles.
  const deskLuxury=mat('#67404A'),deskIvory=mat('#FFF5E9'),deskGold=mat('#D4AD71');
  box(3.12,.54,.15,-6.05,1.02,6.13,deskLuxury,'familyFun');
@@ -84,6 +86,12 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
    for(let k=0;k<3;k++)box(.055,.73,.085,x+(k-1)*.065,.64,6.12,deskLuxury,'familyFun');
  }
  roundedSlab(1.28,.73,.11,.045,-6.42,1.74,5.35,burgundy,'familyFun');
+ // Visitor-facing luxury front: layered champagne trim and raised central relief.
+ box(3.25,.10,.10,-6.05,1.28,6.27,deskGold,'familyFun');
+ box(3.20,.10,.10,-6.05,.72,6.27,deskGold,'familyFun');
+ box(1.00,.32,.085,-6.05,1.03,6.33,deskLuxury,'familyFun');
+ box(.92,.045,.09,-6.05,1.19,6.39,deskGold,'familyFun');
+ for(const x of [-7.42,-4.68])box(.11,1.06,.11,x,.71,6.17,deskGold,'familyFun');
  // Leather desk pad with a gold accent; desk stays in its approved location.
  // v67: oversized legible rotary telephone, with receiver and dial facing the visitor.
  box(3.6,1.14,2.8,8.1,.57,4.9,cream,'protect');
@@ -182,6 +190,7 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  hint('親權扶養',7.0,3.25,-4.8,'child');
  hint('遺囑繼承',-9.85,5.9,6.15,'heritage');
  hint('家事保護',8.0,3.7,4.6,'protect');
+ hint('接待趣味問答',-6.05,3.20,6.25,'familyFun');
  hint('德威陽諮詢',0,3.15,1.7,'sofa');
  const staffLabelText='哈姆太郎';hint(staffLabelText,4.9,3.45,1.1,'staff');
  // Large invisible tap areas improve mobile touch targeting.
@@ -244,7 +253,14 @@ export function createFamilyExperience(){
  ['扶養費可以口頭說好嗎？','薪水掌門人：雙方說扶養費都談妥了。\n夢奇奇：支付金額、時間與方式有沒有寫清楚？\n薪水掌門人：看來不能只靠一句「我會付」。'],
  ['夫妻財產各自管理？','哈姆太郎：婚後買的東西就一定一人一半嗎？\n夢奇奇：要先看夫妻財產制、財產來源與適用規定。\n哈姆太郎：原來不是直接拿計算機除以二。']
  ];let familyFunIndex=0;
- function familyFun(){const item=familyFunLines[familyFunIndex%familyFunLines.length];familyFunIndex++;title.textContent='家庭島書桌｜'+item[0];body.textContent=item[1];choices.replaceChildren();button('再聽一則家庭趣事',familyFun);button('探索遺囑與繼承',()=>quiz('heritage'));button('返回',()=>el.style.display='none');}
- let staffIndex=0;const staffLines=['我是哈姆太郎，歡迎探索家事法律！','想了解夫妻財產？點擊婚姻廚房。','子女扶養與親權，請看玩具箱。','遺囑與繼承爭議，可探索書櫃。','家庭安全與保護令，點擊復古電話。','需要專業協助？歡迎點擊諮詢沙發。'];function open(action){el.style.display='block';if(action==='familyFun')familyFun();else if(action==='sofa')desk();else if(action==='staff'){title.textContent='哈姆太郎｜家事法律導覽';body.textContent=staffLines[staffIndex++%staffLines.length];choices.replaceChildren();button('婚姻廚房｜30則',()=>quiz('kitchen'));button('親子生活｜30則',()=>quiz('child'));button('遺囑繼承｜30則',()=>quiz('heritage'));button('家庭守護｜30則',()=>quiz('protect'));button('了解家事法律諮詢',desk);}else quiz(action);}
+ function familyFun(){const item=familyFunLines[familyFunIndex%familyFunLines.length];familyFunIndex++;title.textContent='家庭島書桌｜'+item[0];body.textContent=item[1];choices.replaceChildren();button('再聽一組趣味對話',familyFun);button('探索遺囑與繼承',()=>quiz('heritage'));button('返回',()=>el.style.display='none');}
+ const staffLines=[
+  ['哈姆太郎｜離婚協議書','哈姆太郎：客戶說離婚條件都談好了，只差簽名。\n我問：孩子跟誰住？扶養費怎麼付？財產怎麼分？\n對方說：這些還沒談。\n哈姆太郎：原來「只差簽名」，差的是整份協議書！\n法律提醒：親權、扶養費、財產分配等重要約定，應具體寫清楚。'],
+  ['哈姆太郎｜繼承篇','哈姆太郎：阿公說，遺囑寫張紙就好。\n我說：紙可以，但法定方式不能少！\n法律提醒：遺囑是否有效，仍須符合民法規定的方式及要件。'],
+  ['哈姆太郎｜扶養費篇','哈姆太郎：說好每個月會付，就不用寫日期？\n我：那薪水也能說「有空再發」嗎？\n法律提醒：扶養費的金額、支付日期與方式，最好明確約定。']
+ ];let staffIndex=0;
+ function staffShow(){const i=(staffIndex+staffLines.length)%staffLines.length;title.textContent=staffLines[i][0];body.textContent=staffLines[i][1];choices.replaceChildren();button('← 上一則',()=>{staffIndex--;staffShow()});button('下一則 →',()=>{staffIndex++;staffShow()});button('返回｜家事法律導覽',staffHome);button('✕ 繼續探索',()=>el.style.display='none');}
+ function staffHome(){title.textContent='哈姆太郎｜家事法律導覽';body.textContent='點我就有新故事！家事法律可不只有家務事。';choices.replaceChildren();button('聽哈姆太郎趣味對話',staffShow);button('婚姻廚房｜30則',()=>quiz('kitchen'));button('親子生活｜30則',()=>quiz('child'));button('遺囑繼承｜30則',()=>quiz('heritage'));button('家庭守護｜30則',()=>quiz('protect'));button('了解家事法律諮詢',desk);}
+ function open(action){el.style.display='block';if(action==='familyFun')familyFun();else if(action==='sofa')desk();else if(action==='staff')staffShow();else quiz(action);}
  return {open,hide:()=>el.style.display='none'};
 }
