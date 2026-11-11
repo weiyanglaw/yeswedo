@@ -1,7 +1,7 @@
-// WEIYANG litigation island v423 — monumental orange/ivory courthouse.
+// WEIYANG litigation island v424 — monumental orange/ivory courthouse.
 // Native geometry, level entrance, no front stairs, ramps, roof domes, or signboard.
 export function createLitigationCourthouse(parent,T){
- const root=new T.Group();root.name='WEIYANG_LITIGATION_V422';root.userData.island='litigation';parent.add(root);
+ const root=new T.Group();root.name='WEIYANG_LITIGATION_V424';root.userData.island='litigation';parent.add(root);
  const mat=(c,metal=0)=>new T.MeshStandardMaterial({color:c,roughness:metal?.42:.79,metalness:metal});
  const ivory=mat('#fff8eb'),white=mat('#fffdf5'),sand=mat('#f5d9b7'),light=mat('#f4b77f'),orange=mat('#db854d'),terracotta=mat('#c66c42'),recess=mat('#a66d52'),blue=mat('#83b5c0'),bronze=mat('#d7a77d',.25);
  const add=(geo,m,x,y,z,p=root)=>{let o=new T.Mesh(geo,m);o.position.set(x,y,z);p.add(o);return o};
@@ -111,5 +111,21 @@ export function createLitigationCourthouse(parent,T){
   box(.9,3.1,.75,side*8.65,10.0,2.25,ivory);
   box(1.4,.35,1.05,side*8.65,11.73,2.25,orange);
  }
+ // Scale every existing court component together, including the side wings and ornament.
+ // Maximum forecourt reach 26.2 * .60 = 15.72, inside the radius-17 island.
+ root.scale.setScalar(.60);
+ // Orange ceremonial flag above central roof, with the unchanged original WEIYANG artwork.
+ // Flag is in parent island coordinates, not scaled with the courthouse.
+ const banner=new T.Group();banner.name='WEIYANG_LITIGATION_FLAG';parent.add(banner);
+ const pole=new T.Mesh(new T.CylinderGeometry(.09,.09,7.5,12),new T.MeshStandardMaterial({color:'#d8b36c',metalness:.55,roughness:.32}));
+ pole.position.set(0,12.5,-2.0);banner.add(pole);
+ const cloth=new T.Mesh(new T.PlaneGeometry(3.8,2.45),new T.MeshStandardMaterial({color:'#e58a4c',side:T.DoubleSide,roughness:.82}));
+ cloth.position.set(1.95,15.05,-2.0);banner.add(cloth);
+ const inset=new T.Mesh(new T.PlaneGeometry(2.15,1.98),new T.MeshBasicMaterial({color:'#fffdf6',side:T.DoubleSide}));
+ inset.position.set(1.95,15.05,-1.97);banner.add(inset);
+ const logoTexture=new T.TextureLoader().load('office-logo-transparent.png');
+ logoTexture.colorSpace=T.SRGBColorSpace;
+ const logo=new T.Mesh(new T.PlaneGeometry(1.76,1.76),new T.MeshBasicMaterial({map:logoTexture,transparent:true,side:T.DoubleSide,depthWrite:false}));
+ logo.position.set(1.95,15.05,-1.94);banner.add(logo);
  return root;
 }
