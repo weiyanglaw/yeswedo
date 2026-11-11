@@ -1,45 +1,45 @@
-// Litigation palace v433: single-level orange-gold interior, fixed non-animated materials.
+// v434 Royal Litigation Island: stable, non-animated geometry, six recognizable installations.
 export function createLitigationInterior(root,T){
- const targets=[];const M=(c,metal=0)=>new T.MeshStandardMaterial({color:c,roughness:metal?.52:.87,metalness:metal});
- const orange=M('#C76332'),light=M('#E99559'),ivory=M('#FFF0D6'),gold=M('#D6A65E',.27),wood=M('#70422D'),navy=M('#263B57'),marble=M('#F8E7CF'),burgundy=M('#8C4435'),glass=M('#D6C9A7');
- const add=(g,m,x,y,z,tag)=>{const o=new T.Mesh(g,m);o.position.set(x,y,z);root.add(o);if(tag){o.userData.litigationZone=tag;targets.push(o)}return o};
- const b=(w,h,d,x,y,z,m,tag)=>add(new T.BoxGeometry(w,h,d),m,x,y,z,tag);
- const c=(r,h,x,y,z,m,tag)=>add(new T.CylinderGeometry(r,r,h,20),m,x,y,z,tag);
- // Single continuous floor, all furniture stands directly on y=0.
- b(35,.24,29,0,-.12,0,marble);b(35,10,.25,0,5,-14.5,orange);
- for(const x of [-17.35,17.35])b(.3,10,29,x,5,0,light);
- // Wide broad architectural gold trim, all firmly connected to walls.
- b(35,.22,.3,0,9.5,-14.24,gold);b(35,.16,.3,0,.22,-14.24,gold);
- for(const x of [-15,-9,9,15]){c(.58,9.2,x,4.6,-13.65,ivory);c(.73,.28,x,9.35,-13.65,gold);c(.75,.2,x,.1,-13.65,gold)}
- // Symmetrical orange royal carpet, flush, no stairs.
- b(5,.025,21,0,.02,3.2,burgundy);b(5.25,.025,21,0,.013,3.2,gold);
- // Central royal reception, independently interactive.
- b(8,1.3,1.65,0,.65,9.6,orange,'reception');b(8.3,.15,1.9,0,1.39,9.6,ivory,'reception');b(8.15,.13,.12,0,.86,10.48,gold,'reception');
- for(const x of [-3.2,3.2])b(.17,1.25,1.8,x,.65,9.6,gold);
- // Unified, luxurious public service hall; separate real receiving and payment windows.
- b(10,.22,3,-11.4,.11,4.0,gold);b(10,1.22,2.1,-11.4,.61,3.3,orange,'service');b(10,.14,2.35,-11.4,1.29,3.3,ivory,'service');
- for(const x of [-14.7,-9.8]){b(4.2,2.1,.35,x,2.7,2.3,wood,'service');b(4.0,.16,.45,x,3.72,2.3,gold,'service')}
- // Large courtroom suites, not small booths: a full courtroom arrangement in each open wing.
- const court=(cx,cz,tag)=>{
-  b(9,.08,8,cx,.04,cz,burgundy);b(9.3,.07,.17,cx,.045,cz-4.1,gold);
-  b(7,1.45,1.35,cx,.725,cz-2.75,wood,tag);b(7.2,.12,1.5,cx,1.5,cz-2.75,gold,tag);
-  for(const x of [-2.4,0,2.4]){b(1.25,2,.35,cx+x,1.1,cz-3.8,orange,tag);b(1.35,.2,.55,cx+x,2.04,cz-3.8,gold)}
-  for(const x of [-2.3,2.3]){b(2.5,.85,1.2,cx+x,.425,cz+.15,wood,tag);b(2.65,.12,1.3,cx+x,.9,cz+.15,ivory,tag)}
-  for(const x of [-2.8,-.95,.95,2.8])for(const z of [2.1,3.25]){b(1.45,.45,.8,cx+x,.3,cz+z,wood);b(1.45,1,.18,cx+x,.83,cz+z+.38,orange)}
- };
- court(-10,-7,'civil');court(10,-7,'criminal');
- // Administrative court on the side, complete desk and judge bench.
- b(7,.05,5,11,.04,5.0,burgundy);b(6,1.3,1.1,11,.65,3.2,wood,'administrative');b(6.1,.14,1.25,11,1.36,3.2,gold,'administrative');
- for(const x of [9.4,12.6]){b(2.3,.8,1.2,x,.4,6.3,wood,'administrative');b(1.2,1.25,.25,x,.7,7.35,orange)}
- // Mediation: full conference table, upholstered backed chairs.
- b(7,.07,5,-11,.04,10.7,burgundy);b(4.7,.9,1.65,-11,.45,10.4,wood,'mediation');b(4.9,.12,1.8,-11,.97,10.4,ivory,'mediation');
- for(const x of [-13,-11,-9])for(const z of [8.95,11.9]){b(1.0,.48,.8,x,.28,z,orange);b(1,1.35,.22,x,.72,z+(z<10?-.38:.38),orange)}
- // Court hierarchy and knowledge wall, integrated into architecture.
- b(9,5,.3,0,5,-14.15,wood,'hierarchy');b(9.3,.2,.42,0,7.55,-13.9,gold,'hierarchy');
- for(const x of [-2.7,0,2.7]){b(2.2,3.6,.1,x,5.0,-13.88,orange,'hierarchy');b(2.35,.16,.18,x,6.9,-13.75,gold)}
- // Waiting lounge: grounded sofas, backed seats and matching side tables.
- for(const x of [-14.2,14.2]){b(3.2,.55,1.35,x,.3,12.2,orange);b(3.2,1.25,.35,x,.7,12.85,orange);b(1.5,.55,1.0,x,.28,10.6,wood)}
- // Large fixed luminous-style fixtures; no emissive pulsing or blinking.
- for(const x of [-7,0,7]){c(.75,.22,x,8.9,1.5,gold);c(.56,.2,x,8.72,1.5,ivory)}
+ const targets=[]; const mat=(color,metalness=0)=>new T.MeshStandardMaterial({color,roughness:metalness?0.49:0.83,metalness,side:T.DoubleSide});
+ const O=mat('#ED8647'),D=mat('#B95831'),P=mat('#F7B5A0'),I=mat('#FFF3E4'),W=mat('#FFFCF5'),G=mat('#D9B36C',.35),N=mat('#263B57'),F=mat('#F2DCC3'),S=mat('#D98E65');
+ const add=(geom,m,x,y,z,zone)=>{const a=new T.Mesh(geom,m);a.position.set(x,y,z);root.add(a);if(zone){a.userData.litigationZone=zone;targets.push(a)}return a};
+ const box=(w,h,d,x,y,z,m,zone)=>add(new T.BoxGeometry(w,h,d),m,x,y,z,zone);
+ const cyl=(r,h,x,y,z,m,zone,r2=r)=>add(new T.CylinderGeometry(r,r2,h,32),m,x,y,z,zone);
+ const round=(w,h,d,x,y,z,m,zone)=>{const a=add(new T.BoxGeometry(w,h,d),m,x,y,z,zone);return a};
+ const sign=(label,x,y,z,w=4,h=.7,zone,rotation=0)=>{const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=220;const q=canvas.getContext('2d');q.fillStyle='#263B57';q.fillRect(0,0,1024,220);q.strokeStyle='#E9C47D';q.lineWidth=13;q.strokeRect(9,9,1006,202);q.fillStyle='#FFF3E4';q.font='bold 88px "Noto Sans TC", "PingFang TC", sans-serif';q.textAlign='center';q.textBaseline='middle';q.fillText(label,512,112,955);const tx=new T.CanvasTexture(canvas);tx.colorSpace=T.SRGBColorSpace;tx.anisotropy=4;const m=new T.MeshBasicMaterial({map:tx,side:T.DoubleSide,transparent:false,depthWrite:true});const a=add(new T.PlaneGeometry(w,h),m,x,y,z,zone);a.rotation.y=rotation;return a};
+ const chair=(x,z,color=O,zone,face=0)=>{const g=new T.Group();root.add(g);g.position.set(x,0,z);g.rotation.y=face;const part=(geo,m,px,py,pz)=>{const a=new T.Mesh(geo,m);a.position.set(px,py,pz);g.add(a);if(zone){a.userData.litigationZone=zone;targets.push(a)}};part(new T.BoxGeometry(1.1,.25,.9),color,0,.76,0);part(new T.BoxGeometry(1.12,1.45,.23),color,0,1.38,.41);for(const dx of [-.45,.45]){part(new T.CylinderGeometry(.075,.075,.75,10),G,dx,.37,0);part(new T.BoxGeometry(.14,.15,.78),G,dx,.99,0)}return g};
+ const desk=(x,z,w,d,zone)=>{box(w,.22,d,x,1.03,z,I,zone);box(w,.73,.15,x,.58,z-d/2+.1,D,zone);for(const dx of [-w/2+.22,w/2-.22])box(.16,.95,.16,x+dx,.5,z,G,zone);box(w,.11,.12,x,1.16,z+d/2-.07,G,zone)};
+ // No overlapping coplanar floors, flickering shaders, emissive pulse, or animated lighting.
+ box(35,.28,29,0,-.14,0,F);box(35,9.7,.32,0,4.85,-14.5,O);for(const x of [-17.36,17.36])box(.28,9.7,29,x,4.85,0,I);
+ box(34,.34,.28,0,8.85,-14.22,G);box(34,.27,.28,0,.34,-14.22,G);
+ // ① Dominant grand courtroom, judge and both parties in adjacent lawyer/client pairs.
+ sign('皇家大法庭',0,8.0,-14.28,9,1.05,'civil');
+ box(25,1.85,1.6,0,.93,-12.35,D,'civil');box(25.3,.2,1.84,0,1.96,-12.35,I,'civil');box(25.35,.16,.16,0,1.64,-11.48,G,'civil');
+ for(const x of [-5.2,0,5.2])chair(x,-13.1,N,'civil');
+ desk(-7.0,-7.7,8.0,2.15,'civil');desk(7.0,-7.7,8.0,2.15,'civil');
+ for(const x of [-8.4,-5.7,5.7,8.4])chair(x,-9.35,P,'civil');
+ sign('原告與律師',-7,2.4,-8.85,5,.7,'civil');sign('被告與律師',7,2.4,-8.85,5,.7,'civil');
+ desk(13,-10.7,2.6,1.35,'civil');chair(13,-12.1,P,'civil');sign('書記官',13,2.2,-11.55,2.5,.55,'civil');
+ // Decorative curved courtroom rail: physically separated components, no surface overlap.
+ for(const x of [-12,-10,-8,8,10,12])cyl(.075,.88,x,.44,-4.85,G);
+ for(const x of [-11,11])box(2.8,.12,.16,x,.89,-4.85,G);
+ // ② Central first/second/third instance exhibition, huge and visible from entrance.
+ sign('法院審級與司法制度',0,4.2,-3.55,10,.8,'hierarchy');
+ const steps=[['第一審','事實與證據',-5.25],['第二審','上訴審查',0],['第三審','法律審為主',5.25]];
+ for(const [a,b,x] of steps){box(4.65,.5,2.8,x,.25,-1.0,I,'hierarchy');box(4.75,.16,2.95,x,.58,-1,G,'hierarchy');box(4.3,1.8,.24,x,1.57,-1.75,N,'hierarchy');sign(a,x,1.92,-1.60,3.85,.78,'hierarchy');sign(b,x,1.12,-1.60,3.8,.47,'hierarchy');cyl(.19,.24,x,.77,-.12,G,'hierarchy')}
+ // ③ Court public service area, two full-size counters.
+ sign('法院便民服務',-11.2,4.4,3.2,8,.85,'service');
+ for(const [x,t] of [[-14,'收狀處'],[-8.5,'裁判費收費處']]){box(5.2,1.45,2.1,x,.73,5.2,O,'service');box(5.35,.18,2.35,x,1.55,5.2,I,'service');box(5.4,.16,.12,x,1.15,6.34,G,'service');sign(t,x,2.65,4.06,5,.7,'service');box(1.7,.08,1.1,x,1.68,5.2,W,'service')}
+ // ④ Royal mediation lounge, large oval table and plush backed seats.
+ sign('皇家調解廳',11.1,4.4,3.2,7.3,.85,'mediation');
+ const oval=cyl(2.25,.22,11,1.1,6.2,I,'mediation');oval.scale.set(2.0,1,0.67);const base=cyl(1.2,1,11,.55,6.2,D,'mediation');base.scale.set(1.7,1,.72);
+ for(const x of [7.2,9.65,12.35,14.8]){chair(x,4.1,P,'mediation',Math.PI);chair(x,8.35,P,'mediation',0)}
+ // ⑤ US introduction: distinct standing digital board, no redundant courtroom.
+ sign('美國訴訟入門',-11,4.1,10.5,7.5,.85,'usa');
+ box(7.4,2.5,.45,-11,2.25,12.5,N,'usa');box(7.7,.16,.65,-11,3.6,12.5,G,'usa');sign('聯邦法院・州法院',-11,2.65,12.78,6.8,.65,'usa');sign('臺美司法制度比較',-11,1.72,12.78,6.8,.65,'usa');
+ // ⑥ Small royal reception with legible sign and desk bell.
+ sign('皇家趣味接待',10.7,4.1,10.5,7.5,.85,'reception');
+ box(7.1,1.3,2.1,10.7,.65,12.3,O,'reception');box(7.35,.18,2.35,10.7,1.4,12.3,I,'reception');box(7.45,.13,.14,10.7,1.08,13.46,G,'reception');cyl(.35,.18,9.1,1.62,12.5,G,'reception');
+ // Strong visual grouping, no delicate patterns invisible on a phone.
  return {targets};
 }
