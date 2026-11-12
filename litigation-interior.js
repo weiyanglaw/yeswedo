@@ -20,13 +20,27 @@ export function createLitigationInterior(root,T){
   const x=Math.cos(a)*archRadius,z=archCenterZ-Math.sin(a)*5.1;
   const panel=cube(archRadius*Math.PI*.76/36+.12,10.2,.6,x,5.1,z,ivory);
   panel.rotation.y=Math.PI/2-a;
-  const stripe=cube(.11,8.6,.68,x,5.1,z,gold);stripe.rotation.y=Math.PI/2-a;
+  // Original wall surface retained; no coplanar thin stripes.
  }
  for(let x of [-17.45,17.45])cube(.35,9.5,29,x,4.75,0,ivory);
- // Grand concentric overhead crown: visually wraps the entire judge's bench.
- for(let radius of [13.5,12.65,11.8]){
-  const arc=new T.Mesh(new T.TorusGeometry(radius,.17,10,96,Math.PI),gold);
-  arc.rotation.x=Math.PI/2;arc.rotation.z=Math.PI;arc.position.set(0,9.1,-9.4);root.add(arc);
+ // Raised open-air architectural silhouette: vertical grand arch, no ceiling or suspended fixtures.
+ // Each upper panel follows the curved profile and sits above the original wall (no overlapping faces).
+ const archTop=x=>10.5+6.2*Math.sqrt(Math.max(0,1-(x/18.3)**2));
+ for(let i=0;i<36;i++){
+   const a=Math.PI*.12+Math.PI*.76*(i+.5)/36;
+   const x=Math.cos(a)*archRadius,z=archCenterZ-Math.sin(a)*5.1;
+   const h=Math.max(.45,archTop(x)-10.2);
+   const panel=cube(archRadius*Math.PI*.76/36+.035,h,.59,x,10.2+h/2,z,ivory);
+   panel.rotation.y=Math.PI/2-a;
+ }
+ // Vertical crown, shaped like the owner's drawn high semicircle; behind all furniture.
+ for(const [offset,thick,mt] of [[0,.24,gold],[-.45,.12,white],[-.83,.10,gold]]){
+   const pts=[];
+   for(let j=0;j<=72;j++){
+     const x=-17.2+34.4*j/72;
+     pts.push(new T.Vector3(x,archTop(x)+offset,-14.95));
+   }
+   mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),100,thick,7,false),mt,0,0,0);
  }
  // Broad floor inlay, not a full bright-white floor.
  rounded(27,21,2,.045,0,.005,-.7,deep);
@@ -62,7 +76,16 @@ export function createLitigationInterior(root,T){
  const star=new T.Shape();for(let i=0;i<10;i++){let a=-Math.PI/2+i*Math.PI/5,r=i%2?2.65:5.25;let x=Math.cos(a)*r,y=Math.sin(a)*r;if(i===0)star.moveTo(x,y);else star.lineTo(x,y)}star.closePath();
  const starGeo=new T.ExtrudeGeometry(star,{depth:.72,bevelEnabled:true,bevelSize:.15,bevelThickness:.12,bevelSegments:3});starGeo.rotateX(-Math.PI/2);
  mesh(starGeo,orange,-11,.35,10.9,'usa');
- const statue=new T.Group();statue.position.set(-11,1.25,10.9);statue.rotation.y=Math.PI;root.add(statue);
+ // C: layered royal star stage, inset star raised above the original platform.
+ const insetStar=new T.Shape();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=(i%2?2.03:4.12);const xx=Math.cos(a)*r,yy=Math.sin(a)*r;if(!i)insetStar.moveTo(xx,yy);else insetStar.lineTo(xx,yy)}insetStar.closePath();
+ const insetGeo=new T.ExtrudeGeometry(insetStar,{depth:.18,bevelEnabled:true,bevelSize:.08,bevelThickness:.04,bevelSegments:2});insetGeo.rotateX(-Math.PI/2);
+ mesh(insetGeo,gold,-11,.92,10.9,'usa');
+ const starInner=new T.Shape();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=(i%2?1.87:3.83);const xx=Math.cos(a)*r,yy=Math.sin(a)*r;if(!i)starInner.moveTo(xx,yy);else starInner.lineTo(xx,yy)}starInner.closePath();
+ const innerGeo=new T.ExtrudeGeometry(starInner,{depth:.09,bevelEnabled:true,bevelSize:.03,bevelThickness:.02,bevelSegments:2});innerGeo.rotateX(-Math.PI/2);
+ mesh(innerGeo,peach,-11,1.17,10.9,'usa');
+ cylinder(1.20,1.37,.33,-11,1.39,10.9,deep,'usa');
+ cylinder(1.09,1.22,.13,-11,1.61,10.9,gold,'usa');
+ const statue=new T.Group();statue.position.set(-11,1.78,10.9);statue.rotation.y=0;root.add(statue);
  const bronze=material('#B78A48',.72,.37),bronzeLight=material('#D3AE68',.68,.35),bronzeShadow=material('#81603B',.58,.5);
  function sp(geo,mt,x,y,z){return mesh(geo,mt,x,y,z,'usa',statue)}
  function limb(a,b,r1,r2,mt=bronze){const v1=new T.Vector3(...a),v2=new T.Vector3(...b),v=v2.clone().sub(v1);let m=sp(new T.CylinderGeometry(r2,r1,v.length(),14),mt,...v1.clone().add(v2).multiplyScalar(.5).toArray());m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),v.normalize());return m}
@@ -77,6 +100,27 @@ export function createLitigationInterior(root,T){
  sp(new T.SphereGeometry(.055,10,8),bronze,0,3.98,.33);
  for(let i=0;i<17;i++){let a=i*Math.PI*2/17;sp(new T.SphereGeometry(.09,9,8),i%3?bronze:bronzeLight,Math.cos(a)*.28,4.28+Math.sin(a)*.12,Math.sin(a)*.21)}
  for(let i=0;i<9;i++){let a=i*.53;sp(new T.SphereGeometry(.07,8,7),bronze,.28+Math.sin(a)*.05,3.9-i*.105,-.08)}
+ // Portrait relief and layered curled locks on the visitor-facing side (+Z).
+ sp(new T.SphereGeometry(.065,10,8),bronzeShadow,-.10,3.92,.323);
+ sp(new T.SphereGeometry(.065,10,8),bronzeShadow,.10,3.92,.323);
+ const lips=sp(new T.SphereGeometry(.10,8,7),bronzeShadow,0,3.83,.307);lips.scale.set(1,.25,.32);
+ for(let i=0;i<18;i++){
+  const a=i*Math.PI*2/18;
+  sp(new T.SphereGeometry(.075,9,8),i%2?bronzeLight:bronzeShadow,Math.cos(a)*.31,4.26+Math.sin(a)*.10,.12+Math.sin(a)*.08);
+ }
+ // Diagonal draped gown with curved fabric ridges, no flashing surface textures.
+ for(let i=0;i<17;i++){
+  const a=i*2*Math.PI/17;
+  const pts=[];
+  for(let j=0;j<=10;j++){
+   const t=j/10,rad=.44+.24*t;
+   pts.push(new T.Vector3(Math.cos(a+.22*t)*rad,2.5-2.04*t,Math.sin(a+.22*t)*rad));
+  }
+  sp(new T.TubeGeometry(new T.CatmullRomCurve3(pts),12,.018+(i%3)*.005,5,false),i%3?bronzeLight:bronzeShadow,0,0,0);
+ }
+ // Braided belt knot and hanging folds on the right hip.
+ sp(new T.SphereGeometry(.13,12,9),bronzeLight,.46,2.63,.20);
+ for(let i=0;i<3;i++)limb([.48+i*.045,2.58,.20],[.53+i*.10,1.86-i*.20,.20],.025,.012,bronzeLight);
  // Raised left arm supports a detailed crossbar with two suspended dishes.
  limb([-.35,3.38,0],[-.70,3.83,.02],.16,.13);limb([-.70,3.83,.02],[-.88,4.65,.04],.13,.095);
  sp(new T.SphereGeometry(.12,14,10),bronzeLight,-.88,4.69,.04);
@@ -99,38 +143,48 @@ export function createLitigationInterior(root,T){
  rounded(8.15,2.62,1.13,.19,10.6,2.13,12.0,white,'reception');
  rounded(7.6,.22,.1,.14,10.6,1.0,13.46,gold,'reception');
 
- // v441: subtle architectural detail, all materials reused from the original v351 palette.
- // Raised moldings remain off the curved wall surfaces to avoid coplanar flicker.
- for(let i=0;i<18;i++){
-  const a=Math.PI*.12+Math.PI*.76*(i+.5)/18;
-  const x=Math.cos(a)*12.9,z=-9.3-Math.sin(a)*5.1;
-  const g=new T.Group();g.position.set(x,5.1,z);g.rotation.y=Math.PI/2-a;root.add(g);
-  const detail=(w,h,d,px,py,pz,mt)=>mesh(new T.BoxGeometry(w,h,d),mt,px,py,pz,null,g);
-  detail(.065,6.2,.08,-.43,0,.51,gold);
-  detail(.065,6.2,.08,.43,0,.51,gold);
-  detail(.92,.075,.08,0,3.1,.51,gold);
-  detail(.92,.075,.08,0,-3.1,.51,gold);
- }
- // Monumental open-air court architecture: taller pilasters and layered upper cornice.
- // No ceiling, suspended lamps or objects crossing the walking paths.
+ // Monumental royal wall relief: fewer broad pilasters, deep framed bays, sculpted capitals.
+ // Decorations have intentional depth separation; no coplanar surfaces or animated lights.
  for(let i=0;i<13;i++){
   const a=Math.PI*.12+Math.PI*.76*i/12;
   const x=Math.cos(a)*12.9,z=-9.3-Math.sin(a)*5.1;
+  const h=archTop(x);
   const p=new T.Group();p.position.set(x,0,z);p.rotation.y=Math.PI/2-a;root.add(p);
-  const detail=(w,h,d,px,py,pz,mt)=>mesh(new T.BoxGeometry(w,h,d),mt,px,py,pz,null,p);
-  detail(.38,10.5,.36,0,5.25,.65,ivory);
-  detail(.64,.42,.56,0,10.24,.70,gold);
-  detail(.78,.19,.62,0,10.54,.70,white);
-  detail(.55,.28,.50,0,.38,.65,gold);
+  const part=(w,hh,d,px,py,pz,mt)=>mesh(new T.BoxGeometry(w,hh,d),mt,px,py,pz,null,p);
+  part(.48,h-.55,.32,0,(h-.55)/2,.62,white);
+  part(.70,.27,.49,0,h-.53,.65,gold);
+  part(.96,.20,.55,0,h-.29,.68,ivory);
+  part(.72,.14,.53,0,h-.09,.68,gold);
+  part(.83,.30,.47,0,.44,.65,gold);
+  for(const dx of [-.20,.20])part(.055,Math.max(1,h-2.3),.07,dx,h/2,.82,gold);
+ }
+ // Arched recessed panels between columns: framed raised relief, restrained and flicker-free.
+ for(let i=0;i<12;i++){
+  const a=Math.PI*.12+Math.PI*.76*(i+.5)/12;
+  const x=Math.cos(a)*12.9,z=-9.3-Math.sin(a)*5.1;
+  const g=new T.Group();g.position.set(x,0,z);g.rotation.y=Math.PI/2-a;root.add(g);
+  const part=(w,h,d,xx,yy,zz,mt)=>mesh(new T.BoxGeometry(w,h,d),mt,xx,yy,zz,null,g);
+  part(1.15,6.55,.12,0,5.2,.46,stone);
+  for(const dx of [-.58,.58])part(.085,6.8,.15,dx,5.25,.56,gold);
+  part(1.22,.10,.16,0,8.7,.57,gold);
+  part(1.22,.11,.16,0,1.78,.57,gold);
+  part(.87,4.95,.10,0,5.15,.58,ivory);
+  part(.68,.09,.13,0,7.68,.68,gold);
+  part(.68,.09,.13,0,2.63,.68,gold);
  }
  // Three substantial tiers behind the judge, without changing bench dimensions.
  rounded(23.6,3.05,1.08,.18,0,.14,-11.4,gold,'civil');
  for(const yy of [1.0,1.43]){
   for(let x=-10.4;x<=10.4;x+=2.08)cube(1.15,.13,.11,x,yy,-9.90,gold,'civil');
  }
+ // Curved judge-dais face relief, layered sculpted ribs with visible spacing.
+ for(const x of [-9.7,-6.7,-3.7,-.7,2.3,5.3,8.3]){
+   cube(.11,1.05,.11,x,1.0,-9.90,gold,'civil');
+   cube(1.65,.10,.14,x,1.72,-9.87,white,'civil');
+ }
  // Genuine unchanged official image on a locally contrasting terracotta backing.
  // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
- const logoGroup=new T.Group();logoGroup.position.set(0,11.35,-14.10);root.add(logoGroup);
+ const logoGroup=new T.Group();logoGroup.position.set(0,13.75,-14.20);root.add(logoGroup);
  const backing=material('#995B57',.05,.87);
  mesh(new T.BoxGeometry(7.4,5.05,.28),gold,0,0,0,'civil',logoGroup);
  mesh(new T.BoxGeometry(7.1,4.76,.10),backing,0,0,.22,'civil',logoGroup);
