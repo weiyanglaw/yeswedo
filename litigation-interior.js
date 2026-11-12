@@ -127,13 +127,13 @@ export function createLitigationInterior(root,T){
  rounded(23.2,2.95,1.08,.16,0,2.32,-9.35,gold,'civil');
  rounded(22.85,2.55,1.02,.19,0,2.49,-9.35,white,'civil');
  for(let x of [-9,-5,-1,3,7,10])cube(.09,1.24,.12,x,1.1,-7.91,gold,'civil');
- for(const obj of root.children.slice(judgeBenchStart))if(obj.isMesh){obj.position.y*=1.42;obj.scale.y*=1.42};
- for(let x of [-5.5,0,5.5]){const c=chair(x,-11.45,'civil',Math.PI,velvet,1.88);c.position.y=0;}
+ for(const obj of root.children.slice(judgeBenchStart))if(obj.isMesh){obj.position.y*=1.68;obj.scale.y*=1.68};
+ for(let x of [-5.5,0,5.5]){const c=chair(x,-11.45,'civil',Math.PI,velvet,2.55);c.position.y=0;}
  // Both counsel tables face the judge; visitor sees their clear curved profiles.
  const counselDeskStart=root.children.length;
  table(-7.8,-4.8,8.5,2.30,'civil');table(7.8,-4.8,8.5,2.30,'civil');
- for(const obj of root.children.slice(counselDeskStart))if(obj.isMesh){obj.position.y*=1.32;obj.scale.y*=1.32};
- for(let x of [-9.3,-6.3,6.3,9.3]){const c=chair(x,-6.25,'civil',Math.PI,peach,1.25);c.position.y=0;}
+ for(const obj of root.children.slice(counselDeskStart))if(obj.isMesh){obj.position.y*=1.54;obj.scale.y*=1.54};
+ for(let x of [-9.3,-6.3,6.3,9.3]){const c=chair(x,-6.25,'civil',Math.PI,peach,1.57);c.position.y=0;}
  // Removed the isolated right-rear desk and chair requested by the owner.
  // v448: One bespoke orange-and-champagne royal four-panel judicial gallery.
  // Wide-spaced real vertical fluting, not coplanar lines or animated lights.
@@ -187,7 +187,7 @@ export function createLitigationInterior(root,T){
  // v449: Both original service pavilions are placed along the LEFT lateral wall.
  // Local front (+Z) is rotated toward the room (+X); no new geometry or materials.
  for(const wallZ of [-3.0,4.0]){
-  const pavilion=new T.Group();pavilion.position.set(-14.80,0,wallZ);pavilion.rotation.y=Math.PI/2;root.add(pavilion);
+  const pavilion=new T.Group();pavilion.position.set(-14.80,0,wallZ);pavilion.rotation.y=-Math.PI/2;root.add(pavilion);
   const x=0,z=0;
   const mesh0=mesh,cube0=cube,cylinder0=cylinder;
   const localMesh=(geo,mt,px,py,pz,zone)=>mesh0(geo,mt,px,py,pz,zone,pavilion);
@@ -379,7 +379,7 @@ export function createLitigationInterior(root,T){
    cube(.11,1.05,.11,x,1.0,-7.85,gold,'civil');
    cube(1.65,.10,.14,x,1.72,-7.82,white,'civil');
  }
- for(const obj of root.children.slice(judgeReliefStart))if(obj.isMesh){obj.position.y*=1.42;obj.scale.y*=1.42};
+ for(const obj of root.children.slice(judgeReliefStart))if(obj.isMesh){obj.position.y*=1.68;obj.scale.y*=1.68};
  // Genuine unchanged official image on a locally contrasting terracotta backing.
  // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
  const logoGroup=new T.Group();logoGroup.position.set(0,14.0,-12.85);root.add(logoGroup);
@@ -398,8 +398,8 @@ export function createLitigationInterior(root,T){
   part(new T.BoxGeometry(.90,.075,.09),gold,0,2.47,.68);
   part(new T.BoxGeometry(.86,.08,.80),white,0,1.04,-.015);
  }
- for(const x of [-5.5,0,5.5])seatFinish(x,-11.45,Math.PI,1.88,'civil',0);
- for(const x of [-9.3,-6.3,6.3,9.3])seatFinish(x,-6.25,Math.PI,1.25,'civil',0);
+ for(const x of [-5.5,0,5.5])seatFinish(x,-11.45,Math.PI,2.55,'civil',0);
+ for(const x of [-9.3,-6.3,6.3,9.3])seatFinish(x,-6.25,Math.PI,1.57,'civil',0);
  
  for(const x of [8.2,10.15,12.05,14]){seatFinish(x,1.85,Math.PI,.86,'mediation');seatFinish(x,6,0,.86,'mediation')}
  // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
@@ -408,7 +408,7 @@ export function createLitigationInterior(root,T){
  seatFinish(10.6,9.94,Math.PI,.80,'reception');
  // No additional round table or loose chairs beside the reception counter.
  // Service counter seats are positioned behind existing counters, not in the walking lane.
- for(const z of [0.9,8.3])chair(-16.05,z,'service',Math.PI/2,peach,.65);
+ for(const z of [-3.0,4.0]){chair(-12.45,z,'service',-Math.PI/2,peach,1.02);seatFinish(-12.45,z,-Math.PI/2,1.02,'service');}
  // Five monumental, single-purpose silhouettes: clearly readable at mobile entrance distance.
  // The objects are kept away from chair paths and remain within their own tabletop footprints.
  function rodBetween(a,b,r,mt,zone){
@@ -462,7 +462,7 @@ export function createLitigationInterior(root,T){
   rodBetween([x-1.12,3.25,z+.1],[x+1.30,4.54,z+.1],.23,deep,'civil');
   const head=rodBetween([x+.92,4.92,z+.1],[x+1.77,4.15,z+.1],.58,gold,'civil');
   head.material=gold;
-  for(const obj of root.children.slice(gavelStart))if(obj.isMesh)obj.position.y+=1.45;
+  for(const obj of root.children.slice(gavelStart))if(obj.isMesh)obj.position.y+=2.08;
  }
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
