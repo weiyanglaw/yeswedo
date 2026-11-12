@@ -408,7 +408,7 @@ export function createLitigationInterior(root,T){
  seatFinish(10.6,9.94,Math.PI,.80,'reception');
  // No additional round table or loose chairs beside the reception counter.
  // Service counter seats are positioned behind existing counters, not in the walking lane.
- for(const z of [-3.0,4.0]){chair(-12.45,z,'service',-Math.PI/2,peach,1.02);seatFinish(-12.45,z,-Math.PI/2,1.02,'service');}
+ for(const z of [-3.0,4.0]){chair(-15.80,z,'service',-Math.PI/2,peach,1.02);seatFinish(-15.80,z,-Math.PI/2,1.02,'service');}
  // Five monumental, single-purpose silhouettes: clearly readable at mobile entrance distance.
  // The objects are kept away from chair paths and remain within their own tabletop footprints.
  function rodBetween(a,b,r,mt,zone){
@@ -463,6 +463,17 @@ export function createLitigationInterior(root,T){
   const head=rodBetween([x+.92,4.92,z+.1],[x+1.77,4.15,z+.1],.58,gold,'civil');
   head.material=gold;
   for(const obj of root.children.slice(gavelStart))if(obj.isMesh)obj.position.y+=2.08;
+ }
+ // v453: Rebalance the existing furnishings toward the visitor without changing the camera,
+ // palette, geometry, count, or the fixed judge bench. Apply shifts once to complete root-level
+ // assemblies so their attached details and seats follow the same movement.
+ const zoneAdvance={service:1.0,usa:.65,hierarchy:1.5,mediation:2.0,reception:1.0};
+ for(const obj of root.children){
+  let zone=obj.userData?.litigationZone;
+  if(!zone && obj.isGroup){
+   obj.traverse(child=>{if(!zone && child.userData?.litigationZone)zone=child.userData.litigationZone});
+  }
+  if(Object.prototype.hasOwnProperty.call(zoneAdvance,zone))obj.position.z+=zoneAdvance[zone];
  }
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
