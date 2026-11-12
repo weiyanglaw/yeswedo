@@ -1,4 +1,4 @@
-// v446: Accessible circulation, solid rear wall, themed counters and large courtroom objects.
+// v447: Accessible circulation, solid rear wall, themed counters and large courtroom objects.
 export function createLitigationInterior(root,T){
  const targets=[];
  const material=(color,metalness=0,roughness=.68)=>new T.MeshStandardMaterial({color,metalness,roughness});
@@ -65,6 +65,15 @@ export function createLitigationInterior(root,T){
    const trim=cube(3.45,.26,.78,side*14.95,12.48,-11.28,gold);trim.rotation.y=side*.27;
    const foot=cube(3.45,.26,.82,side*14.95,.36,-11.28,stone);foot.rotation.y=side*.27;
  }
+ // v447: close BOTH open seams between the end of the radial arc and each side wing.
+ // Continuous opaque masonry bridges the endpoint (x≈±12.6) to the solid lateral wall.
+ // Positioned behind the judge chairs; these are walls, not barriers across the side aisles.
+ for(const side of [-1,1]){
+   const join=cube(5.7,12.6,1.25,side*14.75,6.3,-13.25,ivory);
+   join.rotation.y=side*.11;
+   const lower=cube(5.7,1.0,1.3,side*14.75,.55,-13.25,stone);
+   lower.rotation.y=side*.11;
+ }
  // Sculpt the two formerly blank infill wings as monumental royal masonry, not flat patched boards.
  for(const side of [-1,1]){
    const x=side*14.95;
@@ -118,8 +127,8 @@ export function createLitigationInterior(root,T){
  for(let x of [-9,-5,-1,3,7,10])cube(.09,1.24,.12,x,1.1,-7.91,gold,'civil');
  for(let x of [-5.5,0,5.5])chair(x,-11.45,'civil',Math.PI,velvet,1.48);
  // Both counsel tables face the judge; visitor sees their clear curved profiles.
- table(-7.5,-4.8,7.4,2.1,'civil');table(7.5,-4.8,7.4,2.1,'civil');
- for(let x of [-8.9,-6.2,6.2,8.9])chair(x,-6.25,'civil',Math.PI,peach,1.02);
+ table(-7.8,-4.8,8.5,2.30,'civil');table(7.8,-4.8,8.5,2.30,'civil');
+ for(let x of [-9.3,-6.3,6.3,9.3])chair(x,-6.25,'civil',Math.PI,peach,1.02);
  // Removed the isolated right-rear desk and chair requested by the owner.
  // One unified three-instance exhibit desk: oversized circular medallions, not three cabinets.
  rounded(18,2.5,1.1,1.2,0,.24,-1.05,orange,'hierarchy');
@@ -132,37 +141,39 @@ export function createLitigationInterior(root,T){
   // Use canvas-drawn text on a front-facing plane; this is UI signage only within the exhibit.
   // v436 keeps all signage removed pending user approval, so the medallions stay blank.
  }
- // Two distinctly legible royal service windows: clerk intake and court-fee cashier.
- // Backward shift preserves a usable passage between the independent star and windows.
- for(const [x,kind] of [[-13.7,'intake'],[-8.3,'cashier']]){
+ // v447: Two genuinely open royal service pavilions, not flat desks with signs.
+ // The two freestanding columns and low, wide canopy are real 3D solids; no text panels.
+ for(const x of [-13.7,-8.3]){
   const z=4.7;
-  rounded(4.65,2.25,.65,1.5,x,.18,z,orange,'service');
-  rounded(4.85,2.45,.65,.17,x,1.75,z,white,'service');
-  cube(3.8,.63,.12,x,.85,z+1.19,ivory,'service');
-  // Large architectural relief in front, not tiny desk ornaments.
-  if(kind==='intake'){
-   for(const side of [-1,1]){
-    const leaf=cube(1.42,.79,.19,x+side*.77,1.02,z+1.34,white,'service');leaf.rotation.y=side*.13;
-    cube(1.28,.085,.22,x+side*.77,.69,z+1.46,gold,'service');
-   }
-   cube(.18,1.03,.23,x,1.03,z+1.47,gold,'service');
-  }else{
-   const arch=cube(2.75,1.04,.24,x,1.01,z+1.37,stone,'service');
-   for(const dx of [-1.08,1.08])cube(.22,.95,.29,x+dx,1.03,z+1.53,gold,'service');
-   cube(2.48,.20,.30,x,1.56,z+1.52,gold,'service');
-   const med=cylinder(.37,.37,.18,x,1.10,z+1.60,gold,'service',40);med.rotation.x=Math.PI/2;
+  // Sculpted convex counter: front semicircular outline, supported by a solid curved body.
+  const counterShape=new T.Shape();
+  counterShape.moveTo(-2.16,-.88);counterShape.lineTo(2.16,-.88);
+  counterShape.lineTo(2.16,.28);
+  counterShape.bezierCurveTo(1.9,1.40,.95,1.73,0,1.73);
+  counterShape.bezierCurveTo(-.95,1.73,-1.9,1.40,-2.16,.28);
+  counterShape.closePath();
+  const baseGeo=new T.ExtrudeGeometry(counterShape,{depth:1.32,bevelEnabled:true,bevelSize:.08,bevelThickness:.06,bevelSegments:2,curveSegments:14});
+  baseGeo.rotateX(-Math.PI/2);
+  mesh(baseGeo,orange,x,.22,z,'service');
+  const topGeo=new T.ExtrudeGeometry(counterShape,{depth:.20,bevelEnabled:true,bevelSize:.06,bevelThickness:.045,bevelSegments:2,curveSegments:14});
+  topGeo.rotateX(-Math.PI/2);
+  mesh(topGeo,white,x,1.56,z,'service');
+  // Pillars sit on the back corners, leaving the visitor side open and the walkways clear.
+  for(const dx of [-1.84,1.84]){
+   cylinder(.25,.31,3.15,x+dx,3.25,z-.65,ivory,'service',24);
+   cylinder(.42,.42,.24,x+dx,4.89,z-.65,gold,'service',24);
+   cylinder(.38,.38,.23,x+dx,1.78,z-.65,gold,'service',24);
   }
-  // Oversized readable floating fascia integrated with the counter, not an added desk.
-  const label=kind==='intake'?'收狀處':'裁判費收費處';
-  if(typeof document!=='undefined'){
-   const c=document.createElement('canvas');c.width=1024;c.height=256;
-   const ctx=c.getContext('2d');ctx.clearRect(0,0,1024,256);
-   ctx.fillStyle='#263B57';ctx.beginPath();ctx.roundRect(12,12,1000,232,34);ctx.fill();
-   ctx.strokeStyle='#E8BA60';ctx.lineWidth=16;ctx.stroke();
-   ctx.fillStyle='#F9E4C2';ctx.font='bold 118px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,512,130);
-   const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;
-   mesh(new T.PlaneGeometry(3.55,.88),new T.MeshBasicMaterial({map:tex,transparent:true,side:T.DoubleSide}),x,2.37,z+1.27,'service');
+  // Wide shallow architectural crown: not a tombstone-shaped filled arch.
+  const crownPts=[];
+  for(let i=0;i<=24;i++){
+   const u=-1+2*i/24;
+   crownPts.push(new T.Vector3(x+u*2.17,5.04+.52*(1-u*u),z-.65));
   }
+  mesh(new T.TubeGeometry(new T.CatmullRomCurve3(crownPts),48,.26,10,false),gold,0,0,0,'service');
+  const roof=cube(4.65,.25,.70,x,5.01,z-.65,white,'service');
+  // The top rail remains wide and flat; only the crown rises above it.
+  cube(4.76,.14,.76,x,5.18,z-.65,gold,'service');
  }
  // Mediation: substantial oval tabletop and six genuinely upholstered chairs.
  let t=cylinder(2.2,2.2,.32,11.1,1.2,3.9,white,'mediation',48);t.scale.set(2,1,.7);let rim=cylinder(2.23,2.23,.11,11.1,1.07,3.9,gold,'mediation',48);rim.scale.set(2,1,.7);let pedestal=cylinder(1.25,1.55,.9,11.1,.56,3.9,deep,'mediation');pedestal.scale.set(1.7,1,.7);
@@ -336,7 +347,7 @@ export function createLitigationInterior(root,T){
   part(new T.BoxGeometry(.86,.08,.80),white,0,1.04,-.015);
  }
  for(const x of [-5.5,0,5.5])seatFinish(x,-11.45,Math.PI,1.48,'civil');
- for(const x of [-8.9,-6.2,6.2,8.9])seatFinish(x,-6.25,Math.PI,1.02,'civil');
+ for(const x of [-9.3,-6.3,6.3,9.3])seatFinish(x,-6.25,Math.PI,1.02,'civil');
  
  for(const x of [8.2,10.15,12.05,14]){seatFinish(x,1.85,Math.PI,.86,'mediation');seatFinish(x,6,0,.86,'mediation')}
  // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
@@ -353,14 +364,18 @@ export function createLitigationInterior(root,T){
   const m=mesh(new T.CylinderGeometry(r,r,d.length(),16),mt,...p.clone().add(q).multiplyScalar(.5).toArray(),zone);
   m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),d.normalize());return m;
  }
- // Mediation: a single oversized pair of interlocking clasped hands, not a stack of files.
+ // v447: One oversized two-pan balance scale, with unmistakable horizontal beam and bowls.
  {
-  const z=3.9,y=1.58;
-  rodBetween([9.85,y, z],[10.84,y+.35,z],.25,gold,'mediation');
-  rodBetween([12.35,y,z],[11.36,y+.35,z],.25,gold,'mediation');
-  const a=sphere(.43,10.93,y+.42,z,gold,'mediation');a.scale.set(1.35,.64,.9);
-  const b=sphere(.43,11.28,y+.42,z,white,'mediation');b.scale.set(1.35,.64,.9);
-  for(let k=0;k<3;k++)rodBetween([10.90,y+.48,z-.28+k*.27],[11.39,y+.42,z-.28+k*.27],.065,gold,'mediation');
+  const x=11.1,z=3.9;
+  cylinder(.60,.78,.20,x,1.60,z,gold,'mediation',32);
+  cylinder(.18,.24,1.28,x,2.28,z,deep,'mediation',24);
+  sphere(.24,x,3.00,z,gold,'mediation');
+  rodBetween([x-1.48,2.91,z],[x+1.48,2.91,z],.115,gold,'mediation');
+  for(const dx of [-1.21,1.21]){
+   for(const dd of [-.32,.32])rodBetween([x+dx,2.91,z],[x+dx+dd*.28,2.26,z+dd],.035,deep,'mediation');
+   const pan=cylinder(.49,.32,.14,x+dx,2.20,z,gold,'mediation',32);
+   const bowl=cylinder(.45,.48,.08,x+dx,2.29,z,white,'mediation',32);
+  }
  }
  // Reception: one oversized domed service bell, readable by its button and dome profile.
  {
@@ -385,14 +400,14 @@ export function createLitigationInterior(root,T){
    const pan=mesh(new T.ConeGeometry(.26,.16,24),white,x+dx,2.78,-4.17,'civil');pan.rotation.z=Math.PI;
   }
  }
- counselShield(-7.5);counselShield(7.5);
+ counselShield(-7.8);counselShield(7.8);
  // Judge dais: single monumental diagonal gavel and thick sound block, on the front right.
  {
-  const x=7.8,z=-9.2;
-  cylinder(1.05,1.12,.22,x,2.84,z,gold,'civil',48);
-  cylinder(.82,.86,.17,x,3.02,z,deep,'civil',48);
-  rodBetween([x-.85,3.25,z+.1],[x+1.05,4.26,z+.1],.17,deep,'civil');
-  const head=rodBetween([x+.72,4.56,z+.1],[x+1.37,3.97,z+.1],.46,gold,'civil');
+  const x=0,z=-9.15;
+  cylinder(1.30,1.38,.22,x,2.84,z,gold,'civil',48);
+  cylinder(1.03,1.07,.17,x,3.02,z,deep,'civil',48);
+  rodBetween([x-1.12,3.25,z+.1],[x+1.30,4.54,z+.1],.23,deep,'civil');
+  const head=rodBetween([x+.92,4.92,z+.1],[x+1.77,4.15,z+.1],.58,gold,'civil');
   head.material=gold;
  }
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
