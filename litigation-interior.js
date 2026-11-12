@@ -76,87 +76,53 @@ export function createLitigationInterior(root,T){
  rounded(8.15,2.62,1.13,.19,10.6,2.13,12.0,white,'reception');
  rounded(7.6,.22,.1,.14,10.6,1.0,13.46,gold,'reception');
 
- // v440: strictly additive detailing over user's 351 palette; no flashing materials or animation.
- const detailGold=gold,detailIvory=ivory,detailPeach=peach;
- function trimBox(w,h,d,x,y,z,zone='civil'){return cube(w,h,d,x,y,z,detailGold,zone)}
- // Main court: recessed architectural paneling, each detail offset visibly from existing surfaces.
- // No pole-and-ball lamps and no marble textures.
- for(let i=0;i<22;i++){
-   const a=Math.PI*.17+(Math.PI*.66)*(i+.5)/22;
-   const x=Math.cos(a)*12.9,z=-9.3-Math.sin(a)*5.1;
-   const g=new T.Group();g.position.set(x,4.9,z);g.rotation.y=Math.PI/2-a;root.add(g);
-   const panel=(w,h,d,xx,yy,zz,mt)=>mesh(new T.BoxGeometry(w,h,d),mt,xx,yy,zz,'civil',g);
-   // Narrow raised frames on wall panels, with depth separation preventing z-fighting.
-   panel(.06,6.3,.09,-.35,0,.44,detailGold);panel(.06,6.3,.09,.35,0,.44,detailGold);
-   panel(.75,.07,.09,0,3.12,.44,detailGold);panel(.75,.07,.09,0,-3.12,.44,detailGold);
-   panel(.61,5.8,.055,0,0,.405,stone);
+ // v441: subtle architectural detail, all materials reused from the original v351 palette.
+ // Raised moldings remain off the curved wall surfaces to avoid coplanar flicker.
+ for(let i=0;i<18;i++){
+  const a=Math.PI*.12+Math.PI*.76*(i+.5)/18;
+  const x=Math.cos(a)*12.9,z=-9.3-Math.sin(a)*5.1;
+  const g=new T.Group();g.position.set(x,5.1,z);g.rotation.y=Math.PI/2-a;root.add(g);
+  const detail=(w,h,d,px,py,pz,mt)=>mesh(new T.BoxGeometry(w,h,d),mt,px,py,pz,null,g);
+  detail(.065,6.2,.08,-.43,0,.51,gold);
+  detail(.065,6.2,.08,.43,0,.51,gold);
+  detail(.92,.075,.08,0,3.1,.51,gold);
+  detail(.92,.075,.08,0,-3.1,.51,gold);
  }
- // Central large official logo mounted ABOVE the arch as a freestanding crown,
- // retaining the exact original image, original white background, no recoloring.
- const logoMount=new T.Group();logoMount.position.set(0,10.35,-13.65);root.add(logoMount);
- const frame=mesh(new T.BoxGeometry(5.4,3.25,.30),gold,0,0,0,'civil',logoMount);
- mesh(new T.BoxGeometry(5.12,2.98,.12),white,0,0,.22,'civil',logoMount);
- const logoTex=new T.TextureLoader().load('./office-logo-transparent.png');
- logoTex.colorSpace=T.SRGBColorSpace;
- const logoPlane=mesh(new T.PlaneGeometry(4.72,2.72),new T.MeshBasicMaterial({map:logoTex,transparent:true,side:T.DoubleSide,depthWrite:false}),0,0,.31,'civil',logoMount);
- // Detailed judge chair and courtroom seating: upholstered seams and crown caps.
- function chairDetails(x,z,face=0,sc=1,zone='civil'){
-   const g=new T.Group();g.position.set(x,0,z);g.rotation.y=face;g.scale.setScalar(sc);root.add(g);
-   const part=(geo,mt,px,py,pz)=>mesh(geo,mt,px,py,pz,zone,g);
-   part(new T.BoxGeometry(.93,1.30,.075),velvet,0,1.76,.645);
-   for(let dx of [-.49,.49])part(new T.BoxGeometry(.075,1.55,.10),gold,dx,1.76,.63);
-   part(new T.BoxGeometry(.90,.075,.09),gold,0,2.46,.64);
-   part(new T.BoxGeometry(.88,.10,.82),white,0,1.03,-.02);
-   for(let dx of [-.57,.57])part(new T.BoxGeometry(.14,.13,.80),white,dx,1.25,-.02);
-   for(let dx of [-.36,.36])part(new T.CylinderGeometry(.06,.08,.12,12),gold,dx,2.53,.61);
+ // Genuine unchanged official image on a locally contrasting terracotta backing.
+ // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
+ const logoGroup=new T.Group();logoGroup.position.set(0,10.8,-14.10);root.add(logoGroup);
+ const backing=material('#995B57',.05,.87);
+ mesh(new T.BoxGeometry(6.7,4.65,.28),gold,0,0,0,'civil',logoGroup);
+ mesh(new T.BoxGeometry(6.43,4.39,.10),backing,0,0,.22,'civil',logoGroup);
+ const official=new T.TextureLoader().load('./office-logo-transparent.png');official.colorSpace=T.SRGBColorSpace;
+ const officialMat=new T.MeshBasicMaterial({map:official,transparent:true,side:T.DoubleSide,depthWrite:false});
+ mesh(new T.PlaneGeometry(4.20,4.20),officialMat,0,0,.31,'civil',logoGroup);
+ // Upholstery detailing follows original chair positions, without additional seats in the courtroom.
+ function seatFinish(x,z,face,sc,zone){
+  const g=new T.Group();g.position.set(x,0,z);g.rotation.y=face;g.scale.setScalar(sc);root.add(g);
+  const part=(geo,mt,px,py,pz)=>mesh(geo,mt,px,py,pz,zone,g);
+  part(new T.BoxGeometry(.93,1.24,.085),velvet,0,1.75,.66);
+  for(const dx of [-.48,.48])part(new T.BoxGeometry(.075,1.45,.10),gold,dx,1.76,.68);
+  part(new T.BoxGeometry(.90,.075,.09),gold,0,2.47,.68);
+  part(new T.BoxGeometry(.86,.08,.80),white,0,1.04,-.015);
  }
- for(let x of [-5.5,0,5.5])chairDetails(x,-12.6,Math.PI,1.48);
- for(let x of [-8.9,-6.2,6.2,8.9])chairDetails(x,-8.5,0,1.02);
- chairDetails(13.5,-11.45,0,.86);
- for(let x of [8.2,10.15,12.05,14]){chairDetails(x,3.7,Math.PI,.86,'mediation');chairDetails(x,8,0,.86,'mediation')}
- // Gold inset desk panels, separate feet and trim, all within original furniture footprints.
- for(let [x,z,w,d,zone] of [[-7.5,-6.9,7.4,2.1,'civil'],[7.5,-6.9,7.4,2.1,'civil'],[13.5,-10,2.3,1.4,'civil']]){
-   trimBox(w-.9,.08,.09,x,.89,z+d/2+.05,zone);
-   for(let dx of [-w/2+.65,w/2-.65])trimBox(.11,.62,.10,x+dx,.55,z+d/2+.05,zone);
- }
- // Three-tier exhibit: integrated fluted frontage, no new obstruction.
- for(let x=-7.5;x<=7.5;x+=.75)trimBox(.055,.7,.075,x,.62,.35,'hierarchy');
- // Reception: staff chair INSIDE counter, plus existing requested round table & chairs,
- // moved toward side to preserve a continuous approach from entry.
- chair(10.6,10.10,'reception',Math.PI,velvet,.76);
- chairDetails(10.6,10.10,Math.PI,.76,'reception');
- cylinder(1.18,1.18,.16,15.2,1.16,11.6,white,'reception',40);
- cylinder(.34,.52,1.04,15.2,.55,11.6,gold,'reception',24);
- for(let [x,z,f] of [[15.2,9.9,0],[16.6,11.7,Math.PI/2],[15.2,13.35,Math.PI]]){
-   chair(x,z,'reception',f,peach,.62);chairDetails(x,z,f,.62,'reception');
- }
- // Work seats behind service counters, set back within their counter footprint.
- for(let x of [-13.7,-8.3]){chair(x,3.65,'service',Math.PI,peach,.65);chairDetails(x,3.65,Math.PI,.65,'service')}
- // Courtroom upper cornice: structural moldings, not isolated glowing rods.
- for(let x of [-17.10,17.10]){
-   trimBox(.22,8.8,.15,x,5.0,-7,'civil');
- }
- // Sculpted star edge: non-coplanar accent is raised clear of base surface.
- const starAccent=mesh(new T.CylinderGeometry(1.15,1.23,.22,48),gold,-11,1.12,10.9,'usa');
- // Statue silhouette refinements: flowing fabric pleats, waist, arms and a readable blindfold.
- const statueCloth=white;
- const robeShape=new T.LatheGeometry([
-   new T.Vector2(.83,0),new T.Vector2(1.02,.4),new T.Vector2(.82,1.0),
-   new T.Vector2(.55,1.85),new T.Vector2(.43,2.5),new T.Vector2(.52,3.05),
-   new T.Vector2(.35,3.55)
- ],32);
- sp(robeShape,statueCloth,0,.15,0);
- for(let i=0;i<9;i++){
-   const a=i*Math.PI*2/9;
-   const pleat=sp(new T.CylinderGeometry(.025,.11,2.5,8),gold,Math.cos(a)*.72,1.3,Math.sin(a)*.72);
-   pleat.rotation.z=Math.cos(a)*.13;
- }
- sp(new T.BoxGeometry(1.13,.15,.20),deep,0,4.17,.48);
- sp(new T.SphereGeometry(.24,12,10),gold,-.16,4.54,0);
- sp(new T.SphereGeometry(.24,12,10),gold,.17,4.54,0);
- // Sword blade, hilt and scales: no animation, distinct depth offsets.
- sp(new T.ConeGeometry(.12,2.0,8),gold,.99,2.15,.28).rotation.z=-.30;
- sp(new T.BoxGeometry(.7,.09,.10),gold,.65,2.72,.25);
-
+ for(const x of [-5.5,0,5.5])seatFinish(x,-12.6,Math.PI,1.48,'civil');
+ for(const x of [-8.9,-6.2,6.2,8.9])seatFinish(x,-8.5,0,1.02,'civil');
+ seatFinish(13.5,-11.45,0,.86,'civil');
+ for(const x of [8.2,10.15,12.05,14]){seatFinish(x,3.7,Math.PI,.86,'mediation');seatFinish(x,8,0,.86,'mediation')}
+ // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
+ // Its sole staff chair faces the visitor (+Z), and sits on the staff side (negative Z).
+ chair(10.6,9.73,'reception',0,velvet,.80);
+ seatFinish(10.6,9.73,0,.80,'reception');
+ // Compact conversation table at the far-right rear side, away from the main central aisle.
+ // No extra desk is placed alongside the public-facing reception counter.
+ cylinder(.73,.73,.12,15.58,1.15,11.52,white,'reception',40);
+ cylinder(.25,.37,1.04,15.58,.57,11.52,gold,'reception',24);
+ chair(15.55,9.93,'reception',0,peach,.57);
+ chair(16.48,12.35,'reception',Math.PI/2,peach,.57);
+ // Service counter seats are positioned behind existing counters, not in the walking lane.
+ for(const x of [-13.7,-8.3])chair(x,3.65,'service',0,peach,.65);
+ // Retain original Lady Justice as a temporary placeholder. A photo-identical sculpt
+ // cannot be fabricated from basic primitives; do not misrepresent it as a match.
  return {targets};
 }
