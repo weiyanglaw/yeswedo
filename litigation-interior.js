@@ -172,7 +172,7 @@ export function createLitigationInterior(root,T){
   const disc=cylinder(1.52,1.52,.18,x,3.40,-.99,material(panelColors[i],.07,.72),'hierarchy',48);disc.rotation.x=Math.PI/2;disc.userData.litigationPanel=panel;
   const textMesh=mesh(new T.PlaneGeometry(3.02,1.00),plaqueText(panelNames[i]),x,3.40,-.825,'hierarchy');textMesh.userData.litigationPanel=panel;
   // A pointed sun silhouette: one coherent radial mesh, not dozens of rod-like cylinders.
-  const verts=[],spikes=12,cy=5.26,outer=.52,inner=.34;
+  const verts=[],spikes=12,cy=5.83,outer=.52,inner=.34;
   for(let j=0;j<spikes*2;j++){
    const angle=-Math.PI/2+j*Math.PI/spikes,r=j%2===0?outer:inner;
    verts.push(new T.Vector2(Math.cos(angle)*r,Math.sin(angle)*r));
@@ -438,6 +438,7 @@ export function createLitigationInterior(root,T){
  }
  // Counsel desks: one freestanding convex shield on each, broad shield outline facing entrance.
  function counselShield(x){
+  const shieldPartStart=root.children.length;
   const shape=new T.Shape();shape.moveTo(-1.18,1.16);shape.lineTo(1.18,1.16);
   shape.quadraticCurveTo(1.32,.28,.92,-.37);shape.quadraticCurveTo(.45,-.94,0,-1.25);
   shape.quadraticCurveTo(-.45,-.94,-.92,-.37);shape.quadraticCurveTo(-1.32,.28,-1.18,1.16);
@@ -450,6 +451,15 @@ export function createLitigationInterior(root,T){
   for(const dx of [-.49,.49]){
    rodBetween([x+dx,3.12,-4.17],[x+dx,2.83,-4.17],.035,deep,'civil');
    const pan=mesh(new T.ConeGeometry(.26,.16,24),white,x+dx,2.78,-4.17,'civil');pan.rotation.z=Math.PI;
+  }
+  // v455: Grow the complete emblem (outline, inner face, scales, chains and pans)
+  // about a shared anchor so none of its pieces appear undersized.
+  for(const part of root.children.slice(shieldPartStart)){
+   if(!part.isMesh)continue;
+   part.position.x=x+(part.position.x-x)*1.27;
+   part.position.y=3.55+(part.position.y-3.55)*1.27+.20;
+   part.position.z=-4.48+(part.position.z+4.48)*1.12;
+   part.scale.multiplyScalar(1.27);
   }
  }
  counselShield(-7.8);counselShield(7.8);
@@ -491,6 +501,20 @@ export function createLitigationInterior(root,T){
    else if(z>=-7.5 && z<=-3.4)obj.position.z+=1.25; // two counsel desks, chairs and shields
   }
   if(zone==='service')obj.position.x+=1.20; // leave a walkable strip behind both counters
+ }
+ // v455 owner-approved localized spacing. Move each counsel ensemble as a unit:
+ // left desk slightly right, right desk slightly left, with a wide central aisle.
+ // Includes the four counsel chairs, their upholstery, shields and balance emblems.
+ for(const obj of root.children){
+  let zone=obj.userData?.litigationZone;
+  if(!zone && obj.isGroup)obj.traverse(child=>{if(!zone && child.userData?.litigationZone)zone=child.userData.litigationZone});
+  if(zone==='civil' && obj.position.z>-6.0 && obj.position.z<0 && Math.abs(obj.position.x)>2.5){
+   obj.position.x+=obj.position.x<0?.58:-.58;
+  }
+  // Move mediation and reception further toward the visitor, keeping their own
+  // seats and tabletop details in step. Do not touch the judicial gallery.
+  if(zone==='mediation')obj.position.z+=.68;
+  if(zone==='reception')obj.position.z+=.38;
  }
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
