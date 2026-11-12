@@ -516,6 +516,18 @@ export function createLitigationInterior(root,T){
   if(zone==='mediation')obj.position.z+=.68;
   if(zone==='reception')obj.position.z+=.38;
  }
+ // v456: C option - visibly center the two existing counsel ensembles only.
+ // Move both desks, their chairs, shields and decorative meshes symmetrically.
+ // Keep a substantial center aisle: desk centers end at +/-5.49, desk width 8.5,
+ // leaving approximately 2.48 world units between their tabletop edges.
+ // No Z/Y movement, no geometry/material changes, no camera or other zones touched.
+ for(const obj of root.children){
+  let zone=obj.userData?.litigationZone;
+  if(!zone && obj.isGroup)obj.traverse(child=>{if(!zone && child.userData?.litigationZone)zone=child.userData.litigationZone});
+  if(zone==='civil' && obj.position.z>-6.0 && obj.position.z<0 && Math.abs(obj.position.x)>2.5){
+   obj.position.x+=obj.position.x<0?1.15:-1.15;
+  }
+ }
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
 }
