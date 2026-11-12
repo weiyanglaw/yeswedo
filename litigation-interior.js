@@ -475,6 +475,23 @@ export function createLitigationInterior(root,T){
   }
   if(Object.prototype.hasOwnProperty.call(zoneAdvance,zone))obj.position.z+=zoneAdvance[zone];
  }
+ // v454: Owner-approved spacing adjustment only. Keep every object, camera, material,
+ // animation and existing v453 move intact. The extra offsets are applied to complete
+ // root-level assemblies (including chairs and decorations) exactly once.
+ // +Z is toward the visitor/camera; service pavilions instead move +X away from the left wall.
+ const extraForward={hierarchy:1.35,mediation:.65,reception:.55};
+ for(const obj of root.children){
+  let zone=obj.userData?.litigationZone;
+  if(!zone && obj.isGroup)obj.traverse(child=>{if(!zone && child.userData?.litigationZone)zone=child.userData.litigationZone});
+  if(Object.prototype.hasOwnProperty.call(extraForward,zone))obj.position.z+=extraForward[zone];
+  // Preserve the fixed architecture and the logo, which is a group at y=14.
+  if(zone==='civil' && obj!==logoGroup){
+   const z=obj.position.z;
+   if(z>=-12.3 && z<=-7.5)obj.position.z+=.45; // entire judge dais, chairs and gavel
+   else if(z>=-7.5 && z<=-3.4)obj.position.z+=1.25; // two counsel desks, chairs and shields
+  }
+  if(zone==='service')obj.position.x+=1.20; // leave a walkable strip behind both counters
+ }
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
 }
