@@ -41,7 +41,7 @@ export function createLitigationInterior(root,T){
  // Both counsel tables face the judge; visitor sees their clear curved profiles.
  table(-7.5,-6.9,7.4,2.1,'civil');table(7.5,-6.9,7.4,2.1,'civil');
  for(let x of [-8.9,-6.2,6.2,8.9])chair(x,-8.5,'civil',0,peach,1.02);
- table(13.5,-10,2.3,1.4,'civil');chair(13.5,-11.45,'civil',0,peach,.86);
+ // Removed the isolated right-rear desk and chair requested by the owner.
  // One unified three-instance exhibit desk: oversized circular medallions, not three cabinets.
  rounded(18,2.5,1.1,1.2,0,.24,-1.05,orange,'hierarchy');
  rounded(18.3,2.7,1.13,.15,0,1.48,-1.05,gold,'hierarchy');
@@ -58,18 +58,41 @@ export function createLitigationInterior(root,T){
  // Mediation: substantial oval tabletop and six genuinely upholstered chairs.
  let t=cylinder(2.2,2.2,.32,11.1,1.2,5.8,white,'mediation',48);t.scale.set(2,1,.7);let rim=cylinder(2.23,2.23,.11,11.1,1.07,5.8,gold,'mediation',48);rim.scale.set(2,1,.7);let pedestal=cylinder(1.25,1.55,.9,11.1,.56,5.8,deep,'mediation');pedestal.scale.set(1.7,1,.7);
  for(let x of [8.2,10.15,12.05,14]){chair(x,3.7,'mediation',Math.PI,peach,.86);chair(x,8.0,'mediation',0,peach,.86)}
- // US-law: oversized five-point-star plinth and recognizable Lady Justice silhouette.
+ // US-law: retain original five-point star, replace white cone figure with a bronze sculptural figure.
  const star=new T.Shape();for(let i=0;i<10;i++){let a=-Math.PI/2+i*Math.PI/5,r=i%2?2.65:5.25;let x=Math.cos(a)*r,y=Math.sin(a)*r;if(i===0)star.moveTo(x,y);else star.lineTo(x,y)}star.closePath();
  const starGeo=new T.ExtrudeGeometry(star,{depth:.72,bevelEnabled:true,bevelSize:.15,bevelThickness:.12,bevelSegments:3});starGeo.rotateX(-Math.PI/2);
  mesh(starGeo,orange,-11,.35,10.9,'usa');
  const statue=new T.Group();statue.position.set(-11,1.25,10.9);statue.rotation.y=Math.PI;root.add(statue);
+ const bronze=material('#B78A48',.72,.37),bronzeLight=material('#D3AE68',.68,.35),bronzeShadow=material('#81603B',.58,.5);
  function sp(geo,mt,x,y,z){return mesh(geo,mt,x,y,z,'usa',statue)}
- sp(new T.CylinderGeometry(.52,1.35,3.6,24),white,0,2.1,0);
- sp(new T.SphereGeometry(.56,24,16),gold,0,4.18,0);
- sp(new T.CylinderGeometry(.14,.16,1.85,12),gold,-.65,3.25,0).rotation.z=-.5;
- sp(new T.CylinderGeometry(.12,.12,2.6,12),gold,.74,3.0,0).rotation.z=.34;
- sp(new T.CylinderGeometry(.06,.06,2.4,12),gold,-1.08,4.45,0).rotation.z=Math.PI/2;
- for(let x of [-2.05,-.1]){sp(new T.CylinderGeometry(.04,.04,.8,8),gold,x,4.1,0);sp(new T.CylinderGeometry(.62,.25,.12,24),gold,x,3.7,0)}
+ function limb(a,b,r1,r2,mt=bronze){const v1=new T.Vector3(...a),v2=new T.Vector3(...b),v=v2.clone().sub(v1);let m=sp(new T.CylinderGeometry(r2,r1,v.length(),14),mt,...v1.clone().add(v2).multiplyScalar(.5).toArray());m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),v.normalize());return m}
+ // Folds are modelled in relief rather than painted onto the sculpture.
+ const skirt=sp(new T.LatheGeometry([[.48,0],[.65,.18],[.73,.5],[.68,1.0],[.57,1.6],[.46,2.25],[.43,2.65]].map(q=>new T.Vector2(...q)),48),bronze,0,.34,0);
+ for(let i=0;i<15;i++){let a=i*Math.PI*2/15,rr=.66;let fold=sp(new T.CylinderGeometry(.032,.09,2.05,7),i%3?bronzeLight:bronzeShadow,Math.cos(a)*rr,1.35,Math.sin(a)*rr);fold.rotation.z=Math.sin(a)*.13;fold.rotation.x=Math.cos(a)*.13}
+ const bod=sp(new T.SphereGeometry(.52,28,20),bronze,0,3.08,0);bod.scale.set(1,.98,.65);
+ const neck=sp(new T.CylinderGeometry(.16,.19,.34,16),bronzeLight,0,3.72,0);
+ const head=sp(new T.SphereGeometry(.31,28,22),bronzeLight,0,4.05,.035);head.scale.set(.92,1.15,.86);
+ // Blindfold, face relief and braided curled hair.
+ const blind=sp(new T.BoxGeometry(.57,.13,.13),bronzeShadow,0,4.1,.295);blind.rotation.z=-.08;
+ sp(new T.SphereGeometry(.055,10,8),bronze,0,3.98,.33);
+ for(let i=0;i<17;i++){let a=i*Math.PI*2/17;sp(new T.SphereGeometry(.09,9,8),i%3?bronze:bronzeLight,Math.cos(a)*.28,4.28+Math.sin(a)*.12,Math.sin(a)*.21)}
+ for(let i=0;i<9;i++){let a=i*.53;sp(new T.SphereGeometry(.07,8,7),bronze,.28+Math.sin(a)*.05,3.9-i*.105,-.08)}
+ // Raised left arm supports a detailed crossbar with two suspended dishes.
+ limb([-.35,3.38,0],[-.70,3.83,.02],.16,.13);limb([-.70,3.83,.02],[-.88,4.65,.04],.13,.095);
+ sp(new T.SphereGeometry(.12,14,10),bronzeLight,-.88,4.69,.04);
+ limb([-.88,4.68,.04],[-.88,5.32,.04],.055,.045,bronzeLight);
+ limb([-1.93,4.63,.04],[.16,4.63,.04],.045,.045,bronzeLight);
+ for(const xx of [-1.76,-.02]){for(const delta of [-.24,.24])limb([xx+delta,4.62,.04],[xx+delta,4.03,.04],.014,.014,bronzeShadow);let pan=sp(new T.CylinderGeometry(.32,.17,.09,24),bronzeLight,xx,3.99,.04);pan.scale.z=.65}
+ // Right arm and downward sword, including guard and blade.
+ limb([.34,3.36,0],[.65,2.93,.05],.16,.125);limb([.65,2.93,.05],[.85,2.28,.08],.125,.095);
+ sp(new T.SphereGeometry(.12,12,10),bronzeLight,.86,2.25,.08);
+ limb([.88,2.31,.08],[1.05,.55,.08],.065,.015,bronzeLight);
+ limb([.58,2.19,.08],[1.17,2.19,.08],.05,.05,bronzeShadow);
+ // Pleated shoulder sash and waist belt.
+ for(let i=0;i<5;i++)limb([-.38+i*.09,3.43,.30],[.17+i*.05,2.72,.39],.018,.035,bronzeLight);
+ const belt=sp(new T.TorusGeometry(.48,.06,8,38),bronzeShadow,0,2.65,0);belt.rotation.x=Math.PI/2;
+ // Sculpted pedestal sits on original star, no additional platform footprint.
+ sp(new T.BoxGeometry(1.45,.22,1.03),bronzeShadow,0,.25,0);
  // Reception: single bold curved sculptural piece, no tiny desk accessories.
  rounded(8.2,2.7,1.15,1.65,10.6,.22,12.0,orange,'reception');
  rounded(8.35,2.8,1.2,.16,10.6,1.94,12.0,gold,'reception');
@@ -88,15 +111,32 @@ export function createLitigationInterior(root,T){
   detail(.92,.075,.08,0,3.1,.51,gold);
   detail(.92,.075,.08,0,-3.1,.51,gold);
  }
+ // Monumental open-air court architecture: taller pilasters and layered upper cornice.
+ // No ceiling, suspended lamps or objects crossing the walking paths.
+ for(let i=0;i<13;i++){
+  const a=Math.PI*.12+Math.PI*.76*i/12;
+  const x=Math.cos(a)*12.9,z=-9.3-Math.sin(a)*5.1;
+  const p=new T.Group();p.position.set(x,0,z);p.rotation.y=Math.PI/2-a;root.add(p);
+  const detail=(w,h,d,px,py,pz,mt)=>mesh(new T.BoxGeometry(w,h,d),mt,px,py,pz,null,p);
+  detail(.38,10.5,.36,0,5.25,.65,ivory);
+  detail(.64,.42,.56,0,10.24,.70,gold);
+  detail(.78,.19,.62,0,10.54,.70,white);
+  detail(.55,.28,.50,0,.38,.65,gold);
+ }
+ // Three substantial tiers behind the judge, without changing bench dimensions.
+ rounded(23.6,3.05,1.08,.18,0,.14,-11.4,gold,'civil');
+ for(const yy of [1.0,1.43]){
+  for(let x=-10.4;x<=10.4;x+=2.08)cube(1.15,.13,.11,x,yy,-9.90,gold,'civil');
+ }
  // Genuine unchanged official image on a locally contrasting terracotta backing.
  // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
- const logoGroup=new T.Group();logoGroup.position.set(0,10.8,-14.10);root.add(logoGroup);
+ const logoGroup=new T.Group();logoGroup.position.set(0,11.35,-14.10);root.add(logoGroup);
  const backing=material('#995B57',.05,.87);
- mesh(new T.BoxGeometry(6.7,4.65,.28),gold,0,0,0,'civil',logoGroup);
- mesh(new T.BoxGeometry(6.43,4.39,.10),backing,0,0,.22,'civil',logoGroup);
+ mesh(new T.BoxGeometry(7.4,5.05,.28),gold,0,0,0,'civil',logoGroup);
+ mesh(new T.BoxGeometry(7.1,4.76,.10),backing,0,0,.22,'civil',logoGroup);
  const official=new T.TextureLoader().load('./office-logo-transparent.png');official.colorSpace=T.SRGBColorSpace;
  const officialMat=new T.MeshBasicMaterial({map:official,transparent:true,side:T.DoubleSide,depthWrite:false});
- mesh(new T.PlaneGeometry(4.20,4.20),officialMat,0,0,.31,'civil',logoGroup);
+ mesh(new T.PlaneGeometry(4.75,4.75),officialMat,0,0,.31,'civil',logoGroup);
  // Upholstery detailing follows original chair positions, without additional seats in the courtroom.
  function seatFinish(x,z,face,sc,zone){
   const g=new T.Group();g.position.set(x,0,z);g.rotation.y=face;g.scale.setScalar(sc);root.add(g);
@@ -108,21 +148,15 @@ export function createLitigationInterior(root,T){
  }
  for(const x of [-5.5,0,5.5])seatFinish(x,-12.6,Math.PI,1.48,'civil');
  for(const x of [-8.9,-6.2,6.2,8.9])seatFinish(x,-8.5,0,1.02,'civil');
- seatFinish(13.5,-11.45,0,.86,'civil');
+ 
  for(const x of [8.2,10.15,12.05,14]){seatFinish(x,3.7,Math.PI,.86,'mediation');seatFinish(x,8,0,.86,'mediation')}
  // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
  // Its sole staff chair faces the visitor (+Z), and sits on the staff side (negative Z).
  chair(10.6,9.73,'reception',0,velvet,.80);
  seatFinish(10.6,9.73,0,.80,'reception');
- // Compact conversation table at the far-right rear side, away from the main central aisle.
- // No extra desk is placed alongside the public-facing reception counter.
- cylinder(.73,.73,.12,15.58,1.15,11.52,white,'reception',40);
- cylinder(.25,.37,1.04,15.58,.57,11.52,gold,'reception',24);
- chair(15.55,9.93,'reception',0,peach,.57);
- chair(16.48,12.35,'reception',Math.PI/2,peach,.57);
+ // No additional round table or loose chairs beside the reception counter.
  // Service counter seats are positioned behind existing counters, not in the walking lane.
  for(const x of [-13.7,-8.3])chair(x,3.65,'service',0,peach,.65);
- // Retain original Lady Justice as a temporary placeholder. A photo-identical sculpt
- // cannot be fabricated from basic primitives; do not misrepresent it as a match.
+ // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
 }
