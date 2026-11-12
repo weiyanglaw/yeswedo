@@ -130,16 +130,52 @@ export function createLitigationInterior(root,T){
  table(-7.8,-4.8,8.5,2.30,'civil');table(7.8,-4.8,8.5,2.30,'civil');
  for(let x of [-9.3,-6.3,6.3,9.3])chair(x,-6.25,'civil',Math.PI,peach,1.02);
  // Removed the isolated right-rear desk and chair requested by the owner.
- // One unified three-instance exhibit desk: oversized circular medallions, not three cabinets.
- rounded(18,2.5,1.1,1.2,0,.24,-1.05,orange,'hierarchy');
- rounded(18.3,2.7,1.13,.15,0,1.48,-1.05,gold,'hierarchy');
- rounded(18,2.45,1.1,.16,0,1.63,-1.05,white,'hierarchy');
- // Gold rings face entry, with large legible characters on the integrated tabletop.
- for(const [x,word] of [[-5.5,'一審'],[0,'二審'],[5.5,'三審']]){
-  const ring=mesh(new T.TorusGeometry(1.38,.16,14,56),gold,x,2.95,-1.12,'hierarchy');
-  const disk=cylinder(1.22,1.22,.12,x,2.95,-1.12,peach,'hierarchy',48);disk.rotation.x=Math.PI/2;
-  // Use canvas-drawn text on a front-facing plane; this is UI signage only within the exhibit.
-  // v436 keeps all signage removed pending user approval, so the medallions stay blank.
+ // v448: One bespoke orange-and-champagne royal four-panel judicial gallery.
+ // Wide-spaced real vertical fluting, not coplanar lines or animated lights.
+ const amber=material('#DA8247',.08,.78), caramel=material('#BC683F',.09,.75),cream=material('#F8DFC0',.02,.82),softGold=material('#D6AA65',.22,.7);
+ rounded(19.4,2.85,1.25,.30,0,.22,-1.05,caramel,'hierarchy');
+ rounded(19.0,2.73,1.20,1.05,0,.47,-1.05,amber,'hierarchy');
+ // Broad vertical ribs are distinct shallow solids, with no overlapping coplanar faces.
+ for(let x=-8.5;x<=8.51;x+=.66){
+  const rib=cube(.24,.92,.105,x,1.03,.41,cream,'hierarchy');
+  rib.material=cream;
+ }
+ // Sculptural tapered side wings and solid feet give a crafted, non-boxy silhouette.
+ for(const side of [-1,1]){
+  const wing=cube(.62,1.35,2.74,side*9.26,.98,-1.05,caramel,'hierarchy');wing.rotation.z=-side*.085;
+  const accent=cube(.16,1.16,2.78,side*9.12,1.05,-1.05,softGold,'hierarchy');accent.rotation.z=-side*.085;
+  const foot=cube(1.28,.35,2.48,side*8.78,.17,-1.05,caramel,'hierarchy');
+ }
+ // The marble-like upper surface is one stable layer, not flickering strips.
+ rounded(19.45,3.04,1.28,.17,0,1.52,-1.05,softGold,'hierarchy');
+ rounded(19.15,2.80,1.19,.18,0,1.72,-1.05,cream,'hierarchy');
+ const panelNames=['地檢署','第一審','第二審','第三審'];
+ const panelColors=['#A34A51','#DE9045','#D86E4D','#C38C43'];
+ function plaqueText(str){
+  const c=document.createElement('canvas');c.width=512;c.height=160;
+  const ctx=c.getContext('2d');ctx.clearRect(0,0,512,160);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#FFF7E8';
+  ctx.shadowColor='rgba(71,34,12,.38)';ctx.shadowBlur=5;
+  ctx.font='bold 80px "Noto Sans TC","Microsoft JhengHei",sans-serif';ctx.fillText(str,256,82);
+  const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;
+  return new T.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:T.DoubleSide});
+ }
+ for(let i=0;i<4;i++){
+  const x=[-6.85,-2.28,2.28,6.85][i],panel='court'+i;
+  const stem=cylinder(.27,.37,.95,x,2.17,-1.10,softGold,'hierarchy',24);stem.userData.litigationPanel=panel;
+  const ring=mesh(new T.TorusGeometry(1.48,.18,12,48),softGold,x,3.40,-.96,'hierarchy');ring.userData.litigationPanel=panel;
+  const disc=cylinder(1.31,1.31,.18,x,3.40,-.99,material(panelColors[i],.07,.72),'hierarchy',48);disc.rotation.x=Math.PI/2;disc.userData.litigationPanel=panel;
+  const textMesh=mesh(new T.PlaneGeometry(2.38,.76),plaqueText(panelNames[i]),x,3.40,-.825,'hierarchy');textMesh.userData.litigationPanel=panel;
+  // A pointed sun silhouette: one coherent radial mesh, not dozens of rod-like cylinders.
+  const verts=[],spikes=12,cy=5.26,outer=.52,inner=.34;
+  for(let j=0;j<spikes*2;j++){
+   const angle=-Math.PI/2+j*Math.PI/spikes,r=j%2===0?outer:inner;
+   verts.push(new T.Vector2(Math.cos(angle)*r,Math.sin(angle)*r));
+  }
+  const sunShape=new T.Shape(verts);sunShape.closePath();
+  const sunGeo=new T.ExtrudeGeometry(sunShape,{depth:.09,bevelEnabled:true,bevelThickness:.025,bevelSize:.018,bevelSegments:1});
+  const sun=mesh(sunGeo,softGold,x,cy,-.98,'hierarchy');sun.userData.litigationPanel=panel;
+  const core=mesh(new T.CircleGeometry(.24,24),cream,x,cy,-.845,'hierarchy');core.userData.litigationPanel=panel;
  }
  // v447: Two genuinely open royal service pavilions, not flat desks with signs.
  // The two freestanding columns and low, wide canopy are real 3D solids; no text panels.
