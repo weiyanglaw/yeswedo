@@ -120,15 +120,20 @@ export function createLitigationInterior(root,T){
  rounded(27,21,2,.045,0,.005,-.7,deep);
  rounded(26.6,20.6,2,.065,0,.07,-.7,gold);
  rounded(26.0,20.0,2,.08,0,.14,-.7,stone);
+ // v449: The judge bench is higher than both counsel desks, without changing materials or footprint.
+ const judgeBenchStart=root.children.length;
  // Court bench: substantial crescent front, layered sculpted trim, no dark expanses.
  rounded(23,2.8,1.05,1.95,0,.35,-9.35,orange,'civil');
  rounded(23.2,2.95,1.08,.16,0,2.32,-9.35,gold,'civil');
  rounded(22.85,2.55,1.02,.19,0,2.49,-9.35,white,'civil');
  for(let x of [-9,-5,-1,3,7,10])cube(.09,1.24,.12,x,1.1,-7.91,gold,'civil');
- for(let x of [-5.5,0,5.5])chair(x,-11.45,'civil',Math.PI,velvet,1.48);
+ for(const obj of root.children.slice(judgeBenchStart))if(obj.isMesh)obj.position.y+=.52;
+ for(let x of [-5.5,0,5.5]){const c=chair(x,-11.45,'civil',Math.PI,velvet,1.60);c.position.y=.52;}
  // Both counsel tables face the judge; visitor sees their clear curved profiles.
+ const counselDeskStart=root.children.length;
  table(-7.8,-4.8,8.5,2.30,'civil');table(7.8,-4.8,8.5,2.30,'civil');
- for(let x of [-9.3,-6.3,6.3,9.3])chair(x,-6.25,'civil',Math.PI,peach,1.02);
+ for(const obj of root.children.slice(counselDeskStart))if(obj.isMesh)obj.position.y+=.22;
+ for(let x of [-9.3,-6.3,6.3,9.3]){const c=chair(x,-6.25,'civil',Math.PI,peach,1.10);c.position.y=.22;}
  // Removed the isolated right-rear desk and chair requested by the owner.
  // v448: One bespoke orange-and-champagne royal four-panel judicial gallery.
  // Wide-spaced real vertical fluting, not coplanar lines or animated lights.
@@ -179,8 +184,16 @@ export function createLitigationInterior(root,T){
  }
  // v447: Two genuinely open royal service pavilions, not flat desks with signs.
  // The two freestanding columns and low, wide canopy are real 3D solids; no text panels.
- for(const x of [-13.7,-8.3]){
-  const z=4.7;
+ // v449: Both original service pavilions are placed along the LEFT lateral wall.
+ // Local front (+Z) is rotated toward the room (+X); no new geometry or materials.
+ for(const wallZ of [0.9,8.3]){
+  const pavilion=new T.Group();pavilion.position.set(-14.80,0,wallZ);pavilion.rotation.y=Math.PI/2;root.add(pavilion);
+  const x=0,z=0;
+  const mesh0=mesh,cube0=cube,cylinder0=cylinder;
+  const localMesh=(geo,mt,px,py,pz,zone)=>mesh0(geo,mt,px,py,pz,zone,pavilion);
+  const localCube=(w,h,d,px,py,pz,mt,zone)=>localMesh(new T.BoxGeometry(w,h,d),mt,px,py,pz,zone);
+  const localCylinder=(rt,rb,h,px,py,pz,mt,zone,n=32)=>localMesh(new T.CylinderGeometry(rt,rb,h,n),mt,px,py,pz,zone);
+
   // Sculpted convex counter: front semicircular outline, supported by a solid curved body.
   const counterShape=new T.Shape();
   counterShape.moveTo(-2.16,-.88);counterShape.lineTo(2.16,-.88);
@@ -190,15 +203,15 @@ export function createLitigationInterior(root,T){
   counterShape.closePath();
   const baseGeo=new T.ExtrudeGeometry(counterShape,{depth:1.32,bevelEnabled:true,bevelSize:.08,bevelThickness:.06,bevelSegments:2,curveSegments:14});
   baseGeo.rotateX(-Math.PI/2);
-  mesh(baseGeo,orange,x,.22,z,'service');
+  localMesh(baseGeo,orange,x,.22,z,'service');
   const topGeo=new T.ExtrudeGeometry(counterShape,{depth:.20,bevelEnabled:true,bevelSize:.06,bevelThickness:.045,bevelSegments:2,curveSegments:14});
   topGeo.rotateX(-Math.PI/2);
-  mesh(topGeo,white,x,1.56,z,'service');
+  localMesh(topGeo,white,x,1.56,z,'service');
   // Pillars sit on the back corners, leaving the visitor side open and the walkways clear.
   for(const dx of [-1.84,1.84]){
-   cylinder(.25,.31,3.15,x+dx,3.25,z-.65,ivory,'service',24);
-   cylinder(.42,.42,.24,x+dx,4.89,z-.65,gold,'service',24);
-   cylinder(.38,.38,.23,x+dx,1.78,z-.65,gold,'service',24);
+   localCylinder(.25,.31,3.15,x+dx,3.25,z-.65,ivory,'service',24);
+   localCylinder(.42,.42,.24,x+dx,4.89,z-.65,gold,'service',24);
+   localCylinder(.38,.38,.23,x+dx,1.78,z-.65,gold,'service',24);
   }
   // Wide shallow architectural crown: not a tombstone-shaped filled arch.
   const crownPts=[];
@@ -206,10 +219,10 @@ export function createLitigationInterior(root,T){
    const u=-1+2*i/24;
    crownPts.push(new T.Vector3(x+u*2.17,5.04+.52*(1-u*u),z-.65));
   }
-  mesh(new T.TubeGeometry(new T.CatmullRomCurve3(crownPts),48,.26,10,false),gold,0,0,0,'service');
-  const roof=cube(4.65,.25,.70,x,5.01,z-.65,white,'service');
+  localMesh(new T.TubeGeometry(new T.CatmullRomCurve3(crownPts),48,.26,10,false),gold,0,0,0,'service');
+  const roof=localCube(4.65,.25,.70,x,5.01,z-.65,white,'service');
   // The top rail remains wide and flat; only the crown rises above it.
-  cube(4.76,.14,.76,x,5.18,z-.65,gold,'service');
+  localCube(4.76,.14,.76,x,5.18,z-.65,gold,'service');
  }
  // Mediation: substantial oval tabletop and six genuinely upholstered chairs.
  let t=cylinder(2.2,2.2,.32,11.1,1.2,3.9,white,'mediation',48);t.scale.set(2,1,.7);let rim=cylinder(2.23,2.23,.11,11.1,1.07,3.9,gold,'mediation',48);rim.scale.set(2,1,.7);let pedestal=cylinder(1.25,1.55,.9,11.1,.56,3.9,deep,'mediation');pedestal.scale.set(1.7,1,.7);
@@ -354,6 +367,8 @@ export function createLitigationInterior(root,T){
   part(.68,.09,.13,0,7.68,.68,gold);
   part(.68,.09,.13,0,2.63,.68,gold);
  }
+ // v449: Raised bench fascia and trim follow the same elevation as the judge desk.
+ const judgeReliefStart=root.children.length;
  // Three substantial tiers behind the judge, without changing bench dimensions.
  rounded(23.6,3.05,1.08,.18,0,.14,-9.35,gold,'civil');
  for(const yy of [1.0,1.43]){
@@ -364,6 +379,7 @@ export function createLitigationInterior(root,T){
    cube(.11,1.05,.11,x,1.0,-7.85,gold,'civil');
    cube(1.65,.10,.14,x,1.72,-7.82,white,'civil');
  }
+ for(const obj of root.children.slice(judgeReliefStart))if(obj.isMesh)obj.position.y+=.52;
  // Genuine unchanged official image on a locally contrasting terracotta backing.
  // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
  const logoGroup=new T.Group();logoGroup.position.set(0,14.0,-12.85);root.add(logoGroup);
@@ -374,16 +390,16 @@ export function createLitigationInterior(root,T){
  const officialMat=new T.MeshBasicMaterial({map:official,transparent:true,side:T.DoubleSide,depthWrite:false});
  mesh(new T.PlaneGeometry(5.10,5.10),officialMat,0,0,.31,'civil',logoGroup);
  // Upholstery detailing follows original chair positions, without additional seats in the courtroom.
- function seatFinish(x,z,face,sc,zone){
-  const g=new T.Group();g.position.set(x,0,z);g.rotation.y=face;g.scale.setScalar(sc);root.add(g);
+ function seatFinish(x,z,face,sc,zone,elevation=0){
+  const g=new T.Group();g.position.set(x,elevation,z);g.rotation.y=face;g.scale.setScalar(sc);root.add(g);
   const part=(geo,mt,px,py,pz)=>mesh(geo,mt,px,py,pz,zone,g);
   part(new T.BoxGeometry(.93,1.24,.085),velvet,0,1.75,.66);
   for(const dx of [-.48,.48])part(new T.BoxGeometry(.075,1.45,.10),gold,dx,1.76,.68);
   part(new T.BoxGeometry(.90,.075,.09),gold,0,2.47,.68);
   part(new T.BoxGeometry(.86,.08,.80),white,0,1.04,-.015);
  }
- for(const x of [-5.5,0,5.5])seatFinish(x,-11.45,Math.PI,1.48,'civil');
- for(const x of [-9.3,-6.3,6.3,9.3])seatFinish(x,-6.25,Math.PI,1.02,'civil');
+ for(const x of [-5.5,0,5.5])seatFinish(x,-11.45,Math.PI,1.60,'civil',.52);
+ for(const x of [-9.3,-6.3,6.3,9.3])seatFinish(x,-6.25,Math.PI,1.10,'civil',.22);
  
  for(const x of [8.2,10.15,12.05,14]){seatFinish(x,1.85,Math.PI,.86,'mediation');seatFinish(x,6,0,.86,'mediation')}
  // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
@@ -392,7 +408,7 @@ export function createLitigationInterior(root,T){
  seatFinish(10.6,9.94,Math.PI,.80,'reception');
  // No additional round table or loose chairs beside the reception counter.
  // Service counter seats are positioned behind existing counters, not in the walking lane.
- for(const x of [-13.7,-8.3])chair(x,2.9,'service',Math.PI,peach,.65);
+ for(const z of [0.9,8.3])chair(-16.05,z,'service',Math.PI/2,peach,.65);
  // Five monumental, single-purpose silhouettes: clearly readable at mobile entrance distance.
  // The objects are kept away from chair paths and remain within their own tabletop footprints.
  function rodBetween(a,b,r,mt,zone){
