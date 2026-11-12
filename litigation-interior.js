@@ -1,4 +1,4 @@
-// v444: Royal courtroom geometry and circulation refinement.
+// v445: Royal wall sculpting, circulation and portrait mesh revision.
 export function createLitigationInterior(root,T){
  const targets=[];
  const material=(color,metalness=0,roughness=.68)=>new T.MeshStandardMaterial({color,metalness,roughness});
@@ -50,6 +50,38 @@ export function createLitigationInterior(root,T){
    const trim=cube(3.45,.26,.78,side*14.95,12.48,-11.28,gold);trim.rotation.y=side*.27;
    const foot=cube(3.45,.26,.82,side*14.95,.36,-11.28,stone);foot.rotation.y=side*.27;
  }
+ // Sculpt the two formerly blank infill wings as monumental royal masonry, not flat patched boards.
+ for(const side of [-1,1]){
+   const x=side*14.95;
+   const wallPanel=cube(2.85,8.7,.32,x,6.7,-10.80,stone);
+   wallPanel.rotation.y=side*.27;
+   const centralRelief=cube(1.90,6.45,.28,x,6.45,-10.47,white);
+   centralRelief.rotation.y=side*.27;
+   const crown=cube(3.05,.72,.48,x,11.35,-10.43,gold);crown.rotation.y=side*.27;
+   const plinth=cube(3.10,.74,.44,x,1.1,-10.43,deep);plinth.rotation.y=side*.27;
+   for(const dx of [-1.25,1.25]){
+     const pier=cube(.38,9.6,.47,x+dx,6.0,-10.38,ivory);pier.rotation.y=side*.27;
+     const cap=cube(.67,.37,.55,x+dx,11.0,-10.35,gold);cap.rotation.y=side*.27;
+   }
+ }
+ // Both long lateral walls: bold architectural coffers and broad pilasters, with deep offsets.
+ // Large pieces avoid the high-frequency lines that shimmer on iPhone.
+ for(const side of [-1,1]){
+   const wallX=side*17.45, inward=wallX-side*.30;
+   for(const z of [-9,-1,7]){
+     const bay=cube(.18,6.25,5.6,inward,5.2,z,stone);
+     const panel=cube(.24,4.8,4.05,inward-side*.20,5.3,z,white);
+     const medallion=mesh(new T.CylinderGeometry(.83,.83,.18,40),peach,inward-side*.40,6.25,z);
+     medallion.rotation.z=Math.PI/2;
+     const goldBoss=mesh(new T.CylinderGeometry(.55,.55,.21,40),gold,inward-side*.55,6.25,z);
+     goldBoss.rotation.z=Math.PI/2;
+   }
+   for(const z of [-13,-5,3,11]){
+     cube(.48,8.2,.70,inward-side*.18,4.4,z,ivory);
+     cube(.63,.48,.95,inward-side*.18,8.5,z,gold);
+     cube(.68,.45,1.02,inward-side*.18,.42,z,deep);
+   }
+ }
  // Deep forward-projecting open-air crown (not a ceiling or suspended light).
  // Curved multi-tier architectural extrusion is deliberately separated in depth.
  for(const [offset,z,rad,mt] of [[.65,-13.86,.32,gold],[.30,-13.64,.22,white],[-.15,-13.45,.15,gold]]){
@@ -65,14 +97,14 @@ export function createLitigationInterior(root,T){
  rounded(26.6,20.6,2,.065,0,.07,-.7,gold);
  rounded(26.0,20.0,2,.08,0,.14,-.7,stone);
  // Court bench: substantial crescent front, layered sculpted trim, no dark expanses.
- rounded(23,2.8,1.05,1.95,0,.35,-11.4,orange,'civil');
- rounded(23.2,2.95,1.08,.16,0,2.32,-11.4,gold,'civil');
- rounded(22.85,2.55,1.02,.19,0,2.49,-11.4,white,'civil');
- for(let x of [-9,-5,-1,3,7,10])cube(.09,1.24,.12,x,1.1,-9.96,gold,'civil');
- for(let x of [-5.5,0,5.5])chair(x,-12.6,'civil',Math.PI,velvet,1.48);
+ rounded(23,2.8,1.05,1.95,0,.35,-10.35,orange,'civil');
+ rounded(23.2,2.95,1.08,.16,0,2.32,-10.35,gold,'civil');
+ rounded(22.85,2.55,1.02,.19,0,2.49,-10.35,white,'civil');
+ for(let x of [-9,-5,-1,3,7,10])cube(.09,1.24,.12,x,1.1,-8.91,gold,'civil');
+ for(let x of [-5.5,0,5.5])chair(x,-12.1,'civil',Math.PI,velvet,1.48);
  // Both counsel tables face the judge; visitor sees their clear curved profiles.
  table(-7.5,-6.9,7.4,2.1,'civil');table(7.5,-6.9,7.4,2.1,'civil');
- for(let x of [-8.9,-6.2,6.2,8.9])chair(x,-8.5,'civil',0,peach,1.02);
+ for(let x of [-8.9,-6.2,6.2,8.9])chair(x,-8.5,'civil',Math.PI,peach,1.02);
  // Removed the isolated right-rear desk and chair requested by the owner.
  // One unified three-instance exhibit desk: oversized circular medallions, not three cabinets.
  rounded(18,2.5,1.1,1.2,0,.24,-1.05,orange,'hierarchy');
@@ -112,51 +144,59 @@ export function createLitigationInterior(root,T){
  for(let i=0;i<15;i++){let a=i*Math.PI*2/15,rr=.66;let fold=sp(new T.CylinderGeometry(.032,.09,2.05,7),i%3?bronzeLight:bronzeShadow,Math.cos(a)*rr,1.35,Math.sin(a)*rr);fold.rotation.z=Math.sin(a)*.13;fold.rotation.x=Math.cos(a)*.13}
  const bod=sp(new T.SphereGeometry(.52,28,20),bronze,0,3.08,0);bod.scale.set(1,.98,.65);
  const neck=sp(new T.CylinderGeometry(.16,.19,.34,16),bronzeLight,0,3.72,0);
- // Smooth sculpted portrait: continuous asymmetric facial mesh instead of bead-like features.
- // Front of the statue is +Z; the face silhouette narrows naturally at the jaw.
- const faceRows=[
-  [-.20,3.79,.065,.13],[ -.265,3.86,.105,.18],[-.30,3.96,.145,.22],
-  [-.315,4.09,.17,.23],[-.29,4.20,.145,.21],[-.23,4.30,.095,.17],[-.14,4.36,.035,.10]
- ];
- const verts=[],inds=[],segments=32;
- for(const [width,yy,bulge,depth] of faceRows){
-  const w=Math.abs(width);
-  for(let j=0;j<=segments;j++){
-   const a=j/segments*Math.PI*2;
-   const xx=w*Math.cos(a),zz=.01+depth*Math.sin(a)+bulge;
-   verts.push(xx,yy,zz);
-  }
+ // Rebuilt continuous female portrait mesh: anatomically tapered jaw, sculpted brow,
+ // integrated nose and lips. No spheres, bead hair, or pasted flat photograph.
+ const portrait=new T.BufferGeometry(), pv=[], pi=[];
+ const nLat=34,nLon=64;
+ for(let j=0;j<=nLat;j++){
+   const t=j/nLat, y=3.77+t*.68;
+   const jaw=.18+.16*Math.sin(Math.PI*Math.pow(t,.83));
+   const taper=1-.25*Math.max(0,(t-.82)/.18);
+   for(let k=0;k<=nLon;k++){
+     const a=2*Math.PI*k/nLon, xx=jaw*taper*Math.cos(a);
+     const front=Math.max(0,Math.sin(a));
+     let zz=.012+(.21+.025*Math.sin(Math.PI*t))*Math.sin(a);
+     // Nose ridge is raised as part of the same continuous facial surface.
+     const ridge=Math.exp(-Math.pow(xx/.065,2));
+     const noseProfile=Math.exp(-Math.pow((t-.43)/.15,2));
+     zz+=front*ridge*noseProfile*.12;
+     // Small integrated lips and softly sculpted cheekbones.
+     zz+=front*Math.exp(-Math.pow((t-.245)/.047,2))*Math.exp(-Math.pow(xx/.12,2))*.028;
+     zz+=front*Math.exp(-Math.pow((t-.52)/.20,2))*Math.exp(-Math.pow((Math.abs(xx)-.19)/.10,2))*.023;
+     pv.push(xx,y,zz);
+   }
  }
- for(let i=0;i<faceRows.length-1;i++)for(let j=0;j<segments;j++){
-  const a=i*(segments+1)+j,b=a+segments+1;
-  inds.push(a,b,a+1,b,b+1,a+1);
+ for(let j=0;j<nLat;j++)for(let k=0;k<nLon;k++){
+   const a=j*(nLon+1)+k,b=a+nLon+1;pi.push(a,b,a+1,b,b+1,a+1);
  }
- const faceGeo=new T.BufferGeometry();faceGeo.setAttribute('position',new T.Float32BufferAttribute(verts,3));faceGeo.setIndex(inds);faceGeo.computeVertexNormals();
- sp(faceGeo,new T.MeshStandardMaterial({color:'#D3AE68',metalness:.62,roughness:.43,side:T.DoubleSide}),0,0,0);
- // Continuous tapered nose bridge and small sculpted lips (not spherical nose / eyes).
- const nose=sp(new T.ConeGeometry(.078,.24,12),bronzeLight,0,3.995,.34);nose.rotation.x=-.23;
- const mouth=sp(new T.CapsuleGeometry(.027,.105,3,10),bronzeShadow,0,3.865,.292);mouth.rotation.z=Math.PI/2;
- // Fabric blindfold wraps around the head as a curved band with separated front relief.
- const blindPts=[];for(let j=0;j<=16;j++){
-  const a=-Math.PI*.82+j/16*Math.PI*1.64;
-  blindPts.push(new T.Vector3(.306*Math.sin(a),4.115+.018*Math.cos(a*2),.035+.255*Math.cos(a)));
+ portrait.setAttribute('position',new T.Float32BufferAttribute(pv,3));portrait.setIndex(pi);portrait.computeVertexNormals();
+ sp(portrait,new T.MeshStandardMaterial({color:'#C6A05D',metalness:.58,roughness:.46,side:T.DoubleSide}),0,0,0);
+ // Blindfold: wide, sculpted satin ribbon across the eye line, not a cylindrical bar.
+ const blindShape=new T.BufferGeometry(),bv=[],bi=[];
+ for(let i=0;i<=30;i++){
+   const a=-1.30+i*2.60/30;
+   for(const dy of [-.055,.055]){
+     bv.push(.32*Math.sin(a),4.12+dy+.018*Math.cos(a*2),.225*Math.cos(a)+.06);
+   }
+   if(i<30){const v=i*2;bi.push(v,v+1,v+2,v+1,v+3,v+2)}
  }
- sp(new T.TubeGeometry(new T.CatmullRomCurve3(blindPts),48,.063,7,false),bronzeShadow,0,0,0);
- // Wavy hair locks made of swept continuous strands, no pearl/bead geometry.
- for(let i=0;i<18;i++){
-  const a=(i/18)*Math.PI*1.88-Math.PI*.94;
-  const strand=[];
-  for(let j=0;j<=10;j++){
-   const t=j/10;
-   strand.push(new T.Vector3(Math.sin(a)*(.255+.035*Math.sin(t*5+a)),4.30-.35*t+.035*Math.sin(t*10+a),
-     -.045+Math.cos(a)*(.235+.018*Math.cos(t*9))));
-  }
-  sp(new T.TubeGeometry(new T.CatmullRomCurve3(strand),18,.028,6,false),i%3?bronzeLight:bronzeShadow,0,0,0);
+ blindShape.setAttribute('position',new T.Float32BufferAttribute(bv,3));blindShape.setIndex(bi);blindShape.computeVertexNormals();
+ sp(blindShape,new T.MeshStandardMaterial({color:'#99753F',metalness:.5,roughness:.5,side:T.DoubleSide}),0,0,0);
+ // Sculpted wavy locks: broad swept ribbons, not a row of gold beads.
+ for(let i=0;i<13;i++){
+   const a=-Math.PI+.16+i*(Math.PI*1.84)/12;
+   const ribbon=[],faces=[];
+   for(let j=0;j<=18;j++){
+     const t=j/18,rad=.29+.022*Math.sin(t*11+i),yy=4.43-.53*t+.022*Math.sin(t*12+i);
+     for(const da of [-.085,.085])ribbon.push(Math.sin(a+da)*rad,yy,Math.cos(a+da)*rad-.035);
+     if(j<18){const v=2*j;faces.push(v,v+2,v+1,v+1,v+2,v+3)}
+   }
+   const hair=new T.BufferGeometry();hair.setAttribute('position',new T.Float32BufferAttribute(ribbon,3));hair.setIndex(faces);hair.computeVertexNormals();
+   sp(hair,i%3?bronze:bronzeLight,0,0,0);
  }
- // Long braided curls follow the side of the face with smooth sculpted strands.
- for(let i=0;i<4;i++){
-  const pts=[];for(let j=0;j<=20;j++){const t=j/20;pts.push(new T.Vector3(.27+i*.035+.026*Math.sin(t*15+i),4.16-t*.88,.03+.07*Math.cos(t*11+i)))}
-  sp(new T.TubeGeometry(new T.CatmullRomCurve3(pts),26,.028,7,false),i%2?bronze:bronzeLight,0,0,0);
+ for(let i=0;i<5;i++){
+   const pts=[];for(let j=0;j<=18;j++){const t=j/18;pts.push(new T.Vector3(.28+i*.022+.025*Math.sin(t*12+i),4.22-t*.86,.06+.07*Math.cos(t*9+i)))}
+   sp(new T.TubeGeometry(new T.CatmullRomCurve3(pts),28,.017,6,false),bronzeLight,0,0,0);
  }
  // Diagonal draped gown with curved fabric ridges, no flashing surface textures.
  for(let i=0;i<17;i++){
@@ -223,14 +263,14 @@ export function createLitigationInterior(root,T){
   part(.68,.09,.13,0,2.63,.68,gold);
  }
  // Three substantial tiers behind the judge, without changing bench dimensions.
- rounded(23.6,3.05,1.08,.18,0,.14,-11.4,gold,'civil');
+ rounded(23.6,3.05,1.08,.18,0,.14,-10.35,gold,'civil');
  for(const yy of [1.0,1.43]){
-  for(let x=-10.4;x<=10.4;x+=2.08)cube(1.15,.13,.11,x,yy,-9.90,gold,'civil');
+  for(let x=-10.4;x<=10.4;x+=2.08)cube(1.15,.13,.11,x,yy,-8.85,gold,'civil');
  }
  // Curved judge-dais face relief, layered sculpted ribs with visible spacing.
  for(const x of [-9.7,-6.7,-3.7,-.7,2.3,5.3,8.3]){
-   cube(.11,1.05,.11,x,1.0,-9.90,gold,'civil');
-   cube(1.65,.10,.14,x,1.72,-9.87,white,'civil');
+   cube(.11,1.05,.11,x,1.0,-8.85,gold,'civil');
+   cube(1.65,.10,.14,x,1.72,-8.82,white,'civil');
  }
  // Genuine unchanged official image on a locally contrasting terracotta backing.
  // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
@@ -250,17 +290,17 @@ export function createLitigationInterior(root,T){
   part(new T.BoxGeometry(.90,.075,.09),gold,0,2.47,.68);
   part(new T.BoxGeometry(.86,.08,.80),white,0,1.04,-.015);
  }
- for(const x of [-5.5,0,5.5])seatFinish(x,-12.6,Math.PI,1.48,'civil');
- for(const x of [-8.9,-6.2,6.2,8.9])seatFinish(x,-8.5,0,1.02,'civil');
+ for(const x of [-5.5,0,5.5])seatFinish(x,-12.1,Math.PI,1.48,'civil');
+ for(const x of [-8.9,-6.2,6.2,8.9])seatFinish(x,-8.5,Math.PI,1.02,'civil');
  
  for(const x of [8.2,10.15,12.05,14]){seatFinish(x,1.85,Math.PI,.86,'mediation');seatFinish(x,6,0,.86,'mediation')}
  // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
  // Its sole staff chair faces the visitor (+Z), and sits on the staff side (negative Z).
- chair(10.6,9.73,'reception',Math.PI,velvet,.80);
- seatFinish(10.6,9.73,Math.PI,.80,'reception');
+ chair(10.6,9.94,'reception',Math.PI,velvet,.80);
+ seatFinish(10.6,9.94,Math.PI,.80,'reception');
  // No additional round table or loose chairs beside the reception counter.
  // Service counter seats are positioned behind existing counters, not in the walking lane.
- for(const x of [-13.7,-8.3])chair(x,3.65,'service',0,peach,.65);
+ for(const x of [-13.7,-8.3])chair(x,3.65,'service',Math.PI,peach,.65);
  // Bronze Lady Justice is a detailed procedural approximation, not a photo-identical scan.
  return {targets};
 }
