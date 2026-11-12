@@ -1,4 +1,4 @@
-// v436: Warm royal architecture, no signs, no generated imagery.
+// v444: Royal courtroom geometry and circulation refinement.
 export function createLitigationInterior(root,T){
  const targets=[];
  const material=(color,metalness=0,roughness=.68)=>new T.MeshStandardMaterial({color,metalness,roughness});
@@ -42,6 +42,24 @@ export function createLitigationInterior(root,T){
    }
    mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),100,thick,7,false),mt,0,0,0);
  }
+ // Complete the side wings: no open voids beside the monumental rear wall.
+ // Thick ivory wall sections follow the rear arc endpoints, leaving the front open.
+ for(const side of [-1,1]){
+   const wing=cube(3.55,12.4,.68,side*14.95,6.2,-11.3,ivory);
+   wing.rotation.y=side*.27;
+   const trim=cube(3.45,.26,.78,side*14.95,12.48,-11.28,gold);trim.rotation.y=side*.27;
+   const foot=cube(3.45,.26,.82,side*14.95,.36,-11.28,stone);foot.rotation.y=side*.27;
+ }
+ // Deep forward-projecting open-air crown (not a ceiling or suspended light).
+ // Curved multi-tier architectural extrusion is deliberately separated in depth.
+ for(const [offset,z,rad,mt] of [[.65,-13.86,.32,gold],[.30,-13.64,.22,white],[-.15,-13.45,.15,gold]]){
+   const pts=[];
+   for(let j=0;j<=84;j++){
+    const x=-16.7+33.4*j/84;
+    pts.push(new T.Vector3(x,archTop(x)+offset,z));
+   }
+   mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts),120,rad,10,false),mt,0,0,0);
+ }
  // Broad floor inlay, not a full bright-white floor.
  rounded(27,21,2,.045,0,.005,-.7,deep);
  rounded(26.6,20.6,2,.065,0,.07,-.7,gold);
@@ -70,8 +88,8 @@ export function createLitigationInterior(root,T){
  // Service: two actual work counters with recessed panels and countertops.
  for(let x of [-13.7,-8.3]){rounded(4.65,2.25,.65,1.5,x,.18,5.3,orange,'service');rounded(4.85,2.45,.65,.17,x,1.75,5.3,white,'service');cube(3.8,.63,.08,x,.85,6.47,ivory,'service');cube(3.7,.09,.12,x,1.45,6.51,gold,'service');rounded(1.3,.8,.12,.06,x,1.96,5.2,stone,'service')}
  // Mediation: substantial oval tabletop and six genuinely upholstered chairs.
- let t=cylinder(2.2,2.2,.32,11.1,1.2,5.8,white,'mediation',48);t.scale.set(2,1,.7);let rim=cylinder(2.23,2.23,.11,11.1,1.07,5.8,gold,'mediation',48);rim.scale.set(2,1,.7);let pedestal=cylinder(1.25,1.55,.9,11.1,.56,5.8,deep,'mediation');pedestal.scale.set(1.7,1,.7);
- for(let x of [8.2,10.15,12.05,14]){chair(x,3.7,'mediation',Math.PI,peach,.86);chair(x,8.0,'mediation',0,peach,.86)}
+ let t=cylinder(2.2,2.2,.32,11.1,1.2,3.9,white,'mediation',48);t.scale.set(2,1,.7);let rim=cylinder(2.23,2.23,.11,11.1,1.07,3.9,gold,'mediation',48);rim.scale.set(2,1,.7);let pedestal=cylinder(1.25,1.55,.9,11.1,.56,3.9,deep,'mediation');pedestal.scale.set(1.7,1,.7);
+ for(let x of [8.2,10.15,12.05,14]){chair(x,1.85,'mediation',Math.PI,peach,.86);chair(x,6.0,'mediation',0,peach,.86)}
  // US-law: retain original five-point star, replace white cone figure with a bronze sculptural figure.
  const star=new T.Shape();for(let i=0;i<10;i++){let a=-Math.PI/2+i*Math.PI/5,r=i%2?2.65:5.25;let x=Math.cos(a)*r,y=Math.sin(a)*r;if(i===0)star.moveTo(x,y);else star.lineTo(x,y)}star.closePath();
  const starGeo=new T.ExtrudeGeometry(star,{depth:.72,bevelEnabled:true,bevelSize:.15,bevelThickness:.12,bevelSegments:3});starGeo.rotateX(-Math.PI/2);
@@ -94,19 +112,51 @@ export function createLitigationInterior(root,T){
  for(let i=0;i<15;i++){let a=i*Math.PI*2/15,rr=.66;let fold=sp(new T.CylinderGeometry(.032,.09,2.05,7),i%3?bronzeLight:bronzeShadow,Math.cos(a)*rr,1.35,Math.sin(a)*rr);fold.rotation.z=Math.sin(a)*.13;fold.rotation.x=Math.cos(a)*.13}
  const bod=sp(new T.SphereGeometry(.52,28,20),bronze,0,3.08,0);bod.scale.set(1,.98,.65);
  const neck=sp(new T.CylinderGeometry(.16,.19,.34,16),bronzeLight,0,3.72,0);
- const head=sp(new T.SphereGeometry(.31,28,22),bronzeLight,0,4.05,.035);head.scale.set(.92,1.15,.86);
- // Blindfold, face relief and braided curled hair.
- const blind=sp(new T.BoxGeometry(.57,.13,.13),bronzeShadow,0,4.1,.295);blind.rotation.z=-.08;
- sp(new T.SphereGeometry(.055,10,8),bronze,0,3.98,.33);
- for(let i=0;i<17;i++){let a=i*Math.PI*2/17;sp(new T.SphereGeometry(.09,9,8),i%3?bronze:bronzeLight,Math.cos(a)*.28,4.28+Math.sin(a)*.12,Math.sin(a)*.21)}
- for(let i=0;i<9;i++){let a=i*.53;sp(new T.SphereGeometry(.07,8,7),bronze,.28+Math.sin(a)*.05,3.9-i*.105,-.08)}
- // Portrait relief and layered curled locks on the visitor-facing side (+Z).
- sp(new T.SphereGeometry(.065,10,8),bronzeShadow,-.10,3.92,.323);
- sp(new T.SphereGeometry(.065,10,8),bronzeShadow,.10,3.92,.323);
- const lips=sp(new T.SphereGeometry(.10,8,7),bronzeShadow,0,3.83,.307);lips.scale.set(1,.25,.32);
+ // Smooth sculpted portrait: continuous asymmetric facial mesh instead of bead-like features.
+ // Front of the statue is +Z; the face silhouette narrows naturally at the jaw.
+ const faceRows=[
+  [-.20,3.79,.065,.13],[ -.265,3.86,.105,.18],[-.30,3.96,.145,.22],
+  [-.315,4.09,.17,.23],[-.29,4.20,.145,.21],[-.23,4.30,.095,.17],[-.14,4.36,.035,.10]
+ ];
+ const verts=[],inds=[],segments=32;
+ for(const [width,yy,bulge,depth] of faceRows){
+  const w=Math.abs(width);
+  for(let j=0;j<=segments;j++){
+   const a=j/segments*Math.PI*2;
+   const xx=w*Math.cos(a),zz=.01+depth*Math.sin(a)+bulge;
+   verts.push(xx,yy,zz);
+  }
+ }
+ for(let i=0;i<faceRows.length-1;i++)for(let j=0;j<segments;j++){
+  const a=i*(segments+1)+j,b=a+segments+1;
+  inds.push(a,b,a+1,b,b+1,a+1);
+ }
+ const faceGeo=new T.BufferGeometry();faceGeo.setAttribute('position',new T.Float32BufferAttribute(verts,3));faceGeo.setIndex(inds);faceGeo.computeVertexNormals();
+ sp(faceGeo,new T.MeshStandardMaterial({color:'#D3AE68',metalness:.62,roughness:.43,side:T.DoubleSide}),0,0,0);
+ // Continuous tapered nose bridge and small sculpted lips (not spherical nose / eyes).
+ const nose=sp(new T.ConeGeometry(.078,.24,12),bronzeLight,0,3.995,.34);nose.rotation.x=-.23;
+ const mouth=sp(new T.CapsuleGeometry(.027,.105,3,10),bronzeShadow,0,3.865,.292);mouth.rotation.z=Math.PI/2;
+ // Fabric blindfold wraps around the head as a curved band with separated front relief.
+ const blindPts=[];for(let j=0;j<=16;j++){
+  const a=-Math.PI*.82+j/16*Math.PI*1.64;
+  blindPts.push(new T.Vector3(.306*Math.sin(a),4.115+.018*Math.cos(a*2),.035+.255*Math.cos(a)));
+ }
+ sp(new T.TubeGeometry(new T.CatmullRomCurve3(blindPts),48,.063,7,false),bronzeShadow,0,0,0);
+ // Wavy hair locks made of swept continuous strands, no pearl/bead geometry.
  for(let i=0;i<18;i++){
-  const a=i*Math.PI*2/18;
-  sp(new T.SphereGeometry(.075,9,8),i%2?bronzeLight:bronzeShadow,Math.cos(a)*.31,4.26+Math.sin(a)*.10,.12+Math.sin(a)*.08);
+  const a=(i/18)*Math.PI*1.88-Math.PI*.94;
+  const strand=[];
+  for(let j=0;j<=10;j++){
+   const t=j/10;
+   strand.push(new T.Vector3(Math.sin(a)*(.255+.035*Math.sin(t*5+a)),4.30-.35*t+.035*Math.sin(t*10+a),
+     -.045+Math.cos(a)*(.235+.018*Math.cos(t*9))));
+  }
+  sp(new T.TubeGeometry(new T.CatmullRomCurve3(strand),18,.028,6,false),i%3?bronzeLight:bronzeShadow,0,0,0);
+ }
+ // Long braided curls follow the side of the face with smooth sculpted strands.
+ for(let i=0;i<4;i++){
+  const pts=[];for(let j=0;j<=20;j++){const t=j/20;pts.push(new T.Vector3(.27+i*.035+.026*Math.sin(t*15+i),4.16-t*.88,.03+.07*Math.cos(t*11+i)))}
+  sp(new T.TubeGeometry(new T.CatmullRomCurve3(pts),26,.028,7,false),i%2?bronze:bronzeLight,0,0,0);
  }
  // Diagonal draped gown with curved fabric ridges, no flashing surface textures.
  for(let i=0;i<17;i++){
@@ -184,13 +234,13 @@ export function createLitigationInterior(root,T){
  }
  // Genuine unchanged official image on a locally contrasting terracotta backing.
  // Plane faces the entrance (+Z); preserve the official white-backed artwork without recoloring.
- const logoGroup=new T.Group();logoGroup.position.set(0,13.75,-14.20);root.add(logoGroup);
+ const logoGroup=new T.Group();logoGroup.position.set(0,14.0,-12.85);root.add(logoGroup);
  const backing=material('#995B57',.05,.87);
- mesh(new T.BoxGeometry(7.4,5.05,.28),gold,0,0,0,'civil',logoGroup);
- mesh(new T.BoxGeometry(7.1,4.76,.10),backing,0,0,.22,'civil',logoGroup);
+ mesh(new T.BoxGeometry(7.8,5.4,.28),gold,0,0,0,'civil',logoGroup);
+ mesh(new T.BoxGeometry(7.48,5.06,.10),backing,0,0,.22,'civil',logoGroup);
  const official=new T.TextureLoader().load('./office-logo-transparent.png');official.colorSpace=T.SRGBColorSpace;
  const officialMat=new T.MeshBasicMaterial({map:official,transparent:true,side:T.DoubleSide,depthWrite:false});
- mesh(new T.PlaneGeometry(4.75,4.75),officialMat,0,0,.31,'civil',logoGroup);
+ mesh(new T.PlaneGeometry(5.10,5.10),officialMat,0,0,.31,'civil',logoGroup);
  // Upholstery detailing follows original chair positions, without additional seats in the courtroom.
  function seatFinish(x,z,face,sc,zone){
   const g=new T.Group();g.position.set(x,0,z);g.rotation.y=face;g.scale.setScalar(sc);root.add(g);
@@ -203,11 +253,11 @@ export function createLitigationInterior(root,T){
  for(const x of [-5.5,0,5.5])seatFinish(x,-12.6,Math.PI,1.48,'civil');
  for(const x of [-8.9,-6.2,6.2,8.9])seatFinish(x,-8.5,0,1.02,'civil');
  
- for(const x of [8.2,10.15,12.05,14]){seatFinish(x,3.7,Math.PI,.86,'mediation');seatFinish(x,8,0,.86,'mediation')}
+ for(const x of [8.2,10.15,12.05,14]){seatFinish(x,1.85,Math.PI,.86,'mediation');seatFinish(x,6,0,.86,'mediation')}
  // Reception counter remains exactly v351 dimensions (8.2 x 2.7) and position.
  // Its sole staff chair faces the visitor (+Z), and sits on the staff side (negative Z).
- chair(10.6,9.73,'reception',0,velvet,.80);
- seatFinish(10.6,9.73,0,.80,'reception');
+ chair(10.6,9.73,'reception',Math.PI,velvet,.80);
+ seatFinish(10.6,9.73,Math.PI,.80,'reception');
  // No additional round table or loose chairs beside the reception counter.
  // Service counter seats are positioned behind existing counters, not in the walking lane.
  for(const x of [-13.7,-8.3])chair(x,3.65,'service',0,peach,.65);
