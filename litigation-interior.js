@@ -187,10 +187,11 @@ export function createLitigationInterior(root,T){
  // v449: Both original service pavilions are placed along the LEFT lateral wall.
  // Local front (+Z) is rotated toward the room (+X); no new geometry or materials.
  for(const wallZ of [-3.0,4.0]){
+  const serviceGame=wallZ<0?'filing':'fees';
   const pavilion=new T.Group();pavilion.position.set(-14.80,0,wallZ);pavilion.rotation.y=-Math.PI/2;root.add(pavilion);
   const x=0,z=0;
   const mesh0=mesh,cube0=cube,cylinder0=cylinder;
-  const localMesh=(geo,mt,px,py,pz,zone)=>mesh0(geo,mt,px,py,pz,zone,pavilion);
+  const localMesh=(geo,mt,px,py,pz,zone)=>{const o=mesh0(geo,mt,px,py,pz,zone,pavilion);o.userData.litigationGame=serviceGame;return o};
   const localCube=(w,h,d,px,py,pz,mt,zone)=>localMesh(new T.BoxGeometry(w,h,d),mt,px,py,pz,zone);
   const localCylinder=(rt,rb,h,px,py,pz,mt,zone,n=32)=>localMesh(new T.CylinderGeometry(rt,rb,h,n),mt,px,py,pz,zone);
 
