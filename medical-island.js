@@ -776,9 +776,31 @@ export function createMedicalExperience(){
  };
  const el=document.createElement('section');el.id='wyMedicalExperience';
  el.style.cssText='display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:80;width:min(92vw,440px);background:#FFF9F0;color:#28524D;border:2px solid #C5A875;border-radius:18px;padding:14px;box-shadow:0 14px 36px #14283b66;font:14px/1.6 system-ui,sans-serif;max-height:65dvh;overflow-y:auto';
- el.innerHTML='<div class="wy415Brand"><img src="office-logo-transparent.png" alt="德威陽國際法律事務所官方 Logo"><div><strong>德威陽國際法律事務所</strong><small>WEI &amp; YANG INTERNATIONAL LAW FIRM</small></div></div><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
+ el.innerHTML='<div class="wy415Brand"><img src="office-logo-transparent.png" alt="德威陽國際法律事務所官方 Logo"><div><strong>德威陽國際法律事務所</strong><small>WEI &amp; YANG INTERNATIONAL LAW FIRM</small></div></div><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b id="wyMedTitle"></b><button id="wyMedClose" type="button" aria-label="關閉">✕</button></div><p id="wyMedText" style="margin:12px 0"></p><div id="wyMedSvc" style="display:none;margin:0 0 10px;padding:9px 10px;background:#D9EBE1;border:1px solid #9FC1AE;border-left:5px solid #C6A25D;border-radius:10px"><strong style="display:block;font-size:16px;margin-bottom:3px;color:#173F35">德威陽怎麼幫您？</strong><span style="display:block;font-size:13px;font-weight:600;line-height:1.5;color:#1F4A3F"></span></div><div id="wyMedChoices" style="display:grid;gap:7px"></div><small style="display:block;color:#89755b;margin-top:10px">德威陽｜有法度 · 一般法律資訊，個案仍需評估</small>';
  document.body.append(el);
  const title=el.querySelector('#wyMedTitle'),body=el.querySelector('#wyMedText'),choices=el.querySelector('#wyMedChoices');
+ // v467：每個互動都標示「德威陽可以做什麼？」（趣味接待櫃檯、薪水掌門人、聯絡與形象牆除外）
+ const wySvcBox=el.querySelector('#wyMedSvc');
+ const wyEsc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function wyViewRender(pick,view){body.innerHTML='你的選擇：'+wyEsc(pick)+'<span style="display:block;margin-top:9px;padding:8px 10px;background:#fff;border:1px solid #C5A875;border-radius:10px"><strong style="display:block;font-size:15px;color:#173F35;margin-bottom:2px">德威陽怎麼看？</strong><span style="display:block;font-weight:600;font-size:13.5px;line-height:1.55">'+wyEsc(view)+'</span></span>';}
+
+ const WY_MED_SVC={
+  mediation:'德威陽先替您算清楚醫療費、照護、工作損失與慰撫金，陪同出席醫療爭議調解，把金額、付款期限與放棄範圍逐條寫清楚。',
+  records:'德威陽協助您依法申請完整病歷、護理與檢驗影像資料，建立診療時間軸，標出需要院方說明的關鍵時段。',
+  forensics:'德威陽逐段檢視鑑定意見的依據與漏洞，替您擬定補充鑑定問題，向法院具體指出矛盾所在。',
+  ecg:'德威陽把監測紀錄、醫囑與護理交班對照成時間軸，找出處置是否及時的關鍵證據。',
+  liability:'德威陽從告知、病歷、因果三個面向盤點證據，評估責任成立的可能性，再決定協商、調解或訴訟。',
+  consent:'德威陽檢視同意書內容與實際說明過程，判斷告知是否充分，作為求償或答辯的重點。',
+  standards:'德威陽結合醫療專業意見與判決實務，分析當時的醫療常規與注意義務，不讓結果論決定對錯。',
+  timeline:'德威陽把就診、治療、術後每一段串成完整時間軸，讓調解委員與法官一眼看懂爭點。',
+  case:'德威陽代理病患與家屬求償，也協助醫療院所因應申訴與訴訟，從證據整理到調解、訴訟一路處理。',
+  books:'有疑問時，德威陽先用一次諮詢替您釐清：要不要追究、證據夠不夠、時效還剩多久。',
+  evidence:'德威陽交叉比對病歷、護理與檢查紀錄，把模糊的懷疑整理成可以具體提出的疑點。'
+ };
+ const wyIsNav=l=>/^(↩|✕|←|下一|換一|再翻|返回|重新|重設|再聽|聽薪水|認識德威陽)/.test(String(l).trim());
+ function wySvcHide(){wySvcBox.style.display='none'}
+ function wySvcShow(){const t=WY_MED_SVC[current];if(!t||(current==='computer')){wySvcHide();return}wySvcBox.querySelector('span').textContent=t;wySvcBox.style.display='block'}
+
  el.querySelector('#wyMedClose').onclick=()=>el.style.display='none';
 
  const patientTopics=[['手術後神經損傷','患者術後持續不適，想了解手術風險是否充分告知。'],['急診延誤診斷','家屬質疑急診評估與後續處置是否及時。'],['癌症檢查延誤','檢查結果異常，患者質疑追蹤通知的流程。'],['一場改善生活的手術，卻帶來意外困擾','一名患者接受非緊急性的自費手術後，出現持續不適，影響日常生活，也開始質疑術前風險是否充分告知。'],['麻醉後併發症','患者在麻醉後出現異常，家屬希望釐清監測與應對。'],['產科醫療爭議','生產過程發生緊急狀況，家屬想確認醫療決策。'],['用藥錯誤爭議','患者用藥後出現不良反應，想確認醫囑與給藥紀錄。'],['住院跌倒受傷','患者住院期間跌倒，家屬質疑防護與照護安排。'],['術後感染爭議','術後發生感染，患者想了解感染控制及追蹤措施。'],['病歷記載爭議','患者發現病歷記載與記憶不同，想核對完整資料。']];
@@ -791,8 +813,8 @@ export function createMedicalExperience(){
  const ecgTitles=['術後心率逐漸加快','術後疑似出血','胸痛患者病情變化','昏厥患者的心律異常','麻醉期間血氧下降','麻醉恢復期呼吸異常','心房顫動','心跳過慢','危險性心室心律異常','嚴重感染與生命徵象變化','用藥後疑似嚴重過敏','患者突然意識不清','夜間監測警報','急救前後的監測變化','儀器雜訊與真正異常'];
  let factIndex=0,detectiveIndex=0,ecgIndex=0,storyIndex=0,storyRole='patient';
  function storyChoose(){title.textContent='雙人沙發｜醫療故事';body.textContent='從哪個角度聽故事？';choices.replaceChildren();button('患者／家屬',()=>storyShow('patient',0));button('醫療院所',()=>storyShow('provider',0));}
- function storyShow(role,i){storyRole=role;storyIndex=i;const d=(role==='patient'?patientTopics:providerTopics)[i];title.textContent=d[0];body.textContent=d[1];choices.replaceChildren();button('看看德威陽如何協助',()=>{body.textContent=i===3&&role==='patient'?'本所曾處理相關醫療訴訟，協助患者釐清術前告知、醫療處置及損害責任，透過法律程序維護權益。':'德威陽可協助整理相關資料、釐清告知與醫療處置、分析證據及法律責任，並評估溝通、調解或訴訟途徑。';});button('下一個故事',()=>storyShow(role,(i+1)%10));button('返回身分選擇',storyChoose);}
- function bookShow(){const d=facts[factIndex++%facts.length];title.textContent='大書櫃｜'+d[0];body.textContent=d[1];choices.replaceChildren();button('再翻一本',bookShow);}
+ function storyShow(role,i){storyRole=role;storyIndex=i;const d=(role==='patient'?patientTopics:providerTopics)[i];title.textContent=d[0];body.textContent=d[1];choices.replaceChildren();wySvcShow();button('下一個故事',()=>storyShow(role,(i+1)%10));button('返回身分選擇',storyChoose);}
+ function bookShow(){const d=facts[factIndex++%facts.length];title.textContent='大書櫃｜'+d[0];body.textContent=d[1];choices.replaceChildren();button('再翻一本',bookShow);wySvcShow();}
  function detectiveShow(){const t=detectiveTitles[detectiveIndex++%detectiveTitles.length];title.textContent='醫療偵探｜'+t;body.textContent='調查任務：比較三份紀錄，找出需要進一步核對的線索。';choices.replaceChildren();[['病歷紀錄','先確認診療經過與記載時間。'],['護理紀錄','核對觀察、通知及交班內容。'],['檢查報告','比對檢查時間、結果及後續處置。']].forEach(([a,b])=>button(a,()=>{body.textContent=b;}));button('查看調查結果',()=>{body.textContent='關鍵是比對不同資料的時間、內容與完整性；單一差異不能直接認定疏失，仍須進一步查證。';});button('下一個案件',detectiveShow);}
  function ecgShow(){const t=ecgTitles[ecgIndex++%ecgTitles.length];title.textContent='心電圖監測｜'+t;body.textContent='監測畫面出現變化，什麼時候應提醒醫療團隊評估？';choices.replaceChildren();['發現異常變化時即依臨床情況評估','等到下一次例行巡房','只看單一數字，不確認患者狀況'].forEach((a,i)=>button(a,()=>{body.textContent=i===0?'答對了！應結合病人狀況、監測趨勢與臨床規範及時評估。':'不建議只等待或只看單一數字；應依患者情況與監測趨勢及時評估。';}));button('下一個監測事件',ecgShow);}
  function deskHome(){title.textContent='接待櫃檯｜德威陽';body.textContent='歡迎來到德威陽，想先了解什麼？';choices.replaceChildren();button('患者／家屬法律需求',()=>{body.textContent='可先整理病歷、醫療經過及相關損害資料，再評估法律諮詢。';});button('醫療院所法律需求',()=>{body.textContent='可協助醫療機構檢視診療紀錄、風險、申訴及爭議處理。';});button('諮詢與委任流程',()=>{body.textContent='可先聯繫本所說明案件類型，安排諮詢後再確認委任範圍。';});button('聯絡資訊與複製',contactHome);}
@@ -848,7 +870,7 @@ export function createMedicalExperience(){
     }
     body.textContent=item[1]+"\n\n如果遇到這種情況，你會怎麼選？";
     [2,3,4].forEach((n,j)=>button("ABC"[j]+"．"+item[n],()=>{
-      body.textContent="你的選擇："+item[n]+"\n\n德威陽怎麼看？\n"+item[5+j];
+      wyViewRender(item[n],item[5+j]);
       choices.replaceChildren();button("↩ 看其他選擇",()=>wyZoneShowSame(action,item));
       button(" 下一個情境",()=>wyZoneHome(action));
     }));
@@ -857,11 +879,11 @@ export function createMedicalExperience(){
   function wyZoneShowSame(action,item){
     const zoneNames={mediation:" 醫療糾紛協商區",records:" 病歷證據探索區",forensics:" X光醫療鑑定區",ecg:" 心電圖事件回放區"};
     title.textContent=zoneNames[action]+"｜"+item[0];body.textContent=item[1]+"\n\n如果遇到這種情況，你會怎麼選？";choices.replaceChildren();
-    [2,3,4].forEach((n,j)=>button("ABC"[j]+"．"+item[n],()=>{body.textContent="你的選擇："+item[n]+"\n\n德威陽怎麼看？\n"+item[5+j];choices.replaceChildren();button("↩ 看其他選擇",()=>wyZoneShowSame(action,item));button(" 下一個情境",()=>wyZoneHome(action));}));
+    [2,3,4].forEach((n,j)=>button("ABC"[j]+"．"+item[n],()=>{wyViewRender(item[n],item[5+j]);choices.replaceChildren();button("↩ 看其他選擇",()=>wyZoneShowSame(action,item));button(" 下一個情境",()=>wyZoneHome(action));}));
     button(" 下一個情境",()=>wyZoneHome(action));
   }
  let current='staff';
- function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:10px 12px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=fn;choices.append(b);}
+ function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='width:100%;text-align:left;background:#F0F3EC;border:1px solid #BAC9B9;border-radius:10px;padding:10px 12px;color:#28524D;font-weight:600;cursor:pointer';b.onclick=()=>{wySvcHide();fn();if(!wyIsNav(label))wySvcShow();};choices.append(b);}
  function ecgHome(){title.textContent=' 心電圖螢幕｜醫療法律互動';body.textContent='請選擇您的立場，進入不同的醫療爭議法律情境：';choices.replaceChildren();button('A．病患／家屬',()=>ecgRole('patient'));button('B．醫師／院方',()=>ecgRole('provider'));}
  function ecgRole(role){const t=ecgTree[role];title.textContent=' '+t.title;body.textContent=t.intro;choices.replaceChildren();t.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o.q,()=>ecgQuestion(role,i)));button('↩ 重新選擇身分',ecgHome);}
  function ecgQuestion(role,i){const t=ecgTree[role],o=t.options[i];title.textContent=' '+t.title+'｜'+o.q;body.textContent=o.a;choices.replaceChildren();o.next.forEach((n,j)=>button(String.fromCharCode(65+j)+'．'+n[0],()=>{body.textContent=n[1];choices.replaceChildren();button('↩ 回到這個問題',()=>ecgQuestion(role,i));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));button('✕ 繼續探索',()=>el.style.display='none')}));button('↩ 回到'+t.title+'選單',()=>ecgRole(role));}
@@ -870,5 +892,5 @@ export function createMedicalExperience(){
  function staffHome(){title.textContent='薪水掌門人｜醫療島導覽';body.textContent='今天想聽辦公室趣事，還是一起學醫療法律？';choices.replaceChildren();button('聽薪水掌門人趣味對話',staffStory);button('醫療糾紛怎麼辦？',()=>answer(0,0));button('認識德威陽',()=>answer(1,0));button('✕ 繼續探索',()=>el.style.display='none');}
  function home(){if(current==='staff'){staffStory();return;}if(wyZoneData[current]){wyZoneHome(current);return;}if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
  function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
- return {show(){el.style.display='none'},open(action='staff'){el.classList.toggle('wyStaffCompact',action==='staff');current=(scenes[action]||customMedical[action]||action==='liability')?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
+ return {show(){el.style.display='none'},open(action='staff'){el.classList.toggle('wyStaffCompact',action==='staff');wySvcHide();current=(scenes[action]||customMedical[action]||action==='liability')?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
