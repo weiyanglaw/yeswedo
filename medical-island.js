@@ -848,7 +848,7 @@ export function createMedicalExperience(){
     }
     body.textContent=item[1]+"\n\n如果遇到這種情況，你會怎麼選？";
     [2,3,4].forEach((n,j)=>button("ABC"[j]+"．"+item[n],()=>{
-      body.textContent="你的選擇："+item[n]+"\n\n林律師怎麼看？\n"+item[5+j];
+      body.textContent="你的選擇："+item[n]+"\n\n德威陽怎麼看？\n"+item[5+j];
       choices.replaceChildren();button("↩ 看其他選擇",()=>wyZoneShowSame(action,item));
       button(" 下一個情境",()=>wyZoneHome(action));
     }));
@@ -857,7 +857,7 @@ export function createMedicalExperience(){
   function wyZoneShowSame(action,item){
     const zoneNames={mediation:" 醫療糾紛協商區",records:" 病歷證據探索區",forensics:" X光醫療鑑定區",ecg:" 心電圖事件回放區"};
     title.textContent=zoneNames[action]+"｜"+item[0];body.textContent=item[1]+"\n\n如果遇到這種情況，你會怎麼選？";choices.replaceChildren();
-    [2,3,4].forEach((n,j)=>button("ABC"[j]+"．"+item[n],()=>{body.textContent="你的選擇："+item[n]+"\n\n林律師怎麼看？\n"+item[5+j];choices.replaceChildren();button("↩ 看其他選擇",()=>wyZoneShowSame(action,item));button(" 下一個情境",()=>wyZoneHome(action));}));
+    [2,3,4].forEach((n,j)=>button("ABC"[j]+"．"+item[n],()=>{body.textContent="你的選擇："+item[n]+"\n\n德威陽怎麼看？\n"+item[5+j];choices.replaceChildren();button("↩ 看其他選擇",()=>wyZoneShowSame(action,item));button(" 下一個情境",()=>wyZoneHome(action));}));
     button(" 下一個情境",()=>wyZoneHome(action));
   }
  let current='staff';
