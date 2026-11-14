@@ -5268,18 +5268,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   }return;
  }
  if(activeIslandRoom===1){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[1].camera);const hit=ray.intersectObjects(themeRooms[1].litigationInterior?.targets||[],true)[0];if(hit){const z=hit.object.userData.litigationZone;
- if(z==='hierarchy'){
-  const pages={
-   court0:[['地檢署是什麼？','地方檢察署由檢察官辦理刑事偵查，依法決定起訴、不起訴等處分；它不是法院的一個審級。'],['偵查不公開','偵查原則不公開，目的是保障偵查與相關人員權益；並非當事人完全不能向律師尋求協助。'],['律師在偵查階段','律師可依案件身分與法律規定協助出庭應訊、釐清爭點、整理證據及注意程序權利。'],['德威陽的協助','德威陽國際法律事務所提供刑事案件諮詢、偵查程序協助及辯護等法律服務。']],
-   court1:[['第一審在做什麼？','第一審通常著重事實認定、證據調查與法律適用；實際管轄法院依案件類型與法律規定而定。'],['先把證據準備好','書狀、證據及爭點整理會影響法庭審理效率。律師可協助提出有依據的主張及適當聲請。'],['法律策略','德威陽協助當事人分析訴訟風險、整理證據，並依案件性質規劃民事、刑事或行政訴訟。']],
-   court2:[['第二審在做什麼？','對第一審裁判不服，須依法律規定與期限上訴；第二審的審理範圍依案件類型有所不同。'],['上訴不是重講一次','律師可協助檢視原裁判、辨識具體爭點，並依程序要求提出上訴理由及必要資料。'],['專業協助','德威陽可評估上訴可行性、期限及證據與法律爭點，協助當事人規劃後續程序。']],
-   court3:[['第三審在做什麼？','第三審通常以法律審查為重點；不是所有案件都能上訴第三審，亦有法定門檻及限制。'],['法律理由很重要','第三審往往需要指出符合法定要件的法律違誤，不能只因不滿事實認定就當然提起上訴。'],['上訴前先評估','律師可協助檢視判決、上訴限制與法律理由。德威陽提供案件評估及相關訴訟代理服務。']]
-  };
-  const key=hit.object.userData.litigationPanel||'court1';let idx=0;
-  let d=document.getElementById('wyLitigationInfo433');if(!d){d=document.createElement('div');d.id='wyLitigationInfo433';document.body.appendChild(d)}
-  d.style.cssText='position:fixed;z-index:130;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88vw,440px);max-height:75dvh;overflow:auto;padding:20px;background:#fff5e5;color:#442a22;border:3px solid #d6a65e;border-radius:18px;box-shadow:0 12px 42px #0007;font-size:16px;line-height:1.7';
-  const render=()=>{const items=pages[key]||pages.court1;d.replaceChildren();const h=document.createElement('h3');h.textContent=items[idx][0];h.style.margin='0 0 12px';const p=document.createElement('p');p.textContent=items[idx][1];const n=document.createElement('div');n.style.cssText='display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:18px';const mk=(label,fn,disabled=false)=>{const b=document.createElement('button');b.textContent=label;b.disabled=disabled;b.style.cssText='border:1px solid #c69554;border-radius:9px;background:#fff1da;padding:8px;color:#583b26';b.onclick=fn;return b};n.append(mk('返回',()=>d.style.display='none'),mk('上一則',()=>{idx--;render()},idx===0),mk('下一則',()=>{idx++;render()},idx===items.length-1));d.append(h,p,n)};render();d.style.display='block';return;
- }
+ if(z==='hierarchy'){window.wyJusticeLinkOpen&&window.wyJusticeLinkOpen();return;}
  if(z==='civil'&&hit.point.z<-6.6&&hit.point.y<8){window.wyBenchOpen&&window.wyBenchOpen();return;}
  const msg={reception:'歡迎來到訴訟島｜法院接待櫃檯：認識六大主題，了解進入法院後的基本動線。',service:'法院便民服務｜收狀處受理書狀與附件；收費處可辦理裁判費等繳費。實際窗口與支付方式依各法院公告。另可查詢案件、閱卷與法庭報到資訊。',civil:'民事與家事程序｜通常、簡易、小額、家事、勞動、支付命令、非訟與保全等程序，各有不同適用條件。',criminal:'刑事訴訟｜認識偵查、起訴、審判、簡易判決、國民法官、被告與被害人的程序權利。',administrative:'行政訴訟｜了解訴願、行政訴訟、交通裁決、暫時權利保護及行政法院的審級。',hierarchy:'法院審級與司法制度｜第一審、第二審、第三審的審理重點不同；並非所有案件都能進入第三審。',mediation:'皇家調解廳｜認識民事、家事、勞動調解、和解、判決確定、強制執行及相關救濟。',usa:'美國訴訟入門｜認識美國聯邦與州法院制度，以及臺美訴訟制度的主要差異。'};let d=document.getElementById('wyLitigationInfo433');if(!d){d=document.createElement('div');d.id='wyLitigationInfo433';d.style.cssText='position:fixed;z-index:130;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88vw,440px);max-height:75dvh;overflow:auto;padding:22px;background:#fff5e5;color:#442a22;border:3px solid #d6a65e;border-radius:18px;box-shadow:0 12px 42px #0007;font-size:16px;line-height:1.8';document.body.appendChild(d)}d.replaceChildren();const title=document.createElement('strong');title.textContent='德威陽｜訴訟島司法探索';const body=document.createElement('p');body.textContent=msg[z]||'訴訟島司法導覽';const close=document.createElement('button');close.textContent='返回法院';close.onclick=()=>d.style.display='none';d.append(title,body,close);d.style.display='block';return;}}
  if(activeIslandRoom===3){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[3].camera);const objects=themeRooms[3].familyRoom?.targets||[];const hit=ray.intersectObjects(objects,true);const staffHit=hit.find(h=>h.object.userData.familyAction==='staff' && (h.object.isSprite || h.object.material?.opacity!==0));const chosen=staffHit||hit[0];if(chosen){const action=chosen.object.userData.familyAction;if(action==='logo'){openWyInfo('company');return;}familyExperience.open(action);return;}return;}if(activeIslandRoom===2){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[2].camera);
@@ -5673,7 +5662,7 @@ observer.observe(document.body,{childList:true,subtree:true});sync();
 #wyBench *{box-sizing:border-box}
 #wyBench{position:fixed;inset:0;z-index:140;display:none;overflow:auto;-webkit-overflow-scrolling:touch;background:#2b1a1088;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;color:#442a22;padding:14px 10px 30px;justify-content:center;align-items:flex-start}
 #wyBench button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-#wyBench .win{width:min(100%,460px);background:#fff5e5;border:3px solid #d6a65e;border-radius:18px;box-shadow:0 12px 42px #0004;overflow:hidden}
+#wyBench .win{margin:auto;width:min(100%,460px);background:#fff5e5;border:3px solid #d6a65e;border-radius:18px;box-shadow:0 12px 42px #0004;overflow:hidden}
 #wyBench .brand{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fffaf1;border-bottom:1px solid #ecd3a8}
 #wyBench .brand img{width:46px;height:46px;object-fit:contain;flex:none;background:#fff;border:2px solid #d3aa67;border-radius:9px}
 #wyBench .brand .nm b{display:block;font-size:15px;color:#3c2a20}
@@ -5849,6 +5838,85 @@ function ending(){const c=CASES[cur],good=picks.filter(p=>p.v==='g').length;
 function close(){document.getElementById('wyBench').style.display='none'}
 window.WB={back,backFromEnd,catPage,draw,ending,gameMenu,head,home,lawMenu,lawPage,next,pick,renderStage,show,startCase,close};
 window.wyBenchOpen=function(){const b=document.getElementById('wyBench');V=document.getElementById('wbV');b.style.display='flex';home();b.scrollTop=0};
+})();
+</script>
+<script id="wyJusticeLinkGame">
+// v465 司法連連看（2026-11-14 定稿）：地檢署、一二三審 × 民事、刑事、行政；真實延伸連線動畫、德威陽可以做什麼
+(function(){
+ const TOP=[['prosecutor','地檢署','偵查'],['first','第一審','地方法院'],['second','第二審','高等法院'],['third','第三審','最高法院']];
+ const BOTTOM=[['civil','民事訴訟'],['criminal','刑事訴訟'],['admin','行政訴訟']];
+ const R={
+  prosecutor:{
+   civil:[false,'地檢署不負責一般民事訴訟。民事爭議通常由當事人向法院起訴，不需要先到地檢署偵查。','同一件事可能同時涉及民事與刑事。德威陽先釐清您真正要的是賠償還是追究責任，再決定從哪一步開始。'],
+   criminal:[true,'刑事案件可能從警察局報案、直接向地檢署提告，或由檢察官主動偵查開始；偵查終結後作成起訴、緩起訴或不起訴，起訴後才由法院審理。','報案不等於提告，告訴乃論須在六個月內明確表示追究。從第一份筆錄到地檢署應訊，德威陽陪同在場，把關每一句陳述。'],
+   admin:[false,'地檢署不負責行政爭議。不服政府處分，通常依案件類型先經訴願或復查等程序，再向行政法院起訴。','不服政府處分，起點與期限因處分種類而不同。德威陽一眼辨別該走的救濟管道，不讓時效悄悄流失。']
+  },
+  first:{
+   civil:[true,'民事第一審由地方法院審理契約、借貸、損害賠償等權利義務爭議，原則上由主張權利的一方負舉證責任。','勝負常取決於舉證責任在誰身上。德威陽先找出關鍵爭點，把證據放在法官真正在意的位置。'],
+   criminal:[true,'刑事第一審原則上由地方法院審理檢察官起訴或自訴的案件，調查證據並依法裁判。','一審是證據調查最完整的階段。德威陽從卷證中找出矛盾與漏洞，及早聲請調查對您有利的證據。'],
+   admin:[true,'行政訴訟不在地方法院審理。第一審依事件類型，由高等行政法院的地方行政訴訟庭或高等行政庭審理人民與政府之間的公法爭議。','行政機關熟悉自己的法規與流程。德威陽從處分的事實認定、法律依據與裁量是否合理，逐一找出可挑戰之處。']
+  },
+  second:{
+   civil:[true,'民事第二審原則上由高等法院審理不服一審判決的上訴，會再審查事實與法律，但提出新主張有限制；簡易、小額事件則由地方法院合議庭審理上訴。','二審不是重來一次，新的主張有限制。德威陽精準判斷哪些主張還能補，哪些要換個角度提出。'],
+   criminal:[true,'刑事第二審原則上由高等法院審理，上訴書狀應具體指出原判決不當或違法之處；簡易判決的上訴則由地方法院合議庭審理。','上訴要具體指出原判決錯在哪裡。德威陽逐段檢視判決理由，抓出認事用法的關鍵瑕疵。'],
+   admin:[true,'行政訴訟採二審制。第二審就是最後一審，原則上由最高行政法院審理，著重原判決有無違背法令。','最後一審只有一次機會。德威陽判斷原判決有無違背法令，評估上訴是否值得、從哪裡切入。']
+  },
+  third:{
+   civil:[true,'民事第三審由最高法院審理，只審查原判決是否違背法令，並有上訴金額等限制；依法須委任律師。','第三審只審法律問題，且必須由律師代理。德威陽把案件爭點轉化為最高法院會審查的法律問題。'],
+   criminal:[true,'刑事第三審由最高法院審理，原則上以判決違背法令為上訴理由，部分案件不得上訴第三審。','第三審只看判決是否違背法令，事實爭執很難再翻。德威陽聚焦能被最高法院接受的上訴理由。'],
+   admin:[false,'行政訴訟採二審制，第二審判決就確定，沒有第三審。','行政訴訟只有兩個審級，判決確定後救濟途徑有限。德威陽從一審開始就把每個主張說完整。']
+  }
+ };
+ const NAVY='#e8803f',GOLD='#c99a4b',RED='#b9524a',SAND='#fde3c8';
+ let box,svg,status,topBtns={},botBtns={},sel=null,busy=false,anim=0;
+ function btn(label,cls){const b=document.createElement('button');b.type='button';b.textContent=label;b.className=cls;return b}
+ function build(){
+  box=document.createElement('div');box.id='wyJusticeLink';
+  box.innerHTML='<style>#wyJusticeLink{position:fixed;z-index:131;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,460px);max-height:88dvh;overflow:auto;background:#fff5e5;border:3px solid #d6a65e;border-radius:18px;box-shadow:0 14px 44px #0007;padding:14px;color:#442a22;font-size:14px;line-height:1.6;display:none}'+
+  '#wyJusticeLink .jl-head{background:'+NAVY+';border-radius:12px;padding:12px 14px;color:#fff;margin-bottom:12px}'+
+  '#wyJusticeLink .jl-eye{font-size:10px;color:#fff3e0;letter-spacing:1px}#wyJusticeLink .jl-title{font-size:19px;font-weight:700;margin:2px 0}#wyJusticeLink .jl-sub{font-size:11px;color:#fff}'+
+  '#wyJusticeLink .jl-row{display:grid;gap:6px}#wyJusticeLink .jl-top{grid-template-columns:repeat(4,1fr)}#wyJusticeLink .jl-bot{grid-template-columns:repeat(3,1fr)}'+
+  '#wyJusticeLink .jl-btn{border:1.5px solid #e2c393;background:#fff;color:#442a22;border-radius:8px;padding:9px 2px;font-size:13px;transition:background .2s,color .2s}'+
+  '#wyJusticeLink .jl-btn small{display:block;font-size:10.5px;opacity:.75;margin-top:1px}#wyJusticeLink .jl-btn.on{background:'+NAVY+';color:#fff;border-color:'+NAVY+'}#wyJusticeLink .jl-btn.hit{background:'+SAND+';border-color:#e8a46c}'+
+  '#wyJusticeLink .jl-stage{position:relative}#wyJusticeLink .jl-gap{height:110px}#wyJusticeLink svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}'+
+  '#wyJusticeLink .jl-status{background:#fffaf1;border:1px solid #ecd3a8;border-radius:8px;padding:10px 12px;margin:12px 0;min-height:58px;font-size:13px}#wyJusticeLink .jl-status b{font-weight:700}#wyJusticeLink .jl-wy{margin-top:9px;padding:9px 10px;background:#fdebd6;border:1.5px solid #e2b77a;border-left:5px solid #e8803f;border-radius:9px;line-height:1.7}#wyJusticeLink .jl-wy b{display:block;color:#b35a22}'+
+  '#wyJusticeLink .jl-reset{width:100%;border:0;border-radius:8px;background:'+NAVY+';color:#fff;padding:10px;font-size:14px}'+
+  '#wyJusticeLink .jl-close{width:100%;margin-top:8px;border:1px solid #c69554;border-radius:8px;background:#fff1da;color:#583b26;padding:9px;font-size:14px}</style>'+
+  '<div class="jl-head"><div class="jl-eye">德威陽｜有法度</div><div class="jl-title">司法連連看</div><div class="jl-sub">先點上方司法設施，再點下方訴訟類型，看連線會發生什麼事！</div></div>'+
+  '<div class="jl-stage"><div class="jl-row jl-top"></div><div class="jl-gap"></div><div class="jl-row jl-bot"></div><svg></svg></div>'+
+  '<div class="jl-status"></div><button type="button" class="jl-reset">重新連線</button><button type="button" class="jl-close">返回法院</button>';
+  document.body.appendChild(box);
+  svg=box.querySelector('svg');status=box.querySelector('.jl-status');
+  const top=box.querySelector('.jl-top'),bot=box.querySelector('.jl-bot');
+  TOP.forEach(([k,l,sub])=>{const b=btn(l,'jl-btn');b.innerHTML=l+'<small>'+sub+'</small>';b.onclick=()=>pickTop(k,l);top.appendChild(b);topBtns[k]=b});
+  BOTTOM.forEach(([k,l])=>{const b=btn(l,'jl-btn');b.onclick=()=>pickBottom(k);bot.appendChild(b);botBtns[k]=b});
+  box.querySelector('.jl-reset').onclick=reset;
+  box.querySelector('.jl-close').onclick=()=>{reset();box.style.display='none'};
+ }
+ function setStatus(html){status.innerHTML=html}
+ function clearLine(){cancelAnimationFrame(anim);busy=false;svg.innerHTML='';Object.values(botBtns).forEach(b=>b.classList.remove('hit'))}
+ function reset(){clearLine();sel=null;Object.values(topBtns).forEach(b=>b.classList.remove('on'));setStatus('請選擇上方的「地檢署、第一審、第二審或第三審」，再點擊下方的訴訟類型。')}
+ function pickTop(k,l){if(busy)return;clearLine();sel=k;Object.entries(topBtns).forEach(([n,b])=>b.classList.toggle('on',n===k));setStatus('已選擇「'+l+'」，請點下方訴訟類型。')}
+ function pickBottom(k){
+  if(busy)return;
+  if(!sel){setStatus('請先點上方司法設施，再點下方訴訟類型。');return}
+  clearLine();busy=true;
+  const [ok,text,wy]=R[sel][k],color=ok?GOLD:RED;
+  botBtns[k].classList.add('hit');setStatus('連線中…');
+  const st=box.querySelector('.jl-stage').getBoundingClientRect(),a=topBtns[sel].getBoundingClientRect(),c=botBtns[k].getBoundingClientRect();
+  const x1=a.left+a.width/2-st.left,y1=a.bottom-st.top,x2=c.left+c.width/2-st.left,y2=c.top-st.top,dy=(y2-y1)*.55;
+  const NS='http://www.w3.org/2000/svg';
+  const p=document.createElementNS(NS,'path');p.setAttribute('d','M'+x1+' '+y1+' C'+x1+' '+(y1+dy)+' '+x2+' '+(y2-dy)+' '+x2+' '+y2);
+  p.setAttribute('fill','none');p.setAttribute('stroke',color);p.setAttribute('stroke-width','2.4');p.setAttribute('stroke-linecap','round');
+  const dot=document.createElementNS(NS,'circle');dot.setAttribute('r','4');dot.setAttribute('fill',color);
+  svg.append(p,dot);
+  const len=p.getTotalLength();p.style.strokeDasharray=len;p.style.strokeDashoffset=len;
+  const t0=performance.now(),D=800;
+  const step=now=>{const t=Math.min(1,(now-t0)/D),e=1-Math.pow(1-t,3);p.style.strokeDashoffset=len*(1-e);const pt=p.getPointAtLength(len*e);dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);
+   if(t<1){anim=requestAnimationFrame(step)}else{busy=false;setStatus((ok?'<b>連線完成！</b> '+text:'<b style="color:'+RED+'">這條線不成立！</b> '+text)+'<div class="jl-wy"><b>德威陽可以做什麼？</b>'+wy+'</div>')}};
+  anim=requestAnimationFrame(step);
+ }
+ window.wyJusticeLinkOpen=function(){if(!box)build();reset();box.style.display='block';const old=document.getElementById('wyLitigationInfo433');if(old)old.style.display='none'};
 })();
 </script>
 </body></html>
