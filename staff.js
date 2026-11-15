@@ -1,5 +1,5 @@
 // 德威陽城堡員工 Q 版造型：依事務所角色設定圖（assets/characters-art.png），不戴眼鏡
-export const CHIBI_STAFF = [
+const CHIBI_STAFF_BASE = [
   { name:'林柏均律師', role:'主持律師', gender:'male', skinHex:'#F6D3BC', hairHex:'#3A2A22', hair:'lin', headSY:1.0, noAhoge:true, prop:'book',
     face:{ eye:'#3E271E', eyeW:0.98, eyeH:0.88, browThick:0.032, browTilt:-0.005, browY:0.0, mouth:'grin', browColor:'#33241D', lashes:false },
     fit:{ top:'#2E3138', shirt:'#FFFFFF', tie:'#2B3E6B', tieStripe:'#8FA6CF', bottom:'#2E3138', shoes:'#1A1A1E', lapels:'#24272D', pin:'#D4AF5A' } },
@@ -13,3 +13,11 @@ export const CHIBI_STAFF = [
     face:{ eye:'#B07A45', eyeW:1.02, eyeH:1.08, crease:true, lashes:false, mouth:'smile', blush:'rgba(255,130,150,.75)' },
     fit:{ top:'#F6C3D2', collar:'#FFFFFF', knitVest:'#D9C3A0', bottom:'#5E6470', shoes:'#3A2A24', lanyard:'#1E1E22' } },
 ];
+
+// v477 潮流公仔寫實風（定稿 2026-11-15）
+const TOY_MOUTH = ['smile', 'comic', 'fang', 'comic'];
+export const CHIBI_STAFF = CHIBI_STAFF_BASE.map((b, i) => ({
+  ...b, style: 'toy2',
+  ...(i === 1 ? { combBack: true, puff: true, smoothTail: true } : {}),
+  face: { ...(b.face || {}), eyeType: 'toy2', mouth: TOY_MOUTH[i], softBlush: true, blush: 'rgba(235,95,95,.6)', browThick: 0.014, browY: 0.07, lashes: i === 1 || i === 3 },
+}));
