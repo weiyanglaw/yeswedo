@@ -192,40 +192,124 @@ body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;mar
 .wyStaffCompact #wyFamilyChoices button,.wyStaffCompact #wyMedChoices button{width:auto!important;flex:1 1 28%!important;text-align:center!important;background:#f3e8f7!important;border:1px solid #b993c8!important;color:#563767!important;padding:9px 6px!important;border-radius:9px!important;font-size:13px!important}
 .wyStaffCompact #wyFamilyTitle,.wyStaffCompact #wyMedTitle{font-size:12px!important;font-weight:600!important;color:#705582!important}
 </style></head><body><details id="wyGestures"><summary><span>👆 操作說明</span></summary><div class="wySteps"><div class="wyStep"><span class="wyHand">☝️</span><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span class="wyHand">🤏</span><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span class="wyHand">👐</span><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
-<div id="creator" style="display:none"><div id="creatorCard"><h2>🏰 建立你的法律探索角色</h2><p>超可愛 Q 版角色！左邊即時 3D 預覽，右邊自由換裝。</p><div class="creatorLayout"><div class="previewPane"><div class="previewCaption">角色即時預覽</div><canvas id="avatarCanvas" hidden width="240" height="240" style="display:block;margin:8px auto;background:linear-gradient(#d9efff,#fff4dc);border-radius:18px;max-width:100%;height:190px;width:190px"></canvas><div class="previewHint">角色造型即時更新，進入島嶼後沿用相同設定</div></div><div class="optionsPane"><div class="wy178Section"><h3>基本資料</h3><div class="wy166Name"><label for="visitorName">角色名稱</label><div class="wy166NameRow"><input id="visitorName" maxlength="14" value="法律探險家" placeholder="自由輸入名稱"><button id="wy166Balance" type="button" title="搖動法律天秤，隨機取名"><span class="wy166Scale">⚖</span><small>搖天秤取名</small></button></div></div></div><div class="wy178Section"><h3>外型設定</h3><section class="wy166Pane" data-wy166-pane="appearance"><label for="avatarGender">角色外型</label><select id="avatarGender"><option value="female">女生</option><option value="male">男生</option></select><label for="avatarSkin">膚色</label><select id="avatarSkin"><option value="#f4c9a6">淺膚色</option><option value="#d99c74">自然膚色</option><option value="#ae7355">小麥膚色</option><option value="#754b38">深膚色</option><option value="#eab98d">蜜桃膚色</option><option value="#9b6149">暖棕膚色</option></select><label for="avatarHair">髮型</label><select id="avatarHair"><option value="short">俏皮短髮</option><option value="bob">可愛妹妹頭</option><option value="long">柔順長髮</option><option value="ponytail">高馬尾</option><option value="twintail">雙馬尾</option><option value="curly">蓬鬆捲髮</option><option value="straightshort">短直髮</option><option value="medium">中長髮</option><option value="straightlong">長直髮</option><option value="lowponytail">低馬尾</option><option value="bun">丸子頭</option><option value="sidepart">側分短髮</option></select><label for="avatarHairColor">髮色</label><input id="avatarHairColor" type="color" value="#4b332d" style="width:100%;height:40px;padding:2px"></section></div><div class="wy178Section"><h3>服裝與配色</h3><section class="wy166Pane" data-wy166-pane="clothes"><label for="avatarTopStyle">上半身</label><select id="avatarTopStyle"><option value="tshirt">短袖上衣</option><option value="longsleeve">長袖上衣</option></select><label for="avatarTopColor">上衣顏色</label><input id="avatarTopColor" type="color" value="#6c89ca"><label for="avatarBottomStyle">下半身</label><select id="avatarBottomStyle"><option value="shorts">短褲</option><option value="casual">長褲</option><option value="pleated">短裙</option><option value="longskirt">長裙</option></select><label for="avatarBottomColor">下半身顏色</label><input id="avatarBottomColor" type="color" value="#374b75"><label for="avatarOnepiece">洋裝（一件式，取代上下身）</label><select id="avatarOnepiece"><option value="none">不穿洋裝</option><option value="casualdress">洋裝</option></select><label for="avatarDressColor">洋裝顏色</label><input id="avatarDressColor" type="color" value="#e39fb8"><input id="avatarJacket" type="hidden" value="none"><input id="avatarShoes" type="hidden" value="sneakers"><input id="avatarJacketColor" type="hidden" value="#8e6580"><input id="avatarShoeColor" type="hidden" value="#f7f2e7"></section></div><div class="wy178Section"><h3>配件</h3><section class="wy166Pane" data-wy166-pane="accessory"><label for="avatarAccessory">配飾（單一分類）</label><select id="avatarAccessory"><option value="none">不戴配飾</option><option value="round">圓框眼鏡</option><option value="square">方框眼鏡</option><option value="cap">棒球帽</option><option value="beret">貝雷帽</option><option value="necklace">項鍊</option><option value="bow">蝴蝶結</option><option value="earring">小耳環</option></select></section></div><div class="wy178Section"><h3>職業設定</h3><div class="wy166Occupation"><label for="visitorIndustry">職業／所屬產業</label><select id="visitorIndustry" required><option value="">請選擇職業類別</option><option>法律／司法</option><option>醫療／照護</option><option>科技／半導體／資訊</option><option>製造／工業</option><option>金融／保險／會計</option><option>商業／貿易／企業經營</option><option>教育／研究</option><option>公務／軍警消</option><option>不動產／營建</option><option>餐飲／旅宿／觀光</option><option>零售／電商／服務業</option><option>設計／媒體／行銷</option><option>運輸／物流</option><option>學生</option><option>家管／退休</option><option>自由工作者／自營業</option><option>其他</option><option>不願透露</option></select><div id="otherIndustryWrap" style="display:none;margin-top:8px"><label for="otherIndustry">請填寫您的職業或產業</label><input id="otherIndustry" type="text" maxlength="60" placeholder="例如：美容美髮、農業、藝術創作" style="width:100%;padding:10px;border:1px solid #d7bc88;border-radius:10px"></div></div></div></div></div><button id="startExplore" type="button">完成創建・開始探索</button></div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
+<div id="creator" style="display:none"><style id="wyC2Style">
+#creator{padding:0!important;background:#EFE6D6!important}
+#wyC2{box-sizing:border-box;width:100%;max-width:460px;height:100%;margin:0 auto;display:flex;flex-direction:column;gap:6px;padding:max(8px,env(safe-area-inset-top)) 10px max(8px,env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC',sans-serif;color:#2D3142;text-align:left}
+#wyC2 *,#wcSheet *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+#wyC2 .wcBrand{display:flex;align-items:center;gap:8px;padding:6px 8px;background:#FFFDF8;border:1px solid #D9C29A;border-radius:12px}
+#wyC2 .wcBrand img{width:30px;height:30px;object-fit:contain}
+#wyC2 .wcBrand b{font-size:14px;color:#1A2B4C;display:block;line-height:1.1}
+#wyC2 .wcBrand small{font-size:10px;color:#8A6A3A;letter-spacing:.3px}
+#wyC2 .wcStage{flex:1 1 auto;min-height:118px;position:relative;border-radius:16px;background:radial-gradient(circle at 50% 40%,#FFF7E8,#F3DCC8 70%,#E9CDB6);border:1px solid #D9C29A;overflow:hidden}
+#wyC2 .wcStage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#wyC2 .wcTip{position:absolute;right:8px;top:6px;font-size:10px;color:#9A7A55;background:#fff8;padding:2px 6px;border-radius:8px;pointer-events:none}
+#wyC2 .wcName{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px}
+#wyC2 .wcName input{flex:1;min-width:0;border:1px solid #D9C29A;background:#FFFDF8ee;border-radius:10px;padding:7px 10px;font-size:16px;color:#1A2B4C;font-weight:700;text-align:center;margin:0}
+#wyC2 .wcName button{border:1.5px solid #C6A25D;background:linear-gradient(#FFF6DF,#F1D9A6);border-radius:50%;width:38px;height:38px;flex:0 0 38px;padding:0;margin:0}
+#wcScale{display:block;margin:auto;transform-origin:50% 16%}
+#wcScale.swing{animation:wcSwing .7s ease}
+@keyframes wcSwing{0%{transform:rotate(0)}20%{transform:rotate(-24deg)}45%{transform:rotate(20deg)}70%{transform:rotate(-12deg)}100%{transform:rotate(0)}}
+#wyC2 .wcPanel{background:#FFFDF8;border:1px solid #D9C29A;border-radius:14px;padding:6px 8px;display:flex;flex-direction:column;gap:5px}
+#wyC2 .wcRow{display:flex;align-items:center;gap:6px;min-height:30px}
+#wyC2 .wcRow>label{flex:0 0 34px;font-size:12px;font-weight:800;color:#8A6A3A;margin:0}
+#wyC2 .wcOpts{display:flex;gap:5px;flex:1;flex-wrap:nowrap;align-items:center}
+#wyC2 .wcSeg{display:flex;border:1px solid #D9C29A;border-radius:9px;overflow:hidden;flex:0 0 auto}
+#wyC2 .wcSeg button{border:0;background:#fff;padding:5px 11px;font-size:14px;color:#5A4632;font-weight:800;margin:0;width:auto}
+#wcTab{flex:1!important;display:flex}#wcTab button{flex:1;padding:6px 0;font-size:13px;border-right:1px solid #E8DCC6}#wcTab button:last-child{border-right:0}
+#wcTab button.on{background:#1A2B4C;color:#F3D9A4}
+#wcGender button[data-v=male].on{background:#3D7DD8;color:#fff}
+#wcGender button[data-v=female].on{background:#F07AA0;color:#fff}
+#wyC2 .wcDot{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #D9C29A;flex:0 0 auto;padding:0;margin:0}
+#wyC2 .wcDot.on{box-shadow:0 0 0 2.5px #C6A25D}
+#wyC2 .wcChip{flex:1 1 0;min-width:0;border:1px solid #E2D2B4;background:#fff;border-radius:9px;padding:8px 0;font-size:12.5px;font-weight:700;color:#5A4632;line-height:1.15;white-space:nowrap;letter-spacing:-.3px;margin:0;width:auto}
+#wyC2 .wcChip.on{border-color:#C6A25D;background:#FFF3DC;box-shadow:inset 0 0 0 1px #C6A25D;color:#1A2B4C}
+#wyC2 .wcRobe{border-bottom:4px solid var(--t)!important}
+#wyC2 .wcSep{width:1px;align-self:stretch;background:#E8DCC6;margin:0 2px}
+#wyC2 .wcInd{flex:1;border:1.5px solid #C6A25D;background:#FFF8EA;border-radius:10px;padding:8px 10px;font-size:14px;font-weight:800;color:#1A2B4C;text-align:left;display:flex;justify-content:space-between;align-items:center;margin:0;width:auto}
+#wyC2 .wcInd.empty{color:#A2834F}
+#wyC2 .wcInd small{font-size:10px;color:#9A7A55;font-weight:600}
+#creator #wyC2 #startExplore{border:0!important;border-radius:13px!important;background:#1A2B4C!important;color:#F3D9A4!important;font-size:16px!important;font-weight:800!important;padding:13px!important;letter-spacing:1px;margin:0!important;width:100%!important;min-height:0!important}
+#creator #wyC2 #startExplore:disabled{opacity:.45}
+#wcSheet{position:fixed;inset:0;background:#1A2B4C88;display:none;align-items:flex-end;justify-content:center;z-index:130}
+#wcSheet.show{display:flex}
+#wcSheet .wcCard{width:100%;max-width:460px;background:#FFFDF8;border-radius:18px 18px 0 0;padding:10px 10px max(12px,env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC',sans-serif}
+#wcSheet .wcHead{display:flex;align-items:center;gap:8px;padding:2px 4px 8px;border-bottom:1px solid #E8DCC6;margin-bottom:8px}
+#wcSheet .wcHead img{width:26px;height:26px;object-fit:contain}
+#wcSheet .wcHead b{flex:1;font-size:15px;color:#1A2B4C}
+#wcSheet .wcHead button{border:0;background:none;font-size:22px;color:#8A6A3A;padding:0 6px}
+#wcSheet .wcGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#wcSheet .wcGrid button{border:1px solid #E2D2B4;background:#fff;border-radius:10px;padding:13px 2px;font-size:13px;font-weight:700;color:#3C2A20;line-height:1.2}
+#wcSheet .wcGrid button.on{border-color:#C6A25D;background:#FFF3DC;box-shadow:inset 0 0 0 1px #C6A25D}
+#wcOther{display:none;margin-top:8px;gap:6px}
+#wcOther input{flex:1;border:1px solid #D9C29A;border-radius:9px;padding:9px;font-size:16px}
+#wcOther button{border:0;border-radius:9px;background:#1A2B4C;color:#fff;padding:0 14px;font-weight:700}
+#wcSheet .wcNote{font-size:10.5px;color:#9A7A55;text-align:center;margin-top:7px}
+</style>
+<div id="wyC2">
+  <div class="wcBrand"><img src="office-logo-transparent.png" alt="德威陽官方 Logo"><div><b>建立你的法律探索角色</b><small>德威陽國際法律事務所｜有法度 YES, WE DO!</small></div></div>
+  <div class="wcStage" id="wcStage"><canvas id="wcCanvas"></canvas><span class="wcTip">點一下打招呼・左右滑動可轉動</span>
+    <div class="wcName"><input id="visitorName" maxlength="12" placeholder="法律探險家"><button id="wcDice" type="button" aria-label="搖天秤取名"><svg id="wcScale" viewBox="0 0 32 32" width="24" height="24" fill="none" stroke="#8A6424" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5v21M10 27h12M6 9h20"/><circle cx="16" cy="5" r="1.6" fill="#8A6424"/><path d="M6 9l-4 9h8zM26 9l-4 9h8z"/><path d="M2 18q4 4 8 0M22 18q4 4 8 0"/></svg></button></div>
+  </div>
+  <div class="wcPanel">
+    <div class="wcRow"><label>外型</label><div class="wcOpts"><div class="wcSeg" id="wcGender"><button type="button" data-v="male" class="on">男生</button><button type="button" data-v="female">女生</button></div><span class="wcSep"></span><div class="wcOpts" id="wcSkin"></div></div></div>
+    <div class="wcRow"><label>髮型</label><div class="wcOpts" id="wcHair"></div></div>
+    <div class="wcRow"><label>髮色</label><div class="wcOpts" id="wcHairColor"></div></div>
+    <div class="wcRow"><label>服裝</label><div class="wcSeg" id="wcTab"></div></div>
+    <div class="wcRow"><label></label><div class="wcOpts" id="wcOutfit"></div></div>
+    <div class="wcRow"><label>配件</label><div class="wcOpts" id="wcAcc"></div></div>
+    <div class="wcRow"><label>行業</label><button type="button" class="wcInd empty" id="wcIndBtn"><span id="wcIndTxt">請選擇您的行業</span><small>必選</small></button></div>
+  </div>
+  <button id="startExplore" type="button" disabled>完成創建・開始探索</button>
+</div></div>
+<div id="wcSheet"><div class="wcCard">
+  <div class="wcHead"><img src="office-logo-transparent.png" alt="德威陽官方 Logo"><b>您的行業是？</b><button id="wcSheetX" type="button" aria-label="關閉">×</button></div>
+  <div class="wcGrid" id="wcGrid"></div>
+  <div id="wcOther"><input id="otherIndustry" maxlength="30" placeholder="請填寫您的行業"><button id="wcOtherOk" type="button">確定</button></div>
+  <div class="wcNote">僅作匿名統計，不會顯示在您的角色上</div>
+</div></div>
 <div id="hud"><strong id="where">🏰 德威陽城堡</strong><div id="status">模型準備載入…</div></div>
 <div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">💬 互動</button><button id="home">🏰 回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script><script>
-/* Role creation must remain usable even if a 3D island model fails to load. */
-(()=>{
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script>
+<script type="module">
+/* 建立角色（一頁完成版）：只負責選項與資料；3D 預覽由主程式依 window.wyAvatarProfile 繪製 */
+import {CHIBI_SKINS,CHIBI_HAIR_COLORS,CHIBI_OUTFITS,CHIBI_HAIRS,CHIBI_ACCESSORIES,CHIBI_OUTFIT_GROUPS} from './chibi-avatar.js?v=474';
 const $=id=>document.getElementById(id);
-const fields=['avatarGender','avatarSkin','avatarHair','avatarHairColor','avatarTopStyle','avatarBottomStyle','avatarJacket','avatarOnepiece','avatarShoes','avatarTopColor','avatarBottomColor','avatarJacketColor','avatarDressColor','avatarShoeColor'];
-function update(){drawAvatar()}
-// v167: No flat/2D avatar fallback. Avatar is rendered exclusively by the Three.js 3D chibi scene.
-function drawAvatar(){try{window.weiyangRefreshAvatar?.()}catch(err){console.warn('3D 角色更新失敗',err)}}
-window.weiyangDrawAvatar=drawAvatar;
-
-fields.forEach(id=>{const el=$(id);if(el){el.addEventListener('input',update);el.addEventListener('change',update)}});
-const industry=$('visitorIndustry');
-function updateOther(){const other=industry.value==='其他';$('otherIndustryWrap').style.display=other?'block':'none';$('otherIndustry').required=other}
-industry.addEventListener('change',updateOther);updateOther();drawAvatar();
-const wy166Names=['本席只是路過','證據不足但氣勢很足','開庭前先喝奶茶','異議！我還沒睡醒','今天不想被傳喚','卷宗堆裡的倖存者','我的律師在路上','法官等等我鞋掉了','有理但先吃飯','乖乖保佑不加班','一言不合就調解','先不要寄存證信函','正義可能會遲到','法律小菜雞出巡','我只是來看熱鬧','法條界的皮卡丘','法律系逃跑代表','被告說他只是路過'];
-const wy166Balance=$('wy166Balance');let wy166NameBusy=false;
-wy166Balance.addEventListener('click',()=>{if(wy166NameBusy)return;wy166NameBusy=true;wy166Balance.classList.add('wy166Shake');let n=0;const timer=setInterval(()=>{ $('visitorName').value=wy166Names[Math.floor(Math.random()*wy166Names.length)];if(++n>=9){clearInterval(timer);wy166Balance.classList.remove('wy166Shake');wy166NameBusy=false;}},85);});
-document.querySelectorAll('[data-wy166-tab]').forEach(btn=>btn.addEventListener('click',()=>{const tab=btn.dataset.wy166Tab;document.querySelectorAll('[data-wy166-tab]').forEach(b=>b.classList.toggle('selected',b===btn));document.querySelectorAll('[data-wy166-pane]').forEach(p=>p.hidden=p.dataset.wy166Pane!==tab);}));
-$('avatarAccessory').addEventListener('change',update);
-
+const P={gender:'male',skin:'light',hair:'short',hairColor:'brown',outfit:'casual',accessory:'none',industry:''};
+window.wyAvatarProfile=P;
+const SHORT={short:'短髮',bob:'鮑伯',twin:'雙馬尾',pony:'馬尾',buns:'丸子',curly:'捲髮',none:'無',glasses:'眼鏡',bow:'蝴蝶結',beret:'貝雷帽',bag:'公事包'};
+const draw=hop=>{try{window.weiyangRefreshAvatar?.(hop)}catch(err){console.warn('3D 角色更新失敗',err)}};
+window.weiyangDrawAvatar=()=>draw(false);
+function syncOn(){for(const [id,key] of [['wcHair','hair'],['wcOutfit','outfit'],['wcAcc','accessory']])[...$(id).children].forEach(x=>x.classList.toggle('on',x.dataset.k===P[key]))}
+function dots(id,map,key){const el=$(id);el.innerHTML='';for(const [k,c] of Object.entries(map)){const b=document.createElement('button');b.type='button';b.className='wcDot'+(P[key]===k?' on':'');b.style.background=c;b.dataset.v=k;b.onclick=()=>{P[key]=k;[...el.children].forEach(x=>x.classList.toggle('on',x===b));draw(false)};el.appendChild(b)}}
+function chips(id,keys,key){const el=$(id);el.innerHTML='';for(const k of keys){const b=document.createElement('button');b.type='button';b.className='wcChip'+(P[key]===k?' on':'');b.dataset.k=k;b.textContent=SHORT[k];b.onclick=()=>{P[key]=k;syncOn();draw(true)};el.appendChild(b)}}
+let tab=0;
+function tabs(){const el=$('wcTab');el.innerHTML='';CHIBI_OUTFIT_GROUPS.forEach(([n],i)=>{const b=document.createElement('button');b.type='button';b.textContent=n;if(i===tab)b.classList.add('on');b.onclick=()=>{tab=i;tabs();outfits()};el.appendChild(b)})}
+function outfits(){const el=$('wcOutfit');el.innerHTML='';for(const k of CHIBI_OUTFIT_GROUPS[tab][1]){const o=CHIBI_OUTFITS[k];const b=document.createElement('button');b.type='button';b.className='wcChip'+(P.outfit===k?' on':'');b.dataset.k=k;b.textContent=o.label;if(o.robe){b.classList.add('wcRobe');b.style.setProperty('--t',o.glossTrim?'#1F1F26':o.trim==='#FFFFFF'?'#DADADA':o.trim)}b.onclick=()=>{P.outfit=k;syncOn();draw(true)};el.appendChild(b)}}
+dots('wcSkin',CHIBI_SKINS,'skin');dots('wcHairColor',CHIBI_HAIR_COLORS,'hairColor');
+chips('wcHair',Object.keys(CHIBI_HAIRS),'hair');chips('wcAcc',Object.keys(CHIBI_ACCESSORIES),'accessory');tabs();outfits();
+$('wcGender').onclick=e=>{const b=e.target.closest('button');if(!b)return;P.gender=b.dataset.v;[...$('wcGender').children].forEach(x=>x.classList.toggle('on',x===b));
+ if(P.gender==='female'&&P.hair==='short')P.hair='twin';
+ if(P.gender==='male'&&(P.hair==='twin'||P.hair==='bob'))P.hair='short';
+ syncOn();draw(true)};
+const NAMES=['正義小勇士','條文小精靈','調解小天使','證據小偵探','和解達人','權益守護者','法庭小旅人','契約小管家','公道小騎士','天秤小幫手','有法度隊長','法律探險家'];
+$('wcDice').onclick=()=>{const sc=$('wcScale');sc.classList.remove('swing');void sc.getBoundingClientRect();sc.classList.add('swing');setTimeout(()=>{let n;do{n=NAMES[Math.floor(Math.random()*NAMES.length)]}while(n===$('visitorName').value);$('visitorName').value=n},450)};
+const IND=['法律／司法','醫療／照護','科技／半導體／資訊','製造／工業','金融／保險／會計','商業／貿易／企業經營','教育／研究','公務／軍警消','不動產／營建','餐飲／旅宿／觀光','零售／電商／服務業','設計／媒體／行銷','運輸／物流','學生','家管／退休','自由工作者／自營業','其他','不願透露'];
+const grid=$('wcGrid');
+IND.forEach(t=>{const b=document.createElement('button');b.type='button';b.innerHTML=t.replace(/／/g,'／<wbr>');b.onclick=()=>{[...grid.children].forEach(x=>x.classList.toggle('on',x===b));
+ if(t==='其他'){$('wcOther').style.display='flex';$('otherIndustry').focus();return}$('wcOther').style.display='none';setInd(t)};grid.appendChild(b)});
+$('wcOtherOk').onclick=()=>{const v=$('otherIndustry').value.trim();if(!v){$('otherIndustry').focus();return}setInd('其他：'+v)};
+function setInd(t){P.industry=t;$('wcIndTxt').textContent=t;$('wcIndBtn').classList.remove('empty');$('wcIndBtn').querySelector('small').textContent='更改';$('startExplore').disabled=false;$('wcSheet').classList.remove('show')}
+$('wcIndBtn').onclick=()=>$('wcSheet').classList.add('show');$('wcSheetX').onclick=()=>$('wcSheet').classList.remove('show');
+$('wcSheet').onclick=e=>{if(e.target===$('wcSheet'))$('wcSheet').classList.remove('show')};
 function enterIsland(){
- const chosen=industry.value, other=$('otherIndustry').value.trim();
- if(!chosen){alert('請選擇職業類別（也可以選擇不願透露）');industry.focus();return}
- if(chosen==='其他'&&!other){alert('請填寫您的職業或產業');$('otherIndustry').focus();return}
- const profile={name:$('visitorName').value.trim()||'法律探險家',industry:chosen==='其他'?'其他：'+other:chosen,gender:$('avatarGender').value,skin:$('avatarSkin').value,hair:$('avatarHair').value,hairColor:$('avatarHairColor').value,topStyle:$('avatarTopStyle').value,bottomStyle:$('avatarBottomStyle').value,jacket:$('avatarJacket').value,onepiece:$('avatarOnepiece').value,shoes:$('avatarShoes').value,top:$('avatarTopColor').value,bottom:$('avatarBottomColor').value,jacketColor:$('avatarJacketColor').value,dressColor:$('avatarDressColor').value,shoeColor:$('avatarShoeColor').value,accessory:$('avatarAccessory').value};
+ if(!P.industry){$('wcSheet').classList.add('show');return}
+ const profile={...P,name:$('visitorName').value.trim()||'法律探險家'};
  try{localStorage.setItem('weiyangVisitorProfile',JSON.stringify(profile))}catch(err){}
- $('creator').style.display='none';$('creator').classList.add('finished');
+ $('creator').style.display='none';$('creator').classList.add('finished');$('wcSheet').classList.remove('show');
  $('where').textContent='🏰 '+profile.name+'｜德威陽城堡';
 }
 $('startExplore').addEventListener('click',enterIsland);
-})();
+draw(false);
 </script>
 <style>
 #wyInfo{display:none;position:fixed;inset:0;z-index:90;background:#15263bbd;align-items:center;justify-content:center;padding:15px;font-family:system-ui,'Noto Sans TC',sans-serif}
@@ -275,7 +359,7 @@ $('startExplore').addEventListener('click',enterIsland);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'🚪 入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=473';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=473';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {buildChibi} from './chibi-avatar.js?v=474';import {CHIBI_STAFF} from './staff.js?v=474';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=474';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=473';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['🏰','⚖️','🏥','🏡','🏢','📚'];const xy=[[0,0],[-51,-43],[51,-43],[51,32],[-51,32],[0,-79]];const islandRise=[0,.85,.85,0,0,9.0];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -727,170 +811,33 @@ function walkingSurfaceY(x,z){
 }
 function alignActorToGround(){actor.position.y=walkingSurfaceY(actor.position.x,actor.position.z)}
 const actor=new THREE.Group();scene.add(actor);actor.position.set(7,0,12);alignActorToGround();
+// v474 Q 版角色：訪客與員工統一使用 chibi-avatar.js（畫上去的五官、卡通著色、描邊、表情與小動作）
+const WY_CHIBI_SCALE=1.3;
+const wyChibiLive=new Set();
+function wyTrackChibi(c,holder){wyChibiLive.add({c,holder});return c}
+(function wyChibiLoop(t){requestAnimationFrame(wyChibiLoop);for(const e of wyChibiLive){if(e.holder.userData.wyDead){wyChibiLive.delete(e);continue}if(!e.holder.parent){e.off=e.off||t;if(t-e.off>120000)wyChibiLive.delete(e);continue}e.off=0;try{e.c.tick(t)}catch(err){wyChibiLive.delete(e)}}})(0);
 function makeChibi(settings){
- const g=new THREE.Group(), mat=(color)=>new THREE.MeshStandardMaterial({color,roughness:.82});
- const skinMat=mat(settings.skin), hairMat=mat(settings.hairColor),topMat=mat(settings.top),bottomMat=mat(settings.bottom),shoeMat=mat('#fff8ef'),eyeMat=mat('#302a31'),whiteMat=mat('#ffffff'),pinkMat=mat('#ef98a4');
- const add=(geometry,material,x,y,z,sx=1,sy=1,sz=1)=>{const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);g.add(m);return m};
- const ball=new THREE.SphereGeometry(1,36,28);
- // True chibi silhouette: larger head and compact lower body, with all clothes staying attached.
- // The same makeChibi() is used by both the creator preview and the island avatar.
- const female=settings.gender==='female';
- // Gender selection changes actual 3D facial and silhouette geometry, not just hair/clothes.
- add(ball,skinMat,0,1.76,0,female?.605:.685,female?.675:.625,female?.535:.575);
- // Small ears, not protruding cheek spheres.
- for(const x of [-1,1])add(ball,skinMat,x*(female?.595:.67),1.71,-.035,.082,.13,.085);
- add(ball,hairMat,0,2.13,-.13,.68,.38,.59);
- // Sculpted fringe tufts instead of a flat hair cap.
- for(const [x,y,z,r] of [[-.42,2.18,.34,.23],[-.16,2.22,.43,.22],[.12,2.20,.44,.21],[.39,2.17,.35,.22]])add(ball,hairMat,x,y,z,r,.18,.20);
- if(settings.hair==='bob'||settings.hair==='long'||settings.hair==='ponytail'||settings.hair==='twintail'){
-  for(const x of [-.51,.51])add(ball,hairMat,x,1.69,-.10,.16,settings.hair==='long'?.62:.36,.34);
- }
- if(['long','straightlong','medium'].includes(settings.hair))add(ball,hairMat,0,settings.hair==='medium'?1.50:1.33,-.43,.48,settings.hair==='medium'?.37:.58,.18);
- if(settings.hair==='straightlong')for(const x of [-.52,.52])add(ball,hairMat,x,1.47,-.08,.15,.57,.29);
- if(settings.hair==='straightshort')add(ball,hairMat,0,2.14,.10,.55,.20,.40);
- if(settings.hair==='sidepart'){add(ball,hairMat,-.23,2.13,.25,.34,.22,.27);add(ball,hairMat,.42,1.92,-.08,.17,.26,.33);}
- if(settings.hair==='bun')add(ball,hairMat,0,2.44,-.16,.26,.25,.25);
- if(settings.hair==='lowponytail')add(ball,hairMat,.39,1.51,-.42,.22,.40,.24);
- 
- if(settings.hair==='ponytail')add(ball,hairMat,.42,1.85,-.47,.23,.52,.23);
- if(settings.hair==='twintail')for(const x of [-.65,.65])add(ball,hairMat,x,1.62,-.15,.22,.42,.25);
- if(settings.hair==='curly')for(let i=0;i<11;i++){const angle=i/11*Math.PI*2;add(ball,hairMat,Math.cos(angle)*.52,2.05+Math.sin(angle)*.22,-.08,.20,.22,.20)}
- // Fringe, eyes, blush, small smiling mouth. Face points toward positive Z.
- for(const x of [-.23,.23]){
-  const eyeZ=female?.501:.544;
-  add(ball,mat('#45353d'),x,1.82,eyeZ,female?.165:.145,female?.205:.170,.058);
-  add(ball,whiteMat,x,1.83,eyeZ+.052,female?.145:.128,female?.178:.149,.037);
-  add(ball,eyeMat,x,1.81,eyeZ+.087,female?.113:.103,female?.155:.125,.031);
-  add(ball,whiteMat,x-.040,1.882,eyeZ+.118,.041,.052,.016);
-  add(ball,whiteMat,x+.047,1.756,eyeZ+.118,.020,.025,.013);
-  // Flat blush close to the skin surface; no spherical cheek protrusions.
-  add(ball,pinkMat,x*1.68,1.57,female?.476:.511,.118,.043,.007);
-  if(female){add(ball,mat('#392d34'),x+(x>0?.15:-.15),1.87,eyeZ+.058,.058,.017,.016);}
- }
- add(ball,mat('#c77b78'),0,1.58,.565,.038,.026,.021);
- const smile=new THREE.Mesh(new THREE.TorusGeometry(.105,.016,6,18,Math.PI),mat('#98545b'));smile.position.set(0,1.49,.567);smile.rotation.z=Math.PI;g.add(smile);
- for(const x of [-.23,.23])add(ball,mat('#674a47'),x,2.045,female?.508:.544,female?.105:.137,female?.016:.033,.013);
- if(female){add(ball,mat('#ffe3ee'),.46,2.12,.20,.11,.09,.07);add(ball,mat('#fff9ff'),.46,2.12,.27,.045,.045,.025);}
-
- // Five independent wardrobe categories; silhouettes change rather than only their color.
- const topStyle=settings.topStyle,bottomStyle=settings.bottomStyle,jacket=settings.jacket,onepiece=settings.onepiece,shoes=settings.shoes;
- const full=onepiece!=='none', isDress=['casualdress','princess','shirtdress','formaldress'].includes(onepiece), isJump=onepiece==='jumpsuit';
- const jacketMat=mat(settings.jacketColor),dressMat=mat(settings.dressColor),shoeColorMat=mat(settings.shoeColor);
- const darkTrim=mat('#453e51'),lightTrim=mat('#fff5e5'),metalTrim=mat('#d4b579');
- const cyl=(topR,bottomR,h,m,x,y,z,n=18)=>add(new THREE.CylinderGeometry(topR,bottomR,h,n),m,x,y,z);
- // Separate legs and shoes with visually distinct toe/shaft profiles.
- for(const x of [-.19,.19]){
-   add(ball,skinMat,x,.36,0,.125,.23,.13);
-   if(shoes==='boots'){add(ball,shoeColorMat,x,.21,.01,.17,.24,.18);add(ball,shoeColorMat,x,.105,.16,.245,.12,.34)}
-   else if(shoes==='sandals'){add(ball,skinMat,x,.115,.12,.22,.12,.31);add(ball,shoeColorMat,x,.07,.14,.24,.052,.32);add(ball,shoeColorMat,x,.14,.31,.18,.035,.035)}
-   else {add(ball,shoeColorMat,x,.13,.13,shoes==='leather'?.22:.245,.14,shoes==='maryjane'?.27:.34);if(shoes==='sneakers')add(ball,lightTrim,x,.105,.40,.15,.04,.025);if(shoes==='maryjane')add(ball,darkTrim,x,.19,.31,.16,.032,.028);if(shoes==='casualshoes')add(ball,metalTrim,x,.13,.38,.14,.03,.02)}
- }
- // Top is physically different for each style: sleeve length, collar, hood and knit texture.
- const bodyMat=full?dressMat:topMat;
- add(ball,bodyMat,0,.98,0,female?.305:.375,.39,female?.285:.31);
- // Slight shoulder and waist contrast persists across outfit choices.
- if(female)add(ball,bodyMat,0,.78,0,.335,.19,.295);
- add(ball,skinMat,0,1.33,.05,.14,.14,.13);
- for(const x of (female?[-.425,.425]:[-.49,.49])){
-   const longSleeve=full||['longsleeve','shirt','hoodie','knit'].includes(topStyle);
-   add(ball,bodyMat,x,1.04,0,.17,longSleeve?.31:.19,.19);
-   add(ball,longSleeve?bodyMat:skinMat,x*1.16,.78,0,.12,longSleeve?.22:.24,.13);
-   add(ball,skinMat,x*1.16,.56,.01,.13,.13,.13);
- }
- if(!full){
-   if(topStyle==='shirt'){for(const x of [-.10,.10])add(ball,lightTrim,x,1.21,.278,.12,.14,.03);for(const y of [.90,1.02,1.14])add(ball,darkTrim,0,y,.306,.016,.016,.014)}
-   if(topStyle==='polo'){for(const x of [-.10,.10])add(ball,lightTrim,x,1.23,.26,.10,.085,.025);add(ball,darkTrim,0,1.13,.309,.017,.07,.016)}
-   if(topStyle==='hoodie'){add(ball,bodyMat,0,1.20,-.27,.29,.27,.17);add(ball,bodyMat,0,.82,.30,.23,.14,.06);for(const x of [-.07,.07])add(ball,lightTrim,x,1.19,.30,.012,.13,.015)}
-   if(topStyle==='knit'){for(let k=0;k<6;k++)add(ball,lightTrim,-.25+k*.10,.91,.292,.012,.28,.013);add(ball,lightTrim,0,1.24,.27,.17,.05,.035)}
-   if(topStyle==='longsleeve')for(const x of [-.55,.55])add(ball,lightTrim,x,.64,.01,.13,.035,.13);
- }
- if(isDress){
-   const princess=onepiece==='princess',formal=onepiece==='formaldress',shirtDress=onepiece==='shirtdress';
-   const h=princess?.74:formal?.66:.61;
-   cyl(formal?.31:.33,princess?.86:formal?.42:.61,h,dressMat,0,.64,0,princess?28:20);
-   if(princess){add(ball,lightTrim,0,.97,.32,.28,.09,.055);for(let i=0;i<10;i++){const a=i*Math.PI*2/10;add(ball,dressMat,Math.cos(a)*.62,.33,Math.sin(a)*.48,.18,.12,.16)}}
-   if(shirtDress){for(let i=0;i<4;i++)add(ball,darkTrim,0,.98-i*.13,.337,.016,.016,.016);add(ball,lightTrim,0,.70,.37,.30,.05,.025)}
-   if(formal){add(ball,metalTrim,0,.86,.30,.28,.035,.028)}
- }else if(bottomStyle==='pleated'||bottomStyle==='longskirt'){
-   const h=bottomStyle==='longskirt'?.76:.43;
-   cyl(.30,bottomStyle==='longskirt'?.56:.63,h,bottomMat,0,.69-(h-.43)/2,0,24);
-   if(bottomStyle==='pleated')for(let i=0;i<12;i++){const a=i*Math.PI*2/12;const x=Math.sin(a)*.50,z=Math.cos(a)*.46;const pleat=add(ball,mat(settings.bottom),x,.46,z,.045,.20,.045);}
- }else{
-   const short=bottomStyle==='shorts';const wide=bottomStyle==='casual';const tailored=bottomStyle==='suitpants';
-   for(const x of [-.19,.19]){
-     add(ball,bottomMat,x,short?.70:.51,0,wide?.245:tailored?.16:.19,short?.21:.38,.22);
-     if(bottomStyle==='jeans'){add(ball,lightTrim,x,.68,.218,.012,.16,.008);add(ball,metalTrim,x,.84,.22,.025,.018,.014)}
-     if(tailored)add(ball,darkTrim,x,.55,.222,.012,.31,.012);
-     if(short)add(ball,lightTrim,x,.55,.18,.18,.035,.018);
-   }
- }
- if(isJump){for(const x of [-.19,.19])add(ball,dressMat,x,.52,0,.205,.39,.22);add(ball,metalTrim,0,.91,.305,.32,.045,.027)}
- // Outerwear layers; long trench and hood create distinctive 3D silhouettes.
- if(jacket!=='none'){
-   const long=jacket==='trench', hood=jacket==='ziphood',blazer=jacket==='blazer';
-   for(const x of [-.32,.32])add(ball,jacketMat,x,long?.82:.99,.24,.17,long?.55:.38,.10);
-   for(const x of [-.48,.48])add(ball,jacketMat,x,.90,.015,.18,.38,.20);
-   if(blazer){for(const x of [-.15,.15])add(ball,lightTrim,x,1.13,.32,.12,.20,.025);add(ball,metalTrim,0,.88,.36,.028,.028,.017)}
-   if(hood){add(ball,jacketMat,0,1.28,-.28,.31,.27,.19);add(ball,lightTrim,0,.92,.35,.024,.28,.015)}
-   if(jacket==='denim'){for(const x of [-.20,.20])add(ball,lightTrim,x,1.00,.35,.105,.085,.017);for(const x of [-.52,.52])add(ball,lightTrim,x,.67,.10,.13,.035,.13)}
-   if(jacket==='cardigan')for(let i=0;i<4;i++)add(ball,metalTrim,0,.82+i*.10,.37,.014,.014,.014);
-   if(long){for(const x of [-.29,.29])add(ball,jacketMat,x,.46,.20,.19,.28,.10);add(ball,metalTrim,0,.82,.35,.34,.035,.025)}
- }
-
- // Accessories are real attached meshes and are recreated on each preview change.
- const acc=settings.accessory||'none';
- const brass=mat('#d4a65c'), ribbon=mat('#db7198'), cap=mat('#f3c7a0');
- if(acc==='cap'){
-  add(new THREE.CylinderGeometry(.58,.57,.27,32),cap,0,2.47,-.02);
-  add(new THREE.BoxGeometry(.83,.06,.43),cap,0,2.37,.48);
- }else if(acc==='beret'){
-  add(ball,ribbon,-.12,2.48,-.06,.63,.19,.55);
-  add(ball,brass,.17,2.66,-.06,.065,.08,.065);
- }else if(acc==='bow'){
-  const left=add(ball,ribbon,-.29,2.45,.32,.26,.16,.12);left.rotation.z=.35;
-  const right=add(ball,ribbon,.21,2.45,.32,.26,.16,.12);right.rotation.z=-.35;
-  add(ball,brass,-.04,2.45,.40,.10,.10,.09);
- }else if(acc==='round'||acc==='square'){
-  const rim=mat('#80644c');
-  for(const x of [-.255,.255]){
-   if(acc==='round')add(new THREE.TorusGeometry(.205,.035,8,24),rim,x,1.79,.56);
-   else add(new THREE.BoxGeometry(.40,.035,.04),rim,x,1.98,.56),add(new THREE.BoxGeometry(.40,.035,.04),rim,x,1.60,.56),add(new THREE.BoxGeometry(.035,.38,.04),rim,x-.20,1.79,.56),add(new THREE.BoxGeometry(.035,.38,.04),rim,x+.20,1.79,.56);
-  }
-  add(new THREE.BoxGeometry(.11,.035,.04),rim,0,1.79,.57);
- }else if(acc==='necklace'){
-  add(new THREE.TorusGeometry(.25,.025,8,28,Math.PI),brass,0,1.12,.34);
-  add(ball,brass,0,1.04,.37,.09,.13,.06);
- }else if(acc==='earring'){
-  for(const x of [-.65,.65])add(ball,brass,x,1.54,.13,.08,.12,.07);
- }
- // Consistent proportions across gender, hairstyles, outfit selections and preview/world views.
- // Compress lower-body geometry around the floor, and gently enlarge facial/head features.
- for(const part of g.children){
-  if(part.position.y>=1.45){
-   part.position.y=1.25+(part.position.y-1.45)*1.10;
-   part.position.x*=1.06;part.position.z*=1.06;
-   part.scale.multiplyScalar(1.07);
-  }else{
-   part.position.y*=.86;
-   part.scale.y*=.86;
-  }
- }
- return g;
+ const c=buildChibi(THREE,settings||{});
+ const g=new THREE.Group();c.group.scale.setScalar(WY_CHIBI_SCALE);g.add(c.group);g.userData.chibi=c;g.userData.wyNoLux=true;
+ wyTrackChibi(c,g);return g;
 }
-function getAvatarSettings(){const val=id=>document.getElementById(id).value;return {gender:val('avatarGender'),skin:val('avatarSkin'),hair:val('avatarHair'),hairColor:val('avatarHairColor'),topStyle:val('avatarTopStyle'),bottomStyle:val('avatarBottomStyle'),jacket:val('avatarJacket'),onepiece:val('avatarOnepiece'),shoes:val('avatarShoes'),top:val('avatarTopColor'),bottom:val('avatarBottomColor'),jacketColor:val('avatarJacketColor'),dressColor:val('avatarDressColor'),shoeColor:val('avatarShoeColor'),accessory:val('avatarAccessory')}}
+function getAvatarSettings(){return {...(window.wyAvatarProfile||{})}}
 let avatarBody=null,previewBody=null;
-const previewCanvas=document.createElement('canvas');previewCanvas.width=360;previewCanvas.height=360;previewCanvas.style.height='auto';previewCanvas.style.width='100%';previewCanvas.style.aspectRatio='1 / 1';
-const previewScene=new THREE.Scene();previewScene.background=new THREE.Color('#f4e9e3');
-const previewCamera=new THREE.PerspectiveCamera(36,1,.1,100);previewCamera.position.set(2.0,2.55,8.0);previewCamera.lookAt(0,1.43,0);
-previewScene.add(new THREE.HemisphereLight(0xffffff,0x91b5d6,3));const previewLight=new THREE.DirectionalLight(0xffffff,3);previewLight.position.set(3,6,5);previewScene.add(previewLight);
-const originalPreview=document.getElementById('avatarCanvas');
-const previewHost=originalPreview.parentElement;
-previewCanvas.style.display='block';previewCanvas.style.margin='8px auto';previewCanvas.style.maxWidth='100%';previewCanvas.style.borderRadius='18px';
-previewCanvas.style.height='auto';previewCanvas.style.aspectRatio='1 / 1';
-previewHost.insertBefore(previewCanvas,originalPreview);
-originalPreview.style.display='none';originalPreview.setAttribute('aria-hidden','true');
-const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:false});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,2));previewRenderer.setSize(360,360,false);previewRenderer.outputColorSpace=THREE.SRGBColorSpace;previewRenderer.toneMapping=THREE.ACESFilmicToneMapping;previewRenderer.toneMappingExposure=1.3;
-function refreshChibi(){const cfg=getAvatarSettings();if(avatarBody)actor.remove(avatarBody);if(previewBody)previewScene.remove(previewBody);avatarBody=makeChibi(cfg);actor.add(avatarBody);avatarBody.updateMatrixWorld(true);const footBox=new THREE.Box3().setFromObject(avatarBody);avatarBody.position.y+=Math.max(0,-footBox.min.y);previewBody=makeChibi(cfg);previewScene.add(previewBody);previewRenderer.render(previewScene,previewCamera)}
+const previewCanvas=document.getElementById('wcCanvas');
+const previewScene=new THREE.Scene();
+const previewCamera=new THREE.PerspectiveCamera(28,1,.1,100);
+previewScene.add(new THREE.HemisphereLight(0xfff6ea,0xd9b9a0,1.6));const previewLight=new THREE.DirectionalLight(0xffffff,2.0);previewLight.position.set(2,4,3);previewScene.add(previewLight);
+const previewFill=new THREE.DirectionalLight(0xffe8f0,.6);previewFill.position.set(-3,2,2);previewScene.add(previewFill);
+const previewFloor=new THREE.Mesh(new THREE.RingGeometry(1.0,1.08,64),new THREE.MeshBasicMaterial({color:0xC6A25D}));previewFloor.rotation.x=-Math.PI/2;previewFloor.position.y=.003;previewScene.add(previewFloor);
+const previewRenderer=new THREE.WebGLRenderer({canvas:previewCanvas,antialias:true,alpha:true});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,2));previewRenderer.outputColorSpace=THREE.SRGBColorSpace;
+function wyPreviewResize(){const w=previewCanvas.clientWidth||300,h=previewCanvas.clientHeight||240;previewRenderer.setSize(w,h,false);previewCamera.aspect=w/h;const dist=(h<220?8.2:6.9)*(w/h<0.9?1.25:1);previewCamera.position.set(0,1.38,dist);previewCamera.lookAt(0,1.2,0);previewCamera.updateProjectionMatrix()}
+try{new ResizeObserver(wyPreviewResize).observe(previewCanvas)}catch(e){addEventListener('resize',wyPreviewResize)}wyPreviewResize();
+let wyPrevYaw=.35,wyPrevDrag=null,wyPrevDown=0,wyPrevAuto=true;
+previewCanvas.addEventListener('pointerdown',e=>{wyPrevDrag=e.clientX;wyPrevDown=e.clientX;wyPrevAuto=false;try{previewCanvas.setPointerCapture(e.pointerId)}catch(err){}});
+previewCanvas.addEventListener('pointermove',e=>{if(wyPrevDrag==null)return;wyPrevYaw+=(e.clientX-wyPrevDrag)*.012;wyPrevDrag=e.clientX});
+previewCanvas.addEventListener('pointerup',e=>{if(Math.abs(e.clientX-wyPrevDown)<6)previewBody?.userData.chibi?.wave();wyPrevDrag=null;setTimeout(()=>wyPrevAuto=true,2500)});
+const wyCreatorEl=document.getElementById('creator');(function wyPreviewSpin(t){requestAnimationFrame(wyPreviewSpin);if(!previewBody||wyCreatorEl.style.display==='none'||wyCreatorEl.classList.contains('finished'))return;if(wyPrevAuto)wyPrevYaw=Math.sin(t/2600)*.5;previewBody.rotation.y=wyPrevYaw;previewRenderer.render(previewScene,previewCamera)})(0);
+function refreshChibi(hop){const cfg=getAvatarSettings();if(avatarBody){actor.remove(avatarBody);avatarBody.userData.wyDead=true}if(previewBody){previewScene.remove(previewBody);previewBody.userData.wyDead=true}avatarBody=makeChibi(cfg);actor.add(avatarBody);avatarBody.updateMatrixWorld(true);const footBox=new THREE.Box3().setFromObject(avatarBody);avatarBody.position.y+=Math.max(0,-footBox.min.y);previewBody=makeChibi(cfg);previewScene.add(previewBody);if(hop===true)previewBody.userData.chibi.hop();previewRenderer.render(previewScene,previewCamera)}
 window.weiyangRefreshAvatar=refreshChibi;
 refreshChibi();
 
@@ -903,75 +850,17 @@ const staffDefs=[
  {name:'哈姆太郎',island:5,x:0,z:0,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.8,speed:.75},
  {name:'薪水掌門人',island:4,x:0,z:0,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:3.0,speed:.57}
 ];
+// v474 員工 Q 版：林柏均律師、夢奇奇飼養者、哈姆太郎、薪水掌門人（造型定稿見 staff.js），各島與城堡內外共用
+const WY_STAFF_INDEX={'林柏均律師':0,'林律師':0,'夢奇奇飼養者':1,'夢奇奇':1,'哈姆太郎':2,'薪水掌門人':3};
 function makeStaffChibi(def){
+ const prof=CHIBI_STAFF[WY_STAFF_INDEX[def.name]??0];
  const root=new THREE.Group(),body=new THREE.Group();root.add(body);
- const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.73});
- const skin=mat(def.skin),hair=mat(def.hair),top=mat(def.top),bottom=mat(def.bottom);
- const white=mat('#fffaf5'),dark=mat('#302b37'),pink=mat('#f1a1aa'),gold=mat('#c99d52');
- const ball=new THREE.SphereGeometry(1,36,28);
- const part=(geo,m,x,y,z,sx=1,sy=1,sz=1,group=body)=>{
-  const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);group.add(o);return o;
- };
- const orb=(m,x,y,z,sx,sy,sz,group)=>part(ball,m,x,y,z,sx,sy,sz,group);
- // Big rounded head, small soft body and short legs.
- orb(top,0,.93,0,.42,.49,.34);
- for(const side of [-1,1]){
-  orb(top,side*.41,1.04,0,.18,.245,.19);
-  orb(skin,side*.53,.75,.01,.12,.21,.12);
-  orb(skin,side*.54,.55,.06,.12,.12,.12);
-  orb(bottom,side*.19,.48,0,.18,.30,.21);
-  orb(white,side*.19,.15,.11,.21,.13,.27);
- }
- if(def.kind==='lawyer'){
-  // Navy tailored suit, white shirt, blue tie, gold jacket buttons.
-  orb(white,0,1.05,.288,.18,.27,.025);
-  part(new THREE.ConeGeometry(.09,.35,4),mat('#416ba0'),0,1.03,.323);
-  for(const y of [.88,.73])orb(gold,.09,y,.31,.035,.035,.025);
-  orb(mat('#1a2b43'),-.22,1.10,.285,.13,.31,.02);
-  orb(mat('#1a2b43'),.22,1.10,.285,.13,.31,.02);
- } else if(def.kind==='ponytail'){
-  orb(mat('#f2b8c8'),.07,1.04,.298,.08,.09,.025);
- } else if(def.kind==='short'){
-  orb(mat('#fff4df'),.12,1.01,.298,.10,.10,.02);
- } else {
-  orb(white,0,1.04,.298,.13,.18,.02);
- }
- const head=new THREE.Group();head.position.set(0,1.76,0);head.scale.set(1.08,1.07,1.08);body.add(head);
- orb(skin,0,0,0,.58,.57,.51,head);
- // Hair caps, side locks and characteristic ponytail / bun / short hairstyle.
- orb(hair,0,.35,-.12,.61,.32,.53,head);
- orb(hair,-.39,.29,.12,.25,.20,.34,head);
- if(def.kind==='ponytail'){
-  orb(hair,.45,.33,-.30,.23,.25,.24,head);
-  orb(hair,.58,.15,-.44,.25,.46,.25,head);
-  orb(mat('#f4a7bf'),.47,.32,-.35,.13,.12,.13,head);
-  orb(hair,-.52,-.10,-.06,.12,.29,.24,head);
- }else if(def.kind==='bun'){
-  orb(hair,0,.69,-.20,.32,.30,.32,head);
-  orb(hair,-.49,.05,-.09,.14,.28,.23,head);
-  orb(hair,.49,.05,-.09,.14,.28,.23,head);
- }else if(def.kind==='short'){
-  for(let i=0;i<5;i++)orb(hair,-.37+i*.19,.44,-.06,.19,.19,.28,head);
- }else{
-  orb(hair,.31,.42,-.03,.29,.21,.30,head);
- }
- const eyes=[];
- for(const x of [-.23,.23]){
-  orb(white,x,.035,.461,.137,.17,.054,head);
-  const pupil=orb(dark,x,.025,.514,.084,.118,.042,head);
-  eyes.push(pupil);
-  orb(white,x-.025,.08,.553,.025,.032,.014,head);
-  orb(pink,x*1.60,-.15,.454,.105,.055,.022,head);
- }
- // Smile and nose.
- orb(mat('#b87374'),0,-.26,.467,.095,.026,.024,head);
- orb(skin,0,-.12,.505,.035,.026,.022,head);
- if(def.kind!=='lawyer'){
-  orb(mat('#f6d8e1'),.48,.34,.21,.085,.075,.06,head);
- }
- root.userData.label=def.name;
+ const c=buildChibi(THREE,prof);c.group.scale.setScalar(WY_CHIBI_SCALE);body.add(c.group);
+ const head=new THREE.Object3D();
+ wyTrackChibi(c,root);
+ root.userData.label=def.name;root.userData.chibi=c;root.userData.wyNoLux=true;
  root.traverse(o=>{if(o.isMesh){o.userData.label=def.name;clickable.push(o)}});
- return {root,body,head,eyes};
+ return {root,body,head,eyes:[],chibi:c};
 }
 staffDefs.forEach((def,i)=>{
  const model=makeStaffChibi(def);
@@ -4984,7 +4873,7 @@ function wy401BusinessInterior(root,THREE,staffFactory){
  // Reuse the exact chibi staff factory used by the medical island; independent actor instance.
  let salaryGuide=null,salaryLabel=null;
  if(staffFactory){const result=staffFactory({name:'薪水掌門人',kind:'bun',skin:'#f4c9a6',hair:'#503529',top:'#e7a8bf',bottom:'#5b6b85'});salaryGuide=result.root||result;salaryGuide.position.set(7.2,0,6.5);root.add(salaryGuide);
-  const badge=new THREE.Group();badge.position.set(0,1.08,.355);salaryGuide.add(badge);const back=new THREE.Mesh(new THREE.BoxGeometry(.23,.15,.028),gold);badge.add(back);const face=new THREE.Mesh(new THREE.BoxGeometry(.19,.115,.032),cream);face.position.z=.017;badge.add(face);const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),gold);pin.position.set(-.18,.15,.04);salaryGuide.add(pin);
+  /* v474：薪水掌門人改用定稿 Q 版造型（自帶識別證掛繩與計算機），不再另加金色名牌 */
   const cv=document.createElement('canvas');cv.width=480;cv.height=112;const c=cv.getContext('2d');c.fillStyle='#493657';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='900 55px sans-serif';c.fillText('薪水掌門人',240,56,448);
   const tx=new THREE.CanvasTexture(cv);tx.colorSpace=THREE.SRGBColorSpace;salaryLabel=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthTest:false}));salaryLabel.scale.set(5.3,1.24,1);salaryLabel.renderOrder=80;salaryLabel.position.set(7.2,3.6,6.5);salaryLabel.userData.businessStaff=true;root.add(salaryLabel);
  }
@@ -5296,7 +5185,7 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-previewRenderer.render(previewScene,previewCamera);document.getElementById('creator').style.display='flex';const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());
+document.getElementById('creator').style.display='flex';wyPreviewResize();const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());
  if(activeIslandRoom===4){
   const b=r.scene.children.find(o=>o.userData?.businessInteraction)?.userData.businessInteraction;
   if(b){

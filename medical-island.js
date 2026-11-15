@@ -440,12 +440,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  if(staffFactory){
   const result=staffFactory({name:'薪水掌門人',kind:'bun',skin:'#f4c9a6',hair:'#503529',top:'#e7a8bf',bottom:'#5b6b85'});
   guide=result.root||result;guide.position.set(7.2,0,3.55);guide.rotation.y=-.35;root.add(guide);
-   // Real Three.js geometry (not a flat illustration): tailored staff badge and gold brooch.
-   // The existing bun hairstyle and staff click targets are preserved.
-   const badge=new THREE.Group();badge.position.set(0,1.08,.355);guide.add(badge);
-   const badgeBack=new THREE.Mesh(new THREE.BoxGeometry(.23,.15,.028),gold);badge.add(badgeBack);
-   const badgeFace=new THREE.Mesh(new THREE.BoxGeometry(.19,.115,.032),cream);badgeFace.position.z=.017;badge.add(badgeFace);
-   const pin=new THREE.Mesh(new THREE.SphereGeometry(.048,12,10),lightGold);pin.position.set(-.18,.15,.04);guide.add(pin);
+   // v474：薪水掌門人使用定稿 Q 版造型（自帶識別證與計算機），不再另加名牌
 
  }
  // Keep the original interactive chibi staff. No GLB replacement.
