@@ -71,7 +71,7 @@
  function build(){
   box=document.createElement('div');box.id='wyFee';
   box.innerHTML=css()+'<div class="fe-brand"><img alt="德威陽國際法律事務所" src="./office-logo-transparent.png"><div><b>德威陽國際法律事務所</b><small>Wei &amp; Yang International Law Firm</small></div><button class="fe-x" data-close="1" aria-label="關閉">×</button></div>'+
-   '<div class="fe-title"><h1>法院收費處</h1><p>訴訟島｜裁判費怎麼算？</p></div>'+
+   '<div class="fe-title"><h1>有法度，也要有額度？</h1><p>訴訟島｜收費處</p></div>'+
    '<div class="fe-body"><div class="fe-vs"><div class="court"><b>裁判費</b>向法院起訴、上訴時，繳給法院的費用。</div></div>'+
    '<div class="fe-tabs">'+ORDER.map(k=>'<button type="button" data-t="'+k+'">'+TABS[k].name+'</button>').join('')+'</div><div class="fe-panel" id="fePanel"></div></div>'+
    
