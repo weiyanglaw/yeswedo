@@ -190,7 +190,7 @@ export function createFamilyInterior(scene, THREE, makeStaffChibi){
  hint('親權扶養',7.0,3.25,-4.8,'child');
  hint('遺囑繼承',-9.85,5.9,6.15,'heritage');
  hint('家事保護',8.0,3.7,4.6,'protect');
- hint('接待櫃檯',-6.05,3.20,6.25,'familyFun');
+ hint('趣味接待櫃檯',-6.05,3.20,6.25,'familyFun');
  hint('家庭會議',0,3.15,1.7,'sofa');
  const staffLabelText='哈姆太郎';hint(staffLabelText,4.9,3.45,1.1,'staff');
  // Large invisible tap areas improve mobile touch targeting.

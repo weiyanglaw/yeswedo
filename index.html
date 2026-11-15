@@ -97,7 +97,7 @@ body.wy174-theme-room #wyMedicalGuideAgain,body.wy174-theme-room #wyFamilyGuideA
 #wyMainGuide{--dark:#07162e;--mid:#163c77}
 #wyMedicalGuide{--dark:#08251d;--mid:#1b6149}
 #wyFamilyGuide{--dark:#300e1b;--mid:#85304b}
-.wy175Guide[data-island="1"]{--dark:#221637;--mid:#553678}
+.wy175Guide[data-island="1"]{--dark:#4A2410;--mid:#B85A22}
 .wy175Guide[data-island="4"]{--dark:#241934;--mid:#63428a}
 .wy175Guide[data-island="5"]{--dark:#112b40;--mid:#285b73}
 #wyMainGuide::before,#wyMedicalGuide::before,#wyFamilyGuide::before,.wy175Guide::before{content:"";position:absolute;inset:8px;border:1px solid #e9ce9688;border-radius:12px;pointer-events:none}
@@ -191,7 +191,8 @@ body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;mar
 .wyStaffCompact #wyFamilyChoices,.wyStaffCompact #wyMedChoices{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
 .wyStaffCompact #wyFamilyChoices button,.wyStaffCompact #wyMedChoices button{width:auto!important;flex:1 1 28%!important;text-align:center!important;background:#f3e8f7!important;border:1px solid #b993c8!important;color:#563767!important;padding:9px 6px!important;border-radius:9px!important;font-size:13px!important}
 .wyStaffCompact #wyFamilyTitle,.wyStaffCompact #wyMedTitle{font-size:12px!important;font-weight:600!important;color:#705582!important}
-</style></head><body><details id="wyGestures"><summary><span>操作說明</span></summary><div class="wySteps"><div class="wyStep"><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
+</style><style id="wy480DialogClose">#dialog #dialogClose{background:#fffaf0!important;color:#172c42!important;border:1px solid #c8a46a!important}</style>
+</head><body><details id="wyGestures"><summary><span>操作說明</span></summary><div class="wySteps"><div class="wyStep"><span><b>單指滑動</b><br><small>旋轉視角，查看不同方向</small></span></div><div class="wyStep"><span><b>雙指張合</b><br><small>拉近或拉遠鏡頭</small></span></div><div class="wyStep"><span><b>雙指拖曳／旋轉</b><br><small>平移畫面、調整觀看方向</small></span></div><div class="wyFoot">適用於六座島嶼及室內 3D 場景，點擊上方可收合。</div></div></details>
 <div id="creator" style="display:none"><style id="wyC2Style">
 #creator{padding:0!important;background:#EFE6D6!important}
 #wyC2{box-sizing:border-box;width:100%;max-width:460px;height:100%;margin:0 auto;display:flex;flex-direction:column;gap:6px;padding:max(8px,env(safe-area-inset-top)) 10px max(8px,env(safe-area-inset-bottom));font-family:-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC',sans-serif;color:#2D3142;text-align:left}
@@ -268,7 +269,7 @@ body:not(.wy174-theme-room) #wyV151Controls>button{position:static!important;mar
   <div class="wcNote">僅作匿名統計，不會顯示在您的角色上</div>
 </div></div><div id="top"><div id="brand"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"><div><b>德威陽｜有法度</b><small>YES, WE DO! · 3D 法律探索島</small></div></div><div class="buttons"><button id="overview">俯瞰</button><button id="follow">跟隨</button><button id="help">說明</button></div></div>
 <div id="hud"><strong id="where">德威陽城堡</strong><div id="status">模型準備載入…</div></div>
-<div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><button id="next">下一則／關閉 ›</button></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">互動</button><button id="home">回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
+<div id="dialog" data-theme="castle"><div class="wy-inner"><div class="wy-heading"><span class="wy-mark" aria-hidden="true"><img src="office-logo-transparent.png" alt="WEIYANG 官方 Logo"></span><div><div class="wy-eyebrow">WEIYANG · ROYAL LEGAL OFFICE</div><h3 id="dialogTitle"></h3></div></div><p id="dialogText"></p><div class="wy-foot"><span class="wy-signature">德威陽｜有法度</span><span class="wy-btns" style="display:flex;gap:8px"><button id="next">下一則 ›</button><button id="dialogClose">關閉</button></span></div></div></div><div id="joy"><div id="knob"></div></div><div id="controls"><button id="interact">互動</button><button id="home">回城堡</button></div><div id="hint">左下移動人物 · 俯瞰時拖曳移動畫面、跟隨時旋轉視角 · 點人物可互動 · 首次載入需等候</div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script>
 <script type="module">
 /* 建立角色（一頁完成版）：只負責選項與資料；3D 預覽由主程式依 window.wyAvatarProfile 繪製 */
@@ -359,7 +360,7 @@ draw(false);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {buildChibi} from './chibi-avatar.js?v=477';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=475';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=473';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {buildChibi} from './chibi-avatar.js?v=477';import {setupGuideHosts} from './guide-host.js?v=482';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=482';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['','','','','',''];const xy=[[0,0],[-51,-43],[51,-43],[51,32],[-51,32],[0,-79]];const islandRise=[0,.85,.85,0,0,9.0];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -4206,6 +4207,7 @@ function wy245RideFollow(dt){
   return;
  }
  const f=wyRide.source;
+ if(f===3&&!wy180AtOffice){if(wy247RideView){wy247RestoreOcclusion();wy247RideView=null;}return;}
  if(!wy247RideView||wy247RideView.floor!==f)wy247SetRideView(f);
  if(!wy247RideView)return;
  const v=wy247RideView;
@@ -4239,6 +4241,31 @@ function wy245RideFollow(dt){
 }
 
 let wy351LoungeTransfer=false;
+// v482: 城堡 1F／2F／2F 茶水間 碰撞：家具、櫃子、機器、員工都不能穿過（依實際大小自動計算，人物沿邊緣滑開）。
+const wyIndoorBoxCache=new Map();
+function wyIndoorBoxes(root){
+ let c=wyIndoorBoxCache.get(root);if(c&&c.n===root.children.length)return c.b;
+ root.updateMatrixWorld(true);const inv=new THREE.Matrix4().copy(root.matrixWorld).invert();const out=[];const bb=new THREE.Box3();const m4=new THREE.Matrix4();
+ root.traverse(o=>{if(!o.isMesh||!o.geometry)return;for(let q=o;q&&q!==root;q=q.parent){if(q===wyIndoorActor||q.visible===false)return}
+  const mt=o.material;if(!mt||(Array.isArray(mt)?mt.every(x=>x.visible===false):mt.visible===false))return;
+  if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();bb.copy(o.geometry.boundingBox).applyMatrix4(m4.copy(inv).multiply(o.matrixWorld));
+  const w=bb.max.x-bb.min.x,d=bb.max.z-bb.min.z;if(bb.max.y<.28||bb.min.y>1.25)return;if(w*d>40||w>13||d>13)return;if(Math.max(w,d)<.22)return;
+  out.push([bb.min.x,bb.max.x,bb.min.z,bb.max.z]);});
+ wyIndoorBoxCache.set(root,{n:root.children.length,b:out});return out;}
+function wyIndoorHit(root,x,z){const r=.32;for(const b of wyIndoorBoxes(root)){if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return true}return false}
+function wyIndoorFree(root,p,x,z){if(!root)return true;if(!wyIndoorHit(root,x,z))return true;
+ // 已經卡在家具裡（例如剛出電梯）時，只允許往外移動，避免卡死。
+ return wyIndoorHit(root,p.x,p.z)?wyIndoorEsc(root,p,x,z):false;}
+function wyIndoorEsc(root,p,x,z){const pen=(xx,zz)=>{let s=0;const r=.32;for(const b of wyIndoorBoxes(root)){const dx=Math.min(xx-(b[0]-r),(b[1]+r)-xx),dz=Math.min(zz-(b[2]-r),(b[3]+r)-zz);if(dx>0&&dz>0)s+=Math.min(dx,dz)}return s};return pen(x,z)<pen(p.x,p.z)}
+function wyCloseFloorPopups(){try{wy337Close()}catch(e){}
+ try{if(wy265Modal.style.display!=='none')wy265Close()}catch(e){}
+ try{const im=document.getElementById('wy341Immersive');if(im&&getComputedStyle(im).display!=='none'){const b=[...im.querySelectorAll('button')].find(x=>x.textContent.includes('返回'));if(b)b.click();else im.style.display='none'}}catch(e){}
+ try{if(wy3MovieModal.style.display!=='none'){wy3MovieModal.querySelectorAll('video').forEach(v=>v.pause());wy3MovieModal.style.display='none'}}catch(e){}
+ try{wy345Intro.style.display='none'}catch(e){}
+ try{wy260Modal.style.display='none'}catch(e){}
+ try{wyMainGuide.style.display='none'}catch(e){}
+ try{closeWyInfo()}catch(e){}
+ window.wy165PrinterMode=false;const dg=document.getElementById('dialog');if(dg)dg.style.display='none';}
 function wyStartRide(dest){
  if(wyRide||!insideOffice||activeIslandRoom)return;
  if(wy323Inside){
@@ -4262,7 +4289,14 @@ function wyStartRide(dest){
   return;
  }
  if(dest===wyOfficeFloor){wyLobbyDialog.style.display='none';return;}
+ wyCloseFloorPopups();
  wyIndoorMakeActor();
+ if(wyOfficeFloor===3&&!wy180AtOffice){
+  // v480: the 3F corridor is the lift lobby itself. Skip the overhead approach shot,
+  // which sat outside the corridor walls, and go straight to the closing-door ride.
+  wyLobbyDialog.style.display='none';wyLiftPrompt.style.display='none';wyIndoorPath=[];wy244FollowOffset=null;
+  wyRideShade.style.display='none';wyRide={phase:'close',time:1.2,source:3,dest,openAmount:0};wyDoorOpen=0;return;
+ }
  const source=wyOfficeFloor,approach=source===3&&wy180AtOffice?new THREE.Vector3(8.65,.08,5.55):wyElevPos(source);
  const current=wyIndoorActor.position;
  // Repeat rides: after exiting the lift the actor is already in its approach lane.
@@ -4367,9 +4401,9 @@ function wyElevatorTick(dt){
   if(k.has('arrowup')||k.has('w'))z-=1;
   if(k.has('arrowdown')||k.has('s'))z+=1;
   x+=wyJoyX;z+=wyJoyY;if(x||z){const d=Math.hypot(x,z),speed=4.2*dt,p=wyIndoorActor.position,nx=p.x+x/d*speed,nz=p.z+z/d*speed;
-   if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}
-   else if(wyOfficeFloor===1){const canMove=(xx,zz)=>xx>-12&&xx<12&&zz>-9.5&&zz<10&&!(Math.abs(xx)<7.2&&zz>4.4&&zz<7.6)&&!(Math.abs(xx)<4&&zz>-5.5&&zz<-1.2);if(canMove(nx,p.z))p.x=nx;if(canMove(p.x,nz))p.z=nz;}
-   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}else if(nx>-11&&nx<32.3&&nz>-8.5&&nz<21.5){p.x=nx;p.z=nz;}
+   if(wy323Inside){const okL=(xx,zz)=>xx>wy323X-12.5&&xx<wy323X+12.5&&zz>-10&&zz<10&&wyIndoorFree(wy323Room,p,xx,zz);if(okL(nx,p.z))p.x=nx;if(okL(p.x,nz))p.z=nz;}
+   else if(wyOfficeFloor===1){const canMove=(xx,zz)=>xx>-12&&xx<12&&zz>-9.5&&zz<10&&!(Math.abs(xx)<7.2&&zz>4.4&&zz<7.6)&&!(Math.abs(xx)<4&&zz>-5.5&&zz<-1.2)&&wyIndoorFree(lobbyRoot,p,xx,zz);if(canMove(nx,p.z))p.x=nx;if(canMove(p.x,nz))p.z=nz;}
+   else if(wyOfficeFloor===3){const gate=(p.z>=4.48&&nz<4.48&&nx>6.35&&nx<7.85);const solidWall=(p.z>=4.48&&nz<4.48&&nx>4.75&&nx<9.65&&!(nx>6.35&&nx<7.85));if(nx>-9.2&&nx<9.2&&nz>-8.1&&nz<8.0&&!(Math.abs(nx)<3.8&&nz>-3.0&&nz<-.1)&&!(nx< -8.8&&nz>-.5&&nz<4.0)&&!(nx>3.6&&nx<9&&nz>-2&&nz<2.7)&&!solidWall&&(!gate||(wy3OfficeUnlocked&&wy3DoorProgress>.9))){p.x=nx;p.z=nz;}}else if(wy323Inside){if(nx>wy323X-12.5&&nx<wy323X+12.5&&nz>-10&&nz<10){p.x=nx;p.z=nz;}}else{const ok2=(xx,zz)=>xx>-11&&xx<32.3&&zz>-8.5&&zz<21.5&&wyIndoorFree(roomRoot,p,xx,zz);if(ok2(nx,p.z))p.x=nx;if(ok2(p.x,nz))p.z=nz;}
    wyIndoorActor.rotation.y=Math.atan2(x,z);
    // v392: keep the moving avatar in view on 1F/2F, preserving orbit angle.
    // The 3F guided first-person camera is deliberately left untouched.
@@ -4597,7 +4631,8 @@ function enterOffice(){
  document.getElementById('dialog').style.display='none';orbit.enabled=false;wySetFloor(1);wyIndoorPlace(1);wyDoorOpen=0;floorBtn.style.display='block';lobbyOrbit.enabled=true;lobbyOrbit.update();
  if(!wyMainGuideSeen){wyMainGuide.style.display='block';}document.getElementById('joy').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('top').style.display='none';document.getElementById('hud').style.display='none';
 }
-function leaveOffice(){if(wy323Inside)wy323Leave();
+function wyCloseIslandPopups(){['wyMediation','wyFee','wyFiling','wyBench','wyJusticeLink','wyLitigationInfo433','wyMedicalExperience','wyFamilyExperience','wy410BusinessPanel','wyRC','wyJustice'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none'});try{closeWyInfo()}catch(e){}}
+function leaveOffice(){wyCloseIslandPopups();try{wyCloseFloorPopups()}catch(e){}if(wy323Inside)wy323Leave();
  for(const item of Object.values(wy175ExtraGuides)){item.button.style.display='none';item.guide.style.display='none';}
  closeWyInfo();businessExperience.hide();medicalExperience.hide();familyExperience.hide();wyMainGuide.style.display='none';wyMainGuideAgain.style.display='none';medGuide.style.display='none';medGuideAgain.style.display='none';familyGuide.style.display='none';familyGuideAgain.style.display='none';insideOffice=false;document.getElementById('wyGestures').hidden=false;window.wyEntryGuideVisible?.(true);if(activeIslandRoom){const i=activeIslandRoom;actor.position.set(xy[i][0],0,xy[i][1]+12);alignActorToGround();}else{actor.position.set(0,0,9.5);alignActorToGround();}activeIslandRoom=0;for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=false;document.getElementById('officeUI').querySelector('strong').textContent='德威陽｜3D 事務所';document.getElementById('officeUI').style.display='none';document.getElementById('officeContact').style.display='';
  document.getElementById('dialog').style.display='none';officeOrbit.enabled=false;lobbyOrbit.enabled=false;floorBtn.style.display='none';wyLobbyDialog.style.display='none';wyWalkUI.style.display='none';wyJoyReset();wyLiftPrompt.style.display='none';wyRideShade.style.display='none';wyRide=null;orbit.enabled=true;
@@ -4935,7 +4970,7 @@ for(let i=1;i<6;i++){
  const back=new THREE.Mesh(new THREE.BoxGeometry(24,9,.35),wallMat);back.position.set(0,4.35,-9.2);if(i!==1)root.add(back);
  for(const x of [-11.9,11.9]){const side=new THREE.Mesh(new THREE.BoxGeometry(.3,9,19),wallMat);side.position.set(x,4.35,0);if(i!==1)root.add(side);}
  if(i!==1&&i!==2&&i!==3&&i!==4){const carpet=new THREE.Mesh(new THREE.BoxGeometry(9,.06,13),new THREE.MeshStandardMaterial({color:roomPalettes[i][1],roughness:.95}));carpet.position.set(0,.02,0);root.add(carpet);}
- const litigationInterior=i===1?createLitigationInterior(root,THREE):null;if(i===1){try{applyLitigationLuxury(root,THREE,renderer,sc,litigationInterior)}catch(err){console.error('litigation luxury',err)}}
+ const litigationInterior=i===1?createLitigationInterior(root,THREE):null;if(i===1){try{applyLitigationLuxury(root,THREE,renderer,sc,litigationInterior)}catch(err){console.error('litigation luxury',err)}try{wyAddLitigationLabels(root,litigationInterior)}catch(err){console.error('litigation labels',err)}}
  const columns=(i===1||i===2||i===3||i===4)?[]:[-8.8,8.8];for(const x of columns){const col=new THREE.Mesh(new THREE.CylinderGeometry(.42,.42,8,20),new THREE.MeshStandardMaterial({color:0xf6e4c9}));col.position.set(x,4,-8.65);root.add(col);}
  const gold=new THREE.MeshStandardMaterial({color:roomPalettes[i][2],metalness:.5,roughness:.35});
  let icon=null;
@@ -4961,7 +4996,7 @@ for(let i=1;i<6;i++){
  themeRooms[i]={scene:sc,camera:cam,orbit:control,icon,medicalRoom,familyRoom,litigationInterior};
 }
 const businessExperience=createBusinessExperience();const medicalExperience=createMedicalExperience();const familyExperience=createFamilyExperience();
-const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fffaf0;border:2px solid #cfa96c;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#20354c;font:14px/1.65 system-ui';medGuide.innerHTML="<h3>歡迎來到德威陽醫療法律島！</h3><p><b>點擊醫療協商區：</b>醫療糾紛、調解與和解條件。</p><p><b>點擊病歷展示櫃：</b>病歷證據核對與整理。</p><p><b>點擊 X 光設備：</b>醫療鑑定與證明問題。</p><p><b>點擊心電圖：</b>事件回放與法律情境問答。</p><p><b>點擊接待區：</b>事務所趣味問答。</p><p><b>點擊薪水掌門人：</b>人物專屬互動。</p><button>開始探索</button>";document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
+const medGuide=document.createElement('aside');medGuide.id='wyMedicalGuide';medGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#fffaf0;border:2px solid #cfa96c;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#20354c;font:14px/1.65 system-ui';medGuide.innerHTML="<h3>歡迎來到德威陽醫療法律島！</h3><p><b>點擊醫療協商區：</b>醫療糾紛、調解與和解條件。</p><p><b>點擊病歷展示櫃：</b>病歷證據核對與整理。</p><p><b>點擊 X 光設備：</b>醫療鑑定與證明問題。</p><p><b>點擊心電圖：</b>事件回放與法律情境問答。</p><p><b>點擊趣味接待櫃檯：</b>事務所的日常趣味對話。</p><p><b>點擊薪水掌門人：</b>人物專屬互動。</p><button>開始探索</button>";document.body.append(medGuide);medGuide.querySelector('button').onclick=()=>medGuide.style.display='none';
 const medGuideAgain=document.createElement('button');medGuideAgain.textContent='醫法指南';medGuideAgain.id='wyMedicalGuideAgain';medGuideAgain.style.cssText='display:none;position:fixed;right:9px;top:128px;z-index:50;padding:8px 12px;border:1px solid #d7b77b;border-radius:12px;background:#fffaf0;color:#20354c;font-weight:bold';document.body.append(medGuideAgain);medGuideAgain.onclick=()=>medGuide.style.display='block';
 let medGuideSeen=localStorage.getItem('wy-guide-medical-v165')==='yes';
 const familyGuide=document.createElement('aside');familyGuide.id='wyFamilyGuide';familyGuide.style.cssText='display:none;position:fixed;z-index:95;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow:auto;background:#F4DFE4;border:2px solid #D2AD77;border-radius:18px;padding:17px;box-shadow:0 12px 40px #0005;color:#713F4C;font:14px/1.65 system-ui';familyGuide.innerHTML="<h3>歡迎來到德威陽家庭法律島！</h3><p><b>點擊廚房中島：</b>婚姻家事、離婚法律問題。</p><p><b>點擊親子玩具箱：</b>親權、扶養費與照顧安排。</p><p><b>點擊遺囑書櫃及書桌：</b>遺囑、繼承與遺產分配。</p><p><b>點擊復古電話桌：</b>家庭暴力、保護令及安全。</p><p><b>點擊中央沙發：</b>家事法律諮詢互動。</p><button>開始探索</button>";document.body.append(familyGuide);familyGuide.querySelector('button').onclick=()=>familyGuide.style.display='none';
@@ -5001,10 +5036,40 @@ for(const [k,data] of Object.entries(wy175GuideMap)){
 }
 
 wy413ApplyBrand(wyMainGuide);wy413ApplyBrand(medGuide);wy413ApplyBrand(familyGuide);
-function enterIslandRoom(i){
+// v482: 四島接待櫃檯統一（醫療、家庭、企業改用共用接待櫃檯視窗）。
+{const mo=medicalExperience.open.bind(medicalExperience);medicalExperience.open=a=>{if(a==='computer'){medicalExperience.hide();window.wyReceptionOpen&&window.wyReceptionOpen('med');return}return mo(a)};
+ const fo=familyExperience.open;familyExperience.open=a=>{if(a==='familyFun'){familyExperience.hide();window.wyReceptionOpen&&window.wyReceptionOpen('fam');return}return fo(a)};
+ const bo=businessExperience.open.bind(businessExperience);businessExperience.open=z=>{if(z===7){businessExperience.hide();window.wyReceptionOpen&&window.wyReceptionOpen('biz');return}return bo(z)};}
+// v482: 訴訟島指南改列 7 個互動，第一次進館自動打開。
+{const g=wy175ExtraGuides[1]&&wy175ExtraGuides[1].guide;if(g){g.innerHTML=`<h3 style="margin:8px 0 10px;text-align:center;color:#8A3D10;font-size:20px">訴訟法律島｜探索指南</h3><p style="text-align:center;margin:0 0 12px">七個互動，走一趟法院就懂打官司的門道。</p><div style="display:grid;gap:6px">${[['趣味接待櫃檯','法院日常趣味對話'],['一狀在手法度我有','收狀處｜遞哪一份書狀、期限多長'],['有法度也要有額度','收費處｜裁判費怎麼算'],['一槌定案看你法度','大法官席｜抽一個案件當法官'],['一路連連有法度','司法連連看｜法院審級怎麼走'],['談得攏最有法度','皇家調解廳｜調解與和解'],['美國法庭有法度','正義女神｜美國陪審團與台灣國民法官']].map(a=>`<div style="padding:7px 10px;border:1px solid #ecd3a8;border-radius:9px;background:#fff"><b style="color:#B85A22;font-size:13px">${a[0]}</b><span style="display:block;font-size:12.5px;color:#7a6658">${a[1]}</span></div>`).join('')}</div><p style="font-size:11px;text-align:center;margin:12px 0 8px">點擊場景物件或浮動標示即可開始，右上角可再次查看指南。</p><button type="button" style="display:block;width:100%;padding:11px;border:0;border-radius:10px;background:#e8803f;color:#fff;font-weight:700">開始探索</button>`;
+ g.style.cssText='display:none;position:fixed;z-index:105;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,390px);max-height:78dvh;overflow-y:auto;box-sizing:border-box;background:#fff8ee;border:2px solid #d6a65e;border-radius:17px;padding:17px;box-shadow:0 12px 40px #0005;color:#442a22;font:13px/1.5 system-ui';
+ wy413ApplyBrand(g);g.querySelector('button:last-of-type').onclick=()=>{g.style.display='none'};
+ const bt=wy175ExtraGuides[1].button;bt.style.cssText+=';background:#e8803f;color:#fff;border:1px solid #d6a65e;border-radius:9px;padding:8px 10px;font-weight:700';}}
+// v482: 各島指南介紹人（訴訟＝夢奇奇飼養者、醫療＝薪水掌門人、家庭＝哈姆太郎、企業＝薪水掌門人）。
+try{setupGuideHosts(THREE,buildChibi,CHIBI_STAFF,[{el:wy175ExtraGuides[1]&&wy175ExtraGuides[1].guide,host:1,key:'lit'},{el:medGuide,host:3,key:'med'},{el:familyGuide,host:2,key:'fam'},{el:wy175ExtraGuides[4]&&wy175ExtraGuides[4].guide,host:3,key:'biz'}])}catch(err){console.error('guide hosts',err)}
+
+// v482: 訴訟島 7 個互動家具上方的浮動標示（點標示或家具都能打開）。
+function wyAddLitigationLabels(root,li){
+ if(!li||!li.targets)return;root.updateMatrixWorld(true);
+ const tg=li.targets.slice();const inv=new THREE.Matrix4().copy(root.matrixWorld).invert();
+ const boxOf=fil=>{const b=new THREE.Box3();let n=0;for(const m of tg){if(!m.isMesh||!fil(m))continue;const bb=new THREE.Box3().setFromObject(m);if(bb.isEmpty())continue;b.union(bb);n++}return n?b:null};
+ const wc=m=>m.getWorldPosition(new THREE.Vector3());
+ const make=(text,act,worldPos)=>{const cv=document.createElement('canvas');cv.width=600;cv.height=112;const c=cv.getContext('2d');c.fillStyle='rgba(200,96,40,.97)';c.beginPath();c.roundRect(5,5,590,102,36);c.fill();c.strokeStyle='#F1D08C';c.lineWidth=6;c.stroke();c.fillStyle='#FFF8EE';c.textAlign='center';c.textBaseline='middle';c.font='bold 44px sans-serif';c.fillText(text,300,58,560);
+  const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false}));
+  const lp=worldPos.clone().applyMatrix4(inv);sp.position.copy(lp);sp.scale.set(5.2,0.97,1);sp.renderOrder=80;sp.userData.wyLitAct=act;sp.userData.litigationZone='label';root.add(sp);li.targets.push(sp);return sp};
+ const top=(b,dy)=>new THREE.Vector3((b.min.x+b.max.x)/2,b.max.y+dy,(b.min.z+b.max.z)/2);
+ let b=boxOf(m=>m.userData.litigationZone==='reception');if(b)make('趣味接待櫃檯','reception',top(b,.9));
+ const bases=tg.filter(m=>m.userData.litigationZone==='service'&&m.geometry&&m.geometry.type==='ExtrudeGeometry'&&Math.abs(m.position.y-.22)<.01);
+ for(const bs of bases){const pv=bs.parent;const pb=new THREE.Box3().setFromObject(pv);make(pv.position.z>1?'一狀在手法度我有':'有法度也要有額度',pv.position.z>1?'filing':'fee',top(pb,.8))}
+ b=boxOf(m=>m.userData.litigationZone==='civil'&&wc(m).z<-6.6&&wc(m).y<8);if(b)make('一槌定案看你法度','bench',top(b,.8));
+ b=boxOf(m=>m.userData.litigationZone==='hierarchy');if(b){const p=top(b,.7);p.y=Math.min(p.y,9.5);make('一路連連有法度','hierarchy',p)}
+ b=boxOf(m=>m.userData.litigationZone==='mediation');if(b)make('談得攏最有法度','mediation',top(b,1.4));
+ b=boxOf(m=>m.userData.litigationZone==='usa');if(b){const p=top(b,.8);p.y=Math.min(p.y,10.5);make('美國法庭有法度','usa',p)}
+}
+function enterIslandRoom(i){wyCloseIslandPopups();
  for(const [key,item] of Object.entries(wy175ExtraGuides)){item.button.style.display=Number(key)===i?'block':'none';item.guide.style.display='none';}
  if(i===0){enterOffice();return;}
- activeIslandRoom=i;insideOffice=true;if(i>=2&&i<=4&&themeRooms[i]){const wyLux=()=>{try{applyRoomLuxury(themeRooms[i].scene,THREE,renderer)}catch(err){console.error('room luxury',err)}};wyLux();setTimeout(wyLux,2500);}if(i===4){try{if(localStorage.getItem('wy-guide-business-v413')!=='yes'){wy175ExtraGuides[4].guide.style.display='block';localStorage.setItem('wy-guide-business-v413','yes');}}catch(e){wy175ExtraGuides[4].guide.style.display='block';}}familyGuideAgain.style.display=i===3?'block':'none';if(i===3&&!familyGuideSeen){familyGuide.style.display='block';familyGuideSeen=true;localStorage.setItem('wy-guide-family-v165','yes');}else familyGuide.style.display='none';medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;localStorage.setItem('wy-guide-medical-v165','yes');}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;businessExperience.hide();medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
+ activeIslandRoom=i;insideOffice=true;if(i>=2&&i<=4&&themeRooms[i]){const wyLux=()=>{try{applyRoomLuxury(themeRooms[i].scene,THREE,renderer)}catch(err){console.error('room luxury',err)}};wyLux();setTimeout(wyLux,2500);}if(i===1){try{if(localStorage.getItem('wy-guide-litigation-v482')!=='yes'){wy175ExtraGuides[1].guide.style.display='block';localStorage.setItem('wy-guide-litigation-v482','yes');}}catch(e){wy175ExtraGuides[1].guide.style.display='block';}}if(i===4){try{if(localStorage.getItem('wy-guide-business-v413')!=='yes'){wy175ExtraGuides[4].guide.style.display='block';localStorage.setItem('wy-guide-business-v413','yes');}}catch(e){wy175ExtraGuides[4].guide.style.display='block';}}familyGuideAgain.style.display=i===3?'block':'none';if(i===3&&!familyGuideSeen){familyGuide.style.display='block';familyGuideSeen=true;localStorage.setItem('wy-guide-family-v165','yes');}else familyGuide.style.display='none';medGuideAgain.style.display=i===2?'block':'none';if(i===2&&!medGuideSeen){medGuide.style.display='block';medGuideSeen=true;localStorage.setItem('wy-guide-medical-v165','yes');}else medGuide.style.display='none';document.getElementById('wyGestures').hidden=true;businessExperience.hide();medicalExperience.hide();familyExperience.hide();window.wyEntryGuideVisible?.(false);autoWalkPoints=[];release();hideDoorPrompt();
  document.getElementById('officeUI').style.display='block';document.getElementById('officeUI').querySelector('strong').textContent=names[i]+'｜3D 主題館';document.getElementById('officeContact').style.display=(i===2||i===3)?'none':'';document.getElementById('wyContactPanel').hidden=true;
  document.getElementById('dialog').style.display='none';orbit.enabled=false;officeOrbit.enabled=false;
  for(let j=1;j<6;j++)themeRooms[j].orbit.enabled=(j===i);
@@ -5014,7 +5079,7 @@ function enterIslandRoom(i){
 const originalEnterOffice=enterOffice;
 // Existing direct castle clicking still enters the original office.
 
-const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'夢奇奇飼養者':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'哈姆太郎':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'薪水掌門人':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){document.getElementById('officeExtraLink')?.remove();talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];const dialogEl=document.getElementById('dialog');const themeName=String(talkName);dialogEl.dataset.theme=/醫療/.test(themeName)?'medical':/訴訟|法院/.test(themeName)?'litigation':/家事/.test(themeName)?'family':/企業|商務/.test(themeName)?'business':/知識/.test(themeName)?'knowledge':'castle';dialogEl.querySelector('.wy-eyebrow').textContent=dialogEl.dataset.theme==='castle'?'WEIYANG · ROYAL LEGAL OFFICE':'WEIYANG · LEGAL EXPLORATION';document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('dialog').style.display='block'}document.getElementById('next').onclick=()=>{if(window.wy165PrinterMode){dialogs[talkName]=[nextWyJoke(9)];talkIdx=0;renderTalk();return;}const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
+const dialogs={'林柏均律師':['歡迎來到德威陽國際法律事務所。我是林柏均律師，具台灣與紐約州律師資格。','跨國商務契約、公司治理、智慧財產與訴訟，越早辨識風險，越能避免爭議。','學歷：Emory University 法律碩士（LL.M.）、University of La Verne 企業管理碩士（MBA）。'],'夢奇奇飼養者':['歡迎來到有法度！你可以走過彩虹橋探索不同法律島嶼。','想安排法律諮詢嗎？歡迎透過 LINE：@wylaw 聯絡本所。'],'哈姆太郎':['公司契約、勞動爭議、營業秘密、民刑事訴訟，我們都有對應的法律服務。','簽約前先確認當事人、權利義務、違約責任與爭議解決方式，別只看價錢！'],'薪水掌門人':['德威陽國際法律事務所歡迎你！官網：weiandyang.com。','法律問題可以先整理事實時間軸與文件，再與本所預約諮詢。']};const islandDialogs=[['歡迎來到德威陽城堡！從這裡出發，探索五座法律島嶼。'],['訴訟法律島：民事、刑事、行政訴訟的程序與證據，常常決定案件的處理方向。'],['醫療法律島：醫療爭議應先整理病歷、診療時間軸及溝通紀錄。'],['家庭生活島：離婚、親權、扶養費、繼承及家事爭議，都需要個別評估。'],['企業商務島：契約、公司治理、國際交易、營業秘密與智慧財產，是企業風險管理的重點。'],['法律知識島：探索法律常識；實際案件仍須依具體事實及最新法令評估。']];let talkName='',talkIdx=0;function talk(name){document.getElementById('officeExtraLink')?.remove();talkName=name;talkIdx=0;renderTalk()}function renderTalk(){const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||['歡迎探索德威陽｜有法度！'];const dialogEl=document.getElementById('dialog');const themeName=String(talkName);dialogEl.dataset.theme=/醫療/.test(themeName)?'medical':/訴訟|法院/.test(themeName)?'litigation':/家事/.test(themeName)?'family':/企業|商務/.test(themeName)?'business':/知識/.test(themeName)?'knowledge':'castle';dialogEl.querySelector('.wy-eyebrow').textContent=dialogEl.dataset.theme==='castle'?'WEIYANG · ROYAL LEGAL OFFICE':'WEIYANG · LEGAL EXPLORATION';document.getElementById('dialogTitle').textContent=talkName;document.getElementById('dialogText').textContent=list[talkIdx];document.getElementById('next').style.display=(window.wy165PrinterMode||talkIdx<list.length-1)?'':'none';document.getElementById('dialog').style.display='block'}document.getElementById('dialogClose').onclick=()=>{window.wy165PrinterMode=false;document.getElementById('dialog').style.display='none'};document.getElementById('next').onclick=()=>{if(window.wy165PrinterMode){dialogs[talkName]=[nextWyJoke(9)];talkIdx=0;renderTalk();return;}const list=dialogs[talkName]||islandDialogs[names.indexOf(talkName)]||[''];if(++talkIdx>=list.length)document.getElementById('dialog').style.display='none';else renderTalk()};
 let follow=false,overview=true,joyX=0,joyY=0;const joy=document.getElementById('joy'),knob=document.getElementById('knob');function moveJoy(e){const r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.max(1,Math.hypot(dx,dy)),f=Math.min(1,l/42);joyX=dx/l*f;joyY=dy/l*f;knob.style.transform=`translate(${joyX*38}px,${joyY*38}px)`}joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});function release(){joyX=joyY=0;knob.style.transform=''}joy.addEventListener('pointerup',release);joy.addEventListener('pointercancel',release);
 function goto(i){if(insideOffice)leaveOffice();actor.position.set(xy[i][0],0,xy[i][1]+(i===0?12:12));alignActorToGround();document.getElementById('where').textContent=names[i];talk(names[i]);follow=true;overview=false;camera.position.set(actor.position.x+14,22,actor.position.z+24);orbit.target.set(actor.position.x,2,actor.position.z);orbit.update()}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(Number(b.dataset.go)));document.getElementById('home').onclick=()=>goto(0);document.getElementById('overview').onclick=()=>{follow=false;overview=true;camera.position.set(0,195,255);orbit.target.set(0,0,0);syncIslandCameraMode()};
 // v42: initial creator completion shows the same six-island overview.
@@ -5157,6 +5222,9 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
   }return;
  }
  if(activeIslandRoom===1){pointer.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);ray.setFromCamera(pointer,themeRooms[1].camera);const hit=ray.intersectObjects(themeRooms[1].litigationInterior?.targets||[],true)[0];if(hit){const z=hit.object.userData.litigationZone;
+ const wyAct=hit.object.userData.wyLitAct;if(wyAct){const F={reception:()=>window.wyReceptionOpen&&window.wyReceptionOpen('lit'),filing:()=>window.wyFilingOpen&&window.wyFilingOpen(),fee:()=>window.wyFeeOpen&&window.wyFeeOpen(),bench:()=>window.wyBenchOpen&&window.wyBenchOpen(),hierarchy:()=>window.wyJusticeLinkOpen&&window.wyJusticeLinkOpen(),mediation:()=>window.wyMediationOpen&&window.wyMediationOpen(),usa:()=>window.wyJusticeOpen&&window.wyJusticeOpen()};F[wyAct]&&F[wyAct]();return;}
+ if(z==='reception'){window.wyReceptionOpen&&window.wyReceptionOpen('lit');return;}
+ if(z==='usa'){window.wyJusticeOpen&&window.wyJusticeOpen();return;}
  if(z==='hierarchy'){window.wyJusticeLinkOpen&&window.wyJusticeLinkOpen();return;}
  if(z==='mediation'){window.wyMediationOpen&&window.wyMediationOpen();return;}
  if(z==='service'){const bases=(themeRooms[1].litigationInterior?.targets||[]).filter(m=>m.userData.litigationZone==='service'&&m.geometry&&m.geometry.type==='ExtrudeGeometry'&&Math.abs(m.position.y-.22)<.01);let best=null,bd=1e9;const wp=new THREE.Vector3();for(const b of bases){b.getWorldPosition(wp);const d=wp.distanceToSquared(hit.point);if(d<bd){bd=d;best=b}}const front=best&&best.parent&&best.parent.position.z>1;if(front){window.wyFilingOpen&&window.wyFilingOpen();}else{window.wyFeeOpen&&window.wyFeeOpen();}return;}
@@ -5468,7 +5536,7 @@ sync();
 <style id="wy414UnifiedStyle">
 #wyLobbyDialog:before,#wyMainGuide:before,#wyMedicalGuide:before,#wyFamilyGuide:before{content:none!important;display:none!important}
 #wyMainGuide .wy334-logo-head,#wyMedicalGuide .wy334-logo-head,#wyFamilyGuide .wy334-logo-head{display:none!important}
-.wy175Guide[data-island="4"]{background:#f9f5ff!important;border-color:#bda1d1!important}
+.wy175Guide[data-island="4"]{background:#f9f5ff!important;border-color:#bda1d1!important}.wy175Guide[data-island="1"] div>b{color:#B85A22!important}.wy175Guide[data-island="4"] h3{color:#263B57!important}.wy175Guide[data-island="4"] p{color:#4a3f5c!important}.wy175Guide[data-island="4"] b{color:#8a6a2a!important}
 #wy410BusinessPanel{background:#f8f3ff!important;border:2px solid #b69ccf!important;color:#332547!important;box-shadow:0 15px 38px #24133155!important}
 #wy410BusinessPanel button[data-act="choice"]{background:#f0e6f7!important;color:#38264d!important;border-color:#c9b3dc!important}
 #wy410BusinessPanel button[data-act="prev"],#wy410BusinessPanel button[data-act="next"],#wy410BusinessPanel button[data-act="reset"]{background:#eee4f5!important;color:#39264d!important;border-color:#c9b3dc!important}
@@ -5837,7 +5905,10 @@ html body #wyFamSvc strong{display:block!important;font-size:16px!important;font
 html body #wyFamSvc span{font-size:13px!important;font-weight:600!important;line-height:1.5!important;margin:0!important;color:#6B2A3C!important}
 html body #wyFamSvc::after{content:'LINE：@wylaw　｜　官網：weiandyang.com';display:block;margin-top:7px;padding-top:6px;border-top:1px dashed currentColor;font-size:13px;font-weight:700;letter-spacing:.2px;opacity:.95;color:#5A1F30}
 </style>
-<script src="mediation-game.js?v=478"></script>
-<script src="fee-game.js?v=478"></script>
-<script src="filing-game.js?v=478"></script>
+<script src="mediation-game.js?v=482"></script>
+<script src="fee-game.js?v=482"></script>
+<script src="filing-game.js?v=482"></script>
+<script src="reception-data.js?v=482"></script>
+<script src="reception-card.js?v=482"></script>
+<script src="justice-game.js?v=482"></script>
 </body></html>
