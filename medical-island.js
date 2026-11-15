@@ -701,7 +701,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   ctx.strokeStyle='rgba(80,178,151,.16)';ctx.lineWidth=1;
   for(let x=0;x<640;x+=32){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,256);ctx.stroke()}
   for(let y=0;y<256;y+=32){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(640,y);ctx.stroke()}
-  ctx.fillStyle='#b6f3dc';ctx.font='bold 26px sans-serif';ctx.fillText('♥ 72 BPM',20,36);
+  ctx.fillStyle='#b6f3dc';ctx.font='bold 26px sans-serif';ctx.fillText('HR 72 BPM',20,36);
   ctx.strokeStyle='#67edaf';ctx.lineWidth=3;ctx.beginPath();
   for(let x=0;x<640;x+=2){const y=165-spike(x/185-time*.0002)*74;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
   ctx.fillStyle='#a9d9d1';ctx.font='16px sans-serif';ctx.fillText('WEIYANG | 醫療法律探索展示',20,235);waveTex.needsUpdate=true;
@@ -735,14 +735,14 @@ export function createMedicalExperience(){
    ['醫療糾紛怎麼辦？','先保存病歷、收據和相關紀錄，別急著下結論。','也可以依日期整理經過，讓律師更容易了解問題。'],
    ['你們律師擅長什麼？','林柏均律師具臺灣及紐約州律師資格，處理商務、訴訟及醫療法律等案件。','想進一步了解？歡迎透過 LINE｜@wylaw 聯繫德威陽。'],
    ['為什麼叫薪水掌門人？','法律問題找律師，薪水問題嘛……先確認老闆有沒有在旁邊！','我最希望大家來這裡，都能帶走一點有用的法律知識。']]},
-  books:{name:'法律書櫃',icon:'📚',intro:'書要整理，證據更要整理！發生醫療爭議，你會先做什麼？',options:[
+  books:{name:'法律書櫃',icon:'',intro:'書要整理，證據更要整理！發生醫療爭議，你會先做什麼？',options:[
    ['整理病歷和收據','好主意！病歷、同意書及收據，都是釐清事情的重要資料。','檢查報告、對話紀錄，也可以依日期分類保存。'],
    ['先發到網路上','先別急！公開指控可能衍生名譽或個資爭議。','先確認事實、保存資料，再評估適當處理方式。'],
    ['我不知道怎麼開始','就像整理書架，先分類，再按日期排列就好！','可以先寫下事件時間線，必要時請律師協助分析。']]},
   ecg:{name:'心電圖螢幕',icon:'',intro:'嗶、嗶、嗶～心跳要監測，醫療爭議也要看紀錄！',options:[
    ['結果不好就是醫療疏失？','不一定！治療結果不如預期，不代表必然有醫療過失。','仍須評估診療過程、注意義務、損害與因果關係。'],
    ['病歷可以申請嗎？','可以依法申請相關病歷資料，及早保存更安心。','記得確認資料是否完整，再整理檢查與治療經過。']]},
-  computer:{name:'接待桌電腦',icon:'💻',intro:'叮！德威陽法律小幫手上線。你想了解哪一件事？',options:[
+  computer:{name:'接待桌電腦',icon:'',intro:'叮！德威陽法律小幫手上線。你想了解哪一件事？',options:[
    ['醫療糾紛一定要提告？','不一定！可先整理資料，評估溝通、調解或法律程序。','律師可以協助檢視證據、法律爭點及處理策略。'],
    ['健保爭議怎麼處理？','先確認通知或行政處分內容，尤其要留意救濟期限。','不同程序期限可能不同，建議儘早確認文件及法定期間。'],
    ['我想找德威陽諮詢','歡迎先說明案件類型，由本所協助安排諮詢。','LINE｜@wylaw　官網｜weiandyang.com']]},
@@ -750,11 +750,11 @@ export function createMedicalExperience(){
    ['A．先申請完整病歷','先保存病歷、檢查報告及同意書，有助於釐清診療過程。','可依時間建立事件紀錄，再由專業人士評估醫療常規、過失與因果關係。'],
    ['B．立刻在網路指控醫師','情緒可以理解，但公開未經查證的指控，可能衍生名譽與個資風險。','建議先保存資料、列出具體疑點，再評估溝通、調解或法律途徑。'],
    ['C．直接要求醫院賠償','提出請求前，應先確認損害、可能的注意義務違反及因果關係。','醫療結果不理想不等於必然有過失；必要時可尋求醫療及法律專業評估。']]},
-  evidence:{name:'病歷與證據展示櫃',icon:'📑',intro:'醫療爭議常需要比對多種證據。請選擇想查看的資料：',options:[
+  evidence:{name:'病歷與證據展示櫃',icon:'',intro:'醫療爭議常需要比對多種證據。請選擇想查看的資料：',options:[
    ['病歷與醫囑','病歷可協助確認診斷、用藥、處置及事件時間線。','申請資料時可一併確認護理紀錄、檢查結果及影像是否齊全。'],
    ['手術與治療同意書','同意書有助於了解告知與同意的內容，但簽名不代表醫療機構當然免責。','仍應依個案判斷告知義務、診療處置與實際損害。'],
    ['檢查報告及收據','檢查報告可輔助判讀病況變化，收據可作為部分費用損害的證明。','建議保留原件或完整副本，並依日期整理；個案證據價值仍需具體評估。']]},
-  contact:{name:'聯絡我們｜德威陽國際法律事務所',icon:'☎',intro:'歡迎聯絡德威陽國際法律事務所。您可以透過下列方式了解服務或洽詢諮詢安排。',options:[['LINE 官方帳號｜@wylaw','LINE ID：@wylaw，可搜尋官方帳號聯繫。','如需諮詢，建議先整理案件類型、時間及相關文件。'],['官方網站｜weiandyang.com','官方網站：https://weiandyang.com','可查看本所法律服務及相關資訊。'],['Facebook｜weiandyang','Facebook：https://www.facebook.com/weiandyang','可瀏覽本所公開資訊與法律內容。'],['Instagram｜weiyang_ceo','Instagram：https://www.instagram.com/weiyang_ceo/','可瀏覽德威陽公開分享內容。']]},
+  contact:{name:'聯絡我們｜德威陽國際法律事務所',icon:'',intro:'歡迎聯絡德威陽國際法律事務所。您可以透過下列方式了解服務或洽詢諮詢安排。',options:[['LINE 官方帳號｜@wylaw','LINE ID：@wylaw，可搜尋官方帳號聯繫。','如需諮詢，建議先整理案件類型、時間及相關文件。'],['官方網站｜weiandyang.com','官方網站：https://weiandyang.com','可查看本所法律服務及相關資訊。'],['Facebook｜weiandyang','Facebook：https://www.facebook.com/weiandyang','可瀏覽本所公開資訊與法律內容。'],['Instagram｜weiyang_ceo','Instagram：https://www.instagram.com/weiyang_ceo/','可瀏覽德威陽公開分享內容。']]},
   logo:{name:'WEIYANG 形象牆' ,icon:'',intro:'歡迎來到德威陽國際法律事務所！想認識我們的哪一面？',options:[
    ['認識林柏均律師','林律師具臺灣及紐約州律師資格，擁有 Emory LL.M. 與 ULV MBA 學位。','服務領域包含跨國商務、契約、訴訟及醫療法律等。'],
    ['了解法律服務','德威陽提供商務契約、公司治理、智慧財產及民刑事爭議等法律服務。','想進一步了解？LINE｜@wylaw　weiandyang.com']]}
@@ -825,11 +825,11 @@ export function createMedicalExperience(){
    ['先核對爭議事實','整理診療時間線、病歷與雙方疑問，確認需要釐清的事項。'],
    ['討論調解方案','依醫療爭議處理程序評估調解，記錄雙方提出的條件。'],
    ['協商未成怎麼辦','保留往來紀錄，請專業人士評估後續法律途徑及期限。']]],
-  consent:['📝 手術告知展示桌','簽了同意書，醫師就一定免責嗎？',[
+  consent:['手術告知展示桌','簽了同意書，醫師就一定免責嗎？',[
    ['看同意書','簽名只是證據之一，仍需確認告知內容及當時情況。'],
    ['看告知過程','比較風險、替代方案與患者提問是否得到適當說明。'],
    ['看事件時間軸','從就診檢查、治療告知到術後追蹤，逐段核對紀錄與時間。']]],
-  standards:['🧬 醫療常規展示','人體模型與診療資料，哪個才是判斷醫療責任的依據？',[
+  standards:['醫療常規展示','人體模型與診療資料，哪個才是判斷醫療責任的依據？',[
    ['診療當時資訊','應考量當時可得的症狀、檢查與臨床資訊。'],
    ['鑑定意見','專業鑑定可協助分析醫療常規，但仍須結合其他證據。'],
    ['結果與過失','治療結果不佳，並不自動等於醫療疏失。']]],
@@ -837,7 +837,7 @@ export function createMedicalExperience(){
    ['影像拍攝時間','確認影像日期與症狀變化，避免把不同時點混在一起。'],
    ['影像報告版本','核對原始影像、報告與補充紀錄是否一致。'],
    ['醫療常規與鑑定','結合當時臨床資訊、影像與鑑定意見，分析注意義務及因果關係。']]],
-  timeline:['🕒 醫療事件時間軸','醫療爭議往往發生在不同時間點，先看哪一段？',[
+  timeline:['醫療事件時間軸','醫療爭議往往發生在不同時間點，先看哪一段？',[
    ['就診與檢查','核對症狀、分流、檢驗時間及相關紀錄。'],
    ['治療與告知','確認治療決策、風險告知與同意過程。'],
    ['術後與追蹤','核對病情變化、醫囑、交班與追蹤安排。']]],
@@ -890,7 +890,7 @@ export function createMedicalExperience(){
  const staffStories=[["薪水掌門人｜醫療島趣味對話", "病歷、收據、同意書我都分類好了！醫療爭議最怕的不是資料多，是資料突然找不到。"], ["薪水掌門人｜醫療島趣味對話", "有人說簽了同意書醫院就一定沒責任？那我簽加薪單，薪水也會自動變多嗎？"], ["薪水掌門人｜醫療島趣味對話", "醫療時間軸排好之後，我的強迫症終於可以休息五分鐘。"], ["薪水掌門人｜醫療島趣味對話", "收據一張都別亂丟！薪水掌門人最怕報帳少一張，醫療爭議也一樣。"], ["薪水掌門人｜醫療島趣味對話", "病歷不是偵探小說，關鍵日期和處置內容最好一頁一頁核對。"], ["薪水掌門人｜醫療島趣味對話", "醫師說明聽不懂？先問清楚再決定，這不是考試不能發問！"], ["薪水掌門人｜醫療島趣味對話", "醫療同意書不是魔法護身符，簽了也不代表所有問題都解決。"], ["薪水掌門人｜醫療島趣味對話", "有人說檢查報告看不懂，我說先留著，別把重要證據當廢紙！"], ["薪水掌門人｜醫療島趣味對話", "醫療糾紛協商最怕雙方只記得情緒，忘記把事情經過寫清楚。"], ["薪水掌門人｜醫療島趣味對話", "病歷申請有流程，別急著說資料不見了，先確認申請與交付紀錄。"], ["薪水掌門人｜醫療島趣味對話", "醫療鑑定不是按一下按鈕就出結果，資料完整才比較有得討論。"], ["薪水掌門人｜醫療島趣味對話", "有人問我醫療糾紛要先做什麼？先整理文件，不是先整理怒氣。"], ["薪水掌門人｜醫療島趣味對話", "心電圖事件回放看得我緊張，幸好今天不用核對三十張發票。"], ["薪水掌門人｜醫療島趣味對話", "治療前後的照片有日期嗎？證據也需要自己的時間表。"], ["薪水掌門人｜醫療島趣味對話", "病歷上寫的時間和記憶不同？先查證，不要直接猜結論。"], ["薪水掌門人｜醫療島趣味對話", "同意書字很多沒錯，但不能像月底帳單一樣直接滑到底。"], ["薪水掌門人｜醫療島趣味對話", "醫療爭議不是誰聲音大誰就贏，資料和專業判斷才重要。"], ["薪水掌門人｜醫療島趣味對話", "檢查報告請收好，這可是醫療島的尋寶線索！"], ["薪水掌門人｜醫療島趣味對話", "醫療費用明細我最會看，但醫療責任還是要交給專業判斷。"], ["薪水掌門人｜醫療島趣味對話", "有人問病歷能不能只拍一張？我說完整資料比較不容易漏重點。"], ["薪水掌門人｜醫療島趣味對話", "手術前說明和術後紀錄要分開整理，不然我這個掌門人會眼花。"], ["薪水掌門人｜醫療島趣味對話", "遇到醫療問題，先記下日期、症狀與溝通內容，別只靠回憶。"], ["薪水掌門人｜醫療島趣味對話", "醫療島的X光區不是照出誰在說謊，是幫大家理解鑑定問題。"], ["薪水掌門人｜醫療島趣味對話", "協商前把訴求寫清楚，才不會談了半天還不知道要談什麼。"], ["薪水掌門人｜醫療島趣味對話", "有人說沒有收據沒關係，我的報帳雷達立刻響起來了！"], ["薪水掌門人｜醫療島趣味對話", "病歷影本要保管好，原始紀錄與取得日期也要留意。"], ["薪水掌門人｜醫療島趣味對話", "告知同意不是簽名比賽，重點還包括實際說明了什麼。"], ["薪水掌門人｜醫療島趣味對話", "醫療法律遊戲選錯可以重來，真實決定可要先問清楚。"], ["薪水掌門人｜醫療島趣味對話", "病歷、檢查、費用、溝通四大類，我的資料夾終於整整齊齊！"], ["薪水掌門人｜醫療島趣味對話", "薪水掌門人提醒：醫療爭議先留證據，再討論怎麼處理。"]];;let staffStoryIndex=0;
  function staffStory(){el.classList.add('wyStaffCompact');const i=(staffStoryIndex+staffStories.length)%staffStories.length;title.textContent=staffStories[i][0];body.textContent=staffStories[i][1];choices.replaceChildren();button('← 上一則',()=>{staffStoryIndex--;staffStory()});button('下一則 →',()=>{staffStoryIndex++;staffStory()});button('返回',()=>el.style.display='none');}
  function staffHome(){title.textContent='薪水掌門人｜醫療島導覽';body.textContent='今天想聽辦公室趣事，還是一起學醫療法律？';choices.replaceChildren();button('聽薪水掌門人趣味對話',staffStory);button('醫療糾紛怎麼辦？',()=>answer(0,0));button('認識德威陽',()=>answer(1,0));button('✕ 繼續探索',()=>el.style.display='none');}
- function home(){if(current==='staff'){staffStory();return;}if(wyZoneData[current]){wyZoneHome(current);return;}if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='☎ 聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=s.icon+' '+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
- function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('✨ 再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
+ function home(){if(current==='staff'){staffStory();return;}if(wyZoneData[current]){wyZoneHome(current);return;}if(current==='liability'){liabilityHome();return;}if(customMedical[current]){customHome(current);return;}if(current==='case'){storyChoose();return;}if(current==='books'){bookShow();return;}if(current==='evidence'){detectiveShow();return;}if(current==='computer'){deskHome();return;}if(current==='ecg'){ecgHome();return;}if(current==='contact'){title.textContent='聯絡我們｜德威陽國際法律事務所';body.textContent='請選擇聯絡方式：';choices.replaceChildren();[['LINE｜@wylaw','https://line.me/R/ti/p/@wylaw'],['官方網站','https://weiandyang.com'],['Facebook','https://www.facebook.com/weiandyang'],['Instagram','https://www.instagram.com/weiyang_ceo/']].forEach(([label,url])=>button(label,()=>window.open(url,'_blank','noopener,noreferrer')));button('複製 LINE ID：@wylaw',()=>{navigator.clipboard?.writeText('@wylaw');body.textContent='LINE ID：@wylaw';});return;}const s=scenes[current];title.textContent=(s.icon?s.icon+' ':'')+s.name;body.textContent=s.intro;choices.replaceChildren();s.options.forEach((o,i)=>button(String.fromCharCode(65+i)+'．'+o[0],()=>answer(i,0)));}
+ function answer(i,level){const s=scenes[current],o=s.options[i];body.textContent=o[level+1];choices.replaceChildren();if(level===0)button('再了解一點',()=>answer(i,1));button('↩ 換一個問題',home);button('✕ 繼續逛辦公室',()=>el.style.display='none');}
  return {show(){el.style.display='none'},open(action='staff'){el.classList.toggle('wyStaffCompact',action==='staff');wySvcHide();current=(scenes[action]||customMedical[action]||action==='liability')?action:'staff';home();el.style.display='block'},hide(){el.style.display='none'}};
 }
