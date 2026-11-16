@@ -5,7 +5,7 @@ const NAMEC=['#1A2B4C','#A8476F','#2B6A8A','#8A5A12'];
 const NAMES=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'];
 export const WY_HOST_LINES={
  lit:['咦？林律師是台灣律師，也是紐約州律師？對！','跨國官司兩邊跑？林律師看得懂兩國規則。','收到英文律師函別慌，先拍照傳 LINE @wylaw。','美國客戶、台灣工廠，合約兩邊都要顧到。','中文、英文、日文，三種語言都能談案子！','美國法院來信？期限很短，先問清楚再回。','哇，海外投資、跨國併購，也是德威陽的日常。','台美兩邊的法律差在哪？問林律師最快。','出國做生意前，合約先讓律師看一眼。','跨國糾紛不用分頭找，德威陽一次處理。','英文合約、日文契約，原文直接看，不用等翻譯。','外國當事人來台灣打官司，中英日都能直接溝通。'],
- med:['醫療糾紛先別急著吵，病歷先申請、先整理。','手術結果不如預期，不一定是疏失，要看過程和證據。','醫療鑑定怎麼送、問什麼問題，影響很大。','醫藥費、看護費、薪資損失，每一筆都要留單據。','和解金額怎麼算？損失清單先列清楚再談。','醫療爭議也能先調解，不一定要直接上法院。','病歷有沒有被改過？時間紀錄會說話。','醫療院所遇到病人申訴，也需要專業的法律意見。','健保案件，林律師經驗豐富。','賠償算清楚，心裡才踏實。LINE @wylaw 先問問。','外籍人士在台灣就醫發生爭議，英文、日文都能直接談。'],
+ med:['醫療糾紛先別急著吵，病歷先申請、先整理。','手術結果不如預期，不一定是疏失，要看過程和證據。','醫療鑑定怎麼送、問什麼問題，影響很大。','醫藥費、看護費、薪資損失，每一筆都要留單據。','和解金額怎麼算？損失清單先列清楚再談。','醫療爭議也能先調解，不一定要直接上法院。','病歷有沒有被改過？時間紀錄會說話。','醫療院所遇到病人申訴，也需要專業的法律意見。','健保案件，林律師經驗豐富。','賠償算清楚，心裡才踏實。歡迎 LINE @wylaw 聯繫我們。','外籍人士在台灣就醫發生爭議，英文、日文都能直接談。'],
  fam:['離婚協議跟軟體一樣，條款沒寫到就會出 bug。','孩子跟誰住、怎麼探視，協議要寫到可以執行。','扶養費幾號付、付多少，寫清楚就少吵一半。','夫妻財產要分，先把雙方的財產清單備份好。','遺囑格式不對可能無效，寫之前先問律師。','遇到家暴，保護令可以先聲請，安全最重要。','繼承前先查債務，拋棄繼承有期限。','家事調解，可以讓談判少一點情緒。','對話紀錄、轉帳截圖，在家事案件裡也是證據。','家裡的事不好開口？LINE @wylaw 私訊就好。','跨國婚姻、外籍配偶的離婚與扶養，英文、日文都能溝通。','在國外的家人要辦繼承？英文、日文文件直接處理。'],
  biz:['林律師當過上市公司法務長，合約裡的數字都看得懂。','契約到期、續約、終止，日期跟條件都要盯緊。','合約簽下去之前修，比打官司之後補省事多了。','公司治理、股東會、董事會，程序走對才安心。','常年法律顧問，就像公司的法務部門外包。','付款條件、違約金、驗收標準，三個地方最常出事。','打官司也要算成本：值不值得告，先評估再決定。','員工離職、資遣、競業，勞資問題先問清楚。','營業秘密沒做保護措施，出事時很難主張。','林律師有美國法律、管理會計雙碩士，法律和數字一起看。','日本客戶、美國客戶，用他們的語言談合約。','跨國會議，中文、英文、日文都能上場。','原始碼、客戶名單、製程參數，都是營業秘密。','商標先註冊再上市，不然品牌可能被別人搶走。']
 };
@@ -27,7 +27,7 @@ export const WY_INDUSTRY_LINES={
  '家管／退休':'繼承、遺囑、家事安排，越早規劃越安心。',
  '自由工作者／自營業':'接案合約、收款糾紛、著作權，合約是最好的保障。'
 };
-const GENERIC='有任何法律問題，都可以先 LINE @wylaw 問問看。';
+const GENERIC='有任何法律問題，歡迎 LINE @wylaw 與我們聯繫。';
 export function setupGuideHosts(THREE,buildChibi,STAFF,list){
  const css=document.createElement('style');css.textContent=`
  .wyGH{position:fixed;width:150px;height:165px;pointer-events:none;overflow:hidden;display:none}
@@ -86,7 +86,7 @@ export function setupGuideHosts(THREE,buildChibi,STAFF,list){
  window.wyGuideHostHide=hide;
 }
 
-// v483: 角落小人物（主動提醒 LINE、離開館揮手）。從畫面左下角探頭，雲朵附「LINE 問問看」按鈕。
+// v483: 角落小人物（主動提醒 LINE、離開館揮手）。從畫面左下角探頭，雲朵附「LINE 聯繫我們」按鈕。
 const ROOM={1:{key:'lit',host:1},2:{key:'med',host:3},3:{key:'fam',host:2},4:{key:'biz',host:3}};
 export const WY_REMIND={lit:['要打官司還是先調解？LINE 先評估。','美國的官司，林律師具備紐約州律師資格，LINE 先聊。','跨國訴訟，中英日三語都能直接談。'],med:['醫療爭議越早整理病歷越有利，LINE 先約諮詢。','健保案件，經驗豐富。LINE 先約諮詢。','外籍病患與家屬，中英日三語都能直接談。'],fam:['離婚、扶養、遺囑的安排，LINE 先約個諮詢。','跨國婚姻與海外財產，中英日三語都能直接談。'],biz:['合約審閱、公司治理、營業秘密，LINE 聊聊您的公司。','英文、日文合約，林律師可以直接審閱。','跨國合作，中英日三語都能直接談。']};
 export const WY_LEAVE={lit:['法院的事，德威陽天天在跑。','台灣、美國的官司，下次一起看。'],med:['醫療糾紛，有專業的人陪著談。','中英日三語，隨時等您回來。'],fam:['家裡的事，也能好好處理。','跨國的家事，也能好好處理。'],biz:['生意的事，合約先顧好。','English、日本語的合約，也交給德威陽。']};
@@ -112,7 +112,7 @@ export function setupCornerHost(THREE,buildChibi,STAFF){
  @keyframes wyCHtilt{0%,100%{transform:none}30%{transform:rotate(-9deg)}70%{transform:rotate(7deg)}}
  @keyframes wyCHjump{0%,100%{transform:none}45%{transform:translateY(-16px)}}`;document.head.appendChild(css);
  const host=document.createElement('div');host.className='wyCH';host.innerHTML='<div class="fig"></div>';document.body.appendChild(host);
- const cloud=document.createElement('div');cloud.className='wyCHCloud';cloud.innerHTML='<button class="x" aria-label="關閉">×</button><small></small><span></span><br><a href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener">LINE 問問看</a>';document.body.appendChild(cloud);
+ const cloud=document.createElement('div');cloud.className='wyCHCloud';cloud.innerHTML='<button class="x" aria-label="關閉">×</button><small></small><span></span><br><a href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener">LINE 聯繫我們</a>';document.body.appendChild(cloud);
  let r=null,sc=null,cam=null,ch=null,cur=-1,timers=[],run=false;
  function init(){if(r)return;r=new THREE.WebGLRenderer({antialias:true,alpha:true});r.setPixelRatio(Math.min(2,window.devicePixelRatio||1));r.setSize(130,150);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
   sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.6));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,3);sc.add(d);
@@ -139,7 +139,7 @@ export function setupCornerHost(THREE,buildChibi,STAFF){
   at(ms||1500,hide)}
  window.wyCornerPeek=room=>peek(room,'point',1500);
  window.wyCornerCheer=room=>peek(room,'cheer',1900);
- const WY_OUT={1:'逛了好幾座島，打官司的事 LINE 先問問看。',2:'逛了好幾座島，醫療爭議 LINE 先問問看。',3:'逛了好幾座島，家裡的事 LINE 先問問看。',4:'逛了好幾座島，公司的事 LINE 先問問看。'};
+ const WY_OUT={1:'逛了好幾座島，打官司的事歡迎 LINE 聯繫我們。',2:'逛了好幾座島，醫療爭議歡迎 LINE 聯繫我們。',3:'逛了好幾座島，家裡的事歡迎 LINE 聯繫我們。',4:'逛了好幾座島，公司的事歡迎 LINE 聯繫我們。'};
  window.wyCornerOutdoor=room=>{if(ROOM[room])say(room,WY_OUT[room],0)};
  // 同一次進館玩到第三個互動、關掉之後，主動提醒一次。
  const IDS=['wyMediation','wyFee','wyFiling','wyBench','wyJusticeLink','wyJustice','wyRC','wyMedicalExperience','wyFamilyExperience','wy410BusinessPanel'];
@@ -153,6 +153,22 @@ export function setupCornerHost(THREE,buildChibi,STAFF){
 export function setupHeads(THREE,buildChibi,STAFF){
  const NAMES=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'];let cache=null;
  setTimeout(()=>{try{window.wyGetHeads()}catch(e){}},7000);
+
+ // v491/v492：貼紙式頭像（正面、拍大一點，馬尾與包子頭完整露出）；另有揮手兩格
+ const stickerCache={};
+ function renderStickers(wave){const key=wave?'w':'n';if(stickerCache[key])return stickerCache[key];const out={};stickerCache[key]=out;
+  try{const S=128,r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(2);r.setSize(S,S);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
+   const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.7));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,4);sc.add(d);const cam=new THREE.PerspectiveCamera(22,1,.1,50);
+   const snap=()=>{const cv=document.createElement('canvas');cv.width=cv.height=S*2;const g=cv.getContext('2d');for(let a=0;a<16;a++){g.save();g.translate(Math.cos(a/16*Math.PI*2)*6,Math.sin(a/16*Math.PI*2)*6);g.drawImage(r.domElement,0,0);g.restore()}
+    g.globalCompositeOperation='source-in';g.fillStyle='#fff';g.fillRect(0,0,S*2,S*2);g.globalCompositeOperation='source-over';g.drawImage(r.domElement,0,0);return cv.toDataURL('image/png')};
+   NAMES.forEach((n,i)=>{const c=buildChibi(THREE,{...STAFF[i]});sc.add(c.group);c.group.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(c.group);const h=b.max.y-b.min.y,cy=b.max.y-h*.40;
+    cam.position.set(0,cy,h*(wave?3.4:3.1));cam.lookAt(0,cy,0);
+    if(!wave){r.render(sc,cam);out[n]=snap()}
+    else{const fr=[];let sh=null;c.group.traverse(o=>{if(!sh&&o.type==='Group'&&Math.abs(o.position.y-.57)<.01&&o.position.x>.15)sh=o});try{c.tick(100)}catch(e){}if(sh){sh.scale.setScalar(1.55)}for(const a of [.8,1.2]){if(sh)sh.rotation.z=a;c.group.updateMatrixWorld(true);r.render(sc,cam);fr.push(snap())}out[n]=fr}
+    sc.remove(c.group)});
+   r.dispose();r.forceContextLoss&&r.forceContextLoss()}catch(e){console.error('stickers',e)}return out}
+ window.wyGetStickers=()=>renderStickers(false);
+ window.wyGetWaveStickers=()=>renderStickers(true);
  window.wyGetHeads=function(){if(cache)return cache;cache={};
   try{const S=96,r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(2);r.setSize(S,S);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
    const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.7));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,4);sc.add(d);

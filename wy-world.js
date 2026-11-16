@@ -6,7 +6,7 @@ export function setupWorld(T, c){
  const P={
   day:{bg:'#c8eafb',fog:'#c8eafb',h:1,hc:'#ffffff',s:1,sc:'#ffffff',stars:0,glow:0,cloud:'#ffffff',mote:0},
   dusk:{bg:'#f6c9a6',fog:'#f3c3a8',h:.82,hc:'#ffe2c8',s:.75,sc:'#ffb37a',stars:.25,glow:.55,cloud:'#ffe0d0',mote:.5},
-  night:{bg:'#14233f',fog:'#14233f',h:.42,hc:'#9fb4e8',s:.28,sc:'#9fb7ff',stars:1,glow:1,cloud:'#5d6f9a',mote:1}};
+  night:{bg:'#34508F',fog:'#34508F',h:1.02,hc:'#e2e8ff',s:.86,sc:'#dbe2ff',stars:1,glow:1,cloud:'#93a2d6',mote:1}};
  let mode='auto';try{mode=localStorage.getItem('wy-sky')||'auto'}catch(e){}
  function taipeiHour(){try{const p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());const h=+p.find(x=>x.type==='hour').value,m=+p.find(x=>x.type==='minute').value;return (h%24)+m/60}catch(e){const d=new Date();return d.getHours()+d.getMinutes()/60}}
  function phaseNow(){if(mode==='day')return 'day';if(mode==='night')return 'night';const h=taipeiHour();if(h>=6&&h<16.5)return 'day';if(h>=16.5&&h<18.5)return 'dusk';if(h>=5.3&&h<6)return 'dusk';return 'night'}
@@ -79,63 +79,13 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
   bb.setFromObject(o).expandByScalar(.25);const list=[];r.scene.traverse(m=>{if(!m.isMesh||m===o||list.length>24)return;if(m.userData&&m.userData.chibi)return;for(let q=m;q;q=q.parent){if(q.userData&&q.userData.chibi)return}if(!vis(m))return;bb2.setFromObject(m);if(bb2.isEmpty())return;const cx=(bb2.min.x+bb2.max.x)/2,cy=(bb2.min.y+bb2.max.y)/2,cz=(bb2.min.z+bb2.max.z)/2;if(bb.containsPoint(new T.Vector3(cx,cy,cz))&&(bb2.max.x-bb2.min.x)<6&&(bb2.max.z-bb2.min.z)<6)list.push(m)});hop(list)},{passive:true});
 
 
- /* ---------- v489 節日裝飾（春節、西洋情人節、端午、七夕、中秋、聖誕） ---------- */
- const FEST_TABLE={cny:{2026:'2026-02-17',2027:'2027-02-06',2028:'2028-01-26',2029:'2029-02-13',2030:'2030-02-03'},duan:{2026:'2026-06-19',2027:'2027-06-09',2028:'2028-05-28'},qixi:{2026:'2026-08-19',2027:'2027-08-08',2028:'2028-08-26',2029:'2029-08-16',2030:'2030-08-05'},moon:{2026:'2026-09-25',2027:'2027-09-15',2028:'2028-10-03'}};
- const LUNAR={cny:[1,1],duan:[5,5],qixi:[7,7],moon:[8,15]};
- const WIN={cny:[-7,14],duan:[-5,1],qixi:[-3,1],moon:[-7,2]};
- const GREET={cny:'新春快樂',val:'情人節快樂',duan:'端午節安康',qixi:'七夕快樂',moon:'中秋節快樂',xmas:'Merry Christmas'};
- function tpDate(){const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());return new Date(p+'T12:00:00+08:00')}
- function lunarFind(key,year){/* 表裡沒有的年份，用瀏覽器農曆換算 */try{const f=new Intl.DateTimeFormat('en-u-ca-chinese',{month:'numeric',day:'numeric',timeZone:'Asia/Taipei'});const [lm,ld]=LUNAR[key];let d=new Date(year+'-01-01T12:00:00+08:00');for(let i=0;i<400;i++){const ps=f.formatToParts(d);const m=ps.find(x=>x.type==='month').value,dd=+ps.find(x=>x.type==='day').value;if(String(+m)===m&&+m===lm&&dd===ld&&d.getFullYear()===year)return d;d=new Date(d.getTime()+864e5)}}catch(e){}return null}
- function festDay(key,year){const t=FEST_TABLE[key]&&FEST_TABLE[key][year];return t?new Date(t+'T12:00:00+08:00'):lunarFind(key,year)}
- function currentFest(){let q='';try{q=(new URLSearchParams(location.search).get('fest')||'').toLowerCase()}catch(e){}if(GREET[q])return q;
-  const now=tpDate(),y=now.getFullYear(),md=(now.getMonth()+1)*100+now.getDate();
-  if(md>=1215&&md<=1226)return 'xmas';if(md>=210&&md<=215)return 'val';
-  for(const k of ['cny','duan','qixi','moon'])for(const yy of [y,y+1]){const d=festDay(k,yy);if(!d)continue;const diff=Math.round((now-d)/864e5);if(diff>=WIN[k][0]&&diff<=WIN[k][1])return k}
-  return ''}
- const fest=currentFest();window.wyFest=fest;window.wyFestGreeting=fest?GREET[fest]:'';
- const festGroup=new T.Group();festGroup.name='wyFest';scene.add(festGroup);const fireworks=[];let fwT=1.5;const hearts=[];
- const PLAZA=[[-7.5,13],[8,13.9],[-12.1,7],[12.1,7],[-3.4,12.6]];
- const ISLE=[[1,7.7,2.1],[1,-2.1,7.7],[2,2.6,9.7],[2,-5.5,9.5],[3,2.1,7.7],[3,-7.7,2.1],[4,-2.5,4.3],[4,1.6,5.8]];
- const spots=()=>[...PLAZA.map(([x,z])=>[x,z]),...ISLE.map(([i,x,z])=>[c.xy[i][0]+x,c.xy[i][1]+z])];
- const gy=(x,z)=>{try{return c.groundY?c.groundY(x,z):0}catch(e){return 0}};
- const std=(col,o={})=>new T.MeshStandardMaterial({color:col,roughness:.5,...o});
- function lanternPost(x,z,col){const g=new T.Group();g.position.set(x,gy(x,z),z);
-  const gold=std('#E2B867',{metalness:.7,roughness:.3});const pole=new T.Mesh(new T.CylinderGeometry(.08,.1,3.4,10),gold);pole.position.y=1.7;g.add(pole);
-  const arm=new T.Mesh(new T.CylinderGeometry(.05,.05,1,8),gold);arm.rotation.z=Math.PI/2;arm.position.set(.45,3.35,0);g.add(arm);
-  const L=new T.Group();L.position.set(.9,2.75,0);g.add(L);const body=new T.Mesh(new T.SphereGeometry(.42,20,16),std(col,{emissive:col,emissiveIntensity:.55}));body.scale.set(1,1.15,1);L.add(body);glowMats.set(body.material,.55);
-  for(const yy of [.46,-.46]){const cap=new T.Mesh(new T.CylinderGeometry(.2,.24,.12,14),gold);cap.position.y=yy;L.add(cap)}
-  const ts=new T.Mesh(new T.CylinderGeometry(.03,.06,.5,6),std('#F2C14E'));ts.position.y=-.75;L.add(ts);L.userData.sw=Math.random()*6;g.userData.L=L;festGroup.add(g);try{c.addSolid&&c.addSolid(x,z,.3,.3)}catch(e){}return g}
- function heartShape(){const h=new T.Shape();h.moveTo(0,-.5);h.bezierCurveTo(-.9,.05,-.55,.75,0,.38);h.bezierCurveTo(.55,.75,.9,.05,0,-.5);return h}
- function heartBalloon(x,z,col){const g=new T.Group();const y0=gy(x,z);g.position.set(x,y0,z);const geo=new T.ExtrudeGeometry(heartShape(),{depth:.28,bevelEnabled:true,bevelThickness:.12,bevelSize:.1,bevelSegments:4});geo.center();
-  const m=new T.Mesh(geo,std(col,{emissive:col,emissiveIntensity:.25,roughness:.3}));m.scale.setScalar(1.25);m.position.y=4.2;g.add(m);
-  const str=new T.Mesh(new T.CylinderGeometry(.015,.015,3.6,4),std('#ffffff'));str.position.y=1.9;g.add(str);g.userData.m=m;g.userData.ph=Math.random()*6;hearts.push(g);festGroup.add(g);return g}
- function table(x,z){const g=new T.Group();g.position.set(x,gy(x,z),z);const top=new T.Mesh(new T.CylinderGeometry(1.3,1.3,.14,28),std('#C9653A'));top.position.y=1;g.add(top);const cl=new T.Mesh(new T.CylinderGeometry(1.34,1.34,.1,28),std('#F7E3C8'));cl.position.y=1.08;g.add(cl);const leg=new T.Mesh(new T.CylinderGeometry(.14,.2,1,10),std('#8A3F1A'));leg.position.y=.5;g.add(leg);festGroup.add(g);try{c.addSolid&&c.addSolid(x,z,1.2,1.2)}catch(e){}return g}
- function zongzi(){const m=new T.Mesh(new T.TetrahedronGeometry(.36),std('#5E9E4A',{roughness:.7}));m.rotation.set(.6,.3,.2);const b=new T.Mesh(new T.TorusGeometry(.2,.03,6,16),std('#E8D27A'));m.add(b);return m}
- function burst(){const n=70,pos=new Float32Array(n*3),vel=[];const cx=(Math.random()-.5)*60,cy=60+Math.random()*25,cz=-20+(Math.random()-.5)*30;for(let i=0;i<n;i++){pos[i*3]=cx;pos[i*3+1]=cy;pos[i*3+2]=cz;const u=Math.random()*Math.PI*2,v=Math.acos(2*Math.random()-1),sp=11+Math.random()*5;vel.push([Math.sin(v)*Math.cos(u)*sp,Math.cos(v)*sp,Math.sin(v)*Math.sin(u)*sp])}
-  const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos,3));const cols=['#FFD36E','#FF6B6B','#FFF3C4','#FF9A3C'];const p=new T.Points(g,new T.PointsMaterial({size:2.4,map:dot,transparent:true,depthWrite:false,blending:T.AdditiveBlending,color:cols[Math.floor(Math.random()*cols.length)],fog:false}));p.userData={vel,t:0};scene.add(p);fireworks.push(p);try{window.wySfx&&!c.inside()&&Math.random()<.5&&window.wySfx('tap')}catch(e){}}
- let snow=false;
- function buildFest(){if(!fest)return;const S=spots();
-  if(fest==='cny'){S.forEach(([x,z])=>lanternPost(x,z,'#E23B2E'))}
-  if(fest==='moon'){S.forEach(([x,z],i)=>lanternPost(x,z,i%2?'#F2B33D':'#F7D46A'));const t=table(-11.3,6.5);
-   for(let i=0;i<4;i++){const y=new T.Mesh(new T.SphereGeometry(.34,18,14),std('#B9D46A'));y.position.set(-.6+i*.4,1.45,-.3+(i%2)*.5);t.add(y)}for(let i=0;i<3;i++){const mc=new T.Mesh(new T.CylinderGeometry(.3,.3,.16,20),std('#D9A04E'));mc.position.set(.5,1.22+i*.17,.35);t.add(mc)}}
-  if(fest==='duan'){S.forEach(([x,z],i)=>lanternPost(x,z,['#E23B2E','#3FA36B','#F2C14E','#3B7DD8'][i%4]));const t=table(-11.3,6.5);for(let i=0;i<6;i++){const zz=zongzi();zz.position.set(-.6+(i%3)*.6,1.45+Math.floor(i/3)*.4,-.2+Math.floor(i/3)*.3);t.add(zz)}}
-  if(fest==='val'||fest==='qixi'){S.forEach(([x,z],i)=>heartBalloon(x,z,i%2?'#F26D8E':'#E23B5E'))}
-  if(fest==='xmas'){const xmasTree=(x,z,sc)=>{const g=new T.Group();g.position.set(x,gy(x,z),z);const trunk=new T.Mesh(new T.CylinderGeometry(.3,.4,1,10),std('#7A4A2A'));trunk.position.y=.5;g.add(trunk);
-   [[2.2,2.2,1.6],[1.7,1.9,2.9],[1.15,1.6,4.0]].forEach(([r,h,y])=>{const cn=new T.Mesh(new T.ConeGeometry(r,h,24),std('#2F7A4A',{roughness:.7}));cn.position.y=y;g.add(cn)});
-   const orn=['#E23B2E','#F2C14E','#3B7DD8','#FFFFFF'];for(let i=0;i<16;i++){const a=i*2.4,y=1.2+i*.2,r=2.0-i*.11;const b=new T.Mesh(new T.SphereGeometry(.14,10,8),std(orn[i%4],{emissive:orn[i%4],emissiveIntensity:.4,metalness:.3}));b.position.set(Math.cos(a)*r,y,Math.sin(a)*r);g.add(b);glowMats.set(b.material,.4)}
-   const star=new T.Mesh(new T.OctahedronGeometry(.42),std('#FFD36E',{emissive:'#FFD36E',emissiveIntensity:.9,metalness:.5}));star.position.y=5.0;g.add(star);glowMats.set(star.material,.9);g.userData.star=star;festGroup.add(g);try{c.addSolid&&c.addSolid(x,z,1.9*sc,1.9*sc)}catch(e){}
-   const gifts=[['#E23B2E',-1.6,1.4],['#3B7DD8',1.5,1.6],['#F2C14E',-.4,2.2]];for(const [col,dx,dz] of gifts){const bx=new T.Mesh(new T.BoxGeometry(.7,.6,.7),std(col));bx.position.set(dx,.3,dz);g.add(bx);const rb=new T.Mesh(new T.BoxGeometry(.72,.62,.14),std('#FFFFFF'));rb.position.copy(bx.position);g.add(rb)}
-   g.scale.setScalar(sc);return g};xmasTree(-7.5,13,1);ISLE.filter((_,i)=>i%2===0).forEach(([i,x,z])=>xmasTree(c.xy[i][0]+x,c.xy[i][1]+z,.62));
-   snow=true;motes.userData.snow=1;motes.material.map=dot;motes.material.size=.85;motes.material.color.set('#ffffff');motes.material.blending=T.NormalBlending;motes.material.opacity=.95;motes.material.needsUpdate=true}
- }
- setTimeout(()=>{try{buildFest()}catch(e){console.error('fest',e)}},1500);
- function festTick(dt,now){if(!fest)return;const inside=c.inside&&c.inside();festGroup.visible=!inside;
-  for(const g of festGroup.children){if(g.userData.L){const L=g.userData.L;L.userData.sw+=dt*1.4;L.rotation.z=Math.sin(L.userData.sw)*.06}if(g.userData.star)g.userData.star.rotation.y+=dt*1.2}
-  for(const h of hearts){h.userData.ph+=dt;h.userData.m.position.y=4.2+Math.sin(h.userData.ph*1.3)*.18;h.userData.m.rotation.y=Math.sin(h.userData.ph*.7)*.4}
-  if(fest==='moon'){moon.visible=true;moon.material.opacity=Math.max(moon.material.opacity,.92);moon.scale.set(110,110,1)}
-  if(fest==='cny'&&!inside&&cur!=='day'){fwT-=dt;if(fwT<=0){fwT=1.6+Math.random()*1.6;burst()}}
-  for(let i=fireworks.length-1;i>=0;i--){const p=fireworks[i],u=p.userData;u.t+=dt;const a=p.geometry.attributes.position.array;for(let k=0;k<u.vel.length;k++){const v=u.vel[k];v[1]-=6*dt;v[0]*=.985;v[1]*=.985;v[2]*=.985;a[k*3]+=v[0]*dt;a[k*3+1]+=v[1]*dt;a[k*3+2]+=v[2]*dt}p.geometry.attributes.position.needsUpdate=true;p.material.opacity=Math.max(0,1-u.t/1.8);if(u.t>1.8){scene.remove(p);p.geometry.dispose();p.material.dispose();fireworks.splice(i,1)}}}
-
+ /* ---------- v493 節日裝飾：主體在 wy-fest.js，這裡只提供天空、月亮、飄落物的控制 ---------- */
+ let snow=false;let festTickFn=null;
+ const festApi={moon,dot,glow:(m,i)=>glowMats.set(m,i),phase:()=>cur,
+  setSnow(){snow=true;motes.userData.snow=1;motes.material.map=dot;motes.material.size=.95;motes.material.color.set('#ffffff');motes.material.blending=T.NormalBlending;motes.material.opacity=.95;motes.material.needsUpdate=true},
+  tintMotes(col){motes.userData.tint=col;motes.material.color.set(col);motes.material.needsUpdate=true}};
+ import('./wy-fest.js?v=493').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
+ function festTick(dt,now){if(festTickFn)festTickFn(dt,now)}
  /* ---------- v489 流暢度：依實際幀率自動調整解析度 ---------- */
  const prCap=Math.min(window.devicePixelRatio||1,2),prMin=Math.min(prCap,1.25);let prNow=renderer.getPixelRatio(),pfN=0,pfT=performance.now(),pfGood=0;
  window.wyPerf={get pr(){return prNow},fps:0};

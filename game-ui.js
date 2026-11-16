@@ -78,6 +78,11 @@
  body.gu-room #officeUI>div:first-child,body.gu-room #wyV151Controls,body.gu-room #hint{visibility:hidden!important}
  body.gu-room #officeUI span{visibility:hidden}
  /* 指南打開時，名牌與按鈕讓位 */
+ .guSnd{position:fixed;z-index:60;top:calc(98px + env(safe-area-inset-top,0px));right:18px;width:42px;height:42px;border-radius:50%;border:2.5px solid #D9B56A;background:#1A2B4C;display:grid;place-items:center;box-shadow:0 4px 0 #0E1A31,0 6px 14px #0005;transition:opacity .3s,transform .15s;-webkit-tap-highlight-color:transparent}
+ .guSnd:active{transform:translateY(3px);box-shadow:0 1px 0 #0E1A31}
+ .guSnd svg{width:22px;height:22px}
+ .guSnd.off{background:#5B6577;border-color:#9AA3B2}
+ body.gu-guide .guSnd,body.wy-opening .guSnd{opacity:0!important;pointer-events:none!important}
  body.gu-guide .guBadge,body.gu-guide .guTR,body.gu-guide .guToast{opacity:0!important;pointer-events:none!important}
  /* 島上時左下角人物從搖桿上方探頭 */
  body.gu-out .wyCH{bottom:150px!important}
@@ -102,11 +107,11 @@
   #guSplash .tt{position:relative;overflow:hidden;padding:7px 26px;border-radius:999px;background:linear-gradient(180deg,#FFE7A8,#D9A84E);color:#4A2E08;font-size:21px;letter-spacing:3px;box-shadow:0 0 0 3px #fff,0 6px 0 3px #8A6224,0 12px 22px #0006;opacity:0;animation:guUp .6s .75s both}
   #guSplash .tt:after{content:"";position:absolute;top:-20%;bottom:-20%;width:30%;left:-40%;background:linear-gradient(100deg,transparent,#fffa 50%,transparent);transform:skewX(-18deg);animation:guShine 1s 1.3s ease-out forwards}
   @keyframes guUp{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
-  #guSplash .hd{display:flex;gap:12px;margin-top:8px;min-height:86px}
-  #guSplash .hd div{width:62px;text-align:center;opacity:0;transform:translateY(16px) scale(.5)}
+  #guSplash .hd{display:flex;gap:4px;margin-top:8px;min-height:90px}
+  #guSplash .hd div{width:72px;text-align:center;opacity:0;transform:translateY(16px) scale(.5)}
   #guSplash .hd div.on{animation:guHd .5s cubic-bezier(.3,1.6,.5,1) forwards}
   @keyframes guHd{100%{opacity:1;transform:none}}
-  #guSplash .hd i{display:block;width:58px;height:58px;margin:0 auto;border-radius:50%;background:#fff center/112% no-repeat;border:3px solid #fff;box-shadow:0 0 0 2.5px #D9B56A}
+  #guSplash .hd i{display:block;width:70px;height:70px;margin:0 auto;background:center/contain no-repeat;filter:drop-shadow(0 4px 6px #0006)}
   #guSplash .hd span{display:block;margin-top:5px;font-size:10px;color:#FFE7B0;white-space:nowrap;letter-spacing:.5px}
   #guSplash .bar{width:min(230px,62vw);height:10px;border-radius:99px;background:#ffffff1f;border:1.5px solid #D9B56A88;overflow:hidden;margin-top:6px}
   #guSplash .bar b{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#D9A84E,#FFE7A8);transition:width .4s}
@@ -117,9 +122,11 @@
   const NM=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'],KEY=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'];
   sp.innerHTML=stars+'<div class="lg"><img src="office-logo-transparent.png" alt="德威陽"></div><div class="fm">德威陽國際法律事務所</div><div class="tt">YES, WE DO! 有法度</div><div class="hd">'+NM.map(n=>'<div><i></i><span>'+n+'</span></div>').join('')+'</div><div class="bar"><b></b></div><div class="tip">準備法律探索島中…</div>';
   document.body.appendChild(sp);
+  /* v490：移除開頁瞬間就顯示的靜態遮罩，改由動畫載入畫面接手 */
+  requestAnimationFrame(()=>{const pre=document.getElementById('guPre');if(pre)pre.remove()});
   const t0=performance.now();let prog=0,done=false,headsOn=false;const bar=sp.querySelector('.bar b');
   const step=setInterval(()=>{if(done)return;prog=Math.min(88,prog+(88-prog)*.06+.4);bar.style.width=prog+'%';
-   if(!headsOn&&window.wyGetHeads){headsOn=true;let H={};try{H=window.wyGetHeads()}catch(e){}const ds=sp.querySelectorAll('.hd div');ds.forEach((d,i)=>{const img=H[KEY[i]];if(img)d.querySelector('i').style.backgroundImage='url('+img+')';setTimeout(()=>d.classList.add('on'),i*180)})}
+   if(!headsOn&&(window.wyGetStickers||window.wyGetHeads)){headsOn=true;let H={};try{H=window.wyGetStickers?window.wyGetStickers():window.wyGetHeads()}catch(e){}const ds=sp.querySelectorAll('.hd div');ds.forEach((d,i)=>{const img=H[KEY[i]];if(img)d.querySelector('i').style.backgroundImage='url('+img+')';setTimeout(()=>d.classList.add('on'),i*180)})}
    const cr=document.getElementById('creator');const ready=!!window.__wyGame||(cr&&cr.style.display&&cr.style.display!=='none');
    if(ready&&headsOn&&performance.now()-t0>2600&&!window.__guHold){done=true;bar.style.width='100%';setTimeout(()=>{sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)},950)}
    if(performance.now()-t0>20000&&!done&&!window.__guHold){done=true;sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)}},120);
@@ -128,6 +135,8 @@
  const badge=document.createElement('div');badge.className='gu guBadge';badge.style.display='none';
  badge.innerHTML='<div class="guEm"><img src="office-logo-transparent.png" alt="德威陽"></div><div class="guTab"><b></b><span></span></div>';
  const tr=document.createElement('div');tr.className='gu guTR';tr.style.display='none';
+ /* v492：音效開關獨立成一顆按鈕，放在選單下方，一眼找得到 */
+ const snd=document.createElement('button');snd.type='button';snd.className='gu guSnd';snd.style.display='none';snd.setAttribute('aria-label','音效開關');
  const menu=document.createElement('div');menu.className='gu guMenu';
  menu.innerHTML='<div class="guCard">'+
   '<div class="guMi" data-m="view"><b>視角</b><div class="guSeg"><span data-v="overview">俯瞰</span><span data-v="follow">跟隨</span></div></div>'+
@@ -141,11 +150,15 @@
   '<div class="guMi" data-m="home"><b>回城堡</b><small>回到德威陽城堡</small></div></div>';
  const toast=document.createElement('div');toast.className='gu guToast gone';toast.textContent='搖桿走動　點標示互動';
  const iris=document.createElement('div');iris.className='guIris';iris.innerHTML='<i></i><img src="office-logo-transparent.png" alt="">';
- document.body.append(badge,tr,menu,toast,iris);
+ document.body.append(badge,tr,snd,menu,toast,iris);
  const tab=badge.querySelector('.guTab'),em=badge.querySelector('.guEm');
 
  /* ---------- 音效（超可愛版，即時合成） ---------- */
  let AC=null,soundOn=true;try{soundOn=localStorage.getItem('wy-sound')!=='off'}catch(e){}
+ const SND_ON='<svg viewBox="0 0 24 24" fill="none" stroke="#FFE7B0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#FFE7B0"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+ const SND_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="#E7EAF0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#E7EAF0"/><path d="M16 9l6 6M22 9l-6 6"/></svg>';
+ function syncSnd(){snd.innerHTML=soundOn?SND_ON:SND_OFF;snd.classList.toggle('off',!soundOn);snd.setAttribute('aria-pressed',String(soundOn))}
+ snd.addEventListener('click',e=>{e.stopPropagation();soundOn=!soundOn;try{localStorage.setItem('wy-sound',soundOn?'on':'off')}catch(err){}syncSnd();try{syncMenu()}catch(err){}if(soundOn)window.wySfx('tap')});syncSnd();
  const ac=()=>{if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC};
  const env=(g,t,a,v,d)=>{g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0006,t+d)};
  function squeak(f,at,vol=.15,dur=.13){const a=ac();if(!a)return;const t=a.currentTime+at;const o=a.createOscillator(),g=a.createGain(),v=a.createOscillator(),vg=a.createGain();o.type='sine';o.frequency.setValueAtTime(f*.8,t);o.frequency.exponentialRampToValueAtTime(f*1.5,t+dur*.45);o.frequency.exponentialRampToValueAtTime(f*1.15,t+dur);v.frequency.value=34;vg.gain.value=f*.04;v.connect(vg);vg.connect(o.frequency);env(g,t,.005,vol,dur);o.connect(g);g.connect(a.destination);o.start(t);v.start(t);o.stop(t+dur+.03);v.stop(t+dur+.03)}
@@ -173,12 +186,12 @@
  function shine(){tab.classList.remove('guShine');void tab.offsetWidth;tab.classList.add('guShine')}
  function flipTo(c,t1,t2,sound=true){tab.classList.remove('guFlip');void tab.offsetWidth;tab.classList.add('guFlip');setTimeout(()=>paint(c,t1,t2),300);setTimeout(shine,420);if(sound)window.wySfx('flip')}
  function rbtn(ic,lb,c,act){return '<div class="guRB" data-act="'+act+'" style="--c1:'+c[0]+';--c2:'+c[1]+';--d:'+c[2]+'"><div class="guRnd">'+IC[ic]+'</div><span class="guLbl">'+lb+'</span></div>'}
- function setOut(){mode='out';document.body.classList.add('gu-out');document.body.classList.remove('gu-room');badge.style.display='flex';tr.style.display='flex';tr.innerHTML=rbtn('menu','選單',THEME[0],'menu');toast.classList.add('gone')}
- function setRoom(i){mode='room';curRoom=i;document.body.classList.remove('gu-out');document.body.classList.add('gu-room');badge.style.display='flex';tr.style.display='flex';
+ function setOut(){mode='out';snd.style.display='grid';document.body.classList.add('gu-out');document.body.classList.remove('gu-room');badge.style.display='flex';tr.style.display='flex';tr.innerHTML=rbtn('menu','選單',THEME[0],'menu');toast.classList.add('gone')}
+ function setRoom(i){mode='room';snd.style.display='grid';curRoom=i;document.body.classList.remove('gu-out');document.body.classList.add('gu-room');badge.style.display='flex';tr.style.display='flex';
   const c=THEME[i];tr.innerHTML=rbtn('book','指南',c,'guide')+rbtn('door','回島上',THEME[0],'leave');
   flipTo(c,['','訴訟法律島','醫療法律島','家庭生活島','企業商務島'][i],SLOGAN[i]);
   clearTimeout(toastT);toast.textContent='搖桿走動　點標示互動';toast.classList.remove('gone');toastT=setTimeout(()=>toast.classList.add('gone'),3500)}
- function setHidden(){mode='hidden';document.body.classList.remove('gu-out','gu-room');badge.style.display='none';tr.style.display='none';toast.classList.add('gone');menu.classList.remove('on')}
+ function setHidden(){mode='hidden';snd.style.display='none';document.body.classList.remove('gu-out','gu-room');badge.style.display='none';tr.style.display='none';toast.classList.add('gone');menu.classList.remove('on')}
 
  /* ---------- 轉場（圓圈收合，中心停一下 Logo） ---------- */
  let irisBusy=false;
@@ -201,7 +214,7 @@
   if(m==='view'){const v=e.target.closest('[data-v]');const id=v?v.dataset.v:(menu.querySelector('[data-v="overview"]').classList.contains('on')?'follow':'overview');const b=$(id);if(b)b.click();setTimeout(syncMenu,60)}
   else if(m==='sky'){const k=e.target.closest('[data-k]');if(k&&window.wySky){window.wySky.set(k.dataset.k);syncMenu()}}
   else if(m==='help'){menu.querySelector('.guHelp').classList.toggle('on')}
-  else if(m==='sound'){const s=e.target.closest('[data-s]');soundOn=s?s.dataset.s==='on':!soundOn;try{localStorage.setItem('wy-sound',soundOn?'on':'off')}catch(err){}syncMenu();if(soundOn)window.wySfx('tap')}
+  else if(m==='sound'){const s=e.target.closest('[data-s]');soundOn=s?s.dataset.s==='on':!soundOn;try{localStorage.setItem('wy-sound',soundOn?'on':'off')}catch(err){}syncMenu();syncSnd();if(soundOn)window.wySfx('tap')}
   else if(m==='home'){menu.classList.remove('on');const h=$('home');if(h)h.click()}
   else if(m==='photo'){menu.classList.remove('on');takePhoto()}});
  /* 主按鈕：大門前改為「進入」 */
