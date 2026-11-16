@@ -131,6 +131,7 @@
  const menu=document.createElement('div');menu.className='gu guMenu';
  menu.innerHTML='<div class="guCard">'+
   '<div class="guMi" data-m="view"><b>視角</b><div class="guSeg"><span data-v="overview">俯瞰</span><span data-v="follow">跟隨</span></div></div>'+
+  '<div class="guMi" data-m="sky"><b>天空</b><div class="guSeg"><span data-k="auto">自動</span><span data-k="day">白天</span><span data-k="night">夜晚</span></div></div>'+
   '<div class="guMi" data-m="help"><b>操作說明</b><small>搖桿、點地面、縮放</small></div>'+
   '<div class="guHelp">用左下搖桿，或手指點地面，人物就會走過去。<br>一指拖曳旋轉視角，兩指張合縮放。<br>走到大門前，按金色按鈕就能進館。</div>'+
   '<a class="guMi" href="guide.html"><b>文字版導覽</b><small>一頁看懂德威陽</small></a>'+
@@ -194,10 +195,11 @@
   if(a==='menu'){syncMenu();setTimeout(()=>menu.classList.add('on'),90)}
   else if(a==='guide'){const g=G();g&&g.openGuide(curRoom)}
   else if(a==='leave'){const g=G();if(g)window.wyIris(()=>g.leave())}});
- function syncMenu(){const ov=window.__wyGame&&window.__wyGame.overview?window.__wyGame.overview():true;menu.querySelectorAll('[data-v]').forEach(s=>s.classList.toggle('on',(s.dataset.v==='overview')===!!ov));menu.querySelectorAll('[data-s]').forEach(s=>s.classList.toggle('on',(s.dataset.s==='on')===soundOn))}
+ function syncMenu(){const ov=window.__wyGame&&window.__wyGame.overview?window.__wyGame.overview():true;menu.querySelectorAll('[data-v]').forEach(s=>s.classList.toggle('on',(s.dataset.v==='overview')===!!ov));menu.querySelectorAll('[data-s]').forEach(s=>s.classList.toggle('on',(s.dataset.s==='on')===soundOn));const sk=window.wySky?window.wySky.mode:'auto';menu.querySelectorAll('[data-k]').forEach(s=>s.classList.toggle('on',s.dataset.k===sk))}
  menu.addEventListener('click',e=>{if(e.target===menu){menu.classList.remove('on');return}
   const mi=e.target.closest('.guMi');if(!mi)return;press(mi);window.wySfx('tap');const m=mi.dataset.m;
   if(m==='view'){const v=e.target.closest('[data-v]');const id=v?v.dataset.v:(menu.querySelector('[data-v="overview"]').classList.contains('on')?'follow':'overview');const b=$(id);if(b)b.click();setTimeout(syncMenu,60)}
+  else if(m==='sky'){const k=e.target.closest('[data-k]');if(k&&window.wySky){window.wySky.set(k.dataset.k);syncMenu()}}
   else if(m==='help'){menu.querySelector('.guHelp').classList.toggle('on')}
   else if(m==='sound'){const s=e.target.closest('[data-s]');soundOn=s?s.dataset.s==='on':!soundOn;try{localStorage.setItem('wy-sound',soundOn?'on':'off')}catch(err){}syncMenu();if(soundOn)window.wySfx('tap')}
   else if(m==='home'){menu.classList.remove('on');const h=$('home');if(h)h.click()}
@@ -269,7 +271,7 @@
   if(!inside){if(mode!=='out'){setOut();area=-1}
    var a=g.actor();if(a){let best=-1,bd=1e9;g.xy.forEach(([x,z],i)=>{const d=Math.hypot(a.position.x-x,a.position.z-z);if(d<(i===0?24:19)&&d<bd){bd=d;best=i}});
     if(best>=0&&best!==area){const firstTime=area===-1&&!firstShown;area=best;
-     if(firstTime){firstShown=true;introUntil=performance.now()+2400;em.classList.remove('guPop');void em.offsetWidth;em.classList.add('guPop');paint(THEME[0],'德威陽｜有法度','YES, WE DO!');setTimeout(shine,350);window.wySfx('shine');
+     if(firstTime){firstShown=true;introUntil=performance.now()+2400;em.classList.remove('guPop');void em.offsetWidth;em.classList.add('guPop');paint(THEME[0],'德威陽｜有法度',window.wyFestGreeting?('YES, WE DO!　'+window.wyFestGreeting):'YES, WE DO!');setTimeout(shine,350);window.wySfx('shine');
       setTimeout(()=>{if(mode==='out')flipTo(THEME[area],g.names[area],OUT_HINT[area])},1900)}
      else flipTo(THEME[best],g.names[best],OUT_HINT[best])}}
    const it=$('interact');atDoor=-1;if(a&&area>=0&&area<=4){const [x,z]=g.xy[area];if(Math.hypot(a.position.x-x,a.position.z-z)<(area===0?17:14))atDoor=area}const dp=$('wyDoorPrompt');if(dp&&dp.style.display!=='none'&&atDoor<0)atDoor=2;
