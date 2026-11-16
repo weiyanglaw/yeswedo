@@ -64,6 +64,7 @@
   '#wyMediation .md-info{background:#fffaf1;border:1px solid #ecd3a8;border-radius:10px;padding:7px 10px;font-size:13px;animation:mdIn .3s}'+
   '#wyMediation .md-info>b{color:#b35a22;display:block;font-size:14.5px}'+
   '#wyMediation .md-info ul{margin:3px 0 0;padding-left:18px}#wyMediation .md-info li{margin:1px 0}'+
+  '#wyMediation .md-done{margin-top:8px;background:linear-gradient(135deg,#B85A22,#8A3D10);color:#FCE6CC;border-radius:12px;padding:8px 11px;font-size:13px;line-height:1.6;box-shadow:inset 0 0 0 1.5px #E7C27E}#wyMediation .md-done b{display:block;font-size:15.5px;color:#fff;margin-bottom:2px}'+
   '#wyMediation .md-hint{color:#9a7d56;font-size:13px;text-align:center;padding:14px 0}'+
   '#wyMediation .md-wy{margin-top:6px;background:#FDE3C8;border:1px solid #E9B98A;border-left:5px solid #C6A25D;border-radius:10px;padding:9px 10px;color:#5A3216;font-weight:600;font-size:13px;line-height:1.5;animation:mdIn .35s}'+
   '#wyMediation .md-wy>b{display:block;font-size:16px;font-weight:800;margin-bottom:3px;color:#8A3D10}'+
@@ -119,6 +120,7 @@
    h='<div class="md-h">民事、刑事、行政，都能談嗎？</div><div class="md-doors">'+['civil','criminal','admin'].map(d=>'<button class="md-door" data-k="'+d+'">'+DOORS[d][0]+'</button>').join('')+'</div>'+
     (k?card(DOORS[k]):'<div class="md-hint">點一扇門，看看各自怎麼談</div>');
   }
+  if(Object.keys(seen).every(t=>seen[t].size>0))h+='<div class="md-done"><b>談得攏，才是真的有法度</b>法院調解成立，與確定判決有同一效力。條件怎麼談、怎麼寫進調解筆錄，交給德威陽把關。</div>';
   view.innerHTML=h;
   view.querySelectorAll('[data-k]').forEach(b=>{const kk=b.dataset.k;b.classList.toggle('seen',seen[tab].has(kk));b.classList.toggle('on',kk===k);b.onclick=()=>{pick[tab]=kk;seen[tab].add(kk);render()}});
   const i=TABS.findIndex(t=>t[0]===tab);

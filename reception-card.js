@@ -18,16 +18,17 @@
  '#wyRC .rc-band i:after{content:"";position:absolute;left:50%;top:17px;width:18px;height:3px;transform:translateX(-50%);border-radius:2px;background:#fff}'+
  '#wyRC .rc-talk{margin:10px 12px 0;padding:10px 10px 4px;border-radius:12px;background:var(--bg);border:1px solid #E9DCC4}'+
  '#wyRC .rc-l{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;animation:rcIn .32s both}'+
- '#wyRC .rc-n{flex:none;width:92px;text-align:center;font-size:11.5px;font-weight:800;color:#fff;border-radius:999px;padding:4px 0;margin-top:3px;letter-spacing:.5px}'+
+ '#wyRC .rc-h{flex:none;width:34px;height:34px;border-radius:50%;background:#fff center/112% no-repeat;border:2px solid var(--w);margin-top:-2px;animation:rcPeek .3s both}'+
+ '#wyRC .rc-n{flex:none;width:86px;text-align:center;font-size:11.5px;font-weight:800;color:#fff;border-radius:999px;padding:4px 0;margin-top:3px;letter-spacing:.5px}'+
  '#wyRC .rc-s{flex:1;background:#fff;border-radius:4px 12px 12px 12px;padding:6px 10px;font-size:14.5px;line-height:1.6;box-shadow:0 1px 0 #00000012}'+
  '#wyRC .rc-l.last .rc-s{font-weight:700;box-shadow:inset 3px 0 0 #C9A66B,0 1px 0 #00000012}'+
  '#wyRC .rc-foot{display:flex;gap:8px;padding:10px 12px 4px}'+
  '#wyRC .rc-foot button{flex:1;border-radius:11px;padding:9px 4px;font-size:14px;font-weight:800;cursor:pointer;border:1.5px solid var(--t);background:#fff;color:var(--t)}'+
  '#wyRC .rc-foot .nx{background:var(--t);color:#fff}'+
  '#wyRC .rc-note{padding:4px 14px 10px;font-size:10.5px;color:#9A8466;text-align:center}'+
- '@keyframes rcIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}</style>'}
+ '@keyframes rcPeek{0%{transform:translateY(10px) scale(.4);opacity:0}70%{transform:translateY(-3px) scale(1.08);opacity:1}100%{transform:none}}@keyframes rcIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}</style>'}
  function draw(){if(!bag.length){bag=[...cfg.lines.keys()].sort(()=>Math.random()-.5);if(bag.length>1&&bag[0]===hist[hist.length-1])bag.push(bag.shift())}return bag.shift()}
- function show(i){const d=cfg.lines[i];box.querySelector('.rc-talk').innerHTML=d.map((l,k)=>'<div class="rc-l'+(k===d.length-1?' last':'')+'" style="animation-delay:'+(k*.16)+'s"><span class="rc-n" style="background:'+(WHO[l[0]]||'#555')+'">'+l[0]+'</span><div class="rc-s">'+l[1]+'</div></div>').join('')}
+ function show(i){const d=cfg.lines[i];let H={};try{H=window.wyGetHeads?window.wyGetHeads():{}}catch(e){}box.querySelector('.rc-talk').innerHTML=d.map((l,k)=>'<div class="rc-l'+(k===d.length-1?' last':'')+'" style="animation-delay:'+(k*.16)+'s">'+(H[l[0]]?'<i class="rc-h" style="--w:'+(WHO[l[0]]||'#555')+';background-image:url('+H[l[0]]+');animation-delay:'+(k*.16+.12)+'s"></i>':'')+'<span class="rc-n" style="background:'+(WHO[l[0]]||'#555')+'">'+l[0]+'</span><div class="rc-s">'+l[1]+'</div></div>').join('')}
  function next(){if(pos<hist.length-1)pos++;else{hist.push(draw());pos=hist.length-1}show(hist[pos])}
  function prev(){if(pos>0){pos--;show(hist[pos])}}
  function build(){box=document.createElement('div');box.id='wyRC';box.innerHTML=css()+'<div class="rc-brand"><img src="./office-logo-transparent.png" alt="德威陽國際法律事務所"><div><b>德威陽國際法律事務所</b><small>WEI &amp; YANG INTERNATIONAL LAW FIRM</small></div><button class="rc-x" data-close="1" aria-label="關閉">×</button></div><div class="rc-band"><b>接待櫃檯</b><span>事務所今天又怎麼了？</span><i></i></div><div class="rc-talk"></div><div class="rc-foot"><button data-act="prev">← 上一則</button><button class="nx" data-act="next">下一則 →</button><button data-close="1">返回</button></div><div class="rc-note">德威陽｜有法度・一般法律資訊，個案仍須評估</div>';document.body.appendChild(box);
