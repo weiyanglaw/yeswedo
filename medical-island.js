@@ -661,7 +661,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
     {x:5.5,z:-5.3,hold:0},
     {x:0,z:-5.3,hold:0},
     {x:-5.65,z:-5.3,hold:0},
-    {x:-6.1,z:-6.05,hold:8,task:'books'},
+    {x:-5.75,z:-5.4,hold:8,task:'books'},
     {x:-5.65,z:-5.3,hold:0},
     {x:0,z:-5.3,hold:0},
     {x:5.5,z:-5.3,hold:0},

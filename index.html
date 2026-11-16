@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>德威陽｜有法度 YES, WE DO!｜德威陽國際法律事務所 3D 法律探索島</title>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&display=swap"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>德威陽｜有法度 YES, WE DO!｜德威陽國際法律事務所 3D 法律探索島</title>
 <meta name="description" content="德威陽國際法律事務所由林柏均律師主持，林律師具備台灣與美國紐約州律師資格，可用中文、英文、日文溝通。走進訴訟、醫療、家庭、企業四座 3D 主題島，認識打官司、醫療糾紛、離婚與繼承、企業經營的法律問題。">
 <link rel="canonical" href="https://weiyanglaw.github.io/yeswedo/">
 <link rel="alternate" href="https://weiyanglaw.github.io/yeswedo/guide.html" title="文字版導覽">
@@ -365,7 +365,7 @@ draw(false);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {buildChibi} from './chibi-avatar.js?v=477';import {setupGuideHosts,setupCornerHost,setupHeads,setupServicePointer,setupCelebrate} from './guide-host.js?v=484';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=482';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {buildChibi} from './chibi-avatar.js?v=477';import {setupGuideHosts,setupCornerHost,setupHeads,setupServicePointer,setupCelebrate,WY_HOST_LINES} from './guide-host.js?v=485';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=486';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['','','','','',''];const xy=[[0,0],[-51,-43],[51,-43],[51,32],[-51,32],[0,-79]];const islandRise=[0,.85,.85,0,0,9.0];const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,195,255);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
@@ -851,10 +851,10 @@ refreshChibi();
 // No external image files are needed; their meshes are part of the live game.
 const clickable=[],staffNPCs=[];
 const staffDefs=[
- {name:'林柏均律師',alias:'林律師',x:-6,z:6,skin:'#f2c6a5',hair:'#352a28',top:'#24364f',bottom:'#26344c',kind:'lawyer',range:3.4,speed:.52},
- {name:'夢奇奇飼養者',island:3,x:0,z:0,skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail',range:3.0,speed:.62},
- {name:'哈姆太郎',island:5,x:0,z:0,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.8,speed:.75},
- {name:'薪水掌門人',island:4,x:0,z:0,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:3.0,speed:.57}
+ {name:'林柏均律師',alias:'林律師',x:-4.5,z:8.5,skin:'#f2c6a5',hair:'#352a28',top:'#24364f',bottom:'#26344c',kind:'lawyer',range:2.6,speed:.52,lines:'lin'},
+ {name:'夢奇奇飼養者',island:1,x:4.5,z:7.8,skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail',range:2.6,speed:.62,lines:'lit'},
+ {name:'哈姆太郎',island:3,x:-7.8,z:-4.5,skin:'#f1c9ab',hair:'#30292d',top:'#292b32',bottom:'#7d8e73',kind:'short',range:2.4,speed:.75,lines:'fam'},
+ {name:'薪水掌門人',island:4,x:0,z:9,skin:'#f5cdb0',hair:'#74462e',top:'#efadc2',bottom:'#f2e8dc',kind:'bun',range:2.6,speed:.57,lines:'biz'}
 ];
 // v474 員工 Q 版：林柏均律師、夢奇奇飼養者、哈姆太郎、薪水掌門人（造型定稿見 staff.js），各島與城堡內外共用
 const WY_STAFF_INDEX={'林柏均律師':0,'林律師':0,'夢奇奇飼養者':1,'夢奇奇':1,'哈姆太郎':2,'薪水掌門人':3};
@@ -878,14 +878,14 @@ staffDefs.forEach((def,i)=>{
 function animateStaff(dt,elapsed){
  for(const npc of staffNPCs){
   const {def,root,origin,goal,body,head,eyes}=npc;
+  wyStaffGreet(npc,dt);
   if(npc.idle>0){npc.idle-=dt;}
   else {
    const dx=goal.x-root.position.x,dz=goal.z-root.position.z;
    const distance=Math.hypot(dx,dz);
    if(distance<.25){
     npc.idle=1.0+Math.random()*2.2;
-    const a=Math.random()*Math.PI*2,r=.8+Math.random()*def.range;
-    goal.set(origin.x+Math.cos(a)*r,0,origin.z+Math.sin(a)*r);
+    {const ii=def.island||0;let ok=false;for(let tries=0;tries<12&&!ok;tries++){const a=Math.random()*Math.PI*2,r=.6+Math.random()*def.range;const gx=origin.x+Math.cos(a)*r,gz=origin.z+Math.sin(a)*r;ok=wyStaffPathOk(ii,root.position.x,root.position.z,gx,gz);if(ok)goal.set(gx,0,gz)}if(!ok)goal.set(origin.x,0,origin.z)}
    }else{
     const step=Math.min(distance,def.speed*dt);
     root.position.x+=dx/distance*step;
@@ -906,6 +906,36 @@ function animateStaff(dt,elapsed){
   for(const eye of eyes)eye.scale.y=blink?.012:.118;
  }
 }
+// v487：島上成員升級——走動不穿過道具、訪客也不能穿過成員；訪客走近時轉身揮手、頭上冒出一句話
+const WY_LIN_LINES=['歡迎來到德威陽，有法度！','台灣、美國紐約州，兩邊的法律我都熟。','中文、English、日本語，都能直接談。','合約簽下去之前，先讓我看一眼。','有法律問題，LINE @wylaw 找我們。','跨國案件，兩邊的規則一起看。'];
+const WY_NAME_SHOW={'林柏均律師':'林律師'},WY_NAME_COLOR={'林柏均律師':'#1A2B4C','夢奇奇飼養者':'#A8476F','哈姆太郎':'#2B6A8A','薪水掌門人':'#8A5A12'};
+const wyWalkBase=walkAllowed;const wyStaffPos=[];const _sv=new THREE.Vector3();
+walkAllowed=function(x,z){if(!wyWalkBase(x,z))return false;for(const p of wyStaffPos){if(Math.hypot(x-p[0],z-p[1])<.95)return false}return true};
+function wyStaffPathOk(ii,ax,az,bx,bz){const [ox,oz]=xy[ii];const n=Math.ceil(Math.hypot(bx-ax,bz-az)/.4)+1;for(let j=1;j<=n;j++){const x=ox+ax+(bx-ax)*j/n,z=oz+az+(bz-az)*j/n;if(!wyWalkBase(x,z))return false;for(let q=0;q<4;q++){const b=q*Math.PI/2;if(!wyWalkBase(x+Math.cos(b)*.55,z+Math.sin(b)*.55))return false}}return true}
+function wyBubbleTex(name,text){const c=document.createElement('canvas');c.width=560;c.height=230;const x=c.getContext('2d');
+ const lines=[];let cur='';x.font='40px "Huninn","PingFang TC","Noto Sans TC",sans-serif';for(const ch of text){if(x.measureText(cur+ch).width>470){lines.push(cur);cur=ch}else cur+=ch}if(cur)lines.push(cur);const L=lines.slice(0,3);
+ const h=70+L.length*50;const top=(230-h-26)/2;
+ x.fillStyle='rgba(0,0,0,.12)';x.beginPath();x.roundRect(14,top+6,532,h,38);x.fill();
+ x.fillStyle='#fff';x.beginPath();x.roundRect(10,top,532,h,38);x.fill();x.beginPath();x.moveTo(250,top+h-2);x.lineTo(280,top+h+26);x.lineTo(310,top+h-2);x.fill();
+ x.lineWidth=5;x.strokeStyle='#D9B56A';x.beginPath();x.roundRect(10,top,532,h,38);x.stroke();
+ x.fillStyle=WY_NAME_COLOR[name]||'#1A2B4C';x.font='30px "Huninn","PingFang TC","Noto Sans TC",sans-serif';x.fillText(WY_NAME_SHOW[name]||name,40,top+44);
+ x.fillStyle='#3c2a20';x.font='40px "Huninn","PingFang TC","Noto Sans TC",sans-serif';L.forEach((l,i)=>x.fillText(l,40,top+92+i*50));
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
+function wyBubbleShow(npc){const def=npc.def;const k=def.lines||'lin';const list=k==='lin'?WY_LIN_LINES:(WY_HOST_LINES[k]||WY_LIN_LINES);
+ npc.bag=(npc.bag&&npc.bag.length)?npc.bag:[...list].sort(()=>Math.random()-.5);const line=npc.bag.shift();
+ if(!npc.bubble){const m=new THREE.SpriteMaterial({transparent:true,depthTest:false,depthWrite:false});npc.bubble=new THREE.Sprite(m);npc.bubble.renderOrder=60;npc.bubble.center.set(.5,0);
+  npc.root.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(npc.body);const inv=new THREE.Matrix4().copy(npc.root.matrixWorld).invert();bb.applyMatrix4(inv);npc.bubbleY=bb.max.y+.35;npc.root.add(npc.bubble)}
+ if(npc.bubble.material.map)npc.bubble.material.map.dispose();npc.bubble.material.map=wyBubbleTex(def.name,line);npc.bubble.material.needsUpdate=true;
+ npc.bubble.position.set(0,npc.bubbleY,0);npc.bubble.scale.set(.01,.01,1);npc.bubble.visible=true;npc.bubbleT=0;npc.bubbleIn=0}
+function wyBubbleHide(npc){if(npc.bubble)npc.bubble.visible=false}
+function wyStaffGreet(npc,dt){const r=npc.root;r.getWorldPosition(_sv);npc.cd=(npc.cd||0)-dt;
+ if(npc.bubble&&npc.bubble.visible){npc.bubbleIn=Math.min(1,(npc.bubbleIn||0)+dt*5);const e=npc.bubbleIn<1?1+Math.sin(npc.bubbleIn*Math.PI)*.12:1;const s=npc.bubbleIn*e;const ps=r.scale.x||1;npc.bubble.scale.set(4.4*s/ps,1.8*s/ps,1);npc.bubbleT+=dt;if(npc.bubbleT>6)wyBubbleHide(npc)}
+ if(insideOffice||!actor){wyBubbleHide(npc);return}
+ const d=Math.hypot(actor.position.x-_sv.x,actor.position.z-_sv.z);
+ if(d<4.2){npc.idle=Math.max(npc.idle,.4);const want=Math.atan2(actor.position.x-_sv.x,actor.position.z-_sv.z);let dr=want-r.rotation.y;dr=Math.atan2(Math.sin(dr),Math.cos(dr));r.rotation.y+=dr*Math.min(1,dt*6);
+  if(npc.cd<=0&&!(npc.bubble&&npc.bubble.visible)){npc.cd=16;try{npc.chibi.wave()}catch(e){}wyBubbleShow(npc);try{window.wySfx&&window.wySfx('pop')}catch(e){}}}
+ else if(d>7)wyBubbleHide(npc)}
+const _wyAnimStaff=animateStaff;animateStaff=function(dt,el){_wyAnimStaff(dt,el);wyStaffPos.length=0;for(const n of staffNPCs){n.root.getWorldPosition(_sv);wyStaffPos.push([_sv.x,_sv.z])}};
 
 
 // Detailed second-level dollhouse office. All desks and objects are genuine 3D geometry.
@@ -4399,7 +4429,7 @@ function wyElevatorTick(dt){
   }
  }
 
- if(wyIndoorActor&&!wyRide&&!wy3AutoWalk&&!wy3ArrivalAnim&&!wy177Reveal){
+ if(wyIndoorActor&&!wyRide&&!wy3AutoWalk&&!wy3ArrivalAnim&&!wy177Reveal&&!activeIslandRoom){
   let x=0,z=0;const k=wyMoveKeys;
   if(k.has('arrowleft')||k.has('a'))x-=1;
   if(k.has('arrowright')||k.has('d'))x+=1;
@@ -4912,13 +4942,13 @@ function wy401BusinessInterior(root,THREE,staffFactory){
  const receptionPlaque=new THREE.Mesh(new THREE.PlaneGeometry(3.45,.68),new THREE.MeshBasicMaterial({map:receptionTex,side:THREE.DoubleSide}));receptionPlaque.position.set(0,3.05,6.65);receptionPlaque.userData.businessReception=true;root.add(receptionPlaque);
  // Reuse the exact chibi staff factory used by the medical island; independent actor instance.
  let salaryGuide=null,salaryLabel=null;
- if(staffFactory){const result=staffFactory({name:'薪水掌門人',kind:'bun',skin:'#f4c9a6',hair:'#503529',top:'#e7a8bf',bottom:'#5b6b85'});salaryGuide=result.root||result;salaryGuide.position.set(7.2,0,6.5);root.add(salaryGuide);
+ if(staffFactory){const result=staffFactory({name:'薪水掌門人',kind:'bun',skin:'#f4c9a6',hair:'#503529',top:'#e7a8bf',bottom:'#5b6b85'});salaryGuide=result.root||result;salaryGuide.position.set(7.2,0,6.95);root.add(salaryGuide);
   /* v474：薪水掌門人改用定稿 Q 版造型（自帶識別證掛繩與計算機），不再另加金色名牌 */
   const cv=document.createElement('canvas');cv.width=480;cv.height=112;const c=cv.getContext('2d');c.fillStyle='#493657';c.beginPath();c.roundRect(5,5,470,102,36);c.fill();c.strokeStyle='#d9b779';c.lineWidth=6;c.stroke();c.fillStyle='#fff9ec';c.textAlign='center';c.textBaseline='middle';c.font='900 55px sans-serif';c.fillText('薪水掌門人',240,56,448);
   const tx=new THREE.CanvasTexture(cv);tx.colorSpace=THREE.SRGBColorSpace;salaryLabel=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthTest:false}));salaryLabel.scale.set(5.3,1.24,1);salaryLabel.renderOrder=80;salaryLabel.position.set(7.2,3.6,6.5);salaryLabel.userData.businessStaff=true;root.add(salaryLabel);
  }
  const salaryHit=new THREE.Mesh(new THREE.BoxGeometry(1.9,3.1,1.9),new THREE.MeshBasicMaterial({visible:false}));salaryHit.position.set(7.2,1.55,6.5);salaryHit.userData.businessStaff=true;root.add(salaryHit);
- const salaryStops=[{x:7.2,z:6.5,hold:5},{x:8.7,z:5.1,hold:0},{x:8.7,z:2.5,hold:5},{x:6.6,z:2.5,hold:0},{x:6.6,z:4.6,hold:5},{x:7.2,z:6.5,hold:0}];
+ const salaryStops=[{x:7.2,z:6.95,hold:5},{x:5.85,z:6.95,hold:0},{x:5.85,z:1.95,hold:0},{x:8.4,z:1.85,hold:5},{x:5.85,z:1.95,hold:0},{x:5.85,z:6.95,hold:0},{x:7.2,z:6.95,hold:0}];
  const salaryLegs=[];let salaryDuration=0;
  for(let i=0;i<salaryStops.length;i++){const a=salaryStops[i],next=salaryStops[i+1];if(a.hold){salaryLegs.push({a,b:a,start:salaryDuration,len:a.hold});salaryDuration+=a.hold;}if(next){const len=Math.hypot(next.x-a.x,next.z-a.z)/1.3;salaryLegs.push({a,b:next,start:salaryDuration,len});salaryDuration+=len;}}
  const animateSalary=(time)=>{if(!salaryGuide)return;const elapsed=time*.001%salaryDuration;const leg=salaryLegs.find(l=>elapsed>=l.start&&elapsed<l.start+l.len)||salaryLegs[0];const u=Math.max(0,Math.min(1,(elapsed-leg.start)/leg.len));const smooth=u*u*(3-2*u),moving=leg.a!==leg.b;salaryGuide.position.set(leg.a.x+(leg.b.x-leg.a.x)*smooth,moving?Math.abs(Math.sin(time*.009))*.025:0,leg.a.z+(leg.b.z-leg.a.z)*smooth);if(moving)salaryGuide.rotation.y=Math.atan2(leg.b.x-leg.a.x,leg.b.z-leg.a.z);else salaryGuide.rotation.y=-.35;salaryHit.position.x=salaryGuide.position.x;salaryHit.position.z=salaryGuide.position.z;salaryLabel.position.set(salaryGuide.position.x,salaryGuide.position.y+3.6,salaryGuide.position.z+.1);};
@@ -5053,6 +5083,75 @@ wy413ApplyBrand(wyMainGuide);wy413ApplyBrand(medGuide);wy413ApplyBrand(familyGui
 // v482: 各島指南介紹人（訴訟＝夢奇奇飼養者、醫療＝薪水掌門人、家庭＝哈姆太郎、企業＝薪水掌門人）。
 try{setupCornerHost(THREE,buildChibi,CHIBI_STAFF);try{setupHeads(THREE,buildChibi,CHIBI_STAFF);setupServicePointer();setupCelebrate()}catch(e){console.error('heads',e)}}catch(err){console.error('corner host',err)}
 try{setupGuideHosts(THREE,buildChibi,CHIBI_STAFF,[{el:wy175ExtraGuides[1]&&wy175ExtraGuides[1].guide,host:1,key:'lit'},{el:medGuide,host:3,key:'med'},{el:familyGuide,host:2,key:'fam'},{el:wy175ExtraGuides[4]&&wy175ExtraGuides[4].guide,host:3,key:'biz'}])}catch(err){console.error('guide hosts',err)}
+// v485：遊戲介面（game-ui.js）用的狀態與動作；進館、進城堡加轉場
+window.__wyGame={actor:()=>actor,xy,names,inside:()=>insideOffice,room:()=>activeIslandRoom,floor:()=>wyOfficeFloor,overview:()=>overview,
+ openGuide:i=>{if(i===1||i===4){const g=wy175ExtraGuides[i];if(g)g.guide.style.display='block'}else if(i===2)medGuide.style.display='block';else if(i===3)familyGuide.style.display='block'},
+ leave:()=>leaveOffice(),enter:i=>{if(insideOffice)return;if(i===0)enterOffice();else if(i>=1&&i<=4)enterIslandRoom(i)}};
+// v487：合照（訪客＋四位成員），另開一個小畫布拍照，不影響主畫面
+window.wyPhotoShot=async function(){const W=1000,H=860;const r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(1);r.setSize(W,H);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
+ const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff6ea,0xd9c4b8,1.7));const d=new THREE.DirectionalLight(0xffeedd,2.3);d.position.set(3,8,9);sc.add(d);const f=new THREE.DirectionalLight(0xffe8e0,.6);f.position.set(-6,4,5);sc.add(f);
+ const cam=new THREE.PerspectiveCamera(31,W/H,.1,100);cam.position.set(0,3.3,13.2);cam.lookAt(0,2.05,0);
+ const disc=new THREE.Mesh(new THREE.CylinderGeometry(6.4,6.4,.25,64),new THREE.MeshStandardMaterial({color:0xF7E3C8,roughness:.8}));disc.position.y=-.13;sc.add(disc);
+ const rim=new THREE.Mesh(new THREE.TorusGeometry(6.4,.09,10,96),new THREE.MeshStandardMaterial({color:0xD9B56A,roughness:.3,metalness:.7}));rim.rotation.x=Math.PI/2;sc.add(rim);
+ const list=[];const add=(prof,x,z)=>{const c=buildChibi(THREE,prof||{});c.group.scale.setScalar(WY_CHIBI_SCALE);const g=new THREE.Group();g.add(c.group);sc.add(g);g.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(g);g.position.set(x,-bb.min.y,z);g.rotation.y=Math.atan2(cam.position.x-x,cam.position.z-z)*.9;list.push(c);return c};
+ const me=add(getAvatarSettings(),0,1.7);
+ const L=add(CHIBI_STAFF[0],-1.9,-.1),M=add(CHIBI_STAFF[1],1.9,-.1),H2=add(CHIBI_STAFF[2],-3.3,-1.7),S=add(CHIBI_STAFF[3],3.3,-1.7);
+ const wavers=[me,M,H2,S].filter(()=>Math.random()<.85);if(!wavers.length)wavers.push(me);const t0=performance.now();for(const c of wavers){try{c.wave()}catch(e){}}
+ await new Promise(res=>{const loop=()=>{const t=performance.now();for(const c of list){try{c.tick(t)}catch(e){}}if(t-t0>420)return res();requestAnimationFrame(loop)};loop()});
+ for(const c of list){try{c.tick(performance.now())}catch(e){}}
+ r.render(sc,cam);const url=r.domElement.toDataURL('image/png');
+ sc.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m.map)m.map.dispose();m.dispose()})}});r.dispose();try{r.forceContextLoss()}catch(e){}
+ return url};
+// v486：訪客人物走進四館、館內走動與家具碰撞（館內成員也不與家具重疊）
+const wyRoomWalk={actor:null,room:0,boxes:[],staff:[],bounds:null,exitCd:0,mat:null,built:0};
+const WY_ROOM_B={1:{x:16.2,zmin:-14.0,zmax:17.4},2:{r:12.4,zmin:-12.4,zmax:12.4},3:{x:11.0,zmin:-8.5,zmax:8.55},4:{x:11.3,zmin:-8.8,zmax:8.85}};
+const WY_R=.42;
+function wyRoomCollect(sc){const out=[],staff=[];const bb=new THREE.Box3();sc.updateMatrixWorld(true);
+ sc.traverse(o=>{if(o.userData&&o.userData.chibi&&o!==wyRoomWalk.actor&&!staff.includes(o))staff.push(o)});
+ sc.traverse(o=>{if(!o.isMesh||!o.geometry)return;for(let q=o;q;q=q.parent){if(q===wyRoomWalk.actor||q===wyRoomWalk.mat||q.visible===false||staff.includes(q))return}
+  const mts=Array.isArray(o.material)?o.material:[o.material];if(mts.every(m=>!m||m.visible===false||(m.transparent&&m.opacity<.08)||m.colorWrite===false))return;
+  bb.setFromObject(o);if(bb.isEmpty())return;const w=bb.max.x-bb.min.x,d=bb.max.z-bb.min.z;
+  if(bb.max.y<.6||bb.min.y>2.0)return;if(Math.max(w,d)<.2)return;if(w*d>70||w>17||d>17)return;
+  out.push([bb.min.x,bb.max.x,bb.min.z,bb.max.z])});
+ return {boxes:out,staff}}
+function wyStaffBox(o){const bb=new THREE.Box3().setFromObject(o);const cx=(bb.min.x+bb.max.x)/2,cz=(bb.min.z+bb.max.z)/2;const hx=Math.min(.55,(bb.max.x-bb.min.x)/2*.6),hz=Math.min(.55,(bb.max.z-bb.min.z)/2*.6);return [cx-hx,cx+hx,cz-hz,cz+hz]}
+function wyInB(x,z,B,pad=0){if(B.r){if(Math.hypot(x,z)>B.r-pad)return false}else if(x<-B.x+pad||x>B.x-pad)return false;return z>=B.zmin+pad&&z<=B.zmax-pad}
+function wyHitBoxes(x,z,list,R){for(const b of list){if(x>b[0]-R&&x<b[1]+R&&z>b[2]-R&&z<b[3]+R)return true}return false}
+function wyRoomFree(x,z){const W=wyRoomWalk;if(!W.bounds||!wyInB(x,z,W.bounds))return false;if(wyHitBoxes(x,z,W.boxes,WY_R))return false;for(const s of W.staff){if(s.visible===false)continue;if(wyHitBoxes(x,z,[wyStaffBox(s)],WY_R))return false}return true}
+function wyFindFree(x0,z0,test,maxR=6){if(test(x0,z0))return [x0,z0];for(let r=.4;r<=maxR;r+=.4){for(let k=0;k<16;k++){const a=k/16*Math.PI*2,x=x0+Math.cos(a)*r,z=z0+Math.sin(a)*r;if(test(x,z))return [x,z]}}return null}
+function wyRoomRebuild(){const W=wyRoomWalk,r=themeRooms[W.room];if(!r)return;const c=wyRoomCollect(r.scene);W.boxes=c.boxes;W.staff=c.staff;
+ /* 館內成員若與家具重疊，就近移到空位（名牌一起移） */
+ for(const s of W.staff){if(s.userData.wyMoving)continue;const sb=wyStaffBox(s);const cx=(sb[0]+sb[1])/2,cz=(sb[2]+sb[3])/2;
+  const ok=(x,z)=>wyInB(x,z,W.bounds,.3)&&!wyHitBoxes(x,z,W.boxes,.5);if(ok(cx,cz))continue;const f=wyFindFree(cx,cz,ok,4);if(!f)continue;const dx=f[0]-cx,dz=f[1]-cz;
+  r.scene.traverse(o=>{if(o!==s&&(o.isSprite||(o.isMesh&&o.geometry&&o.geometry.type==='PlaneGeometry'))&&o.parent===s.parent&&Math.hypot(o.position.x-cx,o.position.z-cz)<1.2&&o.position.y>2.2){o.position.x+=dx;o.position.z+=dz}});
+  s.position.x+=dx;s.position.z+=dz}}
+function wyRoomWalkEnter(i){const W=wyRoomWalk;if(!(i>=1&&i<=4))return;const r=themeRooms[i];if(!r)return;W.room=i;W.bounds=WY_ROOM_B[i];
+ if(!W.actor){W.actor=makeChibi(getAvatarSettings());const bb=new THREE.Box3().setFromObject(W.actor);const h=Math.max(.1,bb.max.y-bb.min.y);W.actor.scale.setScalar(2.9/h)}
+ if(!W.mat){const c=document.createElement('canvas');c.width=512;c.height=160;const x=c.getContext('2d');x.fillStyle='#1A2B4Ccc';x.beginPath();x.roundRect(6,6,500,148,60);x.fill();x.lineWidth=10;x.strokeStyle='#D9B56A';x.stroke();x.fillStyle='#FFE7B0';x.font='64px "Huninn","PingFang TC",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('回島上',256,84);
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;W.mat=new THREE.Mesh(new THREE.PlaneGeometry(3.6,1.12),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}));W.mat.rotation.x=-Math.PI/2;W.mat.renderOrder=5}
+ r.scene.add(W.actor);r.scene.add(W.mat);W.mat.position.set(0,.13,W.bounds.zmax-.55);
+ wyRoomRebuild();const sp=wyFindFree(0,W.bounds.zmax-2.4,wyRoomFree,8)||[0,W.bounds.zmax-2.4];W.actor.position.set(sp[0],i===2?.08:0,sp[1]);W.actor.rotation.y=0;W.exitCd=1.4;
+ setTimeout(()=>{if(W.room===i&&insideOffice)wyRoomRebuild()},1800);
+ wyWalkUI.style.display='block';wyJoyReset();wyMoveKeys.clear()}
+const wyStaffClk={};const _wv1=new THREE.Vector3(),_wv2=new THREE.Vector3();
+/* 館內成員走動時，訪客擋在旁邊就先停下來，不會穿過訪客 */
+function wyStaffClock(room){const c=wyStaffClk[room]||(wyStaffClk[room]={t:performance.now(),last:0});const now=performance.now();const dt=c.last?Math.min(100,now-c.last):0;c.last=now;const W=wyRoomWalk;let block=false;
+ if(W.actor&&W.room===room&&W.actor.parent){W.actor.getWorldPosition(_wv1);for(const s of W.staff){s.getWorldPosition(_wv2);if(Math.hypot(_wv1.x-_wv2.x,_wv1.z-_wv2.z)<1.2){block=true;break}}}
+ if(!block)c.t+=dt;return c.t}
+function wySalaryClock(){return wyStaffClock(4)}
+function wyRoomWalkLeave(){const W=wyRoomWalk;if(W.actor&&W.actor.parent)W.actor.parent.remove(W.actor);if(W.mat&&W.mat.parent)W.mat.parent.remove(W.mat);W.room=0}
+addEventListener('keydown',e=>{if(insideOffice&&activeIslandRoom>=1&&activeIslandRoom<=4&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){e.preventDefault();wyMoveKeys.add(e.key.toLowerCase())}});
+(function wyRoomLoop(t){requestAnimationFrame(wyRoomLoop);const dt=Math.min(.05,((t-(wyRoomLoop.l||t))/1000));wyRoomLoop.l=t;const W=wyRoomWalk;
+ if(!insideOffice||!(activeIslandRoom>=1&&activeIslandRoom<=4)||!W.actor||W.room!==activeIslandRoom)return;
+ W.exitCd-=dt;let x=wyJoyX,z=wyJoyY;const k=wyMoveKeys;if(k.has('arrowleft')||k.has('a'))x-=1;if(k.has('arrowright')||k.has('d'))x+=1;if(k.has('arrowup')||k.has('w'))z-=1;if(k.has('arrowdown')||k.has('s'))z+=1;
+ if(!x&&!z)return;const r=themeRooms[W.room],cam=r.camera,tg=r.orbit.target;const a=Math.atan2(cam.position.x-tg.x,cam.position.z-tg.z);
+ const wx=x*Math.cos(a)+z*Math.sin(a),wz=-x*Math.sin(a)+z*Math.cos(a);const d=Math.hypot(wx,wz)||1,sp=5.4*dt*Math.min(1,Math.hypot(x,z)),p=W.actor.position;const nx=p.x+wx/d*sp,nz=p.z+wz/d*sp;
+ const stuck=!wyRoomFree(p.x,p.z);if(wyRoomFree(nx,p.z)||(stuck&&wyInB(nx,p.z,W.bounds)))p.x=nx;if(wyRoomFree(p.x,nz)||(stuck&&wyInB(p.x,nz,W.bounds)))p.z=nz;
+ W.actor.rotation.y=Math.atan2(wx,wz);
+ if(W.exitCd<=0&&wz>.2&&Math.abs(p.x)<2.4&&p.z>W.bounds.zmax-1.0){W.exitCd=99;wyJoyReset();wyMoveKeys.clear();if(window.wyIris)window.wyIris(()=>leaveOffice());else leaveOffice()}})(0);
+{const _eir=enterIslandRoom;enterIslandRoom=function(i){const go=()=>{_eir(i);try{wyRoomWalkEnter(i)}catch(e){console.error('room walk',e)}};if(window.wyIris&&!insideOffice)return window.wyIris(go);return go()};
+ const _lo=leaveOffice;leaveOffice=function(){try{wyRoomWalkLeave()}catch(e){}return _lo.apply(this,arguments)};
+ const _eo=enterOffice;enterOffice=function(){if(window.wyIris&&!insideOffice)return window.wyIris(()=>_eo());return _eo()};}
 
 // v482: 訴訟島 7 個互動家具上方的浮動標示（點標示或家具都能打開）。
 function wyAddLitigationLabels(root,li){
@@ -5289,11 +5388,11 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-document.getElementById('creator').style.display='flex';wyPreviewResize();const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(performance.now());if(r.familyRoom?.animation)r.familyRoom.animation(performance.now());
+document.getElementById('creator').style.display='flex';wyPreviewResize();const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.body.dataset.wyVideoOpen==='1')return;if(joyX||joyY)autoWalkPoints=[];if(!insideOffice&&autoWalkPoints.length&&document.getElementById('creator').style.display==='none'){const dest=autoWalkPoints[0],delta=dest.clone().sub(actor.position);delta.y=0;const distance=delta.length();if(distance<.3)autoWalkPoints.shift();else{delta.normalize();const step=Math.min(distance,dt*9);if(!tryWalk(delta.x*step,delta.z*step))autoWalkPoints=[];actor.rotation.y=Math.atan2(delta.x,delta.z);}}animateStaff(dt,clock.elapsedTime);animateIndoor(dt,clock.elapsedTime);wyElevatorTick(dt);wy252GymTick(performance.now());wy211LabelsTick();window.__weiyangFountainAnimate?.(performance.now());for(const label of islandLabels){label.position.y=label.userData.baseY+Math.sin(clock.elapsedTime*.65+label.userData.floatPhase)*.27;}if(!insideOffice&&document.getElementById('creator').style.display==='none'&&(joyX||joyY)){const forward=new THREE.Vector3();camera.getWorldDirection(forward);forward.y=0;forward.normalize();const right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();const v=right.clone().multiplyScalar(joyX).add(forward.multiplyScalar(-joyY));if(v.lengthSq()>1)v.normalize();const walked=tryWalk(v.x*dt*10,v.z*dt*10);if(!walked&&Math.abs(joyX)>.12)tryWalk(right.x*joyX*dt*10,right.z*joyX*dt*10);follow=true;overview=false;}syncIslandCameraMode();if(medicalFocusAnim){medicalFocusAnim.t=Math.min(1,medicalFocusAnim.t+dt*1.55);const t=medicalFocusAnim.t;const ease=t*t*(3-2*t);orbit.target.lerpVectors(medicalFocusAnim.start,medicalFocusAnim.end,ease);camera.position.copy(orbit.target).add(medicalFocusAnim.offset);if(t>=1)medicalFocusAnim=null;}if(follow){const target=new THREE.Vector3(actor.position.x,actor.position.y+1.3,actor.position.z);const delta=target.clone().sub(orbit.target);orbit.target.lerp(target,.1);camera.position.addScaledVector(delta,.1)}if(insideOffice){if(activeIslandRoom){const r=themeRooms[activeIslandRoom];r.orbit.update();if(r.icon)r.icon.rotation.y+=dt*.25;if(r.medicalRoom)r.medicalRoom.animation(wyStaffClock(2));if(r.familyRoom?.animation)r.familyRoom.animation(wyStaffClock(3));
  if(activeIslandRoom===4){
   const b=r.scene.children.find(o=>o.userData?.businessInteraction)?.userData.businessInteraction;
   if(b){
-   b.animateSalary?.(performance.now());
+   b.animateSalary?.(wySalaryClock());
    // v411: fixed world anchors. Never slide or oscillate signs while the camera moves.
    // All-or-nothing occlusion avoids plaques being visibly sliced by walls.
    const cam=r.camera;
@@ -5945,4 +6044,4 @@ html body #wyFamSvc::after{content:'LINE：@wylaw　｜　官網：weiandyang.co
 <script src="reception-data.js?v=483"></script>
 <script src="reception-card.js?v=483"></script>
 <script src="justice-game.js?v=483"></script>
-</body></html>
+<script src="game-ui.js?v=487"></script></body></html>

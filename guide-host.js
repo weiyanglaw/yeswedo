@@ -60,7 +60,7 @@ export function setupGuideHosts(THREE,buildChibi,STAFF,list){
   chibi.tick(now);renderer.render(scene,cam)}
  function clear(){timers.forEach(clearTimeout);timers=[]}
  function show(cfg){init();clear();active=cfg;const el=cfg.el;let r=el.getBoundingClientRect();if(r.width<10)return;
-  if(r.top<172){const room=window.innerHeight-182;if(r.height>room){el.style.maxHeight=room+'px';el.style.overflowY='auto'}r=el.getBoundingClientRect();if(r.top<172){el.style.top='calc(50% + '+Math.ceil(172-r.top)+'px)';r=el.getBoundingClientRect()}}
+  if(r.top<190){const room=window.innerHeight-198;if(r.height>room){el.style.setProperty('max-height',room+'px','important');el.style.overflowY='auto'}r=el.getBoundingClientRect();if(r.top<190){el.style.setProperty('top','calc(50% + '+Math.ceil(190-r.top)+'px)','important');r=el.getBoundingClientRect()}}
   const z=parseInt(getComputedStyle(el).zIndex)||95;host.style.zIndex=z-1;cloud.style.zIndex=z+1;
   host.style.left=(r.left+14)+'px';host.style.top=(r.top-163)+'px';cloud.style.left=Math.min(r.left+150,window.innerWidth-200)+'px';cloud.style.top=(r.top-162)+'px';
   host.className='wyGH';host.style.display='block';cloud.style.display='block';cloud.classList.remove('on');
@@ -192,7 +192,7 @@ export function setupCelebrate(){
    const a=(Math.random()*Math.PI)+Math.PI,v=90+Math.random()*150,dx=Math.cos(a)*v*(1.3),dy=Math.sin(a)*v;
    p.animate([{transform:'translate(-50%,-50%) rotate(0)',opacity:1},{transform:'translate('+(dx*.7)+'px,'+(dy)+'px) rotate('+(Math.random()*360)+'deg)',opacity:1,offset:.45},{transform:'translate('+dx+'px,'+(dy+190)+'px) rotate('+(Math.random()*720)+'deg)',opacity:0}],{duration:1300+Math.random()*300,easing:'cubic-bezier(.2,.7,.4,1)',fill:'forwards'})}
   el.animate([{transform:'scale(1)'},{transform:'scale(1.035)'},{transform:'scale(1)'}],{duration:450,easing:'ease-out'});
-  setTimeout(()=>L.remove(),1800);const rm=window.wyActiveRoom||0;if(rm>=1&&rm<=4&&window.wyCornerCheer)setTimeout(()=>window.wyCornerCheer(rm),250)}
+  try{window.wySfx&&window.wySfx('done')}catch(e){}setTimeout(()=>L.remove(),1800);const rm=window.wyActiveRoom||0;if(rm>=1&&rm<=4&&window.wyCornerCheer)setTimeout(()=>window.wyCornerCheer(rm),250)}
  setInterval(()=>{
   for(const sel of ['.j-done','.fi-done','.md-done']){const e=document.querySelector(sel);if(e&&e.offsetParent!==null&&!done.has(sel)){done.add(sel);burst(e)}}
   if(!done.has('vip')){for(const o of document.querySelectorAll('.wy416Overline')){if(o.textContent.indexOf('VIP會客室')<0||o.offsetParent===null)continue;const s=o.parentElement&&o.parentElement.parentElement&&o.parentElement.parentElement.querySelector('.wy414Service');if(s&&s.offsetParent!==null){done.add('vip');burst(s)}}}
