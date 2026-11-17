@@ -63,7 +63,7 @@ export function setupSea(T, c){
   // 水簾：上兩層水盤邊緣流下的細水柱
   const jm=new T.MeshBasicMaterial({color:0xC9F6FF,transparent:true,opacity:.6,depthWrite:false});const curtains=[];
   for(const [R,y0,h,n] of [[2.55,3.45,2.0,22],[1.6,4.95,1.45,14]])for(let k=0;k<n;k++){const a=k/n*Math.PI*2;const j=new T.Mesh(new T.CylinderGeometry(.05,.07,h,6),jm);j.position.set(Math.cos(a)*R,y0-h/2,Math.sin(a)*R);j.userData.wyFtn=1;F.add(j);curtains.push(j)}
-  movers.push((t,dt)=>{med.rotation.y=Math.sin(t*.5)*.7;jm.opacity=.45+.2*Math.sin(t*3);let ph='day';try{ph=window.wySky.phase()}catch(e){}disc.material.emissiveIntensity=ph==='night'?.9:.35});
+  movers.push((t,dt)=>{med.rotation.y=Math.sin(t*.5)*.7;jm.opacity=.5+.06*Math.sin(t*1.2);let ph='day';try{ph=window.wySky.phase()}catch(e){}disc.material.emissiveIntensity=ph==='night'?.9:.35});
  })();
  // ---------- 3) 橋頭：石板平台＋兩根深藍金燈柱 ----------
  (window.wyLinks||[]).forEach(L=>{[L.pts[0],L.pts[L.pts.length-1]].forEach((p,j)=>{const q=j?L.pts[L.pts.length-2]:L.pts[1];const ang=Math.atan2(q[0]-p[0],q[2]-p[2]);const head=new T.Group();head.position.set(p[0],p[1]+.86,p[2]);head.rotation.y=ang;root.add(head);
@@ -90,7 +90,7 @@ export function setupSea(T, c){
   // 風吹花浪：每 9 秒一陣風，花浪從左後方往右前方滾過
   const WIND=(x,z,t)=>{const c2=t%9;if(c2>4.5)return 0;const fr=-RR-4+c2/4.5*(2*RR+8);const d=(x*.8+z*.6)-fr;return .42*Math.exp(-d*d/5)+.18*Math.exp(-(d+3.5)*(d+3.5)/4)};
   fieldSet=(tt,t)=>{for(let k=0;k<N;k++){const p=cells[k];let f;if(tt<6){const front=-W/2-1.5+(tt-.3)/1.8*(W+3);f=Math.min(1,Math.max(0,(front-p.x)/1.4))}else{const front=-W/2-1.5+(tt-6)/1.8*(W+3);f=1-Math.min(1,Math.max(0,(front-p.x)/1.4))}
-    const wv=WIND(p.x,p.z,t);e.set(wv*.35,0,-(f*1.32+(Math.sin(t*2+p.ph)*.05+wv)*(1-f*.6)));q.setFromEuler(e);v.set(p.x,0,p.z);m.compose(v,q,s);stems.setMatrixAt(k,m);heads.setMatrixAt(k,m);col.copy(p.idle||cIdle).lerp(p.on?(p.txt?cTxt:cOn):(p.off||cOff),Math.min(1,f*1.6));heads.setColorAt(k,col)}
+    const wv=WIND(p.x,p.z,t);e.set(wv*.35,0,-(f*1.32+(Math.sin(t*2+p.ph)*.05+wv)*(1-f*.6)));q.setFromEuler(e);v.set(p.x-Math.sin(f*1.32)*.95,0,p.z);/* v500：花倒下時往右偏的量補回來，Logo 置中 */m.compose(v,q,s);stems.setMatrixAt(k,m);heads.setMatrixAt(k,m);col.copy(p.idle||cIdle).lerp(p.on?(p.txt?cTxt:cOn):(p.off||cOff),Math.min(1,f*1.6));heads.setColorAt(k,col)}
    stems.instanceMatrix.needsUpdate=true;heads.instanceMatrix.needsUpdate=true;heads.instanceColor.needsUpdate=true};
   // v499 節慶花田換色：春節紅金、情人節粉紅、端午綠、七夕紫、中秋金黃、聖誕紅綠
   {let tries=0;const pal=()=>{const F=window.wyFest;if(F===undefined){if(tries++<80)setTimeout(pal,250);return}const k=['cny','val','moon','xmas','qixi','duan'].find(q=>F.split(',').includes(q));if(!k)return;
@@ -137,7 +137,7 @@ export function setupSea(T, c){
   brand:null,
   cny:ctex(256,256,(x,w,h)=>{x.fillStyle='#D7261E';x.fillRect(0,0,w,h);x.fillStyle='#8A1A14';for(let k=1;k<6;k++)x.fillRect(0,h*k/6-3,w,6);x.fillStyle='#F2C14E';x.beginPath();x.arc(w/2,h*.45,46,0,7);x.fill();x.fillStyle='#D7261E';x.font='bold 64px "Noto Serif TC","PMingLiU",serif';x.textAlign='center';x.textBaseline='middle';x.fillText('福',w/2,h*.46)}),
   xmas:ctex(256,256,(x,w,h)=>{for(let k=0;k<8;k++){x.fillStyle=k%2?'#2F8F4E':'#D7261E';x.fillRect(0,k*h/8,w,h/8)}x.fillStyle='#FFFFFF';for(let k=0;k<14;k++){x.beginPath();x.arc((k*67)%w,(k*41)%h,5,0,7);x.fill()}})};
- sailTex.brand=ctex(256,256,(x,w,h)=>{x.fillStyle='#1F3A75';x.fillRect(0,0,w,h);x.strokeStyle='#F0C75E';x.lineWidth=8;x.strokeRect(10,10,w-20,h-20);x.fillStyle='#F0C75E';x.font='bold 96px Georgia,serif';x.textAlign='center';x.textBaseline='middle';x.fillText('WY',w/2,h*.56)});
+ sailTex.brand=/* v500：品牌帆改正式 Logo */(()=>{const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');x.fillStyle='#1F3A75';x.fillRect(0,0,256,256);x.strokeStyle='#F0C75E';x.lineWidth=8;x.strokeRect(10,10,236,236); const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;const im=new Image();im.onload=()=>{x.drawImage(im,8,14,240,240);t.needsUpdate=true};im.src='./office-logo-transparent.png';return t})();
  try{const li=new Image();li.onload=()=>{const t=sailTex.brand;const cv=t.image;const x=cv.getContext('2d');x.fillStyle='#1F3A75';x.fillRect(14,14,cv.width-28,cv.height-28);const sc=Math.min(118/li.width,118/li.height);const lw=li.width*sc,lh=li.height*sc;x.drawImage(li,cv.width*.33-lw/2,cv.height*.64-lh/2,lw,lh);const d=x.getImageData(0,0,cv.width,cv.height);for(let i=0;i<d.data.length;i+=4){const r=d.data[i],g=d.data[i+1],b=d.data[i+2];if(r<90&&g<90&&b<120&&!(Math.abs(r-31)<8&&Math.abs(g-58)<8&&Math.abs(b-117)<8)){d.data[i]=240;d.data[i+1]=199;d.data[i+2]=94}}x.putImageData(d,0,0);t.needsUpdate=true};li.src='office-logo-transparent.png'}catch(e){}
  const triGeo=(w,h,curve)=>{const g=new T.BufferGeometry();const N=8,pos=[],uv=[],idx=[];for(let j=0;j<=N;j++)for(let i=0;i<=N;i++){const v=j/N,u=i/N*(1-v);const bul=Math.sin(Math.PI*u/(1-v+1e-6)*(1-v))*curve*(1-v);pos.push(bul,v*h,u*w);uv.push(u/(1-v+1e-6)*(1-v)+.0,v)}for(let j=0;j<N;j++)for(let i=0;i<N;i++){const a=j*(N+1)+i,b=a+1,c2=a+N+1,d=c2+1;idx.push(a,c2,b,b,c2,d)}g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g};
  const sails=[];const boat=(kind)=>{const g=new T.Group();

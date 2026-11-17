@@ -8,19 +8,21 @@ export function setupSky(T, c, api){
  const ctex=(w,h,fn)=>{const cv=document.createElement('canvas');cv.width=w;cv.height=h;fn(cv.getContext('2d'),w,h);const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t};
  const GOLD=M('#F2C14E',{metalness:.4,roughness:.3});const OX=0,OZ=-50;
  const summer=window.wySeason==='summer';
+ /* v500：一律用事務所正式 Logo（金色麥穗徽章），不再用自畫的 WY */
+ const LOGO=new T.TextureLoader().load('./office-logo-transparent.png');LOGO.colorSpace=T.SRGBColorSpace;LOGO.anisotropy=4;
+ const logoDisc=(r,bg)=>{const g=new T.Group();const b=new T.Mesh(new T.CircleGeometry(r,40),M(bg||'#1F3460'));g.add(b);const l=new T.Mesh(new T.PlaneGeometry(r*2.15,r*2.15),new T.MeshStandardMaterial({map:LOGO,transparent:true,alphaTest:.25,roughness:.45,metalness:.2}));l.position.z=.02;g.add(l);const rim=new T.Mesh(new T.TorusGeometry(r,.06*r,8,40),GOLD);g.add(rim);return g};
  const ban2=(geo,mat)=>{const g=new T.Group();const a=new T.Mesh(geo,mat);const b=new T.Mesh(geo,mat);b.rotation.y=Math.PI;b.position.z=-.02;g.add(a,b);return g};
  // ---------- 常駐：德威陽小飛艇 ----------
  const banner=ctex(1024,128,(x,w,h)=>{x.fillStyle='#FFFFFF';x.fillRect(0,0,w,h);x.strokeStyle='#F2C14E';x.lineWidth=10;x.strokeRect(5,5,w-10,h-10);x.fillStyle='#1F3460';x.font='bold 64px "Noto Sans TC","PingFang TC",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('有法度 YES, WE DO!',w/2,h/2+4)});
- const blimp=new T.Group();root.add(blimp);{const body=sph(3,'#1F3460',1,1,1.9);blimp.add(body);const band=new T.Mesh(new T.TorusGeometry(3.02,.12,8,40),GOLD);blimp.add(band);
-  const lg=ctex(256,256,(x,w,h)=>{x.fillStyle='#F2C14E';x.beginPath();x.arc(128,128,124,0,7);x.fill();x.fillStyle='#1F3460';x.font='bold 120px Georgia,serif';x.textAlign='center';x.textBaseline='middle';x.fillText('WY',128,140)});
-  for(const e of[-1,1]){const l=new T.Mesh(new T.CircleGeometry(1.4,32),new T.MeshStandardMaterial({map:lg,roughness:.4}));l.position.set(e*3.01,0,1);l.rotation.y=e*Math.PI/2;blimp.add(l)}
+ const blimp=new T.Group();root.add(blimp);{const body=sph(3,'#1F3460',1,1,1.9);blimp.add(body);const band=new T.Mesh(new T.TorusGeometry(2.5,.12,8,40),GOLD);band.position.z=-3.2;blimp.add(band);/* v500：金環移到後段，不再壓到 Logo */
+  for(const e of[-1,1]){const l=logoDisc(1.45);l.position.set(e*2.99,.15,1.1);l.rotation.y=e*Math.PI/2;blimp.add(l)}
   for(const [rx,rz] of[[0,1],[1,0],[0,-1],[-1,0]]){const fin=new T.Mesh(new T.BoxGeometry(rx?2.2:.15,rz?2.2:.15,1.6),GOLD);fin.position.set(rx*1.0,rz*1.0,-5.4);blimp.add(fin)}
   const gond=new T.Mesh(new T.BoxGeometry(1.2,.7,2.4),M('#FFFFFF'));gond.position.set(0,-3.2,0);blimp.add(gond);const prop=new T.Group();prop.position.set(0,0,-6.1);blimp.add(prop);for(let k=0;k<3;k++){const b=new T.Mesh(new T.BoxGeometry(.18,1.6,.06),M('#333333'));b.rotation.z=k*Math.PI/1.5;prop.add(b)}blimp.userData.prop=prop;
   const bnG=new T.PlaneGeometry(14,1.75,16,1);const bn=ban2(bnG,new T.MeshStandardMaterial({map:banner,roughness:.6}));bn.position.set(0,-4.6,-12);bn.rotation.y=Math.PI/2;blimp.add(bn);blimp.userData.bn={geometry:bnG};const rope=cyl(.03,.03,6,'#888888',4);rope.rotation.x=Math.PI/2.4;rope.position.set(0,-4.1,-7.5);blimp.add(rope)}
  const bnPos=blimp.userData.bn.geometry.attributes.position,bnBase=bnPos.array.slice();
  // ---------- 隨機驚喜 ----------
  const balloonTex=c2=>ctex(64,128,(x,w,h)=>{const cols=c2;for(let k=0;k<8;k++){x.fillStyle=cols[k%cols.length];x.fillRect(k*w/8,0,w/8+1,h)}});
- function mkBalloon(cols,logo){const g=new T.Group();const env=new T.Mesh(new T.SphereGeometry(3,24,18),new T.MeshStandardMaterial({map:balloonTex(cols),roughness:.5}));env.scale.y=1.15;env.position.y=4;g.add(env);if(logo){const lg=ctex(128,128,(x)=>{x.fillStyle='#1F3460';x.beginPath();x.arc(64,64,60,0,7);x.fill();x.fillStyle='#F2C14E';x.font='bold 54px Georgia';x.textAlign='center';x.textBaseline='middle';x.fillText('WY',64,70)});const l=new T.Mesh(new T.CircleGeometry(1.3,24),new T.MeshStandardMaterial({map:lg}));l.position.set(0,4,3.02);g.add(l)}
+ function mkBalloon(cols,logo){const g=new T.Group();const env=new T.Mesh(new T.SphereGeometry(3,24,18),new T.MeshStandardMaterial({map:balloonTex(cols),roughness:.5}));env.scale.y=1.15;env.position.y=4;g.add(env);if(logo){const l=logoDisc(1.25,'#1F3460');l.position.set(0,4,3.03);g.add(l)}
   const bask=new T.Mesh(new T.BoxGeometry(1.1,.8,1.1),M('#B07A4A'));bask.position.y=-.4;g.add(bask);for(const [x,z] of[[-.5,-.5],[.5,-.5],[-.5,.5],[.5,.5]]){const r=cyl(.02,.02,1.8,'#7A5A3A',4);r.position.set(x,.6,z);g.add(r)}return g}
  function mkPlane(){const g=new T.Group();const body=sph(.9,'#FFFFFF',1,.8,2.6);g.add(body);const wing=new T.Mesh(new T.BoxGeometry(7,.18,1.2),M('#E23B2E'));wing.position.set(0,0,.3);g.add(wing);const tail=new T.Mesh(new T.BoxGeometry(2.4,.14,.7),M('#E23B2E'));tail.position.set(0,.2,-2.1);g.add(tail);const fin=new T.Mesh(new T.BoxGeometry(.14,1,.8),M('#1F3460'));fin.position.set(0,.6,-2.1);g.add(fin);const prop=new T.Mesh(new T.BoxGeometry(1.6,.12,.05),M('#333'));prop.position.z=2.4;g.add(prop);g.userData.prop=prop;
   const bt=ctex(1024,128,(x,w,h)=>{x.fillStyle='#FFF6D8';x.fillRect(0,0,w,h);x.strokeStyle='#E23B2E';x.lineWidth=8;x.strokeRect(4,4,w-8,h-8);x.fillStyle='#1F3460';x.font='bold 66px "Noto Sans TC",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('德威陽 有法度',w/2,h/2+4)});const bG=new T.PlaneGeometry(12,1.6,16,1);const bn=ban2(bG,new T.MeshStandardMaterial({map:bt}));bn.position.set(0,0,-9.5);bn.rotation.y=Math.PI/2;g.add(bn);g.userData.bn={geometry:bG};return g}
@@ -42,7 +44,7 @@ export function setupSky(T, c, api){
  window.__wySky={start:k=>{if(ev)endEvent();startEvent(k);ev.t=ev.dur*.45},meteor:()=>{mCd=0},blimp,cur:()=>ev,meteorMesh:meteor};
  return function tick(dt){tt+=dt;const ins=c.inside&&c.inside();root.visible=!ins;if(ins)return;const ph=api.phase();const t=tt;
   // 飛艇
-  {const a=t*.035;blimp.position.set(OX+Math.cos(a)*95,40+Math.sin(t*.4)*1.5,OZ+Math.sin(a)*70);blimp.rotation.y=-a;blimp.rotation.z=Math.sin(t*.4)*.03;blimp.userData.prop.rotation.z+=dt*8;for(let i=0;i<bnPos.count;i++){const xx=bnBase[i*3];bnPos.setZ(i,Math.sin(t*3+xx*.6)*.25)}bnPos.needsUpdate=true}
+  {const a=t*.035;blimp.position.set(OX+Math.cos(a)*62,33+Math.sin(t*.4)*1.2,OZ+Math.sin(a)*48);/* v500：航線往中間收，不躲在右上角按鈕後面 */blimp.rotation.y=-a;blimp.rotation.z=Math.sin(t*.4)*.03;blimp.userData.prop.rotation.z+=dt*8;for(let i=0;i<bnPos.count;i++){const xx=bnBase[i*3];bnPos.setZ(i,Math.sin(t*3+xx*.6)*.25)}bnPos.needsUpdate=true}
   // 白天驚喜
   if(ph!=='night'){if(!ev){evCd-=dt;if(evCd<=0)startEvent()}}
   if(ev){ev.t+=dt;const u=ev.t/ev.dur;const k=ev.k;

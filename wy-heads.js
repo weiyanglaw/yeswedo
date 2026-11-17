@@ -5,7 +5,7 @@ export function makeHeads(T){
  const sph=(r,c,sx=1,sy=1,sz=1,a=24,b=16)=>{const m=new T.Mesh(new T.SphereGeometry(r,a,b),typeof c==='string'?M(c):c);m.scale.set(sx,sy,sz);return m};
  const cyl=(a,b,h,c,s=16)=>new T.Mesh(new T.CylinderGeometry(a,b,h,s),typeof c==='string'?M(c):c);
  const ctex=(w,h,fn)=>{const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;t.anisotropy=4;return t};
- const GOLD=M('#E9B53C',{metalness:.45,roughness:.3}),FUR=M('#FFFFFF',{roughness:.95}),BLACK=M('#141414',{roughness:.4});
+ const GOLD=M('#E9B53C',{metalness:.45,roughness:.3}),FUR=M('#FFFFFF',{roughness:.95}),LFUR=M('#F6C24A',{roughness:.9}),BLACK=M('#141414',{roughness:.4});
  const fur=(g,pts,r,mat=FUR)=>pts.forEach(([x,y,z],k)=>{const f=sph(r*(.8+.4*((k*37)%10)/10),mat,1,1,1,10,8);f.position.set(x,y,z);g.add(f)});
  const ET=new Map();const eyeTex=iris=>{if(ET.has(iris))return ET.get(iris);const t=ctex(256,256,(x)=>{x.fillStyle='#FFFFFF';x.fillRect(0,0,256,256);const gr=x.createRadialGradient(128,128,10,128,128,70);gr.addColorStop(0,'#000');gr.addColorStop(.35,'#111');gr.addColorStop(.4,iris);gr.addColorStop(.9,'#222');gr.addColorStop(1,'#FFFFFF');x.fillStyle=gr;x.beginPath();x.arc(128,128,70,0,7);x.fill();x.fillStyle='rgba(255,255,255,.95)';x.beginPath();x.arc(100,100,16,0,7);x.fill();x.beginPath();x.arc(150,150,7,0,7);x.fill()});ET.set(iris,t);return t};
  const eyeball=(r,iris)=>{const e=new T.Mesh(new T.SphereGeometry(r,24,18),new T.MeshStandardMaterial({map:eyeTex(iris),roughness:.15}));e.rotation.y=-Math.PI/2;return e};
@@ -22,11 +22,11 @@ export function makeHeads(T){
   const horn=new T.Mesh(new T.ConeGeometry(.13,.42,12),M(accent,{roughness:.3}));horn.position.set(0,1.18,.3);horn.rotation.x=-.4;g.add(horn);const hb=new T.Mesh(new T.TorusGeometry(.13,.04,8,16),GOLD);hb.position.set(0,1.0,.36);hb.rotation.x=Math.PI/2-.4;g.add(hb);
   const lids=[];
   for(const e of[-1,1]){const eg=new T.Group();eg.position.set(e*.48,.3,.88);g.add(eg);eg.add(eyeball(.26,'#5A3A1A'));const lid=new T.Mesh(new T.SphereGeometry(.29,24,12,0,Math.PI*2,0,Math.PI*.3),GOLD);lid.rotation.x=-.35;eg.add(lid);lids.push(lid);const rim=new T.Mesh(new T.TorusGeometry(.27,.035,8,24),BLACK);rim.position.z=.03;eg.add(rim);
-   const bp=[];for(let k=0;k<9;k++){const t=k/8;bp.push([e*(.2+t*.55),.58+Math.sin(t*Math.PI)*.12,.92-t*.25])}fur(g,bp,.1);
+   const bp=[];for(let k=0;k<9;k++){const t=k/8;bp.push([e*(.2+t*.55),.58+Math.sin(t*Math.PI)*.12,.92-t*.25])}fur(g,bp,.1,LFUR);
    const ear=sph(.26,M('#F2C14E',{metalness:.3}),.5,1,.35);ear.position.set(e*1.15,.7,-.1);ear.rotation.z=-e*.5;g.add(ear);const ein=sph(.18,M('#D3202A'),.4,.8,.3);ein.position.set(e*1.13,.7,-.04);ein.rotation.z=-e*.5;g.add(ein)}
   const nose=sph(.28,M('#F2C14E',{metalness:.35,roughness:.3}),1.3,.8,1);nose.position.set(0,-.02,1.08);g.add(nose);for(const e of[-1,1]){const n=sph(.06,BLACK,1,1,1,10,8);n.position.set(e*.13,-.08,1.3);g.add(n)}
   const lip=new T.Mesh(new T.TorusGeometry(.62,.1,8,28,Math.PI),M('#F2C14E',{metalness:.3}));lip.rotation.set(Math.PI*1.05,0,0);lip.position.set(0,-.25,.72);lip.scale.set(1,.8,1);g.add(lip);
-  const mp=[];for(let k=0;k<15;k++){const a=Math.PI*(k/14);mp.push([Math.cos(a)*.66,-.3-Math.sin(a)*.08,.75+Math.sin(a)*.38])}fur(g,mp,.09);
+  const mp=[];for(let k=0;k<15;k++){const a=Math.PI*(k/14);mp.push([Math.cos(a)*.66,-.3-Math.sin(a)*.08,.75+Math.sin(a)*.38])}fur(g,mp,.09,LFUR);
   const mouth=sph(.6,M('#5A0E12',{roughness:.8}),1,.45,.8);mouth.position.set(0,-.48,.55);g.add(mouth);
   for(let k=0;k<8;k++){const tx=-.42+k*.12;const t=new T.Mesh(new T.ConeGeometry(.05,.13,6),M('#FFFFFF',{roughness:.3}));t.position.set(tx,-.36,.95-Math.abs(tx)*.35);t.rotation.x=Math.PI;g.add(t)}
   const jaw=new T.Group();jaw.position.set(0,-.55,.3);g.add(jaw);
@@ -34,7 +34,7 @@ export function makeHeads(T){
   const jw=new T.Mesh(new T.TorusGeometry(.55,.12,8,28,Math.PI),M('#D3202A'));jw.rotation.set(Math.PI*.05,0,Math.PI);jw.position.set(0,-.07,.3);jw.scale.set(1,.7,1);jaw.add(jw);
   for(let k=0;k<7;k++){const tx=-.36+k*.12;const t=new T.Mesh(new T.ConeGeometry(.045,.11,6),M('#FFFFFF'));t.position.set(tx,-.15,.65-Math.abs(tx)*.4);jaw.add(t)}
   const bd=[];for(let k=0;k<13;k++){const a=Math.PI*(k/12);bd.push([Math.cos(a)*.55,-.4-Math.sin(a)*.15,.3+Math.sin(a)*.35])}fur(jaw,bd,.13);
-  const mn=[];for(let k=0;k<34;k++){const a=k/34*Math.PI*2;mn.push([Math.cos(a)*1.3,Math.sin(a)*1.12+.05,-.05])}fur(g,mn,.2);
+  const mn=[];for(let k=0;k<34;k++){const a=k/34*Math.PI*2;mn.push([Math.cos(a)*1.3,Math.sin(a)*1.12+.05,-.05])}fur(g,mn,.2,LFUR);
   const back=sph(1.05,M(main),1.15,1,1);back.position.z=-.45;g.add(back);return {g,lids,jaw}}
  // 龍頭：opts.pearl 是否含龍珠。回傳 {g, jaw}
  let scaleT=null;const dragonScale=()=>scaleT||(scaleT=(()=>{const t=ctex(512,512,(x,w,h)=>{x.fillStyle='#1E8C4A';x.fillRect(0,0,w,h);for(let r=0;r<14;r++)for(let k=0;k<14;k++){const cx=k*38+(r%2)*19,cy=r*38;const gr=x.createRadialGradient(cx,cy+6,2,cx,cy,22);gr.addColorStop(0,'#5FD08A');gr.addColorStop(1,'#167A3E');x.fillStyle=gr;x.beginPath();x.arc(cx,cy,20,0,Math.PI);x.fill();x.strokeStyle='#F2C14E';x.lineWidth=2;x.beginPath();x.arc(cx,cy,20,0,Math.PI);x.stroke()}});t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(2,2);return t})());

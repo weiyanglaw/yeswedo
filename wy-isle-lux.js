@@ -55,10 +55,26 @@ export function setupIsleLux(T, c){
   const tr=new T.Group();tr.position.set(.12,1.3,-3.4);heli.add(tr);for(let k=0;k<2;k++){const b=box(.03,.9,.12,M('#FFFFFF'));b.rotation.x=k*Math.PI/2;tr.add(b)}
   for(const e of[-1,1]){const sk=cyl(.05,.05,2.2,GOLD,8);sk.rotation.x=Math.PI/2;sk.position.set(e*.7,.05,.1);heli.add(sk);for(const z of[-.5,.6]){const st=cyl(.04,.04,.45,GOLD,6);st.position.set(e*.6,.25,z);st.rotation.z=e*.3;heli.add(st)}}
   const mast=cyl(.07,.07,.4,M('#333333'),8);mast.position.set(0,1.65,.1);heli.add(mast);const rot=new T.Group();rot.position.set(0,1.88,.1);heli.add(rot);for(let k=0;k<2;k++){const b=box(5.4,.05,.28,M('#2B2B2B'));b.rotation.y=k*Math.PI/2;rot.add(b)}
-  const logo=new T.Mesh(new T.CircleGeometry(.32,24),new T.MeshStandardMaterial({map:ctex(128,128,(x,w,h)=>{x.fillStyle='#16264A';x.beginPath();x.arc(64,64,62,0,7);x.fill();x.fillStyle='#F2C14E';x.font='bold 60px Georgia';x.textAlign='center';x.textBaseline='middle';x.fillText('WY',64,68)})}));logo.position.set(.9,.8,0);logo.rotation.y=Math.PI/2;heli.add(logo);const logo2=logo.clone();logo2.position.x=-.9;logo2.rotation.y=-Math.PI/2;heli.add(logo2);
-  movers.push((t,dt)=>{rot.rotation.y+=dt*2.2;tr.rotation.x+=dt*6;const n=phase()==='night'?1:.3;lights.forEach((l,k)=>l.material.emissiveIntensity=n*(.5+.5*Math.max(0,Math.sin(t*3-k*.8))))})}
+  const logo=new T.Mesh(new T.CircleGeometry(.32,24),new T.MeshStandardMaterial({map:(()=>{/* v500：直升機也用正式 Logo */const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');x.fillStyle='#16264A';x.beginPath();x.arc(128,128,126,0,7);x.fill();const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;const im=new Image();im.onload=()=>{x.drawImage(im,-10,-10,276,276);t.needsUpdate=true};im.src='./office-logo-transparent.png';return t})()}));logo.position.set(.9,.8,0);logo.rotation.y=Math.PI/2;heli.add(logo);const logo2=logo.clone();logo2.position.x=-.9;logo2.rotation.y=-Math.PI/2;heli.add(logo2);
+  movers.push((t,dt)=>{rot.rotation.y+=dt*2.2;tr.rotation.x+=dt*6;const n=phase()==='night'?1:.3;lights.forEach((l,k)=>l.material.emissiveIntensity=n*.8)/* v500：停機坪燈改恆亮，不跑馬不閃 */})}
 
   // 39 紫旗移到主塔後方另一角，讓停機坪完整露出
   g.traverse(o=>{if(!o.isMesh)return;const b=new T.Box3().setFromObject(o);if(b.min.y>19.4&&b.max.x<46.5&&b.min.x>40.3&&b.max.z>-84.5){const p=o.parent;const v=new T.Vector3(4.6,0,-6.0);const inv=new T.Matrix4().copy(p.matrixWorld).invert();const a=o.getWorldPosition(new T.Vector3());const tgt=a.clone().add(v);p.worldToLocal(tgt);o.position.copy(tgt)}})}
+
+ // ================= v500 企業島夜景：探照燈＋整點燈光秀（全部緩慢變化，不閃、不變色） =================
+ {const beamTex=ctex(8,256,(x,w,h)=>{const g=x.createLinearGradient(0,h,0,0);g.addColorStop(0,'rgba(255,246,220,.85)');g.addColorStop(.35,'rgba(255,246,220,.35)');g.addColorStop(1,'rgba(255,246,220,0)');x.fillStyle=g;x.fillRect(0,0,w,h)});
+  const BL=70;const beams=[];for(const [bx,bz,ph0] of[[36.6,-91.5,0],[47.4,-91.5,Math.PI]]){const piv=new T.Group();piv.position.set(bx,.6,bz);root.add(piv);
+   const base=cyl(.55,.7,.6,NAVY,16);piv.add(base);const lamp=cyl(.42,.42,.5,GOLD,16);lamp.position.y=.55;piv.add(lamp);
+   const arm=new T.Group();arm.position.y=.8;piv.add(arm);const geo=new T.CylinderGeometry(3.6,.35,BL,24,1,true);geo.translate(0,BL/2,0);
+   const mat=new T.MeshBasicMaterial({map:beamTex,transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide,blending:T.AdditiveBlending,fog:false});const beam=new T.Mesh(geo,mat);beam.renderOrder=2;beam.visible=false;arm.add(beam);beams.push({arm,mat,beam,ph0})}
+  let bk=0;movers.push((t,dt)=>{const ph=phase();const tg=ph==='night'?1:0;bk+=(tg-bk)*Math.min(1,(dt||.016)*.6);for(const b of beams){b.mat.opacity=.42*bk;b.beam.visible=bk>.01;const a=t*2*Math.PI/14+b.ph0;b.arm.rotation.z=Math.sin(a)*.32;b.arm.rotation.x=-.18+Math.cos(a)*.1}});
+  // 整點燈光秀：大樓正面與兩側的金色燈帶，晚上每到整點慢慢亮起、停留、再慢慢暗掉（平常就是金色飾條）
+  const showM=new T.MeshStandardMaterial({color:'#F4C552',metalness:.4,roughness:.35,emissive:'#FFD46A',emissiveIntensity:0});const strips=new T.Group();root.add(strips);
+  for(let y=6;y<=17.5;y+=2.3){const f=box(8.3,.16,.12,showM);f.position.set(42,y,-83.5);strips.add(f);for(const e of[-1,1]){const sd=box(.12,.16,6.5,showM);sd.position.set(42+e*4.08,y,-86.8);strips.add(sd)}}
+  let showT=-1,lastHour=-1;window.__wyLightShow=()=>{showT=0};
+  movers.push((t,dt)=>{const ph=phase();let hr=-1,mi=0;try{const d=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Taipei'}));hr=d.getHours();mi=d.getMinutes()}catch(e){}
+   if(ph==='night'&&mi===0&&hr!==lastHour&&showT<0){lastHour=hr;showT=0}
+   let k=0;if(showT>=0){showT+=dt||.016;const D=45;k=showT<3?showT/3:showT<D-3?1:Math.max(0,(D-showT)/3);k=k*k*(3-2*k);if(showT>=D)showT=-1}
+   showM.emissiveIntensity=k*2.4})}
  let tt=0;return function tick(dt){tt+=dt;const ins=c.inside&&c.inside();root.visible=!ins;if(ins)return;const ph=phase();const n=ph==='night'?1:ph==='dusk'?.5:0;for(const m of glow)m.emissiveIntensity=(m.userData.wyGlowMax||.9)*n+(m.userData.wyGlowMax?0:.15);for(const f of movers){try{f(tt,dt)}catch(e){}}};
 }
