@@ -9,7 +9,7 @@ export function setupFest(T, c, api){
  // ---------- 日期 ----------
  const TABLE={cny:{2026:'2026-02-17',2027:'2027-02-06',2028:'2028-01-26',2029:'2029-02-13',2030:'2030-02-03',2031:'2031-01-23'},duan:{2026:'2026-06-19',2027:'2027-06-09',2028:'2028-05-28'},qixi:{2026:'2026-08-19',2027:'2027-08-08',2028:'2028-08-26',2029:'2029-08-16',2030:'2030-08-05'},moon:{2026:'2026-09-25',2027:'2027-09-15',2028:'2028-10-03'}};
  const LUNAR={cny:[1,1],duan:[5,5],qixi:[7,7],moon:[8,15]};
- const WIN={cny:[-8,14],duan:[-7,0],qixi:[-7,0],moon:[-7,0]};   // 節前一週起；春節從除夕前一週到元宵；過節隔天收
+ const WIN={cny:[-9,14],duan:[-7,0],qixi:[-7,0],moon:[-7,0]};   // 節前一週起；春節從小年夜前 7 天（v501）到元宵；過節隔天收
  const GREET={cny:'新春快樂',val:'情人節快樂',duan:'端午節安康',qixi:'七夕快樂',moon:'中秋節快樂',xmas:'Merry Christmas'};
  const tpDate=()=>{const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());return new Date(p+'T12:00:00+08:00')};
  function lunarFind(key,year){try{const f=new Intl.DateTimeFormat('en-u-ca-chinese',{month:'numeric',day:'numeric',timeZone:'Asia/Taipei'});const [lm,ld]=LUNAR[key];let d=new Date(year+'-01-01T12:00:00+08:00');for(let i=0;i<400;i++){const ps=f.formatToParts(d);const m=ps.find(x=>x.type==='month').value,dd=+ps.find(x=>x.type==='day').value;if(String(+m)===m&&+m===lm&&dd===ld&&d.getFullYear()===year)return d;d=new Date(d.getTime()+864e5)}}catch(e){}return null}
@@ -45,10 +45,10 @@ export function setupFest(T, c, api){
  function linkPts(L,n,off){const P=L.pts,out=[];const segs=P.length-1;for(let k=0;k<n;k++){const f=(n===1?.5:(k+.5)/n)*segs;const j=Math.min(segs-1,Math.floor(f)),u=f-j;const a=P[j],b=P[j+1];const x=a[0]+(b[0]-a[0])*u,z=a[2]+(b[2]-a[2])*u;const dx=b[0]-a[0],dz=b[2]-a[2],l=Math.hypot(dx,dz)||1;const px=-dz/l,pz=dx/l;const y=gy(x,z);
    for(const s of [-1,1])out.push({x:x+px*off*s,z:z+pz*off*s,y,s,ang:Math.atan2(dx,dz)})}return out}
  function bridgePts(i,n,off){const out=[];for(const L of LINKS())if(L.b===i||(i==='C'&&L.b==='C'))out.push(...linkPts(L,n,off));return out}
- const corners=i=>{const I=island(i);return [{x:I.x-11,z:I.z+7},{x:I.x+11,z:I.z+7}]};
+ const corners=i=>{const I=island(i);const dz=i===2?9.4:7;/* v501：醫療島往前一點，不壓到建築；家庭島右側避開天鵝湖 */return [{x:I.x-11,z:I.z+dz},{x:I.x+(i===3?13.6:11),z:I.z+dz}]};
  const PLAZA={L:{x:-8.6,z:14.6},Rt:{x:9.2,z:14.6},F:{x:0,z:20.5}};
  // 噴水池與城堡正面
- let fountain=null;try{c.groups&&c.groups()[0].traverse(o=>{if(!fountain&&o.type==='Group'&&Math.abs(o.position.x-.5)<.05&&Math.abs(o.position.z-9.8)<.05)fountain=o})}catch(e){}
+ let fountain=null;try{c.groups&&c.groups()[0].traverse(o=>{if(!fountain&&o.type==='Group'&&(o.userData.wyMainFountain||Math.abs(o.position.x-.5)<.05&&(Math.abs(o.position.z-9.8)<.05||Math.abs(o.position.z-13.3)<.05)))fountain=o})}catch(e){}
  function castleFrontZ(x,y){try{const rc=new T.Raycaster(new T.Vector3(x,y,40),new T.Vector3(0,0,-1));const ms=[];c.groups()[0].traverse(o=>{if(o.isMesh&&o.visible)ms.push(o)});const h=rc.intersectObjects(ms,false).find(h=>h.point.z<8);return h?h.point.z:4.2}catch(e){return 4.2}}
  let AC=null;
  // ---------- v497 共用：點擊物件、提示泡泡 ----------
@@ -91,7 +91,7 @@ export function setupFest(T, c, api){
    const beam=new T.Mesh(new T.BoxGeometry(5.8,.22,.3),gold);beam.position.y=4.55;gate.add(beam);const bn=pl(banner(ISL[i][2]),2.9,.8);bn.position.set(0,5.1,.05);gate.add(bn);const roof=new T.Mesh(new T.BoxGeometry(6.2,.18,.6),M('#B3141C'));roof.position.y=5.6;gate.add(roof);
    add(gate,gx,gz);solid(gx-2.6,gz,.2,.2);solid(gx+2.6,gz,.2,.2)}
   // v497：三組舞龍舞獅繞整個廣場跑（不擠在噴水池旁）
-  const cx=0,cz=16.4,rx=11.2,rz=4.1;const posOn=a=>({x:cx+Math.cos(a)*rx,z:cz+Math.sin(a)*rz});
+  /* v501：噴水池往前移後，廣場舞獅改在噴水池前方繞小圈，不穿過噴水池和求籤供桌 */const cx=0,cz=20.0,rx=9.5,rz=2.4;const posOn=a=>({x:cx+Math.cos(a)*rx,z:cz+Math.sin(a)*rz});
   const troupes=[];const RED='#D7261E',GOLD='#F2C14E';
   // 舞龍：18 節，紅金鱗片、金色背鰭、大龍頭（角、鬍鬚、張嘴）、發光龍珠
   const dragon=new T.Group();root.add(dragon);const segs=[];const DN=18;
@@ -123,7 +123,7 @@ export function setupFest(T, c, api){
   const linkP=(ia,ib)=>{for(const L3 of LINKS()){if(L3.a===ia&&L3.b===ib)return L3.pts.map(p=>({x:p[0],z:p[2]}));if(L3.a===ib&&L3.b===ia)return L3.pts.map(p=>({x:p[0],z:p[2]})).reverse()}return []};
   const doorPt=i=>({x:xy[i][0],z:xy[i][1]+11.8,pause:5});
   const lionAnim=(L2,t,i,show,mv)=>{const U=L2.userData;U.head.rotation.y=Math.sin(t*(show?9:3)+i)*(show?.5:.25);U.head.rotation.x=Math.sin(t*5+i)*.12;const blink=(t*1.3+i)%3<.12;U.lids.forEach(l=>{l.rotation.x=blink?.95:-.35});const mo=Math.max(0,Math.sin(t*(show?8:4)));U.mouth.rotation.x=.1+mo*.35};
-  const roamers=[];const buildRoute=(e,i1,i2)=>{const pts=[{x:e*6,z:13},{x:e*15,z:9},{x:e*19.5,z:1}];for(const p of linkP(0,i1))pts.push(p);pts.push(doorPt(i1));{const I1=island(i1);/* v499：繞過建築側邊再上橋，不穿過房子 */pts.push({x:I1.x+e*12.5,z:I1.z+9.5},{x:I1.x+e*14.5,z:I1.z-7})}for(const p of linkP(i1,i2))pts.push(p);pts.push(doorPt(i2));const r=pts.slice(0,-1).reverse().map(p=>({x:p.x,z:p.z,pause:p.pause}));return pts.concat(r.slice(1))};
+  const roamers=[];const buildRoute=(e,i1,i2)=>{const pts=[{x:e*6,z:16.5},{x:e*13.5,z:15.8},{x:e*16,z:6},{x:e*19.5,z:1}];/* v501：繞過前移的噴水池、求籤小廟與發財樹 */for(const p of linkP(0,i1))pts.push(p);pts.push(doorPt(i1));{const I1=island(i1);/* v499：繞過建築側邊再上橋，不穿過房子 */pts.push({x:I1.x+e*12.5,z:I1.z+9.5},{x:I1.x+e*14.5,z:I1.z-7})}for(const p of linkP(i1,i2))pts.push(p);pts.push(doorPt(i2));const r=pts.slice(0,-1).reverse().map(p=>({x:p.x,z:p.z,pause:p.pause}));return pts.concat(r.slice(1))};
   [[-1,1,2,['#E23B2E','#F2C14E']],[1,3,4,['#F2C14E','#E23B2E']]].forEach(([e,i1,i2,cols],li)=>{const L2=lion(...cols);const R=buildRoute(e,i1,i2);roamers.push({L2,R,k:0,f:0,wait:0,li,dir:0})});window.__wyRoam=roamers;
   // 四座島門口原地表演的小舞獅
   const smalls=[];for(let i=1;i<=4;i++){for(const e of[-1,1]){const L2=lion(e<0?'#E23B2E':'#F2C14E',e<0?'#F2C14E':'#E23B2E');L2.scale.setScalar(.6);const x=xy[i][0]+e*(i===2?3.6:4.4),z=xy[i][1]+(i===2?13.6:13.2);/* v500：醫療島右側花圃避開 */L2.position.set(x,gy(x,z)+.3,z);L2.rotation.y=e*.3;solid(x,z,.9,.9);smalls.push({L2,i:i*2+(e>0?1:0),x,z})}}
@@ -143,7 +143,7 @@ export function setupFest(T, c, api){
    const envTex=canvasTex(64,96,(g2,w,h)=>{g2.fillStyle='#D7261E';g2.fillRect(0,0,w,h);g2.fillStyle='#F2C14E';g2.beginPath();g2.arc(w/2,h*.38,13,0,7);g2.fill();g2.fillStyle='#D7261E';g2.font='bold 18px serif';g2.textAlign='center';g2.textBaseline='middle';g2.fillText('福',w/2,h*.4)});
    for(let k=0;k<16;k++){const a=k*2.4,r=1.2+(k%3)*.35,y=3.3+(k%5)*.35;const env=new T.Mesh(new T.PlaneGeometry(.42,.62),new T.MeshStandardMaterial({map:envTex,side:T.DoubleSide,roughness:.6}));env.position.set(Math.cos(a)*r,y,Math.sin(a)*r);env.rotation.y=-a+Math.PI/2;tree.add(env);const ph=k;movers.push(t=>{env.rotation.z=Math.sin(t*1.5+ph)*.12})}
    for(let k=0;k<6;k++){const co=cyl(.22,.22,.06,M(GOLD,{metalness:.6,roughness:.25}),16);co.rotation.x=Math.PI/2;co.position.set(Math.cos(k)*1.5,2.8+k*.3,Math.sin(k)*1.5);tree.add(co)}
-   const P={x:-12.5,z:9.2};tree.scale.setScalar(1.1);add(tree,P.x,P.z);solid(P.x,P.z,1.3,1.3);
+   const P={x:-9.6,z:9.0};/* v501：讓開旁邊的長椅 */tree.scale.setScalar(1.1);add(tree,P.x,P.z);solid(P.x,P.z,1.3,1.3);
    // v498：發財樹點了只搖動、掉紅包和金幣（文字祝福交給籤筒）
    const drops=[];onTap(tree,()=>{beep([1319,1568,1760,2093],.08);let sh=0;const sv=setInterval(()=>{sh++;tree.rotation.z=Math.sin(sh*1.6)*.06*(1-sh/14);if(sh>=14){clearInterval(sv);tree.rotation.z=0}},40);
     for(let k=0;k<12;k++){const isEnv=k%2===0;const m=isEnv?new T.Mesh(new T.PlaneGeometry(.42,.62),new T.MeshStandardMaterial({map:envTex,side:T.DoubleSide,roughness:.6,transparent:true})):new T.Mesh(new T.CylinderGeometry(.22,.22,.06,14),new T.MeshStandardMaterial({color:GOLD,metalness:.6,roughness:.25,transparent:true}));
@@ -177,7 +177,7 @@ export function setupFest(T, c, api){
    ['上籤','願望',['春風化雨潤心田','一步一腳印向前','今年種下好種子','明年花開更燦然'],'今年打好基礎，明年更好。'],
    ['大吉','新春',['德威迎春福滿堂','陽光普照好運長','有法有度心安穩','新年新氣象吉祥'],'新年新氣象，福氣滿滿。']];
    const NUM=['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','二十一','二十二','二十三','二十四'];
-   const QP={x:12.5,z:9.2};const qy=gy(QP.x,QP.z);const q=new T.Group();
+   const QP={x:9.6,z:9.0},QR=-1.1;/* v501：移到城堡大門右前方的廣場空地，不壓到旁邊的長椅與花叢 */const qy=gy(QP.x,QP.z);const q=new T.Group();
    const tbl=new T.Mesh(new T.BoxGeometry(2.4,.12,1.3),M('#8A2A1E'));tbl.position.y=1.0;q.add(tbl);const cloth=new T.Mesh(new T.BoxGeometry(2.42,.7,1.32),M('#D7261E'));cloth.position.y=.62;q.add(cloth);const fr=new T.Mesh(new T.BoxGeometry(2.44,.08,1.34),gold);fr.position.y=.95;q.add(fr);
    for(const e of[-1,1]){const lg=cyl(.06,.06,1,M('#5A1A12'),6);lg.position.set(e*1.05,.5,.5);q.add(lg);const lg2=lg.clone();lg2.position.z=-.5;q.add(lg2)}
    const tube=new T.Group();tube.position.set(-.25,1.06,0);q.add(tube);const tb=new T.Mesh(new T.CylinderGeometry(.34,.3,1.0,20,1,true),M('#C8161E',{side:T.DoubleSide}));tb.position.y=.5;tube.add(tb);const tbBot=cyl(.3,.3,.04,M('#8A1A14'),20);tube.add(tbBot);
@@ -186,11 +186,51 @@ export function setupFest(T, c, api){
    for(let k=0;k<14;k++){const a=k/14*Math.PI*2,r=.05+(k%3)*.07;const st=new T.Mesh(new T.BoxGeometry(.05,.95,.015),M(k%4?'#C89B5A':'#D7261E'));st.position.set(Math.cos(a)*r,1.1+(k%3)*.06,Math.sin(a)*r);st.rotation.z=Math.cos(a)*.12;st.rotation.x=Math.sin(a)*.12;tube.add(st)}
    const burner=cyl(.22,.18,.25,gold,14);burner.position.set(.55,1.18,-.15);q.add(burner);for(let k=0;k<3;k++){const ic=cyl(.012,.012,.6,M('#B8202A'),4);ic.position.set(.5+k*.05,1.55,-.15);ic.rotation.z=(k-1)*.15;q.add(ic)}
    const plate=cyl(.32,.26,.05,gold,16);plate.position.set(.7,1.1,.3);q.add(plate);for(let k=0;k<4;k++){const or=sph(.12,M('#F28C28',{roughness:.5}));or.position.set(.62+(k%2)*.16,1.2+(k>2?.16:0),.22+Math.floor(k/2)*.16);q.add(or)}
-   add(q,QP.x,QP.z);q.rotation.y=-.5;solid(QP.x,QP.z,1.3,.9);
+   add(q,QP.x,QP.z);q.rotation.y=QR;
+   /* v501：供桌擴大成小廟前庭（紅柱、雙層屋簷、金雲籤牌），比較遠也看得到 */
+   {const tp=new T.Group();q.add(tp);const RED=M('#C8261E',{roughness:.5}),RED2=M('#A3161A',{roughness:.5});
+    const plat=new T.Mesh(new T.BoxGeometry(4.6,.22,2.8),M('#EBD9B8',{roughness:.8}));plat.position.set(0,.11,-.35);tp.add(plat);const pe=new T.Mesh(new T.BoxGeometry(4.7,.06,2.9),gold);pe.position.set(0,.24,-.35);tp.add(pe);
+    for(const e of[-1,1]){const pl=cyl(.16,.18,3.3,RED,14);pl.position.set(e*1.85,1.85,-1.35);tp.add(pl);const pb=cyl(.26,.3,.25,gold,14);pb.position.set(e*1.85,.36,-1.35);tp.add(pb);const pc=cyl(.24,.2,.22,gold,14);pc.position.set(e*1.85,3.5,-1.35);tp.add(pc)}
+    const back=new T.Mesh(new T.BoxGeometry(3.5,2.6,.12),RED2);back.position.set(0,1.75,-1.45);tp.add(back);const bf=new T.Mesh(new T.BoxGeometry(3.3,2.4,.04),M('#F2C14E',{metalness:.3,roughness:.4}));bf.position.set(0,1.75,-1.38);tp.add(bf);const bi=new T.Mesh(new T.BoxGeometry(3.1,2.2,.05),RED);bi.position.set(0,1.75,-1.36);tp.add(bi);
+    const roof=(w,y,d)=>{const r=new T.Mesh(new T.BoxGeometry(w,.28,d),RED);r.position.set(0,y,-1.2);tp.add(r);const tr=new T.Mesh(new T.BoxGeometry(w+.1,.08,d+.1),gold);tr.position.set(0,y-.16,-1.2);tp.add(tr);for(const e of[-1,1]){const tip=new T.Mesh(new T.ConeGeometry(.16,.6,8),gold);tip.position.set(e*(w/2+.12),y+.22,-1.2+d/2-.1);tip.rotation.z=-e*.9;tp.add(tip)}};
+    roof(4.7,3.75,1.9);roof(3.5,4.35,1.4);const ridge=cyl(.09,.09,3.2,gold,10);ridge.rotation.z=Math.PI/2;ridge.position.set(0,4.58,-1.2);tp.add(ridge);const pearl=sph(.2,gold);pearl.position.set(0,4.8,-1.2);tp.add(pearl);
+    for(const e of[-1,1]){const ln=sph(.32,M('#E23B2E',{emissive:'#E23B2E',emissiveIntensity:.35,roughness:.5}),1,1.15,1);ln.position.set(e*1.85,3.1,-.95);tp.add(ln);for(const yy of[.36,-.36]){const cp=cyl(.18,.22,.08,gold,12);cp.position.set(e*1.85,3.1+yy,-.95);tp.add(cp)}}
+    const cloudT=canvasTex(512,220,(x,w,h)=>{x.fillStyle='#F2C14E';x.beginPath();x.roundRect(40,40,w-80,h-80,40);x.fill();for(const [cx,cy,r] of[[60,110,52],[w-60,110,52],[150,46,40],[w-150,46,40],[256,36,40],[150,h-40,36],[w-150,h-40,36]]){x.beginPath();x.arc(cx,cy,r,0,7);x.fill()}
+     x.strokeStyle='#B8892E';x.lineWidth=6;x.beginPath();x.roundRect(52,52,w-104,h-104,32);x.stroke();x.fillStyle='#B0141A';x.font='bold 74px "Noto Serif TC","PMingLiU",serif';x.textAlign='center';x.textBaseline='middle';x.fillText('新春好運籤',w/2,h/2+4)});
+    const sign=new T.Mesh(new T.PlaneGeometry(3.0,1.29),new T.MeshStandardMaterial({map:cloudT,transparent:true,alphaTest:.3,roughness:.4,metalness:.2,emissive:'#4a3208',emissiveIntensity:.2}));sign.position.set(0,3.95,-.24);tp.add(sign)}
+   q.scale.setScalar(1.3);solid(QP.x,QP.z,1.9,1.9);
+   /* v501：第一次靠近城堡時提示一次求籤位置；走到供桌前林律師打招呼 */
+   {let hinted=false,greeted=false;try{hinted=localStorage.getItem('wy-cny-hint-'+cnyYear)==='1'}catch(e){}
+    movers.push(()=>{const A=c.actor&&c.actor();if(!A||(c.inside&&c.inside()))return;const dc=Math.hypot(A.position.x,A.position.z-8);
+     if(!hinted&&dc<24){hinted=true;try{localStorage.setItem('wy-cny-hint-'+cnyYear,'1')}catch(e){}setTimeout(()=>toastMsg('城堡廣場右側有新春好運籤，過去抽一支吧'),1500)}
+     if(!greeted&&Math.hypot(A.position.x-QP.x,A.position.z-QP.z)<4.2){greeted=true;toastMsg('林律師：新年快樂！抽一支好運籤，祝您新的一年有法度。')}})}
+   /* v501：春節期間「介紹」上方多一個紅燈籠「求籤」按鈕，點了自動走到供桌前 */
+   {const css=document.createElement('style');css.textContent='#wyLanternBtn{position:fixed;z-index:58;width:62px;height:76px;border:0;padding:0;background:none;display:none;-webkit-tap-highlight-color:transparent}#wyLanternBtn .lb{position:absolute;left:4px;top:10px;width:54px;height:54px;border-radius:50%/46%;background:radial-gradient(circle at 35% 30%,#FF7A63,#D7261E 55%,#9A0F14);border:2px solid #F2C14E;box-shadow:0 6px 14px #0004;display:flex;align-items:center;justify-content:center;color:#FFE7A8;font:800 15px "Noto Sans TC",sans-serif;letter-spacing:1px}#wyLanternBtn .cp{position:absolute;left:19px;width:24px;height:7px;border-radius:3px;background:#F2C14E}#wyLanternBtn .ts{position:absolute;left:29px;top:66px;width:4px;height:10px;background:#F2C14E;border-radius:2px}';document.head.appendChild(css);
+    const bt=document.createElement('button');bt.id='wyLanternBtn';bt.type='button';bt.setAttribute('aria-label','求籤');bt.innerHTML='<i class="cp" style="top:6px"></i><span class="lb">求籤</span><i class="cp" style="top:62px"></i><i class="ts"></i>';document.body.appendChild(bt);
+    const STAND={x:QP.x+Math.sin(QR)*3.2,z:QP.z+Math.cos(QR)*3.2};let going=false;
+    bt.onclick=e=>{e.stopPropagation();if(window.wyWalkTo){window.wyWalkTo(STAND.x,STAND.z);going=true}else show()};
+    let lt=0;movers.push((t)=>{if(t-lt<.25)return;lt=t;const it=document.getElementById('interact');const A=c.actor&&c.actor();const cr=document.getElementById('creator');
+     const ok=it&&A&&!(c.inside&&c.inside())&&getComputedStyle(it).display!=='none'&&!(cr&&cr.style.display!=='none')&&!document.getElementById('wyFortune');const near=A&&Math.hypot(A.position.x-QP.x,A.position.z-QP.z)<3.6;
+     if(going&&near){going=false;setTimeout(show,300)}
+     if(!ok||near){bt.style.display='none';return}const r=it.getBoundingClientRect();if(!r.width){bt.style.display='none';return}bt.style.display='block';bt.style.left=(r.left+r.width/2-31)+'px';bt.style.top=(r.top-84)+'px'})}
+   /* v501：每支籤加一句法度小提醒（依主題），不含任何保證 */
+   const TIP={財運:'借錢給親友，記得留下借據或轉帳紀錄。',事業:'合作開始前，先把合約的權利義務寫清楚。',健康:'看診的病歷與收據記得保存，日後用得上。',感情:'婚前財產可以先做約定，感情更安心。',平安:'發生車禍先報警、拍照存證，再談和解。',學業:'租屋簽約前，先確認押金與修繕責任。',人緣:'網路發言前多想一下，避免涉及妨害名譽。',家庭:'遺囑要符合法定方式，才能照心意安排。',願望:'重要的承諾，記得留下書面紀錄。',合作:'合夥做生意，出資與分紅比例先白紙黑字寫好。',旅行:'出國旅遊買保險前，先看清楚理賠範圍。',新春:'新年新計畫，重要約定記得白紙黑字。'};
    let shuffled=[],first=true;const pick=()=>{if(!shuffled.length){shuffled=FORT.map((_,i)=>i);for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}}return shuffled.pop()};
    let busy=false;
+   /* v501：把籤詩卡畫成一張圖，手機可直接分享，不支援時改為下載 */
+   const shareCard=(idx,f)=>{const W=720,H=1280,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+    const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#C8161E');g.addColorStop(1,'#A30F15');x.fillStyle=g;x.fillRect(0,0,W,H);x.strokeStyle='#F2C14E';x.lineWidth=14;x.strokeRect(20,20,W-40,H-40);x.lineWidth=4;x.strokeRect(42,42,W-84,H-84);
+    x.textAlign='center';x.fillStyle='#FFE7A8';x.font='34px "Noto Serif TC",serif';x.fillText('德威陽 新春好運籤',W/2,130);x.fillStyle='#FFD86A';x.font='bold 60px "Noto Serif TC",serif';x.fillText('第'+NUM[idx]+'籤　'+f[0],W/2,215);
+    x.fillStyle='#F2C14E';x.beginPath();x.roundRect(W/2-70,245,140,48,24);x.fill();x.fillStyle='#A30F15';x.font='bold 28px "Noto Sans TC",sans-serif';x.fillText(f[1],W/2,280);
+    x.fillStyle='#FFF4D2';x.font='bold 50px "BiauKai","DFKai-SB","Kaiti TC","Noto Serif TC",serif';f[2].forEach((l,ci)=>{const cx=W/2+135-ci*90;[...l].forEach((ch,k)=>x.fillText(ch,cx,370+k*62))});
+    x.fillStyle='#FFE7A8';x.font='30px "Noto Serif TC",serif';x.fillText('解曰：'+f[3],W/2,860);
+    if(TIP[f[1]]){x.fillStyle='#FFF4D2';x.beginPath();x.roundRect(70,900,W-140,110,20);x.fill();x.fillStyle='#7A0A10';x.font='bold 28px "Noto Sans TC",sans-serif';x.fillText('法度小提醒',W/2,945);x.font='27px "Noto Sans TC",sans-serif';x.fillText(TIP[f[1]],W/2,988)}
+    const fin=()=>{x.fillStyle='#FFE7A8';x.font='bold 32px "Noto Sans TC",sans-serif';x.fillText('德威陽國際法律事務所',W/2+60,1125);x.fillStyle='#FFD86A';x.fillText('有法度 YES, WE DO!',W/2+60,1170);x.fillStyle='#FFE7A8';x.font='24px "Noto Sans TC",sans-serif';x.fillText('weiyanglaw.github.io/yeswedo',W/2,1225);
+     cv.toBlob(b=>{const file=new File([b],'德威陽新春好運籤.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:'德威陽 新春好運籤'}).catch(()=>{})}else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='德威陽新春好運籤.png';a.click();toastMsg('好運籤圖片已下載')}},'image/png')};
+    const im=new Image();im.onload=()=>{x.drawImage(im,110,1075,130,130);fin()};im.onerror=fin;im.src='office-logo-transparent.png'};
+   window.__wyFortuneShow=()=>show();
    const show=()=>{if(busy)return;busy=true;const idx=pick(),f=FORT[idx];const isFirst=first;first=false;
-    const ov=document.createElement('div');ov.id='wyFortune';ov.style.cssText='position:fixed;inset:0;z-index:90;background:rgba(20,10,10,.55);display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:"Noto Serif TC","PMingLiU",serif;touch-action:none';
+    const ov=document.createElement('div');ov.id='wyFortune';ov.style.cssText='position:fixed;inset:0;z-index:90;background:rgba(20,10,10,.55);display:flex;align-items:center;justify-content:center;flex-direction:column;overflow-y:auto;padding:12px 0;box-sizing:border-box;font-family:"Noto Serif TC","PMingLiU",serif;touch-action:none';
     const tubeEl=document.createElement('div');tubeEl.style.cssText='width:96px;height:150px;border-radius:12px 12px 16px 16px;background:linear-gradient(90deg,#9A0F14,#D7261E 45%,#9A0F14);border:4px solid #F2C14E;position:relative;box-shadow:0 10px 30px #0006';tubeEl.innerHTML='<div style="position:absolute;left:50%;top:38px;transform:translateX(-50%);width:44px;padding:6px 0;background:#F2C14E;color:#C8161E;font-weight:800;font-size:24px;line-height:1.15;text-align:center;border-radius:4px">求<br>籤</div>'+Array.from({length:9},(_,k)=>'<div style="position:absolute;bottom:136px;left:'+(14+k*7.5)+'px;width:5px;height:'+(46+(k%3)*10)+'px;background:'+(k%4?'#D9AE6A':'#E0302A')+';border-radius:2px;transform:rotate('+((k-4)*3)+'deg)"></div>').join('');
     ov.appendChild(tubeEl);document.body.appendChild(ov);
     if(isFirst){const glow=document.createElement('div');glow.style.cssText='position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#FFE7A8cc,#FFD36E33 55%,transparent 70%);animation:wyGlowP 1.6s ease-out forwards;pointer-events:none';ov.insertBefore(glow,tubeEl)}
@@ -200,30 +240,54 @@ export function setupFest(T, c, api){
      setTimeout(()=>{ov.innerHTML='';const card=document.createElement('div');card.style.cssText='position:relative;width:min(300px,82vw);background:linear-gradient(180deg,#C8161E,#A30F15);border:5px solid #F2C14E;border-radius:14px;padding:16px 14px 14px;color:#FFE7A8;text-align:center;box-shadow:0 16px 40px #0008,inset 0 0 0 3px #A30F15,inset 0 0 0 5px #F2C14E;animation:wyCardIn .5s ease-out';
       const ttl=isFirst?'今日第一支好運籤':'德威陽 新春好運籤';
       card.innerHTML='<div style="font-size:15px;letter-spacing:2px;opacity:.95">'+ttl+'</div><div style="margin:6px 0 2px;font-size:22px;font-weight:800;color:#FFD86A">第'+NUM[idx]+'籤　'+f[0]+'</div><div style="display:inline-block;font-size:12px;background:#F2C14E;color:#A30F15;border-radius:10px;padding:2px 10px;font-weight:700">'+f[1]+'</div>'
-       +'<div style="display:flex;flex-direction:row-reverse;justify-content:center;gap:14px;margin:14px 0 10px;height:196px;font-size:21px;font-weight:700;color:#FFF4D2;font-family:\'BiauKai\',\'DFKai-SB\',\'Kaiti TC\',\'Noto Serif TC\',serif">'+f[2].map(l=>'<div style="writing-mode:vertical-rl;text-orientation:upright;letter-spacing:4px;line-height:1">'+l+'</div>').join('')+'</div>'
+       +'<div style="display:flex;flex-direction:row-reverse;justify-content:center;gap:14px;margin:10px 0 8px;height:172px;font-size:19px;font-weight:700;color:#FFF4D2;font-family:\'BiauKai\',\'DFKai-SB\',\'Kaiti TC\',\'Noto Serif TC\',serif">'+f[2].map(l=>'<div style="writing-mode:vertical-rl;text-orientation:upright;letter-spacing:4px;line-height:1">'+l+'</div>').join('')+'</div>'
        +'<div style="font-size:14px;color:#FFE7A8;margin:4px 6px 10px;line-height:1.5">解曰：'+f[3]+'</div>'
-       +'<div style="display:flex;align-items:center;justify-content:center;gap:8px;border-top:1px solid #F2C14E88;padding-top:9px"><img src="office-logo-transparent.png" style="width:30px;height:30px;object-fit:contain;filter:brightness(0) saturate(100%) invert(84%) sepia(40%) saturate(600%) hue-rotate(350deg)"><div style="font-size:12px;line-height:1.35;text-align:left">有法度 YES, WE DO!<br>新春快樂</div></div>'
-       +'<div style="display:flex;gap:10px;margin-top:12px"><button id="wyFortAgain" style="flex:1;padding:9px 0;border-radius:20px;border:2px solid #F2C14E;background:#7A0A10;color:#FFE7A8;font-size:15px;font-weight:700">再抽一支</button><button id="wyFortOk" style="flex:1;padding:9px 0;border-radius:20px;border:2px solid #F2C14E;background:#F2C14E;color:#A30F15;font-size:15px;font-weight:800">收下好運</button></div>'
-       +'<div style="position:absolute;right:10px;top:-26px;font-size:12px;color:#FFE7A8;background:#1F3460cc;border:1px solid #F2C14E;border-radius:10px;padding:3px 9px">截圖分享好運</div>';
+       +(TIP[f[1]]?'<div style="margin:0 4px 10px;padding:7px 9px;background:#FFF4D2;color:#7A0A10;border-radius:9px;font-size:13px;line-height:1.45;text-align:left;font-family:\'Noto Sans TC\',sans-serif"><b>法度小提醒｜</b>'+TIP[f[1]]+'</div>':'')
+       +'<div style="display:flex;align-items:center;justify-content:center;gap:10px;border-top:1px solid #F2C14E88;padding-top:10px"><img src="office-logo-transparent.png" style="width:52px;height:52px;object-fit:contain"><div style="font-size:14px;line-height:1.4;text-align:left;font-weight:700">德威陽國際法律事務所<br><span style="color:#FFD86A">有法度 YES, WE DO!</span></div></div>'
+       +'<button id="wyFortShare" style="width:100%;margin-top:12px;padding:9px 0;border-radius:20px;border:2px solid #F2C14E;background:#1F3460;color:#FFE7A8;font-size:15px;font-weight:800">存圖分享好運</button><div style="display:flex;gap:10px;margin-top:8px"><button id="wyFortAgain" style="flex:1;padding:9px 0;border-radius:20px;border:2px solid #F2C14E;background:#7A0A10;color:#FFE7A8;font-size:15px;font-weight:700">再抽一支</button><button id="wyFortOk" style="flex:1;padding:9px 0;border-radius:20px;border:2px solid #F2C14E;background:#F2C14E;color:#A30F15;font-size:15px;font-weight:800">收下好運</button></div>'
+       +'';
       ov.appendChild(card);beep([784,988,1319,1568],.12);
-      const close=()=>{ov.remove();busy=false};card.querySelector('#wyFortOk').onclick=close;card.querySelector('#wyFortAgain').onclick=()=>{close();setTimeout(show,60)};ov.addEventListener('click',e=>{if(e.target===ov)close()})},800)},1500)};
+      const close=()=>{ov.remove();busy=false};card.querySelector('#wyFortOk').onclick=close;card.querySelector('#wyFortShare').onclick=e=>{e.stopPropagation();try{shareCard(idx,f)}catch(err){toastMsg('請直接截圖分享')}};card.querySelector('#wyFortAgain').onclick=()=>{close();setTimeout(show,60)};ov.addEventListener('click',e=>{if(e.target===ov)close()})},800)},1500)};
    onTap(q,show);
    movers.push(()=>{const A=c.actor&&c.actor();if(!A)return;const near=Math.hypot(A.position.x-QP.x,A.position.z-QP.z)<3.6;if(near&&!window.wyNearAction)window.wyNearAction={label:'求籤',hint:'按金色按鈕求籤',fn:show};else if(!near&&window.wyNearAction&&window.wyNearAction.fn===show)window.wyNearAction=null})}
 
   // 元宵大花燈（生肖）
-  if(yuan){const Z='鼠牛虎兔龍蛇馬羊猴雞狗豬'[((cnyYear||new Date().getFullYear())-4)%12];const g=new T.Group();const fr=cyl(.12,.14,5.6,gold);fr.position.y=2.8;g.add(fr);
+  /* v501：生肖大燈籠整個春節期間都有（不只元宵），另在城堡正面兩角掛一對 */{const Z='鼠牛虎兔龍蛇馬羊猴雞狗豬'[((cnyYear||new Date().getFullYear())-4)%12];const g=new T.Group();const fr=cyl(.12,.14,5.6,gold);fr.position.y=2.8;g.add(fr);
    const big=sph(2.1,glowM('#E23B2E',.75),1,1.1,1);big.position.y=5.4;g.add(big);for(const yy of [3.05,7.75]){const cp=cyl(.9,1.1,.35,gold,20);cp.position.y=yy;g.add(cp)}
    for(let k=0;k<8;k++){const rib=new T.Mesh(new T.TorusGeometry(2.12,.05,6,40,Math.PI),gold);rib.rotation.y=k/8*Math.PI;rib.rotation.z=Math.PI/2;rib.position.y=5.4;rib.scale.set(1.1,1,1);g.add(rib)}
    const lbl=new T.Mesh(new T.CircleGeometry(1.05,40),new T.MeshBasicMaterial({map:canvasTex(256,256,(x,w,h)=>{x.fillStyle='#FFF4D2';x.beginPath();x.arc(128,128,124,0,7);x.fill();x.strokeStyle='#C9A13B';x.lineWidth=10;x.stroke();x.fillStyle='#C8342B';x.font='bold 150px "Noto Serif TC",serif';x.textAlign='center';x.textBaseline='middle';x.fillText(Z,128,138)})}));lbl.position.set(0,5.4,2.25);g.add(lbl);
-   const ts=cyl(.08,.25,1.4,M('#F2C14E'),8);ts.position.y=2.4;g.add(ts);/* v499：生肖大燈籠縮小成一對，放廣場左右兩側，不擋城堡 */g.scale.setScalar(.55);add(g,-12.6,18.6);const g2=g.clone();add(g2,12.6,18.6);solid(-12.6,18.6,.9,.9);solid(12.6,18.6,.9,.9)}
-  // 夜晚煙火（2/14 撞期時會出現愛心煙火）
-  const fws=[];let fwT=1.2;
-  function burst(){const n=90,pos=new Float32Array(n*3),vel=[];const cx2=(Math.random()-.5)*70,cy2=58+Math.random()*25,cz2=-25+(Math.random()-.5)*30;const heart=day214&&Math.random()<.5;
-   for(let i=0;i<n;i++){pos.set([cx2,cy2,cz2],i*3);let vx,vy,vz;if(heart){const a=i/n*Math.PI*2;vx=16*Math.pow(Math.sin(a),3)*.75;vy=(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a))*.75;vz=(Math.random()-.5)*2}else{const u=Math.random()*Math.PI*2,v=Math.acos(2*Math.random()-1),sp=12+Math.random()*6;vx=Math.sin(v)*Math.cos(u)*sp;vy=Math.cos(v)*sp;vz=Math.sin(v)*Math.sin(u)*sp}vel.push([vx,vy,vz])}
-   const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos,3));const col=heart?'#FF6F9C':['#FFD36E','#FF6B6B','#FFF3C4','#FF9A3C','#9AD8FF'][Math.floor(Math.random()*5)];
-   const p=new T.Points(g,new T.PointsMaterial({size:2.6,map:api.dot,transparent:true,depthWrite:false,blending:T.AdditiveBlending,color:col,fog:false}));p.userData={vel,t:0,heart};scene.add(p);fws.push(p)}
-  movers.push((t,dt)=>{const inside=c.inside&&c.inside();if(!inside&&api.phase()!=='day'){fwT-=dt;if(fwT<=0){fwT=1.1+Math.random()*1.3;burst()}}
-   for(let i=fws.length-1;i>=0;i--){const p=fws[i],u=p.userData;u.t+=dt;const a=p.geometry.attributes.position.array;for(let k=0;k<u.vel.length;k++){const v=u.vel[k];v[1]-=(u.heart?2.5:6)*dt;const dmp=u.heart?.97:.985;v[0]*=dmp;v[1]*=dmp;v[2]*=dmp;a[k*3]+=v[0]*dt;a[k*3+1]+=v[1]*dt;a[k*3+2]+=v[2]*dt}p.geometry.attributes.position.needsUpdate=true;p.material.opacity=Math.max(0,1-u.t/2);if(u.t>2){scene.remove(p);p.geometry.dispose();p.material.dispose();fws.splice(i,1)}}})}
+   const ts=cyl(.08,.25,1.4,M('#F2C14E'),8);ts.position.y=2.4;g.add(ts);/* v499：生肖大燈籠縮小成一對，放廣場左右兩側，不擋城堡 */g.scale.setScalar(.55);add(g,-12.6,18.6);const g2=g.clone();add(g2,12.6,18.6);solid(-12.6,18.6,.9,.9);solid(12.6,18.6,.9,.9);
+   for(const e of[-1,1]){const h=new T.Group();const hz=castleFrontZ(e*8.4,9)+.9;const ln=g.children.filter(o=>o!==fr&&o!==ts).map(o=>o.clone());ln.forEach(o=>{o.position.y-=5.4;h.add(o)});const rope=cyl(.04,.04,1.6,gold,6);rope.position.y=2.9;h.add(rope);h.scale.setScalar(.62);h.position.set(e*8.4,gy(e*8.4,hz)+6.2,hz);root.add(h);const ph=e;movers.push(t=>{h.rotation.z=Math.sin(t*.8+ph)*.04})}}
+  // v501 春節煙火：入夜後每 20 秒輪流放「垂柳」「牡丹」「福字」；入夜與每個整點有 30 秒煙火秀，最後是 Logo 煙火和「有法度」。全部慢慢淡出，不閃爍。
+  const fws=[];let fwT=4,fwK=0,showT=-1,lastHour=-1,lastPh='';
+  const textPts=(txt,font,W,H,scale,max)=>{const cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');x.fillStyle='#000';x.font=font;x.textAlign='center';x.textBaseline='middle';x.fillText(txt,W/2,H/2+2);const d=x.getImageData(0,0,W,H).data;const pts=[];
+   for(let j=0;j<H;j+=1)for(let i=0;i<W;i+=1){if(d[(j*W+i)*4+3]>120)pts.push([(i-W/2)*scale,(H/2-j)*scale])}return pts.length>max?pts.filter((_,k)=>k%Math.ceil(pts.length/max)===0):pts};
+  let FU=null,YFD=null;try{FU=textPts('福','bold 52px "Noto Serif TC","PMingLiU",serif',64,64,.42,520);YFD=textPts('有法度','bold 40px "Noto Sans TC","PingFang TC",sans-serif',150,52,.3,700)}catch(e){}
+  const skyPoint=(sx,sy,D)=>{const cam=c.camera;const dir=new T.Vector3(sx,sy,.5).unproject(cam).sub(cam.position).normalize();const p=cam.position.clone().addScaledVector(dir,D);if(p.y<24)p.y=24;return p};
+  function shell(type,at){const cam=c.camera;const center=at||skyPoint((Math.random()-.5)*1.1,.25+Math.random()*.35,Math.min(95,Math.max(55,cam.position.y*.75+42)));
+   let n,cols,vel=[],tgt=null,life,grav,drag,size;
+   if(type==='willow'){n=120;cols=['#FFD36E','#FFE7A8','#F0B23C'];life=3.4;grav=3.2;drag=.975;size=2.3;for(let i=0;i<n;i++){const u=Math.random()*Math.PI*2,v=Math.acos(2*Math.random()-1),sp=10+Math.random()*3;vel.push([Math.sin(v)*Math.cos(u)*sp,Math.cos(v)*sp*.8+3,Math.sin(v)*Math.sin(u)*sp])}}
+   else if(type==='peony'){n=130;const P=[['#FF5A5F','#FFD36E'],['#FF8FB8','#FFFFFF'],['#9AD8FF','#FFE7A8'],['#B8F28A','#FFD36E']][Math.floor(Math.random()*4)];cols=P;life=2.2;grav=5;drag=.982;size=2.6;for(let i=0;i<n;i++){const u=Math.random()*Math.PI*2,v=Math.acos(2*Math.random()-1),sp=(i%2?14:9)+Math.random()*1.5;vel.push([Math.sin(v)*Math.cos(u)*sp,Math.cos(v)*sp,Math.sin(v)*Math.sin(u)*sp])}}
+   else{const src=type==='fu'?FU:YFD;if(!src||!src.length)return;tgt=src;n=src.length;cols=type==='fu'?['#FF4A3D','#FFD36E']:['#FFD36E','#FFF1C9'];life=4.4;grav=2.2;drag=.99;size=type==='fu'?2.1:1.7}
+   const pos=new Float32Array(n*3),col=new Float32Array(n*3);for(let i=0;i<n;i++){const cc=new T.Color(cols[i%cols.length]);col.set([cc.r,cc.g,cc.b],i*3)}
+   const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('color',new T.BufferAttribute(col,3));
+   const p=new T.Points(g,new T.PointsMaterial({size,map:api.dot,vertexColors:true,transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false}));p.position.copy(center);if(tgt){p.lookAt(cam.position)}p.renderOrder=5;scene.add(p);
+   fws.push({p,vel,tgt,t:0,life,grav,drag,type});try{crackle()}catch(e){}}
+  window.__wyCnyShow=()=>{showT=0};window.__wyCnyShell=t=>shell(t||'willow');
+  movers.push((t,dt)=>{const inside=c.inside&&c.inside();const ph=api.phase();
+   let hr=-1,mi=0;try{const p2=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());hr=+p2.find(q=>q.type==='hour').value%24;mi=+p2.find(q=>q.type==='minute').value}catch(e){}
+   if(!inside&&ph==='night'){if(lastPh&&lastPh!=='night'&&showT<0)showT=0;if(mi===0&&hr!==lastHour&&showT<0){lastHour=hr;showT=0}}
+   lastPh=ph;
+   if(!inside&&showT>=0){const prev=showT;showT+=dt;const cross=v=>prev<v&&showT>=v;
+    if(Math.floor(showT/0.9)!==Math.floor(prev/0.9)&&showT<25)shell(Math.random()<.5?'willow':'peony');
+    if(cross(10)||cross(19))shell('fu');if(cross(26.5)){try{window.wyLogoFireworks&&window.wyLogoFireworks()}catch(e){}}
+    if(cross(28.2))shell('yfd',skyPoint(0,.02,Math.min(95,Math.max(55,c.camera.position.y*.75+40))));if(showT>30)showT=-1}
+   else if(!inside&&ph!=='day'){fwT-=dt;if(fwT<=0){fwT=20;shell(['willow','peony','fu'][fwK++%3])}}
+   for(let i=fws.length-1;i>=0;i--){const f=fws[i];f.t+=dt;const a=f.p.geometry.attributes.position.array;
+    if(f.tgt){const u=Math.min(1,f.t/.9),e=1-Math.pow(1-u,3);const fall=f.t>2.6?(f.t-2.6):0;for(let k=0;k<f.tgt.length;k++){a[k*3]=f.tgt[k][0]*e;a[k*3+1]=f.tgt[k][1]*e-fall*fall*f.grav*(1+(k%5)*.08);a[k*3+2]=0}}
+    else{for(let k=0;k<f.vel.length;k++){const v=f.vel[k];v[1]-=f.grav*dt;v[0]*=f.drag;v[1]*=f.drag;v[2]*=f.drag;a[k*3]+=v[0]*dt;a[k*3+1]+=v[1]*dt;a[k*3+2]+=v[2]*dt}}
+    f.p.geometry.attributes.position.needsUpdate=true;const fade=f.tgt?(f.t>2.6?Math.max(0,1-(f.t-2.6)/1.8):1):Math.max(0,1-Math.max(0,f.t-f.life*.45)/(f.life*.55));f.p.material.opacity=fade;
+    if(f.t>f.life){scene.remove(f.p);f.p.geometry.dispose();f.p.material.dispose();fws.splice(i,1)}}})}
  // ---------- 西洋情人節 ----------
  function heartBalloon(col,h){const g=new T.Group();const sh=new T.Shape();sh.moveTo(0,-.5);sh.bezierCurveTo(-.9,.05,-.55,.75,0,.38);sh.bezierCurveTo(.55,.75,.9,.05,0,-.5);const geo=new T.ExtrudeGeometry(sh,{depth:.26,bevelEnabled:true,bevelThickness:.12,bevelSize:.1,bevelSegments:4});geo.center();
   const m=new T.Mesh(geo,M(col,{roughness:.25,emissive:col,emissiveIntensity:.15}));m.scale.setScalar(1.15);m.position.y=h;g.add(m);const str=cyl(.012,.012,h-.3,M('#FFFFFF'),4);str.position.y=(h-.3)/2;g.add(str);const ph=Math.random()*6;movers.push(t=>{m.position.y=h+Math.sin(t*1.3+ph)*.16;m.rotation.y=Math.sin(t*.7+ph)*.45});return g}
@@ -233,7 +297,7 @@ export function setupFest(T, c, api){
   try{api.tintMotes&&api.tintMotes('#FF9EC0')}catch(e){}
   if(both)return;   // 撞期時，廣場和城堡交給春節
   if(fountain){fountain.traverse(o=>{if(o.userData&&o.userData.wyTopMedal)o.visible=false;if(!o.isMesh)return;const p=o.geometry.parameters||{};if(o.geometry.type==='SphereGeometry'&&(p.radius||0)>=.9)o.visible=false;const col=o.material&&o.material.color&&o.material.color.getHexString();if(col==='40c6f2'){o.material=o.material.clone();o.material.color.set('#F7A8C8')}})}
-  const fp=new T.Vector3(.5,0,9.8);let topY=3.4;try{const bb=new T.Box3().setFromObject(fountain);topY=bb.max.y}catch(e){}
+  const fp=new T.Vector3(.5,0,fountain?fountain.position.z:13.3);let topY=3.4;try{const bb=new T.Box3().setFromObject(fountain);topY=bb.max.y}catch(e){}
   // v497 邱比特：Q 版小天使，金色捲髮、明顯的翅膀、拿弓箭、頭上光環，站在一朵雲上
   const cup=new T.Group();const skin=M('#FBE0CC',{roughness:.45});
   const cloud=new T.Group();[[0,0,0,.9],[-.8,-.05,.1,.65],[.8,-.05,.1,.65],[-.35,.15,-.3,.6],[.4,.12,-.3,.6]].forEach(([x,y,z,r])=>{const c2=sph(r,M('#FFFFFF',{roughness:.9}));c2.position.set(x,y,z);cloud.add(c2)});cloud.position.y=.2;cup.add(cloud);
@@ -263,7 +327,7 @@ export function setupFest(T, c, api){
   {const fr=new T.Group();const sh=new T.Shape();sh.moveTo(0,-.5);sh.bezierCurveTo(-.9,.05,-.55,.75,0,.38);sh.bezierCurveTo(.55,.75,.9,.05,0,-.5);const hole=new T.Path();hole.moveTo(0,-.36);hole.bezierCurveTo(-.7,.05,-.43,.58,0,.27);hole.bezierCurveTo(.43,.58,.7,.05,0,-.36);sh.holes.push(hole);
    const geo=new T.ExtrudeGeometry(sh,{depth:.15,bevelEnabled:true,bevelThickness:.05,bevelSize:.04,bevelSegments:3});geo.center();const fm=new T.Mesh(geo,M('#FF8FB0',{roughness:.3}));fm.scale.setScalar(4.2);fm.position.y=3.0;fr.add(fm);
    for(let k=0;k<20;k++){const a=k/20*Math.PI*2;const rr=sph(.16,M(k%2?'#FFFFFF':'#E23B5E'));rr.position.set(Math.sin(a)*1.6,3+Math.cos(a)*1.5,.25);fr.add(rr)}
-   for(const e of [-1,1]){const p=cyl(.08,.1,1.2,gold,8);p.position.set(e*.6,.6,0);fr.add(p)}const P={x:12.6,z:9.4};fr.rotation.y=-.35;add(fr,P.x,P.z);solid(P.x,P.z,.8,.3)}
+   for(const e of [-1,1]){const p=cyl(.08,.1,1.2,gold,8);p.position.set(e*.6,.6,0);fr.add(p)}const P={x:12.4,z:13.4};/* v501：讓開長椅，也不和春節求籤小廟撞位 */fr.rotation.y=-.96;add(fr,P.x,P.z);solid(P.x,P.z,.8,.3)}
   // 城堡大門玫瑰花拱門
   const zd=castleFrontZ(0,3.2)+2.4;const arch=new T.Group();const vine=new T.Mesh(new T.TorusGeometry(2.6,.16,8,40,Math.PI),M('#3F8F4F'));vine.position.y=2.6;arch.add(vine);for(const e of [-1,1]){const p=cyl(.14,.16,2.6,M('#3F8F4F'),8);p.position.set(e*2.6,1.3,0);arch.add(p)}
   for(let k=0;k<26;k++){const a=k/25*Math.PI;const r=sph(.22,M(k%3===0?'#FFFFFF':k%2?'#E23B5E':'#FF8FB0'));r.position.set(Math.cos(a)*2.6,2.6+Math.sin(a)*2.6,(Math.random()-.5)*.2);arch.add(r)}
@@ -280,50 +344,43 @@ export function setupFest(T, c, api){
  function buildDuan(){
   [PLAZA.L,PLAZA.Rt].forEach(p=>{add(zongziPost(),p.x,p.z);solid(p.x,p.z,.25,.25)});for(let i=1;i<=4;i++)corners(i).forEach(p=>{add(zongziPost(),p.x,p.z);solid(p.x,p.z,.25,.25)});
   for(let i=1;i<=4;i++){const e=entrance(i);[-1,1].forEach(s=>add(mugwort(),e.x+e.px*5.4*s,e.z+e.pz*5.4*s))}
-  // 噴水池改成水池
-  if(!fountain)return;const fx=.5,fz=9.8;let baseY=1.6;try{fountain.traverse(o=>{if(o.userData&&o.userData.wyFtn){o.visible=false;return}if(!o.isMesh)return;const col=o.material&&o.material.color&&o.material.color.getHexString();const p=o.geometry.parameters||{};
-   if(col==='40c6f2'||o.geometry.type==='TubeGeometry'||o.geometry.type==='TorusGeometry'||(o.geometry.type==='SphereGeometry'&&(p.radius||0)>=.5)||(o.geometry.type==='CylinderGeometry'&&(p.radiusTop||0)<1.2&&o.position.y>1))o.visible=false});const bb=new T.Box3().setFromObject(fountain);baseY=bb.min.y+.7}catch(e){}
-  // v497：水池加大成橢圓（往廣場前方延伸，不擋城堡大門），龍舟放大、8 名划手加鼓手和舵手，划的時候激起水花
-  const PX=.5,PZ=14.6,PRX=6.6,PRZ=5.0;const pool=new T.Group();
-  const ring=new T.Mesh(new T.TorusGeometry(1,.05,10,96),M('#FFF5E4'));ring.rotation.x=Math.PI/2;ring.scale.set(PRX,PRZ,6);ring.position.y=.32;pool.add(ring);
-  const ring2=new T.Mesh(new T.TorusGeometry(1,.012,6,96),gold);ring2.rotation.x=Math.PI/2;ring2.scale.set(PRX,PRZ,1);ring2.position.y=.6;pool.add(ring2);
-  const water=new T.Mesh(new T.CylinderGeometry(1,1,.3,72),M('#4FC3E8',{roughness:.1,metalness:.05}));water.scale.set(PRX-.1,1,PRZ-.1);water.position.y=.2;pool.add(water);add(pool,PX,PZ,1.45);solid(PX,PZ,PRX-.6,PRZ-.6);
-  for(let k=0;k<8;k++){const lp=new T.Mesh(new T.CylinderGeometry(.42,.42,.05,14),M('#6FBF5B'));const a2=k/8*Math.PI*2;lp.position.set(Math.cos(a2)*(PRX-1),.37,Math.sin(a2)*(PRZ-1));pool.add(lp)}
-  boat=new T.Group();const hull=sph(1,M('#D7261E'),.55,.34,2.4);hull.position.y=.15;boat.add(hull);const stripe=sph(1.01,M('#F0C75E'),.56,.13,2.41);stripe.position.y=.26;boat.add(stripe);
-  for(let k=0;k<9;k++){for(const e of [-1,1]){const sc=sph(.12,M('#2F8F4E'),1,.6,1.4);sc.position.set(e*.54,.08,-1.9+k*.45);boat.add(sc)}}
-  const dh=new T.Group();dh.position.set(0,.85,2.45);boat.add(dh);const BH=HEADS.dragonHead();BH.g.scale.setScalar(.36);BH.g.position.set(0,0,-.1);dh.add(BH.g);BH.jaw.rotation.x=-.2;
-  const tail=new T.Mesh(new T.ConeGeometry(.22,.8,8),M('#2F8F4E'));tail.position.set(0,.7,-2.45);tail.rotation.x=-1.1;boat.add(tail);
-  const rowers=[];const shirts=['#FFFFFF','#F2C14E'];for(let k=0;k<8;k++){const side=k%2?1:-1;const r=new T.Group();r.position.set(side*.18,.42,1.55-Math.floor(k/2)*.75);const b=sph(.15,M(shirts[k%2]),1,1.2,1);b.position.y=.12;r.add(b);const h=sph(.13,M('#F6D3BC'));h.position.y=.38;r.add(h);const hb=cyl(.14,.14,.05,M('#D7261E'),10);hb.position.y=.45;r.add(hb);
-   const pad=new T.Group();pad.position.set(side*.3,.1,0);const sh=cyl(.02,.02,.8,M('#8A5A36'),5);sh.position.y=-.3;pad.add(sh);const bl=sph(.09,M('#8A5A36'),1,2,.3);bl.position.y=-.72;pad.add(bl);pad.rotation.z=side*.5;r.add(pad);r.userData.pad=pad;boat.add(r);rowers.push(r)}
-  const drm=cyl(.22,.22,.28,M('#C8342B'),12);drm.position.set(0,.55,1.95);boat.add(drm);const dr=new T.Group();dr.position.set(0,.55,2.2);const db=sph(.15,M('#F2C14E'),1,1.2,1);db.position.y=.12;dr.add(db);const dhd=sph(.13,M('#F6D3BC'));dhd.position.y=.38;dr.add(dhd);boat.add(dr);
-  const st=new T.Group();st.position.set(0,.55,-2.0);const sb=sph(.15,M('#FFFFFF'),1,1.2,1);sb.position.y=.12;st.add(sb);const shd=sph(.13,M('#F6D3BC'));shd.position.y=.38;st.add(shd);const oar=cyl(.025,.025,1.3,M('#8A5A36'),5);oar.position.set(.2,-.1,-.4);oar.rotation.x=.9;st.add(oar);boat.add(st);
-  // v499：龍舟上不放人（只留會自己擺動的槳、鼓），放大三倍移到城堡前方海上自己划
-  rowers.forEach(r=>{r.children.slice().forEach(ch=>{if(ch!==r.userData.pad)r.remove(ch)})});dr.visible=false;st.children.slice().forEach(ch=>{if(ch!==oar)st.remove(ch)});
-  boat.scale.setScalar(3.6);root.add(boat);let ang=0;const SEA_Y=-1.25,BX=0,BZ=31.5,BRX=21,BRZ=6.2;
-  for(const [x,z,cl] of[[-23,31.5,'#F2C14E'],[23,31.5,'#F2C14E'],[0,24.6,'#E23B2E'],[0,38.4,'#E23B2E']]){const by=new T.Group();const b2=sph(.55,M(cl,{roughness:.4}));by.add(b2);const fl=new T.Mesh(new T.PlaneGeometry(.9,.6),M(cl==='#E23B2E'?'#F2C14E':'#E23B2E',{side:T.DoubleSide}));fl.position.set(.45,1.3,0);by.add(fl);const pole=cyl(.03,.03,1.4,gold,6);pole.position.y=.7;by.add(pole);by.position.set(x,SEA_Y+.1,z);root.add(by);movers.push(t=>{by.position.y=SEA_Y+.1+Math.sin(t*1.8+x)*.12;fl.rotation.y=Math.sin(t*3+z)*.3})}
-  // 水池中央：五彩繩蛋兜金蛋立在紅色圓台上，旁插艾草菖蒲，中午閃金光
-  {const eg=new T.Group();const ped=cyl(1.25,1.4,.55,M('#C8261E',{roughness:.45}),28);ped.position.y=.28;eg.add(ped);const pr=new T.Mesh(new T.TorusGeometry(1.3,.06,8,32),gold);pr.rotation.x=Math.PI/2;pr.position.y=.56;eg.add(pr);
-   const eggM=new T.MeshStandardMaterial({color:'#F5C542',metalness:.55,roughness:.25,emissive:'#FFD36E',emissiveIntensity:0});const egg=sph(.75,eggM,1,1.35,1,28);egg.position.y=1.55;eg.add(egg);
-   const cols=['#E23B2E','#F2C14E','#2F8F4E','#3B7DD8','#FFFFFF'];for(let k=0;k<10;k++){const r2=new T.Mesh(new T.TorusGeometry(.77,.03,6,40),M(cols[k%5]));r2.rotation.y=k/10*Math.PI;r2.scale.set(1,1.35,1);r2.position.y=1.55;eg.add(r2)}
-   for(const yy of[1.1,1.55,2.0]){const rr=Math.sqrt(Math.max(.05,1-((yy-1.55)/1.01)**2))*.78;const h2=new T.Mesh(new T.TorusGeometry(rr,.03,6,32),M(cols[(yy*10|0)%5]));h2.rotation.x=Math.PI/2;h2.position.y=yy;eg.add(h2)}
-   const knot=sph(.12,M('#E23B2E'));knot.position.y=2.6;eg.add(knot);for(let k=0;k<5;k++){const ts=cyl(.012,.012,.7,M(cols[k]),4);ts.position.set((k-2)*.05,.2+.05,.8);eg.add(ts)}
-   for(let k=0;k<10;k++){const a2=k/10*Math.PI*2;const leaf=new T.Mesh(new T.ConeGeometry(.06,1.4,5),M(k%2?'#4E8F3A':'#6FAE4A',{roughness:.7}));leaf.position.set(Math.cos(a2)*1.15,1.1,Math.sin(a2)*1.15);leaf.rotation.set(Math.sin(a2)*.25,0,-Math.cos(a2)*.25);eg.add(leaf)}
-   add(eg,PX,PZ,1.5);movers.push(t=>{let h=12;try{h=+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',hour12:false}).format(new Date())}catch(e){}const noon=h>=11&&h<13;eggM.emissiveIntensity=noon?.6:.05;/* v500：中午恆亮金光，不閃 */egg.rotation.y=t*.3})}
+  // v501：端午期間噴水池整個收起來，原地換成大立蛋＋一圈粽子
+  if(!fountain)return;const fx=fountain.position.x,fz=fountain.position.z;fountain.visible=false;
+  {const eg=new T.Group();const RED=M('#C8261E',{roughness:.45});
+   const plat=cyl(3.5,3.7,.5,RED,40);plat.position.y=.25;eg.add(plat);const pr=new T.Mesh(new T.TorusGeometry(3.55,.1,8,64),gold);pr.rotation.x=Math.PI/2;pr.position.y=.5;eg.add(pr);const top2=cyl(3.3,3.3,.06,M('#F6E7C8',{roughness:.7}),40);top2.position.y=.52;eg.add(top2);
+   const ped=cyl(1.35,1.55,.7,RED,28);ped.position.y=.9;eg.add(ped);const pr2=new T.Mesh(new T.TorusGeometry(1.42,.07,8,32),gold);pr2.rotation.x=Math.PI/2;pr2.position.y=1.25;eg.add(pr2);
+   const eggM=new T.MeshStandardMaterial({color:'#F5C542',metalness:.55,roughness:.25,emissive:'#FFD36E',emissiveIntensity:.05});const egg=sph(1.3,eggM,1,1.35,1,32);egg.position.y=3.0;eg.add(egg);
+   const cols=['#E23B2E','#F2C14E','#2F8F4E','#3B7DD8','#FFFFFF'];for(let k=0;k<10;k++){const r2=new T.Mesh(new T.TorusGeometry(1.33,.045,6,48),M(cols[k%5]));r2.rotation.y=k/10*Math.PI;r2.scale.set(1,1.35,1);r2.position.y=3.0;eg.add(r2)}
+   const knot=sph(.2,M('#E23B2E'));knot.position.y=4.85;eg.add(knot);
+   for(let k=0;k<12;k++){const a2=k/12*Math.PI*2;const z=zongzi();z.scale.setScalar(3.2);z.position.set(Math.cos(a2)*2.75,.95,Math.sin(a2)*2.75);z.rotation.y=-a2;eg.add(z)}
+   for(let k=0;k<8;k++){const a2=(k+.5)/8*Math.PI*2;const leaf=new T.Mesh(new T.ConeGeometry(.1,2.2,5),M(k%2?'#4E8F3A':'#6FAE4A',{roughness:.7}));leaf.position.set(Math.cos(a2)*1.6,2.0,Math.sin(a2)*1.6);leaf.rotation.set(Math.sin(a2)*.25,0,-Math.cos(a2)*.25);eg.add(leaf)}
+   const sign=new T.Mesh(new T.PlaneGeometry(2.6,.75),new T.MeshBasicMaterial({map:canvasTex(256,74,(g2,w,h)=>{g2.fillStyle='#1F3460';g2.fillRect(0,0,w,h);g2.strokeStyle='#F2C14E';g2.lineWidth=6;g2.strokeRect(3,3,w-6,h-6);g2.fillStyle='#FFE7B0';g2.font='bold 42px "Noto Serif TC",serif';g2.textAlign='center';g2.textBaseline='middle';g2.fillText('端午立大蛋',w/2,h/2+2)})}));sign.position.set(0,.45,3.72);eg.add(sign);
+   add(eg,fx,fz,1.45);solid(fx,fz,3.3,3.3);movers.push(t=>{let h=12;try{h=+new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Taipei',hour:'2-digit',hour12:false}).format(new Date())}catch(e){}eggM.emissiveIntensity=(h>=11&&h<13)?.55:.05;egg.rotation.y=t*.3})}
+  // v501：四艘龍舟繞著整個群島划（船上不放人，只有會擺動的槳和鼓），點一下龍舟會加速
+  const boats=[];const SEA_Y=-1.25;
+  function makeBoat(col){const b=new T.Group();const hull=sph(1,M(col),.55,.34,2.4);hull.position.y=.15;b.add(hull);const stripe=sph(1.01,M('#F0C75E'),.56,.13,2.41);stripe.position.y=.26;b.add(stripe);
+   for(let k=0;k<9;k++){for(const e of [-1,1]){const sc=sph(.12,M('#2F8F4E'),1,.6,1.4);sc.position.set(e*.54,.08,-1.9+k*.45);b.add(sc)}}
+   const dh=new T.Group();dh.position.set(0,.85,2.45);b.add(dh);const BH=HEADS.dragonHead();BH.g.scale.setScalar(.36);BH.g.position.set(0,0,-.1);dh.add(BH.g);BH.jaw.rotation.x=-.2;
+   const tail=new T.Mesh(new T.ConeGeometry(.22,.8,8),M('#2F8F4E'));tail.position.set(0,.7,-2.45);tail.rotation.x=-1.1;b.add(tail);
+   const pads=[];for(let k=0;k<8;k++){const side=k%2?1:-1;const pad=new T.Group();pad.position.set(side*.48,.52,1.55-Math.floor(k/2)*.75);const sh=cyl(.02,.02,.8,M('#8A5A36'),5);sh.position.y=-.3;pad.add(sh);const bl=sph(.09,M('#8A5A36'),1,2,.3);bl.position.y=-.72;pad.add(bl);pad.rotation.z=side*.5;b.add(pad);pads.push(pad)}
+   const drm=cyl(.22,.22,.28,M('#C8342B'),12);drm.position.set(0,.55,1.95);b.add(drm);const fl=new T.Mesh(new T.PlaneGeometry(.7,.45),M('#F2C14E',{side:T.DoubleSide}));fl.position.set(.35,1.35,-1.8);b.add(fl);const fp2=cyl(.025,.025,1.2,gold,5);fp2.position.set(0,1.0,-1.8);b.add(fp2);
+   b.scale.setScalar(3.2);root.add(b);return {b,pads,boost:0}}
+  const ECX=0,ECZ=-52,ERX=76,ERZ=86;['#D7261E','#E8A21E','#2F7FC8','#2F9E5A'].forEach((col,k)=>{const B=makeBoat(col);B.ph=k*Math.PI/2;B.ang=0;boats.push(B)});
+  boat=boats[0].b;
   const splashes=[];const spM=new T.MeshBasicMaterial({color:'#FFFFFF',transparent:true,opacity:.8});
-  movers.push((t,dt)=>{boatBoost=Math.max(0,boatBoost-dt);const sp=boatBoost>0?.32:.13;ang+=sp*dt;boat.position.set(BX+Math.cos(ang)*BRX,SEA_Y+.55+Math.sin(t*3)*.08,BZ+Math.sin(ang)*BRZ);
-   const nx=-Math.sin(ang)*BRX,nz=Math.cos(ang)*BRZ;boat.rotation.y=Math.atan2(nx,nz);boat.rotation.z=Math.sin(t*2.5)*.04;const f=boatBoost>0?14:7;
-   rowers.forEach((r,k)=>{r.userData.pad.rotation.x=Math.sin(t*f+k*.25)*.7});dr.rotation.x=Math.sin(t*f*2)*.25;
-   if(Math.random()<dt*(boatBoost>0?18:6)){const m=new T.Mesh(new T.SphereGeometry(.12,6,4),spM.clone());const side=Math.random()<.5?-1:1;m.position.copy(boat.position);m.position.x+=Math.cos(boat.rotation.y)*side*3;m.position.z-=Math.sin(boat.rotation.y)*side*3;m.position.y=boat.position.y+.4;m.scale.setScalar(2.4);scene.add(m);splashes.push({m,v:new T.Vector3((Math.random()-.5)*1.5,2+Math.random()*1.5,(Math.random()-.5)*1.5),life:.6})}
+  movers.push((t,dt)=>{for(const B of boats){B.boost=Math.max(0,B.boost-dt);B.ang+=(B.boost>0?.11:.045)*dt;const a=B.ph+B.ang;B.b.position.set(ECX+Math.cos(a)*ERX,SEA_Y+.55+Math.sin(t*3+B.ph)*.08,ECZ+Math.sin(a)*ERZ);
+    const nx=-Math.sin(a)*ERX,nz=Math.cos(a)*ERZ;B.b.rotation.y=Math.atan2(nx,nz);B.b.rotation.z=Math.sin(t*2.5+B.ph)*.04;const f=B.boost>0?14:7;B.pads.forEach((pd,k)=>{pd.rotation.x=Math.sin(t*f+k*.25)*.7});
+    if(Math.random()<dt*(B.boost>0?12:3)){const m=new T.Mesh(new T.SphereGeometry(.12,6,4),spM.clone());const side=Math.random()<.5?-1:1;m.position.copy(B.b.position);m.position.x+=Math.cos(B.b.rotation.y)*side*2.6;m.position.z-=Math.sin(B.b.rotation.y)*side*2.6;m.position.y=B.b.position.y+.4;m.scale.setScalar(2.4);scene.add(m);splashes.push({m,v:new T.Vector3((Math.random()-.5)*1.5,2+Math.random()*1.5,(Math.random()-.5)*1.5),life:.6})}}
    for(let i=splashes.length-1;i>=0;i--){const o=splashes[i];o.life-=dt;o.v.y-=9*dt;o.m.position.addScaledVector(o.v,dt);o.m.material.opacity=Math.max(0,o.life/.6*.8);if(o.life<=0){scene.remove(o.m);o.m.geometry.dispose();o.m.material.dispose();splashes.splice(i,1)}}});
   // v497 端午加碼：立蛋桌（正午 11:00–13:00 雞蛋自己一顆顆立起來；平常點一下也會立起來）
   {const tb=new T.Group();const top=new T.Mesh(new T.BoxGeometry(4.6,.18,1.6),M('#C8342B'));top.position.y=1.05;tb.add(top);const cl=new T.Mesh(new T.BoxGeometry(4.7,.5,1.7),M('#E23B2E'));cl.position.y=.82;tb.add(cl);
    for(const [x,z] of [[-2,-.6],[2,-.6],[-2,.6],[2,.6]]){const lg=cyl(.07,.07,.95,M('#8A5A36'),6);lg.position.set(x,.48,z);tb.add(lg)}
    const sign=new T.Mesh(new T.PlaneGeometry(2.4,.7),new T.MeshBasicMaterial({map:canvasTex(256,76,(g2,w,h)=>{g2.fillStyle='#1F3460';g2.fillRect(0,0,w,h);g2.strokeStyle='#F2C14E';g2.lineWidth=6;g2.strokeRect(3,3,w-6,h-6);g2.fillStyle='#FFE7B0';g2.font='bold 44px "Noto Serif TC",serif';g2.textAlign='center';g2.textBaseline='middle';g2.fillText('端午立蛋',w/2,h/2+2)})}));sign.position.set(0,2.05,-.75);tb.add(sign);const sp2=cyl(.04,.04,1,gold,6);sp2.position.set(0,1.6,-.78);tb.add(sp2);
    const eggs=[];for(let k=0;k<6;k++){const e=sph(.24,M('#FFF6E6',{roughness:.4}),1,1.3,1);e.position.set(-1.75+k*.7,1.32,.15);e.rotation.z=Math.PI/2;tb.add(e);eggs.push({m:e,up:0,want:0})}
-   const P={x:12.4,z:5.5};tb.rotation.y=-Math.PI/2+.25;add(tb,P.x,P.z);solid(P.x,P.z,1.2,2.4);
+   const P={x:11.6,z:21.0};/* v501：移到廣場右前方，不擋城堡右側走道 */tb.rotation.y=Math.atan2(-11.1,-7.7);add(tb,P.x,P.z);solid(P.x,P.z,2.0,1.7);
    const standAll=()=>{eggs.forEach((e,k)=>setTimeout(()=>{e.want=1;beep([660+k*90],.1)},k*260));setTimeout(()=>toastMsg('立蛋成功，好運一整年'),6*260+200)};onTap(tb,standAll);
    let noonDone=false;movers.push((t,dt)=>{const hr=new Date().getHours();if(!noonDone&&hr>=11&&hr<13){noonDone=true;standAll()}eggs.forEach(e=>{e.up+=(e.want-e.up)*Math.min(1,dt*6);e.m.rotation.z=Math.PI/2*(1-e.up);e.m.position.y=1.32+e.up*.08;e.m.material.emissive&&e.m.material.emissive.set(e.up>.95?'#FFE27A':'#000000')})})}
-  try{const el=c.renderer&&c.renderer.domElement;if(el){const rc=new T.Raycaster(),v=new T.Vector2();el.addEventListener('pointerdown',e=>{if(!boat||(c.inside&&c.inside()))return;const r=el.getBoundingClientRect();v.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);rc.setFromCamera(v,c.camera);if(rc.intersectObject(boat,true).length){boatBoost=2.4;drum()}})}}catch(e){}}
+  try{const el=c.renderer&&c.renderer.domElement;if(el){const rc=new T.Raycaster(),v=new T.Vector2();el.addEventListener('pointerdown',e=>{if(!boats.length||(c.inside&&c.inside()))return;const r=el.getBoundingClientRect();v.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);rc.setFromCamera(v,c.camera);for(const B of boats){if(rc.intersectObject(B.b,true).length){B.boost=2.4;drum();break}}})}}catch(e){}}
  // ---------- 七夕 ----------
  function magpie(){const g=new T.Group();const body=sph(.3,M('#E23B3B'),1,.85,1.3);g.add(body);const belly=sph(.24,M('#FFF4E0'),1,.8,1.1);belly.position.set(0,-.06,.05);g.add(belly);const head=sph(.2,M('#E23B3B'));head.position.set(0,.18,.32);g.add(head);
   const bk=new T.Mesh(new T.ConeGeometry(.05,.18,6),M('#F2B33D'));bk.rotation.x=Math.PI/2;bk.position.set(0,.16,.55);g.add(bk);for(const e of [-1,1]){const ey=sph(.045,M('#1A1A1A'));ey.position.set(e*.09,.24,.47);g.add(ey);const ck=sph(.04,M('#FFB3C6'));ck.position.set(e*.13,.16,.46);g.add(ck)}const hrt=new T.Mesh(new T.PlaneGeometry(.22,.22),new T.MeshBasicMaterial({map:heartTex,color:'#FF4F7E',transparent:true,depthWrite:false,side:T.DoubleSide}));hrt.position.set(0,.14,.66);g.add(hrt);
@@ -332,7 +389,23 @@ export function setupFest(T, c, api){
   const pc=['#8E7CE0','#5DA8F0'];for(const i of [1,2,3,4,5])bridgeLanterns(i,pc,3);[PLAZA.L,PLAZA.Rt].forEach(p=>{add(lanternPost('#8E7CE0',true),p.x,p.z);solid(p.x,p.z,.25,.25)});
   // 鵲橋：通往後方第五座島的那座橋
   const CL=LINKS().find(L=>L.b==='C');const cen=window.wyCenterXZ||{x:0,z:-56,r:15};const I={x:cen.x,z:cen.z},Lq=Math.hypot(I.x,I.z),ux=I.x/Lq,uz=I.z/Lq,px=-uz,pz=ux;const P0=CL?CL.pts[0]:[0,0,-21],P1=CL?CL.pts[CL.pts.length-1]:[0,0,-42];const N=12;
-  const dirA=Math.atan2(P1[0]-P0[0],P1[2]-P0[2]);const NB=18;for(let k=0;k<NB;k++){const t=k/(NB-1);for(const s2 of [-1,1]){const cx=P0[0]+(P1[0]-P0[0])*t,cz=P0[2]+(P1[2]-P0[2])*t;const y=gy(cx,cz)+2.6+Math.sin(t*Math.PI)*4.2;const m=magpie();m.scale.setScalar(1.6);m.position.set(cx+Math.cos(dirA)*s2*1.5,y,cz-Math.sin(dirA)*s2*1.5);m.rotation.y=dirA;m.userData.wl.rotation.z=.9;m.userData.wr.rotation.z=-.9;root.add(m);const ph=k*.5+s2;movers.push(t2=>{const f=.7+Math.sin(t2*6+ph)*.35;m.userData.wl.rotation.z=f;m.userData.wr.rotation.z=-f;m.position.y=y+Math.sin(t2*2+ph)*.12})}}
+  const dirA=Math.atan2(P1[0]-P0[0],P1[2]-P0[2]);
+  /* v501：通往中央島的每一座橋都搭起喜鵲橋（一次畫完所有喜鵲，手機也順） */
+  {const CLs=LINKS().filter(L=>L.b==='C'||L.a==='C');const NB=12;const birds=[];
+   for(const L of CLs){const P=L.pts;const seg=[];let tot=0;for(let k=0;k<P.length-1;k++){const d=Math.hypot(P[k+1][0]-P[k][0],P[k+1][2]-P[k][2]);seg.push(d);tot+=d}
+    const at=u=>{let d=u*tot;for(let k=0;k<seg.length;k++){if(d<=seg[k]||k===seg.length-1){const f=seg[k]?Math.min(1,d/seg[k]):0;const A=P[k],B=P[k+1];return {x:A[0]+(B[0]-A[0])*f,z:A[2]+(B[2]-A[2])*f,ang:Math.atan2(B[0]-A[0],B[2]-A[2])}}d-=seg[k]}};
+    for(let k=0;k<NB;k++){const u=(k+.5)/NB;const p=at(u);for(const s2 of[-1,1]){birds.push({x:p.x+Math.cos(p.ang)*s2*1.5,z:p.z-Math.sin(p.ang)*s2*1.5,y:gy(p.x,p.z)+2.6+Math.sin(u*Math.PI)*4.2,ang:p.ang,ph:k*.5+s2+birds.length*.13})}}}
+   const N=birds.length;if(N){const parts=[[new T.SphereGeometry(.3,12,9),M('#E23B3B'),[0,0,0],[1,.85,1.3]],[new T.SphereGeometry(.24,10,8),M('#FFF4E0'),[0,-.06,.05],[1,.8,1.1]],[new T.SphereGeometry(.2,10,8),M('#E23B3B'),[0,.18,.32],[1,1,1]],[new T.ConeGeometry(.05,.18,6).rotateX(Math.PI/2),M('#F2B33D'),[0,.16,.55],[1,1,1]],[new T.SphereGeometry(.12,8,6),M('#F2C14E'),[0,.06,-.55],[.6,.25,2.2]]];
+    const wingG=new T.SphereGeometry(.22,10,7).scale(.5,.5,1).translate(.11,0,0);const wingM=M('#F2C14E',{metalness:.35,roughness:.35});const S=1.6;
+    const IMs=parts.map(([g,m])=>{const im=new T.InstancedMesh(g,m,N);im.frustumCulled=false;root.add(im);return im});const WL=new T.InstancedMesh(wingG,wingM,N),WR=new T.InstancedMesh(wingG,wingM,N);WL.frustumCulled=WR.frustumCulled=false;root.add(WL,WR);
+    const mB=new T.Matrix4(),mP=new T.Matrix4(),q=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3();
+    const place=(t2)=>{for(let n=0;n<N;n++){const b=birds[n];const y=b.y+Math.sin(t2*2+b.ph)*.12;q.setFromEuler(e.set(0,b.ang,0));mB.compose(v.set(b.x,y,b.z),q,sc.set(S,S,S));
+      parts.forEach(([g,m,off,scl],pi)=>{mP.compose(v.set(off[0],off[1],off[2]),q.identity(),sc.set(scl[0],scl[1],scl[2]));mP.premultiply(mB);IMs[pi].setMatrixAt(n,mP)});
+      const f=.7+Math.sin(t2*6+b.ph)*.35;for(const [W,sd] of[[WL,-1],[WR,1]]){q.setFromEuler(e.set(0,sd<0?Math.PI:0,sd<0?-f:-f));mP.compose(v.set(sd*.07,.04,-.02),q,sc.set(1,.5,1));mP.premultiply(mB);W.setMatrixAt(n,mP)}
+      q.setFromEuler(e.set(0,b.ang,0))}
+     for(const im of IMs)im.instanceMatrix.needsUpdate=true;WL.instanceMatrix.needsUpdate=true;WR.instanceMatrix.needsUpdate=true};
+    place(0);let acc=0;movers.push((t2,dt)=>{acc+=dt||.016;if(acc<.033)return;acc=0;place(t2)})}}
+
   for(let k=0;k<12;k++){const m=magpie();m.scale.setScalar(1.5);root.add(m);const ph=k/12*Math.PI*2,rr=6+k%3*2,h=10+k%4*1.6;const mid={x:(P0[0]+P1[0])/2,z:(P0[2]+P1[2])/2};movers.push(t2=>{const a=ph+t2*.5;m.position.set(mid.x+Math.cos(a)*rr+ux*Math.sin(a*.7)*8,h+Math.sin(t2*2+k)*.5,mid.z+Math.sin(a)*rr+uz*Math.sin(a*.7)*8);m.rotation.y=-a;const f=Math.sin(t2*10+k)*.7;m.userData.wl.rotation.z=f;m.userData.wr.rotation.z=-f})}
   // 銀河
   const n=2600,pos=new Float32Array(n*3),col=new Float32Array(n*3);const cA=new T.Color('#FFFFFF'),cB=new T.Color('#9FB8FF'),cC=new T.Color('#D6A8FF');
@@ -342,7 +415,19 @@ export function setupFest(T, c, api){
   // v497 七夕加碼：銀河兩側一顆藍白牛郎星、一顆粉紫織女星（晚上會閃）；橋欄杆掛滿紫色許願紙條
   {const starTex=canvasTex(128,128,(x,w,h)=>{const gr=x.createRadialGradient(64,64,4,64,64,62);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.25,'rgba(255,255,255,.85)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,w,h);x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=3;x.beginPath();x.moveTo(64,4);x.lineTo(64,124);x.moveTo(4,64);x.lineTo(124,64);x.stroke()});
    const mk=(col,x,y,z)=>{const sp=new T.Sprite(new T.SpriteMaterial({map:starTex,color:col,transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false}));sp.position.set(x,y,z);sp.scale.set(22,22,1);scene.add(sp);return sp};
-   const s1=mk('#BFE3FF',-150,190,-240),s2=mk('#FFB8E6',150,185,-240);movers.push(t=>{const ph=api.phase();const on=ph==='night'?1:ph==='dusk'?.5:0;s1.visible=s2.visible=on>0;s1.material.opacity=on*.9;s2.material.opacity=on*.9;/* v500：牛郎織女星恆亮 */const k=22+Math.sin(t*2)*2;s1.scale.set(k,k,1);s2.scale.set(k,k,1)})}
+   /* v501：牛郎、織女改成兩顆大愛心，低一點、大一點，沿著鵲橋從兩端慢慢飛向中間相會，相會時變成一顆大愛心，光是穩定的不閃 */
+   {const hs=new T.Shape();hs.moveTo(0,-1);hs.bezierCurveTo(-1.8,.2,-1,1.6,0,.8);hs.bezierCurveTo(1,1.6,1.8,.2,0,-1);const hg=new T.ExtrudeGeometry(hs,{depth:.45,bevelEnabled:true,bevelSize:.14,bevelThickness:.14,bevelSegments:3});hg.center();
+    const mkH=(col)=>{const m=new T.Mesh(hg,new T.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.55,roughness:.35,transparent:true,opacity:1}));m.scale.setScalar(2.2);root.add(m);return m};
+    const hA=mkH('#8FC8FF'),hB=mkH('#FF8FC8'),hC=mkH('#FF6FA8');hC.scale.setScalar(0.01);hC.visible=false;
+    const mid={x:(P0[0]+P1[0])/2,z:(P0[2]+P1[2])/2};const baseY=gy(mid.x,mid.z)+11.5;const L0={x:P0[0],z:P0[2]},L1={x:P1[0],z:P1[2]};const ry=dirA+Math.PI/2;[hA,hB,hC].forEach(h=>h.rotation.y=ry);
+    const lab=(txt,col)=>{const sp=new T.Sprite(new T.SpriteMaterial({map:canvasTex(256,80,(x,w,h)=>{x.fillStyle='rgba(255,255,255,.9)';x.beginPath();x.roundRect(4,8,w-8,h-16,30);x.fill();x.fillStyle=col;x.font='bold 40px "Noto Sans TC",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(txt,w/2,h/2+2)}),transparent:true,depthWrite:false}));sp.scale.set(4.4,1.4,1);root.add(sp);return sp};
+    const lA=lab('牛郎','#3E7BC8'),lB=lab('織女','#D2508F');
+    const CYC=40;movers.push(t=>{const u=(t%CYC)/CYC;let k=Math.min(1,u/.55);k=k*k*(3-2*k);const meet=u>=.55&&u<.85;const back=u>=.85;
+     const a={x:L0.x+(mid.x-L0.x)*k*.92,z:L0.z+(mid.z-L0.z)*k*.92},b={x:L1.x+(mid.x-L1.x)*k*.92,z:L1.z+(mid.z-L1.z)*k*.92};const bob=Math.sin(t*1.2)*.3;
+     if(!back){hA.position.set(a.x,baseY+bob,a.z);hB.position.set(b.x,baseY-bob,b.z);lA.position.set(a.x,baseY+3.4+bob,a.z);lB.position.set(b.x,baseY+3.4-bob,b.z)}
+     let m=0;if(meet){m=Math.min(1,(u-.55)/.06)}else if(back){m=Math.max(0,1-(u-.85)/.06)}
+     hC.visible=m>.01;hC.position.set(mid.x,baseY+.6,mid.z);hC.scale.setScalar(.01+m*3.4);const keep=1-m;[hA,hB].forEach(h=>{h.material.opacity=back?Math.max(0,(u-.91)/.09):keep;h.visible=h.material.opacity>.02});lA.material.opacity=lB.material.opacity=hA.material.opacity;lA.visible=lB.visible=hA.visible;
+     if(back&&u>.91){hA.position.set(L0.x,baseY,L0.z);hB.position.set(L1.x,baseY,L1.z);lA.position.set(L0.x,baseY+3.4,L0.z);lB.position.set(L1.x,baseY+3.4,L1.z)}})}}
   {const cols=['#B79CF2','#8E7CE0','#D7B8FF','#9FB8FF'];for(const L of LINKS())for(const p of linkPts(L,12,4.9)){const col=cols[Math.floor(Math.random()*4)];const hg=new T.Group();hg.position.set(p.x,p.y+1.55,p.z);hg.rotation.y=p.ang;const st=new T.Mesh(new T.PlaneGeometry(.34,1.0),new T.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:.25,side:T.DoubleSide,roughness:.6}));st.position.y=-.62;hg.add(st);const str=cyl(.008,.008,.14,M('#F2C14E'),3);str.position.y=-.07;hg.add(str);root.add(hg);const ph=Math.random()*6;movers.push(t=>{hg.rotation.x=Math.sin(t*2+ph)*.3})}}
 }
  // ---------- 中秋 ----------

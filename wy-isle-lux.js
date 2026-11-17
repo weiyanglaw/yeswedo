@@ -72,6 +72,10 @@ export function setupIsleLux(T, c){
   const showM=new T.MeshStandardMaterial({color:'#F4C552',metalness:.4,roughness:.35,emissive:'#FFD46A',emissiveIntensity:0});const strips=new T.Group();root.add(strips);
   for(let y=6;y<=17.5;y+=2.3){const f=box(8.3,.16,.12,showM);f.position.set(42,y,-83.5);strips.add(f);for(const e of[-1,1]){const sd=box(.12,.16,6.5,showM);sd.position.set(42+e*4.08,y,-86.8);strips.add(sd)}}
   let showT=-1,lastHour=-1;window.__wyLightShow=()=>{showT=0};
+  /* v501：選單加「燈光秀」，隨時可以看企業島大樓的燈光秀 */
+  {let tries=0;const addBtn=()=>{const card=document.querySelector('.guMenu .guCard');if(!card){if(tries++<120)setTimeout(addBtn,1000);return}if(card.querySelector('[data-m="lightshow"]'))return;const it=document.createElement('div');it.className='guMi';it.dataset.m='lightshow';it.innerHTML='<b>燈光秀</b><small>企業商務島大樓，晚上更漂亮</small>';
+   it.onclick=e=>{e.stopPropagation();showT=0;try{const m=document.querySelector('.guMenu');m&&m.classList.remove('on')}catch(err){}let d=document.getElementById('wyLsToast');if(!d){d=document.createElement('div');d.id='wyLsToast';d.style.cssText='position:fixed;left:50%;top:96px;transform:translateX(-50%);z-index:80;background:rgba(31,52,96,.9);color:#FFE7A8;border:1px solid #F0C75E;border-radius:14px;padding:8px 14px;font:600 13px "Noto Sans TC",sans-serif;transition:opacity .4s;pointer-events:none';document.body.appendChild(d)}d.textContent='燈光秀開始了：請看企業商務島大樓';d.style.opacity=1;clearTimeout(d._t);d._t=setTimeout(()=>d.style.opacity=0,3500)};
+   card.appendChild(it)};setTimeout(addBtn,1500)}
   movers.push((t,dt)=>{const ph=phase();let hr=-1,mi=0;try{const d=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Taipei'}));hr=d.getHours();mi=d.getMinutes()}catch(e){}
    if(ph==='night'&&mi===0&&hr!==lastHour&&showT<0){lastHour=hr;showT=0}
    let k=0;if(showT>=0){showT+=dt||.016;const D=45;k=showT<3?showT/3:showT<D-3?1:Math.max(0,(D-showT)/3);k=k*k*(3-2*k);if(showT>=D)showT=-1}

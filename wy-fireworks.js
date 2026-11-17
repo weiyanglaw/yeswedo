@@ -53,7 +53,7 @@ export function setupFireworks(T, c, api){
    else if(s.rk.parent){scene.remove(s.rk);s.rk.geometry.dispose();s.P.visible=true}
    if(t>=1.4){const a=s.P.geometry.attributes.position.array;const u=Math.min(1,(t-1.4)/.9),e=ease(u);const fall=t>4.6?(t-4.6):0;
     for(let k=0;k<targets.length&&k*3<a.length;k++){const q=targets[k];a[k*3]=-q.x*e;a[k*3+1]=q.y*e-fall*fall*2.2-(fall>0?((k*7)%5)*fall*.3:0);a[k*3+2]=0}
-    s.P.geometry.attributes.position.needsUpdate=true;s.P.material.size=1.25+(t<2.3?(1-u)*1.2:Math.sin(t*12)*.12);s.P.material.opacity=t>4.6?Math.max(0,1-(t-4.6)/1.6):1}
+    s.P.geometry.attributes.position.needsUpdate=true;s.P.material.size=1.25+(t<2.3?(1-u)*1.2:0);/* v501：不閃爍 */s.P.material.opacity=t>4.6?Math.max(0,1-(t-4.6)/1.6):1}
    for(const sd of s.side){if(t<sd.at)continue;sd.p.visible=true;const lt=t-sd.at;const a=sd.p.geometry.attributes.position.array;for(let k=0;k<sd.vel.length;k++){const v=sd.vel[k];a[k*3]=v[0]*lt;a[k*3+1]=v[1]*lt-3*lt*lt;a[k*3+2]=v[2]*lt}sd.p.geometry.attributes.position.needsUpdate=true;sd.p.material.opacity=Math.max(0,1-lt/1.8)}
    if(t>6.4){scene.remove(s.P);s.P.geometry.dispose();s.P.material.dispose();for(const sd of s.side){scene.remove(sd.p);sd.p.geometry.dispose();sd.p.material.dispose()}shows.splice(i,1)}}};
  window.__wyFwStep=tick;return tick;

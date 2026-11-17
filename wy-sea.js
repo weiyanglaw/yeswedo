@@ -47,7 +47,7 @@ export function setupSea(T, c){
  [[-15.5,17],[15.5,17],[-6.5,24],[6.5,24]].forEach(([x,z])=>bed(x,z));
  for(let i=0;i<30;i++){const a=Math.PI*.12+i/29*Math.PI*.76;const r=CC.r-.6;const x=CC.x+Math.cos(a)*r,z=CC.z+Math.sin(a)*r;if(Math.abs(x)<3.5)continue;const ps=cyl(.13,.13,1.0,navy,8);ps.position.set(x,2.05,z);root.add(ps);const cp=sph(.2,gold,1,1,1,8);cp.position.set(x,2.62,z);root.add(cp)}
  // ---------- v497 噴水池升級：三層大理石水盤＋旋轉發光的金色 Logo 圓徽（占地不變，不擋大門）----------
- (()=>{let F=null;G[0].traverse(o=>{if(!F&&o.type==='Group'&&Math.abs(o.position.x-.5)<.05&&Math.abs(o.position.z-9.8)<.05)F=o});if(!F)return;
+ (()=>{let F=null;G[0].traverse(o=>{if(!F&&o.type==='Group'&&Math.abs(o.position.x-.5)<.05&&Math.abs(o.position.z-9.8)<.05)F=o});if(!F)return;F.userData.wyMainFountain=1;F.position.z=13.3;/* v501：噴水池往前移，不擋城堡大門 */
   F.traverse(o=>{if(o.isMesh&&o.geometry.type==='SphereGeometry'&&(o.geometry.parameters.radius||0)>1.5)o.visible=false});
   const marble=M('#FBF6EE',{roughness:.28}),goldM=M('#E9C46A',{metalness:.6,roughness:.25}),water=new T.MeshPhysicalMaterial({color:0x6FD3F2,transparent:true,opacity:.85,roughness:.08});
   const tag=o=>{o.userData.wyFtn=1;F.add(o);return o};
@@ -195,6 +195,48 @@ export function setupSea(T, c){
   const a3=2.4+k*.9;if(freeAng(k,a3)){const hc=hermit();const r3=I.r+3.0;hc.position.set(I.x+Math.cos(a3)*r3,SEA+1.02,I.z+Math.sin(a3)*r3);hc.rotation.y=-a3;root.add(hc)}});
  // 海龜：在城堡島前方的淺灘慢慢游
  for(let k=0;k<3;k++){const tt=turtle();tt.userData.dyn=1;root.add(tt);const ph=k*2.1,Rt=CC.r+11+k*2.5;movers.push(t=>{const a=ph+t*.05;tt.position.set(CC.x+Math.cos(a)*Rt,SEA+.05+Math.sin(t*1.2+k)*.06,CC.z+Math.sin(a)*Rt);tt.rotation.y=-a})}
+ // ---------- v501 海洋生物：海豚、鯨魚、熱帶魚、海獅、章魚、貝殼（動作都慢慢的，不閃） ----------
+ {const CX=CEN.x,CZ=CEN.z;
+  // 貝殼：每座島沙灘上幾顆（不會動，之後一起合併）
+  const fanShape=new T.Shape();fanShape.moveTo(0,0);for(let k=0;k<=10;k++){const a=Math.PI*(.12+.76*k/10);const r=k%2?.62:.7;fanShape.lineTo(Math.cos(a)*r,Math.sin(a)*r)}fanShape.lineTo(0,0);
+  const fanG=new T.ExtrudeGeometry(fanShape,{depth:.08,bevelEnabled:true,bevelSize:.04,bevelThickness:.04,bevelSegments:2});
+  const scallop=col=>{const g=new T.Group();const f=new T.Mesh(fanG,M(col,{roughness:.45}));f.rotation.x=-Math.PI/2;f.position.y=.06;g.add(f);for(let k=0;k<5;k++){const rb=cyl(.025,.025,.55,'#FFFFFF',5);const a=Math.PI*(.25+.5*k/4);rb.rotation.z=Math.PI/2;rb.rotation.y=-a+Math.PI/2;rb.position.set(Math.cos(a)*.3,.16,-Math.sin(a)*.3);g.add(rb)}const hinge=sph(.12,col,1.4,.6,.8,10);hinge.position.y=.08;g.add(hinge);g.scale.setScalar(1.25);return g};
+  const conch=col=>{const g=new T.Group();const sh=new T.Mesh(new T.ConeGeometry(.42,1.2,12),M(col,{roughness:.45}));sh.rotation.z=Math.PI/2;sh.position.y=.35;g.add(sh);for(let k=0;k<3;k++){const r=new T.Mesh(new T.TorusGeometry(.38-k*.1,.06,6,16),M('#FFF1E0'));r.rotation.y=Math.PI/2;r.position.set(-.2+k*.25,.35,0);g.add(r)}const lip=sph(.3,'#FFB8A8',.6,1,1,10);lip.position.set(-.55,.35,0);g.add(lip);return g};
+  const SC=['#FFC2C8','#FFE0B8','#FFFFFF','#F7D6F0','#FFD8A8'];
+  isles.forEach((I,k)=>{if(k===6)return;for(let j=0;j<4;j++){const a=j/4*Math.PI*2+.95+k*.7;if(!freeAng(k,a))continue;const o=(j%2?conch:scallop)(SC[(j+k)%5]);const r=I.r+3.1+(j%2)*.5;o.position.set(I.x+Math.cos(a)*r,SEA+1.02,I.z+Math.sin(a)*r);o.rotation.y=-a+j;root.add(o)}});
+  // 海豚：在群島外圍的海面跳出水面（三隻一組，不靠近橋）
+  const dolphin=()=>{const g=new T.Group();const bc='#7FA9D6';const b=sph(.6,bc,1,.85,2.1,16);g.add(b);const bl=sph(.5,'#F4F8FF',.9,.6,1.7,14);bl.position.set(0,-.18,.1);g.add(bl);const sn=sph(.22,bc,1,.8,1.6,10);sn.position.set(0,-.08,1.45);g.add(sn);
+   const fin=new T.Mesh(new T.ConeGeometry(.22,.7,6),M(bc));fin.position.set(0,.6,-.15);fin.rotation.x=-.5;g.add(fin);for(const e of[-1,1]){const fl=sph(.32,bc,1,.18,.6,8);fl.position.set(e*.8,-.62,-1.35);fl.rotation.y=e*.6;g.add(fl);const pf=sph(.22,bc,1,.15,.55,8);pf.position.set(e*.5,-.25,.5);pf.rotation.z=e*.6;g.add(pf);const ey=sph(.07,'#1A1A1A',1,1,1,6);ey.position.set(e*.36,.12,.95);g.add(ey)}
+   const tl=cyl(.12,.3,.9,bc,8);tl.rotation.x=Math.PI/2;tl.position.set(0,-.3,-1.35);g.add(tl);g.scale.setScalar(1.15);return g};
+  const pods=[57,123,186,243,297,354].map(d=>{const a=d*Math.PI/180;return {x:CX+Math.cos(a)*96,z:CZ+Math.sin(a)*96,dir:a+Math.PI/2}});
+  pods.forEach((P,pk)=>{for(let n=0;n<3;n++){const d=dolphin();d.userData.dyn=1;root.add(d);const off=n*1.1+pk*.7,span=7,per=6.5;movers.push(t=>{const u=((t+off*per/3)%per)/per;const air=u<.32;const k=air?u/.32:1;const along=-span/2+span*((t/per+off)%1);
+    const dx=Math.cos(P.dir),dz=Math.sin(P.dir);const side=(n-1)*2.2;const x=P.x+dx*along-dz*side,z=P.z+dz*along+dx*side;const y=air?SEA+.2+Math.sin(k*Math.PI)*3.4:SEA-2.6;d.position.set(x,y,z);d.visible=air;
+    d.rotation.set(0,Math.atan2(dx,dz),0);d.rotateX(air?-(Math.cos(k*Math.PI))*.9:0)})}});
+  // 鯨魚：群島外圍慢慢游，背部浮出水面，噴出穩定的水柱
+  {const w=new T.Group();w.userData.dyn=1;const wc='#5E86B8';const body=sph(2.6,wc,1,.62,2.6,20);w.add(body);const belly=sph(2.3,'#E8F1FA',.95,.4,2.3,18);belly.position.y=-.5;w.add(belly);
+   for(let k=0;k<6;k++){const gr=cyl(.04,.04,2.2,'#BFD3EA',4);gr.rotation.z=Math.PI/2;gr.position.set(0,-1.1,1.6-k*.35);w.add(gr)}
+   const tail=new T.Group();tail.position.set(0,.2,-6.6);w.add(tail);for(const e of[-1,1]){const fl=sph(1.0,wc,1.3,.2,.6,10);fl.position.set(e*1.1,0,-.4);fl.rotation.y=e*.4;tail.add(fl)}const ts=cyl(.5,1.1,2.2,wc,10);ts.rotation.x=Math.PI/2;ts.position.z=.9;tail.add(ts);
+   for(const e of[-1,1]){const ey=sph(.16,'#1A1A1A',1,1,1,8);ey.position.set(e*1.9,.1,4.0);w.add(ey);const fin=sph(.7,wc,1.6,.2,.6,10);fin.position.set(e*2.4,-.8,2.2);fin.rotation.z=e*.5;w.add(fin);const ck=sph(.25,'#FFB3C6',1,.5,.6,8);ck.position.set(e*2.0,-.25,3.8);w.add(ck)}
+   const spM=new T.MeshStandardMaterial({color:'#DDF3FF',transparent:true,opacity:.75,roughness:.2});const spout=new T.Group();spout.position.set(0,1.5,2.4);w.add(spout);const col=new T.Mesh(new T.CylinderGeometry(.25,.12,3,10),spM);col.position.y=1.5;spout.add(col);const drops=[];for(let k=0;k<10;k++){const dp=new T.Mesh(new T.SphereGeometry(.3,8,6),spM);spout.add(dp);drops.push(dp)}
+   w.scale.setScalar(1.25);root.add(w);movers.push(t=>{const a=t*.012+1.2;const R1=118,R2=124;w.position.set(CX+Math.cos(a)*R1,SEA-.75+Math.sin(t*.35)*.35,CZ+Math.sin(a)*R2);w.rotation.y=Math.atan2(-Math.sin(a)*R1,Math.cos(a)*R2);tail.rotation.x=Math.sin(t*.9)*.18;
+    drops.forEach((dp,k)=>{const u=((t*.5+k/10)%1);dp.position.set(Math.cos(k*2.4)*u*1.2,3+u*1.4-u*u*2.2,Math.sin(k*2.4)*u*1.2);dp.scale.setScalar(1-u*.6)})})}
+  // 熱帶魚：在四座主題島外的淺海，一群一群輪流跳出水面
+  const fish=(c1,c2)=>{const g=new T.Group();const b=sph(.32,c1,.55,1,1.2,12);g.add(b);const st=sph(.33,c2,.56,1.01,.25,10);st.position.z=.1;g.add(st);const tl=new T.Mesh(new T.ConeGeometry(.3,.45,4),M(c2));tl.rotation.x=-Math.PI/2;tl.position.z=-.5;tl.scale.x=.3;g.add(tl);for(const e of[-1,1]){const ey=sph(.05,'#1A1A1A',1,1,1,6);ey.position.set(e*.16,.08,.25);g.add(ey)}g.scale.setScalar(1.3);return g};
+  const FC=[['#FFD23F','#3B82C4'],['#FF8C42','#FFFFFF'],['#4CC9F0','#FFD23F'],['#F25F8C','#FFE5A8'],['#7BD389','#2E86AB']];
+  for(let k=1;k<=4;k++){const I=isles[k];const a0=Math.atan2(I.z-CZ,I.x-CX);for(let n=0;n<6;n++){const f=fish(...FC[(n+k)%5]);f.userData.dyn=1;root.add(f);const a=a0+(n-2.5)*.09,r=I.r+9+(n%2)*1.4;const bx=I.x+Math.cos(a)*r,bz=I.z+Math.sin(a)*r;const off=n*.55+k;
+    movers.push(t=>{const per=4.2;const u=((t+off)%per)/per;const air=u<.3;const k2=air?u/.3:0;f.visible=air;if(!air)return;const dx=-Math.sin(a),dz=Math.cos(a);f.position.set(bx+dx*(k2-.5)*2.4,SEA+.1+Math.sin(k2*Math.PI)*1.5,bz+dz*(k2-.5)*2.4);f.rotation.set(0,Math.atan2(dx,dz),0);f.rotateX(-Math.cos(k2*Math.PI)*.8)})}}
+  // 海獅：礁石上頂著球，頭慢慢點
+  const rock=()=>{const r=new T.Mesh(new T.DodecahedronGeometry(1.6,0),M('#A89A8A',{roughness:.9,flatShading:true}));r.scale.set(1.3,.55,1);return r};
+  const seaLion=()=>{const g=new T.Group();const sc='#9C6B48';const b=sph(.75,sc,1,1.3,.9,14);b.position.y=.95;b.rotation.x=-.25;g.add(b);const hd=new T.Group();hd.position.set(0,2.05,.25);g.add(hd);const h=sph(.42,sc,1,.95,1.05,14);hd.add(h);const mz=sph(.24,'#C99A72',1.2,.8,.9,10);mz.position.set(0,-.08,.36);hd.add(mz);const ns=sph(.07,'#2A1A12',1,1,1,6);ns.position.set(0,0,.58);hd.add(ns);
+   for(const e of[-1,1]){const ey=sph(.07,'#1A1A1A',1,1,1,6);ey.position.set(e*.18,.14,.33);hd.add(ey);const fl=sph(.32,sc,.4,.2,1,8);fl.position.set(e*.62,.45,.35);fl.rotation.z=e*.6;g.add(fl);for(let k=0;k<2;k++){const wh=cyl(.008,.008,.3,'#FFFFFF',3);wh.rotation.z=Math.PI/2;wh.position.set(e*.32,-.06-k*.06,.45);hd.add(wh)}}
+   const ball=new T.Group();ball.position.set(0,.66,.5);hd.add(ball);const bl=sph(.34,'#FF5A5F',1,1,1,14);ball.add(bl);const bs=sph(.345,'#FFFFFF',1,.32,1,14);ball.add(bs);const by=sph(.345,'#3B82C4',.32,1,1,14);ball.add(by);g.userData={hd,ball};return g};
+  [[0,1.7],[6,3.6],[3,4.3]].forEach(([k,a],n)=>{const I=isles[k];const r=I.r+(k===6?6:8.5);const x=I.x+Math.cos(a)*r,z=I.z+Math.sin(a)*r;const rk=rock();rk.position.set(x,SEA+.2,z);root.add(rk);const sl=seaLion();sl.userData.dyn=1;sl.position.set(x,SEA+.55,z);sl.rotation.y=Math.atan2(I.x-x,I.z-z)+Math.PI;root.add(sl);
+   movers.push(t=>{const hd=sl.userData.hd,bl=sl.userData.ball;hd.rotation.x=Math.sin(t*1.1+n)*.12;hd.rotation.z=Math.sin(t*.7+n)*.08;bl.rotation.y=t*.8;bl.rotation.x=t*.5})});
+  // 章魚：在淺水礁石旁探出頭，八隻腳慢慢擺
+  const octo=col=>{const g=new T.Group();const hd=sph(.95,col,1,1.15,1,16);hd.position.y=.9;g.add(hd);for(const e of[-1,1]){const ew=sph(.22,'#FFFFFF',1,1,1,8);ew.position.set(e*.38,.75,.78);g.add(ew);const ep=sph(.11,'#1A1A1A',1,1,1,6);ep.position.set(e*.38,.75,.97);g.add(ep);const ck=sph(.14,'#FFB3C6',1,.5,.5,8);ck.position.set(e*.62,.45,.72);g.add(ck)}
+   const legs=[];for(let k=0;k<8;k++){const a=k/8*Math.PI*2;const lg=new T.Group();lg.position.set(Math.cos(a)*.75,0,Math.sin(a)*.75);lg.rotation.y=-a;g.add(lg);const tt=new T.Mesh(new T.TorusGeometry(.5,.13,8,14,Math.PI),M(col));tt.position.x=.45;tt.rotation.x=Math.PI/2;lg.add(tt);legs.push(lg)}g.userData.legs=legs;return g};
+  [[2,'#F28AB2',5.2],[4,'#FF9F5A',2.0]].forEach(([k,col,a],n)=>{const I=isles[k];const r=I.r+7.2;const x=I.x+Math.cos(a)*r,z=I.z+Math.sin(a)*r;const rk=rock();rk.scale.multiplyScalar(.6);rk.position.set(x+2,SEA+.1,z);root.add(rk);const o=octo(col);o.userData.dyn=1;o.position.set(x,SEA-.1,z);o.rotation.y=Math.atan2(I.x-x,I.z-z)+Math.PI;root.add(o);
+   movers.push(t=>{o.position.y=SEA-.1+Math.sin(t*.9+n)*.12;o.userData.legs.forEach((lg,k)=>{lg.rotation.z=Math.sin(t*1.4+k*.8)*.35})})})}
  // ---------- 效能：把不會動的裝飾依材質合併，大幅減少手機要畫的物件數 ----------
  async function freeze(container){try{const U=await import('three/addons/utils/BufferGeometryUtils.js');const roots=Array.isArray(container)?container:[container];const groups=new Map(),drop=[];
   for(const rt of roots){rt.updateMatrixWorld(true);rt.traverse(o=>{if(!o.isMesh||o.isInstancedMesh)return;for(let q=o;q&&q!==rt.parent;q=q.parent){if(q.userData&&q.userData.dyn)return;if(q.visible===false)return}
