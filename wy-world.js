@@ -24,18 +24,18 @@ export function setupWorld(T, c){
  const glowMats=new Map(),winMats=new Map();
  const _gb=new T.Box3();
  let winClone=null;
- function collectGlow(){scene.traverse(o=>{if(!o.isMesh||!o.material)return;
+ function collectGlow(){const bigUse=new Set();scene.traverse(o=>{if(!o.isMesh||!o.material)return;
   /* 城堡窗戶玻璃與屋頂共用同一個材質：窗戶另外複製一份材質，夜晚才能單獨亮燈 */
   if(!Array.isArray(o.material)&&o.material.color&&o.material.color.getHexString()==='557895'&&!/Cone|Cylinder|Lathe/.test(o.geometry.type)){if(!winClone){winClone=o.material.clone();winMats.set(winClone,{e:winClone.emissive.clone(),i:winClone.emissiveIntensity||1})}o.material=winClone;return}
-const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const m of ms){if(!m||!m.emissive||glowMats.has(m)||winMats.has(m))continue;
+const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const m of ms){if(!m||!m.emissive||glowMats.has(m))continue;if(winMats.has(m)){if(m===winClone)continue;if(size<0){_gb.setFromObject(o);size=Math.max(_gb.max.x-_gb.min.x,_gb.max.y-_gb.min.y,_gb.max.z-_gb.min.z)}if(size>=2.6)bigUse.add(m);continue}
    const e=m.emissive;if(e.r+e.g+e.b>.15&&(m.emissiveIntensity||1)>0){glowMats.set(m,m.emissiveIntensity||1);continue}
-   const col=m.color;if(!col)continue;const lum=.3*col.r+.59*col.g+.11*col.b;if(!(col.b>col.r+.06&&col.g>col.r&&lum>.55))continue;
-   if(size<0){_gb.setFromObject(o);size=Math.max(_gb.max.x-_gb.min.x,_gb.max.y-_gb.min.y,_gb.max.z-_gb.min.z)}if(size<2.6)winMats.set(m,{e:m.emissive.clone(),i:m.emissiveIntensity||1})}})}
+   const col=m.color;if(!col)continue;if(m.transparent||m.opacity<1||m.transmission>0)continue;/* v497：玻璃（例如醫療館圓頂）晚上不要變成暖黃色 */const lum=.3*col.r+.59*col.g+.11*col.b;if(!(col.b>col.r+.06&&col.g>col.r&&lum>.55))continue;
+   if(size<0){_gb.setFromObject(o);size=Math.max(_gb.max.x-_gb.min.x,_gb.max.y-_gb.min.y,_gb.max.z-_gb.min.z)}if(size<2.6)winMats.set(m,{e:m.emissive.clone(),i:m.emissiveIntensity||1});else bigUse.add(m)}});for(const m of bigUse)winMats.delete(m)}
  const warm=new T.Color('#ffcf7a');
 
  /* 飄雲 */
  const cloudTex=(()=>{const cv=document.createElement('canvas');cv.width=256;cv.height=128;const x=cv.getContext('2d');x.fillStyle='#fff';[[70,78,40],[118,62,52],[170,76,40],[120,86,46],[200,88,26],[44,92,24]].forEach(([a,b,r])=>{x.beginPath();x.arc(a,b,r,0,7);x.fill()});const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t})();
- const clouds=[];for(let i=0;i<9;i++){const s=new T.Sprite(new T.SpriteMaterial({map:cloudTex,transparent:true,depthWrite:false,opacity:.85,fog:false}));const k=24+Math.random()*22;s.scale.set(k,k/2,1);const a=i/9*Math.PI*2+Math.random()*.4,r=90+Math.random()*80;s.position.set(Math.cos(a)*r,42+Math.random()*30,Math.sin(a)*r-20);s.userData.sp=.6+Math.random()*.8;clouds.push(s);scene.add(s)}
+ const clouds=[];for(let i=0;i<9;i++){const s=new T.Sprite(new T.SpriteMaterial({map:cloudTex,transparent:true,depthWrite:false,opacity:.85,fog:false}));const k=24+Math.random()*22;s.scale.set(k,k/2,1);/* v497：雲只在遠方高空，不會從鏡頭前穿過 */s.position.set(-220+i*50+Math.random()*20,62+Math.random()*26,-170-Math.random()*130);s.userData.sp=.6+Math.random()*.8;clouds.push(s);scene.add(s)}
 
  /* 花瓣（白天）與光點（夜晚） */
  const M=140,mp=new Float32Array(M*3),mv=[];for(let i=0;i<M;i++){mp[i*3]=(Math.random()-.5)*70;mp[i*3+1]=2+Math.random()*18;mp[i*3+2]=(Math.random()-.5)*70;mv.push([(Math.random()-.5)*.6,-.25-Math.random()*.35,(Math.random()-.5)*.6,Math.random()*6.28])}
@@ -84,10 +84,11 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
  const festApi={moon,dot,glow:(m,i)=>glowMats.set(m,i),phase:()=>cur,
   setSnow(){snow=true;motes.userData.snow=1;motes.material.map=dot;motes.material.size=.95;motes.material.color.set('#ffffff');motes.material.blending=T.NormalBlending;motes.material.opacity=.95;motes.material.needsUpdate=true},
   tintMotes(col){motes.userData.tint=col;motes.material.color.set(col);motes.material.needsUpdate=true}};
- import('./wy-fest.js?v=493').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
- function festTick(dt,now){if(festTickFn)festTickFn(dt,now)}
+ import('./wy-fest.js?v=498').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
+ let fwTickFn=null;import('./wy-fireworks.js?v=498').then(m=>{try{fwTickFn=m.setupFireworks(T,c,festApi)}catch(e){console.error('fw',e)}}).catch(e=>console.error('fw load',e));
+ function festTick(dt,now){if(festTickFn)festTickFn(dt,now);if(fwTickFn)try{fwTickFn(dt)}catch(e){}}
  /* ---------- v489 流暢度：依實際幀率自動調整解析度 ---------- */
- const prCap=Math.min(window.devicePixelRatio||1,2),prMin=Math.min(prCap,1.25);let prNow=renderer.getPixelRatio(),pfN=0,pfT=performance.now(),pfGood=0;
+ const prCap=Math.min(window.devicePixelRatio||1,2),prMin=Math.min(prCap,1.75);let prNow=renderer.getPixelRatio(),pfN=0,pfT=performance.now(),pfGood=0;
  window.wyPerf={get pr(){return prNow},fps:0};
  function perfTick(now){if(document.hidden){pfT=now;pfN=0;return}pfN++;const span=now-pfT;if(span<2000)return;const fps=pfN*1000/span;pfN=0;pfT=now;window.wyPerf.fps=Math.round(fps);
   if(fps<40&&prNow>prMin){prNow=Math.max(prMin,+(prNow-.25).toFixed(2));renderer.setPixelRatio(prNow);pfGood=0}

@@ -5,7 +5,7 @@
  const $=id=>document.getElementById(id);
  const F='"Huninn","PingFang TC","Noto Sans TC",sans-serif';
  const THEME={0:['#2E4A7A','#1A2B4C','#0E1A31'],1:['#E07A3A','#B4511C','#7A3410'],2:['#2F8A6A','#1B6149','#0C3A2B'],3:['#B44A6A','#85304B','#5A1C30'],4:['#7A55A8','#553878','#2E1D45'],5:['#3E9A8A','#2A7468','#164840']};
- const OUT_HINT={0:'點大門進入事務所',1:'走到大門就能進館',2:'走到大門就能進館',3:'走到大門就能進館',4:'走到大門就能進館',5:'島上走走看看'};
+ const OUT_HINT={0:'往大門走就能進入',1:'往大門走就能進入',2:'往大門走就能進入',3:'往大門走就能進入',4:'往大門走就能進入',5:'島上走走看看'};
  const SLOGAN={1:'打官司也要有法度',2:'病歷在手有法度',3:'家和萬事有法度',4:'生意做大有法度'};
  const IC={
   menu:'<svg viewBox="0 0 24 24" stroke="#fff" stroke-width="2.8" stroke-linecap="round" fill="none"><path d="M5 7h14M5 12h14M5 17h14"/></svg>',
@@ -219,7 +219,8 @@
   else if(m==='photo'){menu.classList.remove('on');takePhoto()}});
  /* 主按鈕：大門前改為「進入」 */
  document.addEventListener('click',e=>{const it=e.target.closest&&e.target.closest('#interact');if(!it||!playing)return;press(it);window.wySfx('tap');
-  if(mode==='out'&&atDoor>=0){e.stopImmediatePropagation();e.preventDefault();const g=G();g&&g.enter(atDoor)}},true);
+  if(mode==='out'&&atDoor>=0){e.stopImmediatePropagation();e.preventDefault();const g=G();g&&g.enter(atDoor)}
+  else if(mode==='out'&&window.wyNearAction){e.stopImmediatePropagation();e.preventDefault();try{window.wyNearAction.fn()}catch(err){}}},true);
  document.addEventListener('click',e=>{const h=e.target.closest&&e.target.closest('#home');if(h&&playing){press(h);window.wySfx('tap')}},true);
  /* 原本的「返回探索島」也套轉場 */
  document.addEventListener('click',e=>{const x=e.target.closest&&e.target.closest('#officeExit');if(!x||!playing||x.dataset.guPass)return;e.stopImmediatePropagation();e.preventDefault();window.wyIris(()=>{x.dataset.guPass='1';x.click();delete x.dataset.guPass})},true);
@@ -287,10 +288,12 @@
      if(firstTime){firstShown=true;introUntil=performance.now()+2400;em.classList.remove('guPop');void em.offsetWidth;em.classList.add('guPop');paint(THEME[0],'德威陽｜有法度',window.wyFestGreeting?('YES, WE DO!　'+window.wyFestGreeting):'YES, WE DO!');setTimeout(shine,350);window.wySfx('shine');
       setTimeout(()=>{if(mode==='out')flipTo(THEME[area],g.names[area],OUT_HINT[area])},1900)}
      else flipTo(THEME[best],g.names[best],OUT_HINT[best])}}
-   const it=$('interact');atDoor=-1;if(a&&area>=0&&area<=4){const [x,z]=g.xy[area];if(Math.hypot(a.position.x-x,a.position.z-z)<(area===0?17:14))atDoor=area}const dp=$('wyDoorPrompt');if(dp&&dp.style.display!=='none'&&atDoor<0)atDoor=2;
-   if(it){const lb=atDoor>=0?'進入':'介紹';if(it.textContent!==lb)it.textContent=lb;it.classList.toggle('glow',atDoor>=0);it.classList.remove('dim')}
-   if(performance.now()<introUntil){}else if(atDoor>=0&&area>=0){const s=tab.querySelector('span');if(s.textContent!=='按金色按鈕進入參觀')s.textContent='按金色按鈕進入參觀'}
-   else if(area>=0){const s=tab.querySelector('span');if(s.textContent==='按金色按鈕進入參觀')s.textContent=OUT_HINT[area]}}
+   const it=$('interact');atDoor=-1;if(a&&area>=0&&area<=4){const [x,z]=g.xy[area];/* v497：要真的走到大門前約 5 步才切換 */const DZ=area===0?7:8.5;if(Math.hypot(a.position.x-x,a.position.z-(z+DZ))<6)atDoor=area}const dp=$('wyDoorPrompt');if(dp&&dp.style.display!=='none'&&atDoor<0)atDoor=2;
+   const NA=atDoor<0?window.wyNearAction:null;/* v498：節慶互動（例如春節求籤）也用金色按鈕 */
+   if(it){const lb=atDoor>=0?'進入':NA?NA.label:'介紹';if(it.textContent!==lb)it.textContent=lb;it.classList.toggle('glow',atDoor>=0||!!NA);it.classList.remove('dim')}
+   if(performance.now()<introUntil){}else if(NA&&area>=0){const s=tab.querySelector('span');if(s.textContent!==NA.hint)s.textContent=NA.hint}
+   else if(atDoor>=0&&area>=0){const s=tab.querySelector('span');if(s.textContent!=='按金色按鈕進入參觀')s.textContent='按金色按鈕進入參觀'}
+   else if(area>=0){const s=tab.querySelector('span');if(s.textContent==='按金色按鈕進入參觀'||/^按金色按鈕(?!進入)/.test(s.textContent))s.textContent=OUT_HINT[area]}}
   else if(room>=1&&room<=4){if(mode!=='room'||curRoom!==room)setRoom(room)}
   else{if(mode!=='hidden')setHidden();const it=$('interact'),f=g.floor();if(it){const lb=f===3?'互動':'交談';if(it.textContent!==lb)it.textContent=lb;it.classList.toggle('dim',f===3);it.classList.remove('glow')}}
   /* 指南打開時讓位 */
