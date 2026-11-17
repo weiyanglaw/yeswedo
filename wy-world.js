@@ -17,7 +17,7 @@ export function setupWorld(T, c){
  const dot=(()=>{const cv=document.createElement('canvas');cv.width=cv.height=64;const x=cv.getContext('2d');const g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(255,240,200,.9)');g.addColorStop(1,'rgba(255,240,200,0)');x.fillStyle=g;x.fillRect(0,0,64,64);const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t})();
  const stars=new T.Points(sg,new T.PointsMaterial({size:3.2,map:dot,transparent:true,depthWrite:false,opacity:0,color:'#fff7e0',sizeAttenuation:true,fog:false}));stars.renderOrder=-1;scene.add(stars);
  /* 月亮 */
- const moonTex=(()=>{const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,40,128,128,128);g.addColorStop(0,'rgba(255,248,220,.55)');g.addColorStop(1,'rgba(255,248,220,0)');x.fillStyle=g;x.fillRect(0,0,256,256);x.fillStyle='#FFF6D8';x.beginPath();x.arc(128,128,48,0,7);x.fill();x.fillStyle='rgba(225,210,170,.5)';[[112,116,9],[142,140,7],[124,150,5]].forEach(([a,b,r])=>{x.beginPath();x.arc(a,b,r,0,7);x.fill()});const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t})();
+ const moonTex=(()=>{const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');const g=x.createRadialGradient(128,128,40,128,128,128);g.addColorStop(0,'rgba(255,248,220,.55)');g.addColorStop(1,'rgba(255,248,220,0)');x.fillStyle=g;x.fillRect(0,0,256,256);x.fillStyle='#FFF6D8';x.beginPath();x.arc(128,128,48,0,7);x.fill();x.fillStyle='rgba(225,210,170,.5)';[[112,116,9],[142,140,7],[124,150,5]].forEach(([a,b,r])=>{x.beginPath();x.arc(a,b,r,0,7);x.fill()});/* v499：月亮依真實農曆日期顯示月相 */try{const f=new Intl.DateTimeFormat('en-u-ca-chinese',{day:'numeric',timeZone:'Asia/Taipei'});const d=parseInt(f.formatToParts(new Date()).find(q=>q.type==='day').value,10);const k=((d-1)%30)/29.5;if(Math.abs(k-.5)>.04){const R=50;const dx=k<.5?-2*R*(k/.5):2*R*((1-k)/.5);x.globalCompositeOperation='destination-out';x.beginPath();x.arc(128+dx,128,R,0,7);x.fill();x.globalCompositeOperation='source-over'}}catch(e){}const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t})();
  const moon=new T.Sprite(new T.SpriteMaterial({map:moonTex,transparent:true,depthWrite:false,fog:false,opacity:0}));moon.scale.set(70,70,1);moon.position.set(-160,190,-300);scene.add(moon);
 
  /* 夜燈：原本會發光的材質（路燈燈泡等）夜晚加亮；窗戶玻璃夜晚透出暖光 */
@@ -40,7 +40,12 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
  /* 花瓣（白天）與光點（夜晚） */
  const M=140,mp=new Float32Array(M*3),mv=[];for(let i=0;i<M;i++){mp[i*3]=(Math.random()-.5)*70;mp[i*3+1]=2+Math.random()*18;mp[i*3+2]=(Math.random()-.5)*70;mv.push([(Math.random()-.5)*.6,-.25-Math.random()*.35,(Math.random()-.5)*.6,Math.random()*6.28])}
  const mg=new T.BufferGeometry();mg.setAttribute('position',new T.BufferAttribute(mp,3));
- const petalTex=(()=>{const cv=document.createElement('canvas');cv.width=cv.height=64;const x=cv.getContext('2d');x.translate(32,32);x.rotate(.6);x.fillStyle='#F7B6C8';x.beginPath();x.ellipse(0,0,13,22,0,0,7);x.fill();x.fillStyle='#FCD9E3';x.beginPath();x.ellipse(-3,-4,5,10,0,0,7);x.fill();const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t})();
+ const WY_MONTH=(()=>{try{return +new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Taipei',month:'numeric'}).format(new Date())}catch(e){return new Date().getMonth()+1}})();const WY_SEASON=WY_MONTH>=3&&WY_MONTH<=5?'spring':WY_MONTH>=6&&WY_MONTH<=8?'summer':WY_MONTH>=9&&WY_MONTH<=11?'autumn':'winter';window.wySeason=WY_SEASON;
+ /* v499：依真實季節換飄落物：春櫻花、秋楓葉、冬小雪；夏天白天不飄（改多風箏熱氣球） */
+ const petalTex=(()=>{const cv=document.createElement('canvas');cv.width=cv.height=64;const x=cv.getContext('2d');x.translate(32,32);x.rotate(.6);
+  if(WY_SEASON==='autumn'){x.fillStyle=['#E8692E','#D9482B','#F2A23A'][Math.floor(Math.random()*3)];x.beginPath();for(let k=0;k<10;k++){const a=k/10*Math.PI*2,r=k%2?9:22;x.lineTo(Math.cos(a)*r,Math.sin(a)*r)}x.closePath();x.fill();x.strokeStyle='rgba(120,40,10,.6)';x.lineWidth=2;x.beginPath();x.moveTo(0,0);x.lineTo(0,24);x.stroke()}
+  else if(WY_SEASON==='winter'){const g=x.createRadialGradient(0,0,0,0,0,14);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.beginPath();x.arc(0,0,14,0,7);x.fill()}
+  else{x.fillStyle='#F7B6C8';x.beginPath();x.ellipse(0,0,13,22,0,0,7);x.fill();x.fillStyle='#FCD9E3';x.beginPath();x.ellipse(-3,-4,5,10,0,0,7);x.fill()}const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t})();
  const motes=new T.Points(mg,new T.PointsMaterial({size:.55,map:petalTex,transparent:true,depthWrite:false,opacity:.9,sizeAttenuation:true}));scene.add(motes);
  let moteNight=false;
 
@@ -84,9 +89,10 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
  const festApi={moon,dot,glow:(m,i)=>glowMats.set(m,i),phase:()=>cur,
   setSnow(){snow=true;motes.userData.snow=1;motes.material.map=dot;motes.material.size=.95;motes.material.color.set('#ffffff');motes.material.blending=T.NormalBlending;motes.material.opacity=.95;motes.material.needsUpdate=true},
   tintMotes(col){motes.userData.tint=col;motes.material.color.set(col);motes.material.needsUpdate=true}};
- import('./wy-fest.js?v=498').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
+ import('./wy-fest.js?v=499').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
+ let skyTickFn=null;import('./wy-sky.js?v=499').then(m=>{try{skyTickFn=m.setupSky(T,c,festApi)}catch(e){console.error('sky',e)}}).catch(e=>console.error('sky load',e));
  let fwTickFn=null;import('./wy-fireworks.js?v=498').then(m=>{try{fwTickFn=m.setupFireworks(T,c,festApi)}catch(e){console.error('fw',e)}}).catch(e=>console.error('fw load',e));
- function festTick(dt,now){if(festTickFn)festTickFn(dt,now);if(fwTickFn)try{fwTickFn(dt)}catch(e){}}
+ function festTick(dt,now){if(festTickFn)festTickFn(dt,now);if(fwTickFn)try{fwTickFn(dt)}catch(e){}if(skyTickFn)try{skyTickFn(dt)}catch(e){}if(WY_SEASON==='summer'&&!snow)motes.visible=moteNight}
  /* ---------- v489 流暢度：依實際幀率自動調整解析度 ---------- */
  const prCap=Math.min(window.devicePixelRatio||1,2),prMin=Math.min(prCap,1.75);let prNow=renderer.getPixelRatio(),pfN=0,pfT=performance.now(),pfGood=0;
  window.wyPerf={get pr(){return prNow},fps:0};

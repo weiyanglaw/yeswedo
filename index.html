@@ -366,11 +366,12 @@ draw(false);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {buildChibi} from './chibi-avatar.js?v=477';import {setupWorld} from './wy-world.js?v=498';import {setupOpening} from './wy-opening.js?v=494';import {setupSea} from './wy-sea.js?v=498';import {setupGuideHosts,setupCornerHost,setupHeads,setupServicePointer,setupCelebrate,WY_HOST_LINES} from './guide-host.js?v=492';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=486';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {buildChibi} from './chibi-avatar.js?v=477';import {setupWorld} from './wy-world.js?v=499';import {setupOpening} from './wy-opening.js?v=494';import {setupSea} from './wy-sea.js?v=499';import {setupGuideHosts,setupCornerHost,setupHeads,setupServicePointer,setupCelebrate,WY_HOST_LINES} from './guide-host.js?v=492';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=486';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 const MANIFEST={"litigation":["assets/litigation_00.part","assets/litigation_01.part","assets/litigation_02.part","assets/litigation_03.part","assets/litigation_04.part"],"medical":["assets/medical_00.part","assets/medical_01.part","assets/medical_02.part"],"family":["assets/family_00.part","assets/family_01.part"],"business":["assets/business_00.part","assets/business_01.part"],"library":["assets/library_00.part"],"bridge":["assets/bridge_00.part"]};const names=['德威陽城堡','訴訟法律島','醫療法律島','家庭生活島','企業商務島','法律知識島'];const emoji=['','','','','',''];const xy=[[0,0],[-50,-30],[-42,-82],[50,-30],[42,-82],[0,-114]];const islandRise=[0,.85,.85,0,0,0];/* v494：麥穗群島排列 */const WY_CENTER={x:0,z:-56,r:15,top:1.45};const scene=new THREE.Scene();scene.background=new THREE.Color('#c8eafb');scene.fog=new THREE.Fog('#c8eafb',320,800);const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.5,700);camera.position.set(0,190,150);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.toneMappingExposure=1.0;document.body.prepend(renderer.domElement);renderer.domElement.style.touchAction='none';const orbit=new OrbitControls(camera,renderer.domElement);orbit.enableDamping=true;orbit.target.set(0,2,0);orbit.minDistance=12;orbit.maxDistance=460;orbit.maxPolarAngle=Math.PI*.49;/* v494：學動物森友會，鏡頭固定從前方斜上方看，只能小幅左右轉 */orbit.minAzimuthAngle=-.6;orbit.maxAzimuthAngle=.6;orbit.minPolarAngle=.42;
 // Overview is a navigable map, not a rotation locked to the main castle.
 // One-finger drag pans the camera target across the entire six-island world.
 orbit.enablePan=true;orbit.screenSpacePanning=true;
+/* v499：拖曳時目標點高度鎖在海面附近、鏡頭不會轉到海面以下（避免看到島的底部） */orbit.addEventListener('change',()=>{if(insideOffice)return;const t=orbit.target;if(t.y<-1||t.y>14){const dy=Math.min(14,Math.max(-1,t.y))-t.y;t.y+=dy;camera.position.y+=dy}if(camera.position.y<4){camera.position.y=4}});
 function syncIslandCameraMode(){
  const isOverview=!insideOffice && overview;
  orbit.mouseButtons.LEFT=THREE.MOUSE.ROTATE;
@@ -849,14 +850,15 @@ const staffDefs=[
 // v474 員工 Q 版：林柏均律師、夢奇奇飼養者、哈姆太郎、薪水掌門人（造型定稿見 staff.js），各島與城堡內外共用
 const WY_STAFF_INDEX={'林柏均律師':0,'林律師':0,'夢奇奇飼養者':1,'夢奇奇':1,'哈姆太郎':2,'薪水掌門人':3};
 function makeStaffChibi(def){
- const prof=CHIBI_STAFF[WY_STAFF_INDEX[def.name]??0];
+ const sIdx=WY_STAFF_INDEX[def.name]??0;let prof=CHIBI_STAFF[sIdx];const FD=window.__wyFestDress;
+ if(FD){const fo=FD.OF.FIT[FD.fest]&&FD.OF.FIT[FD.fest][sIdx];prof={...prof,...(fo?{fit:{...fo}}:{}),...(FD.OF.propless(FD.fest,sIdx)?{prop:null}:{})}}
  const root=new THREE.Group(),body=new THREE.Group();root.add(body);
- const c=buildChibi(THREE,prof);c.group.scale.setScalar(WY_CHIBI_SCALE);body.add(c.group);
+ const c=buildChibi(THREE,prof);if(FD){try{c.group.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(c.group);FD.OF.dress(FD.fest,sIdx,c.group,bb.max.y-bb.min.y)}catch(e){}}c.group.scale.setScalar(WY_CHIBI_SCALE);body.add(c.group);
  const head=new THREE.Object3D();
  wyTrackChibi(c,root);
  root.userData.label=def.name;root.userData.chibi=c;root.userData.wyNoLux=true;
  root.traverse(o=>{if(o.isMesh){o.userData.label=def.name;clickable.push(o)}});
- return {root,body,head,eyes:[],chibi:c};
+ const MODEL={root,body,head,eyes:[],chibi:c,def};(window.__wyStaffModels=window.__wyStaffModels||[]).push(MODEL);return MODEL;
 }
 staffDefs.forEach((def,i)=>{
  const model=makeStaffChibi(def);
@@ -5081,11 +5083,11 @@ window.__wyGame={actor:()=>actor,xy,names,inside:()=>insideOffice,room:()=>activ
  leave:()=>leaveOffice(),enter:i=>{if(insideOffice)return;if(i===0)enterOffice();else if(i>=1&&i<=4)enterIslandRoom(i)}};
 // v488：天空、夜燈、飄雲、花瓣光點、小灰塵、家具彈跳
 /* v498 節日換裝：由 wy-fest.js 呼叫，重建四位成員的 Q 版外觀並掛上節日配件 */
-window.wyRedressStaff=function(fest,OF){try{for(const npc of staffNPCs){const idx=WY_STAFF_INDEX[npc.def.name]??0;const base=CHIBI_STAFF[idx];const fo=OF.FIT[fest]&&OF.FIT[fest][idx];
+window.wyRedressStaff=function(fest,OF){window.__wyFestDress={fest,OF};try{const list=[...staffNPCs];for(const m of (window.__wyStaffModels||[]))if(!list.some(n=>n.root===m.root))list.push(m);for(const npc of list){const idx=WY_STAFF_INDEX[npc.def.name]??0;const base=CHIBI_STAFF[idx];const fo=OF.FIT[fest]&&OF.FIT[fest][idx];
  const prof={...base,...(fo?{fit:{...fo}}:{}),...(OF.propless(fest,idx)?{prop:null}:{})};const c=buildChibi(THREE,prof);c.group.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(c.group);const H=bb.max.y-bb.min.y;
  try{OF.dress(fest,idx,c.group,H)}catch(e){console.error('dress',e)}
  const old=npc.chibi;if(old&&old.group){old.group.traverse(o=>{const k=clickable.indexOf(o);if(k>=0)clickable.splice(k,1)});if(old.group.parent)old.group.parent.remove(old.group)}for(const e of wyChibiLive)if(e.c===old)wyChibiLive.delete(e);
- c.group.scale.setScalar(WY_CHIBI_SCALE);npc.body.add(c.group);wyTrackChibi(c,npc.root);npc.root.userData.chibi=c;npc.chibi=c;
+ c.group.scale.setScalar(WY_CHIBI_SCALE);npc.body.add(c.group);wyTrackChibi(c,npc.root);npc.root.userData.chibi=c;npc.chibi=c;for(const m of (window.__wyStaffModels||[]))if(m.root===npc.root)m.chibi=c;for(const n of staffNPCs)if(n.root===npc.root)n.chibi=c;
  c.group.traverse(o=>{if(o.isMesh){o.userData.label=npc.def.name;clickable.push(o)}})}}catch(e){console.error('redress',e)}};
 try{setupWorld(THREE,{scene,renderer,camera,hemi:wyHemi,sun,actor:()=>actor,inside:()=>insideOffice,room:()=>activeIslandRoom,rooms:()=>themeRooms,xy,groundY:(x,z)=>walkingSurfaceY(x,z),addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'fest'),groups:()=>groups,staff:()=>staffNPCs})}catch(err){console.error('world',err)}
 // v491：開場（白雲、律師函、蓋章、雲散開、鏡頭落到人物背後）
@@ -5438,7 +5440,7 @@ document.getElementById('creator').style.display='flex';wyPreviewResize();const 
   sign.visible=(officeCam.position.z>sign.position.z+0.12);
  }
 }renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(wyCreatorEl.style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
-(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();/* v494：沖繩海上熱鬧版（海、沙灘、城堡島重做、中間花田 Logo、船、海鷗、遊客、攤位） */try{setupSea(THREE,{scene,xy,groups:()=>groups,bridgeGroups:()=>bridges.map(b=>b.group),center:WY_CENTER,actor:()=>actor,inside:()=>insideOffice,renderer,camera,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'sea')})}catch(err){console.error('sea',err)}status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
+(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();/* v494：沖繩海上熱鬧版（海、沙灘、城堡島重做、中間花田 Logo、船、海鷗、遊客、攤位） */try{setupSea(THREE,{scene,xy,groups:()=>groups,bridgeGroups:()=>bridges.map(b=>b.group),center:WY_CENTER,actor:()=>actor,inside:()=>insideOffice,renderer,camera,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'sea')})}catch(err){console.error('sea',err)}import('./wy-isle-lux.js?v=499').then(m=>{let tk=()=>{};try{tk=m.setupIsleLux(THREE,{scene,groups:()=>groups,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'lux'),inside:()=>insideOffice})}catch(e){console.error('isle lux',e)}window.__wyIsleTick=tk;let lt=performance.now();(function L(){requestAnimationFrame(L);const n=performance.now();try{tk(Math.min(.05,(n-lt)/1000))}catch(e){}lt=n})()}).catch(e=>console.error('isle lux load',e));status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="guide.html">文字版導覽</a>｜<a href="credits.html" target="_blank">模型授權</a></div>
 
 <script id="wy196UnifiedHeaderNavigation">
@@ -6050,4 +6052,4 @@ html body #wyFamSvc::after{content:'LINE：@wylaw　｜　官網：weiandyang.co
 <script src="reception-data.js?v=483"></script>
 <script src="reception-card.js?v=483"></script>
 <script src="justice-game.js?v=483"></script>
-<script src="game-ui.js?v=498"></script></body></html>
+<script src="game-ui.js?v=499"></script></body></html>
