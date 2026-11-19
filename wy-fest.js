@@ -15,7 +15,7 @@ export function setupFest(T, c, api){
  function lunarFind(key,year){try{const f=new Intl.DateTimeFormat('en-u-ca-chinese',{month:'numeric',day:'numeric',timeZone:'Asia/Taipei'});const [lm,ld]=LUNAR[key];let d=new Date(year+'-01-01T12:00:00+08:00');for(let i=0;i<400;i++){const ps=f.formatToParts(d);const m=ps.find(x=>x.type==='month').value,dd=+ps.find(x=>x.type==='day').value;if(String(+m)===m&&+m===lm&&dd===ld&&d.getFullYear()===year)return d;d=new Date(d.getTime()+864e5)}}catch(e){}return null}
  const festDay=(k,y)=>{const t=TABLE[k]&&TABLE[k][y];return t?new Date(t+'T12:00:00+08:00'):lunarFind(k,y)};
  const ACT=new Set();let yuan=false,cnyYear=0,day214=false;
- let q='',qy='';try{const u=new URLSearchParams(location.search);q=(u.get('fest')||'').toLowerCase();qy=u.get('yuan')||''}catch(e){}
+ let q='',qy='';try{const u=new URLSearchParams(location.search);q=(u.get('fest')||'').toLowerCase();qy=u.get('yuan')||'';const hm=(location.hash||'').match(/^#fest-([a-z-]+)/);if(hm&&!q){q=hm[1].replace(/-/g,',');if(q.includes('yuan')){qy='1';q=q.replace(/,?yuan/,'')}}}catch(e){}
  if(q){q.split(',').forEach(k=>{if(GREET[k])ACT.add(k)});yuan=qy==='1';day214=ACT.has('cny')&&ACT.has('val');cnyYear=new Date().getFullYear()}
  else{const now=tpDate(),y=now.getFullYear(),md=(now.getMonth()+1)*100+now.getDate();
   if(md>=1201&&md<=1226)ACT.add('xmas');if(md>=207&&md<=214){ACT.add('val');if(md===214)day214=true}
@@ -91,7 +91,7 @@ export function setupFest(T, c, api){
    const beam=new T.Mesh(new T.BoxGeometry(5.8,.22,.3),gold);beam.position.y=4.55;gate.add(beam);const bn=pl(banner(ISL[i][2]),2.9,.8);bn.position.set(0,5.1,.05);gate.add(bn);const roof=new T.Mesh(new T.BoxGeometry(6.2,.18,.6),M('#B3141C'));roof.position.y=5.6;gate.add(roof);
    add(gate,gx,gz);solid(gx-2.6,gz,.2,.2);solid(gx+2.6,gz,.2,.2)}
   // v497：三組舞龍舞獅繞整個廣場跑（不擠在噴水池旁）
-  /* v501：噴水池往前移後，廣場舞獅改在噴水池前方繞小圈，不穿過噴水池和求籤供桌 */const cx=0,cz=20.0,rx=9.5,rz=2.4;const posOn=a=>({x:cx+Math.cos(a)*rx,z:cz+Math.sin(a)*rz});
+  /* v501：噴水池往前移後，廣場舞獅改在噴水池前方繞小圈，不穿過噴水池和求籤供桌 */const cx=0,cz=22.4,rx=9.5,rz=2.2;const posOn=a=>({x:cx+Math.cos(a)*rx,z:cz+Math.sin(a)*rz});
   const troupes=[];const RED='#D7261E',GOLD='#F2C14E';
   // 舞龍：18 節，紅金鱗片、金色背鰭、大龍頭（角、鬍鬚、張嘴）、發光龍珠
   const dragon=new T.Group();root.add(dragon);const segs=[];const DN=18;
@@ -203,7 +203,7 @@ export function setupFest(T, c, api){
    {let hinted=false,greeted=false;try{hinted=localStorage.getItem('wy-cny-hint-'+cnyYear)==='1'}catch(e){}
     movers.push(()=>{const A=c.actor&&c.actor();if(!A||(c.inside&&c.inside()))return;const dc=Math.hypot(A.position.x,A.position.z-8);
      if(!hinted&&dc<24){hinted=true;try{localStorage.setItem('wy-cny-hint-'+cnyYear,'1')}catch(e){}setTimeout(()=>toastMsg('城堡廣場右側有新春好運籤，過去抽一支吧'),1500)}
-     if(!greeted&&Math.hypot(A.position.x-QP.x,A.position.z-QP.z)<4.2){greeted=true;toastMsg('林律師：新年快樂！抽一支好運籤，祝您新的一年有法度。')}})}
+     if(!greeted&&Math.hypot(A.position.x-QP.x,A.position.z-QP.z)<4.2){greeted=true;if(window.wyCornerSay)window.wyCornerSay(0,'新年快樂！抽一支好運籤，祝您新的一年有法度。',6000);else toastMsg('新年快樂！抽一支好運籤')}})}
    /* v501：春節期間「介紹」上方多一個紅燈籠「求籤」按鈕，點了自動走到供桌前 */
    {const css=document.createElement('style');css.textContent='#wyLanternBtn{position:fixed;z-index:58;width:62px;height:76px;border:0;padding:0;background:none;display:none;-webkit-tap-highlight-color:transparent}#wyLanternBtn .lb{position:absolute;left:4px;top:10px;width:54px;height:54px;border-radius:50%/46%;background:radial-gradient(circle at 35% 30%,#FF7A63,#D7261E 55%,#9A0F14);border:2px solid #F2C14E;box-shadow:0 6px 14px #0004;display:flex;align-items:center;justify-content:center;color:#FFE7A8;font:800 15px "Noto Sans TC",sans-serif;letter-spacing:1px}#wyLanternBtn .cp{position:absolute;left:19px;width:24px;height:7px;border-radius:3px;background:#F2C14E}#wyLanternBtn .ts{position:absolute;left:29px;top:66px;width:4px;height:10px;background:#F2C14E;border-radius:2px}';document.head.appendChild(css);
     const bt=document.createElement('button');bt.id='wyLanternBtn';bt.type='button';bt.setAttribute('aria-label','求籤');bt.innerHTML='<i class="cp" style="top:6px"></i><span class="lb">求籤</span><i class="cp" style="top:62px"></i><i class="ts"></i>';document.body.appendChild(bt);
@@ -570,7 +570,7 @@ export function setupFest(T, c, api){
    else continue;
    add(g,x,z);solid(x,z,1.2,1.2)}}
  const builders={cny:buildCNY,val:buildVal,duan:buildDuan,qixi:buildQixi,moon:buildMoon,xmas:buildXmas};
- const waitSea=(cb,n=0)=>{if(window.wySeaReady||n>60)cb();else setTimeout(()=>waitSea(cb,n+1),250)};const OUT_PRI=['cny','qixi','moon','duan','xmas','val'];const outFest=day214?'val':OUT_PRI.find(k=>ACT.has(k));
+ const waitSea=(cb,n=0)=>{if((window.wySeaReady&&window.wyCastleTopReady!==false)||n>80)cb();else setTimeout(()=>waitSea(cb,n+1),250)};const OUT_PRI=['cny','qixi','moon','duan','xmas','val'];const outFest=day214?'val':OUT_PRI.find(k=>ACT.has(k));
  if(outFest){const OF=makeOutfits(T);const tryDress=(n=0)=>{const S=c.staff?c.staff():[];if(window.wyRedressStaff&&S.length){window.wyRedressStaff(outFest,OF);movers.push(t=>{for(const f of OF.ANIM){try{f(t)}catch(e){}}})}else if(n<80)setTimeout(()=>tryDress(n+1),250)};setTimeout(tryDress,600)}
  waitSea(()=>setTimeout(()=>{try{islandPiece(day214?'val':(OUT_PRI.find(k=>ACT.has(k))))}catch(e){console.error('piece',e)}for(const k of LIST){try{const r=builders[k]();if(r&&r.catch)r.catch(e=>console.error('fest '+k,e))}catch(e){console.error('fest '+k,e)}}},300));
  let tt=0;return function tick(dt){tt+=dt;const inside=c.inside&&c.inside();root.visible=!inside;if(inside)return;for(const f of movers){try{f(tt,dt)}catch(e){}}};

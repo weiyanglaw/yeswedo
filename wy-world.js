@@ -89,7 +89,7 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
  const festApi={moon,dot,glow:(m,i)=>glowMats.set(m,i),phase:()=>cur,
   setSnow(){snow=true;motes.userData.snow=1;motes.material.map=dot;motes.material.size=.95;motes.material.color.set('#ffffff');motes.material.blending=T.NormalBlending;motes.material.opacity=.95;motes.material.needsUpdate=true},
   tintMotes(col){motes.userData.tint=col;motes.material.color.set(col);motes.material.needsUpdate=true}};
- import('./wy-fest.js?v=501').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
+ import('./wy-fest.js?v=502').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
  let skyTickFn=null;import('./wy-sky.js?v=500').then(m=>{try{skyTickFn=m.setupSky(T,c,festApi)}catch(e){console.error('sky',e)}}).catch(e=>console.error('sky load',e));
  let fwTickFn=null;import('./wy-fireworks.js?v=501').then(m=>{try{fwTickFn=m.setupFireworks(T,c,festApi)}catch(e){console.error('fw',e)}}).catch(e=>console.error('fw load',e));
  function festTick(dt,now){if(festTickFn)festTickFn(dt,now);if(fwTickFn)try{fwTickFn(dt)}catch(e){}if(skyTickFn)try{skyTickFn(dt)}catch(e){}if(WY_SEASON==='summer'&&!snow)motes.visible=moteNight}

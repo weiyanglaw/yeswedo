@@ -1,5 +1,6 @@
 // 德威陽｜有法度 v494 沖繩海上熱鬧版：翡翠漸層海、白沙灘、椰子樹、扶桑花、城堡島重做（草地＋廣場＋橋頭）、
 // 中間的骨牌花田 Logo、可愛的船／海鷗／遊客／攤位、遠方小島。
+import {buildLuxFountain} from './wy-fountain.js?v=503';
 export function setupSea(T, c){
  const scene=c.scene, xy=c.xy, G=c.groups(), CEN=c.center, SEA=-1.25;
  const MC=new Map();const M=(col,o)=>{const k=col+(o?JSON.stringify(o):'');if(!MC.has(k))MC.set(k,new T.MeshStandardMaterial({color:col,roughness:.62,...(o||{})}));return MC.get(k)};
@@ -46,24 +47,12 @@ export function setupSea(T, c){
  const bed=(x,z)=>{const cols=['#FFB3CB','#FFFFFF','#FFF1D6','#F6D27A'];for(let k=0;k<9;k++){const a=k*2.4,r=.4+k*.18;const fl=sph(.32,cols[k%4],1,1,1,10);fl.position.set(x+Math.cos(a)*r,1.95,z+Math.sin(a)*r);root.add(fl);const lf=sph(.38,'#4FA54E',1,.5,1,8);lf.position.set(x+Math.cos(a)*r,1.7,z+Math.sin(a)*r);root.add(lf)}};
  [[-15.5,17],[15.5,17],[-6.5,24],[6.5,24]].forEach(([x,z])=>bed(x,z));
  for(let i=0;i<30;i++){const a=Math.PI*.12+i/29*Math.PI*.76;const r=CC.r-.6;const x=CC.x+Math.cos(a)*r,z=CC.z+Math.sin(a)*r;if(Math.abs(x)<3.5)continue;const ps=cyl(.13,.13,1.0,navy,8);ps.position.set(x,2.05,z);root.add(ps);const cp=sph(.2,gold,1,1,1,8);cp.position.set(x,2.62,z);root.add(cp)}
- // ---------- v497 噴水池升級：三層大理石水盤＋旋轉發光的金色 Logo 圓徽（占地不變，不擋大門）----------
- (()=>{let F=null;G[0].traverse(o=>{if(!F&&o.type==='Group'&&Math.abs(o.position.x-.5)<.05&&Math.abs(o.position.z-9.8)<.05)F=o});if(!F)return;F.userData.wyMainFountain=1;F.position.z=13.3;/* v501：噴水池往前移，不擋城堡大門 */
+ // ---------- v503 噴水池：依參考圖重做（wy-fountain.js）；占地不變，不擋大門 ----------
+ (()=>{let F=null;G[0].traverse(o=>{if(!F&&o.type==='Group'&&Math.abs(o.position.x-.5)<.05&&Math.abs(o.position.z-9.8)<.05)F=o});if(!F)return;F.userData.wyMainFountain=1;F.position.z=16.2;/* v501：噴水池往前移，不擋城堡大門 */
   F.traverse(o=>{if(o.isMesh&&o.geometry.type==='SphereGeometry'&&(o.geometry.parameters.radius||0)>1.5)o.visible=false});
-  const marble=M('#FBF6EE',{roughness:.28}),goldM=M('#E9C46A',{metalness:.6,roughness:.25}),water=new T.MeshPhysicalMaterial({color:0x6FD3F2,transparent:true,opacity:.85,roughness:.08});
-  const tag=o=>{o.userData.wyFtn=1;F.add(o);return o};
-  const ped1=tag(cyl(.75,1.0,1.5,marble,32));ped1.position.y=2.3;
-  const b2=tag(new T.Mesh(new T.CylinderGeometry(2.7,1.3,.55,48),marble));b2.position.y=3.2;const w2=tag(cyl(2.5,2.5,.06,water,48));w2.position.y=3.46;const r2=tag(new T.Mesh(new T.TorusGeometry(2.7,.12,10,64),goldM));r2.rotation.x=Math.PI/2;r2.position.y=3.48;
-  const ped2=tag(cyl(.5,.7,1.2,marble,28));ped2.position.y=4.05;
-  const b3=tag(new T.Mesh(new T.CylinderGeometry(1.7,.85,.45,40),marble));b3.position.y=4.75;const w3=tag(cyl(1.55,1.55,.05,water,40));w3.position.y=4.96;const r3=tag(new T.Mesh(new T.TorusGeometry(1.7,.1,10,48),goldM));r3.rotation.x=Math.PI/2;r3.position.y=4.98;
-  const ped3=tag(cyl(.32,.42,.9,goldM,24));ped3.position.y=5.4;
-  const med=new T.Group();med.userData.wyFtn=1;med.userData.wyTopMedal=1;med.position.y=6.95;F.add(med);
-  const disc=new T.Mesh(new T.CylinderGeometry(1.25,1.25,.22,48),new T.MeshStandardMaterial({color:'#F0C75E',metalness:.65,roughness:.22,emissive:'#6b4d10',emissiveIntensity:.35}));disc.rotation.x=Math.PI/2;med.add(disc);
-  const rimM=new T.Mesh(new T.TorusGeometry(1.25,.09,10,48),goldM);med.add(rimM);
-  try{const tex=new T.TextureLoader().load('office-logo-transparent.png');tex.colorSpace=T.SRGBColorSpace;for(const sd of [1,-1]){const face=new T.Mesh(new T.CircleGeometry(1.05,40),new T.MeshBasicMaterial({color:'#FFF8EC'}));face.position.z=sd*.115;if(sd<0)face.rotation.y=Math.PI;med.add(face);const lg=new T.Mesh(new T.CircleGeometry(.98,40),new T.MeshBasicMaterial({map:tex,transparent:true}));lg.position.z=sd*.12;if(sd<0)lg.rotation.y=Math.PI;med.add(lg)}}catch(e){}
-  // 水簾：上兩層水盤邊緣流下的細水柱
-  const jm=new T.MeshBasicMaterial({color:0xC9F6FF,transparent:true,opacity:.6,depthWrite:false});const curtains=[];
-  for(const [R,y0,h,n] of [[2.55,3.45,2.0,22],[1.6,4.95,1.45,14]])for(let k=0;k<n;k++){const a=k/n*Math.PI*2;const j=new T.Mesh(new T.CylinderGeometry(.05,.07,h,6),jm);j.position.set(Math.cos(a)*R,y0-h/2,Math.sin(a)*R);j.userData.wyFtn=1;F.add(j);curtains.push(j)}
-  movers.push((t,dt)=>{med.rotation.y=Math.sin(t*.5)*.7;jm.opacity=.5+.06*Math.sin(t*1.2);let ph='day';try{ph=window.wySky.phase()}catch(e){}disc.material.emissiveIntensity=ph==='night'?.9:.35});
+  /* v503：依使用者參考圖重做（三層花瓣大理石水盤＋太陽光芒 Logo＋四座繡球花台），舊模型全部隱藏，高度不變 */
+  F.traverse(o=>{if(o.isMesh)o.visible=false});
+  buildLuxFountain(T,F,1.55,movers);
  })();
  // ---------- 3) 橋頭：石板平台＋兩根深藍金燈柱 ----------
  (window.wyLinks||[]).forEach(L=>{[L.pts[0],L.pts[L.pts.length-1]].forEach((p,j)=>{const q=j?L.pts[L.pts.length-2]:L.pts[1];const ang=Math.atan2(q[0]-p[0],q[2]-p[2]);const head=new T.Group();head.position.set(p[0],p[1]+.86,p[2]);head.rotation.y=ang;root.add(head);
@@ -96,6 +85,7 @@ export function setupSea(T, c){
   {let tries=0;const pal=()=>{const F=window.wyFest;if(F===undefined){if(tries++<80)setTimeout(pal,250);return}const k=['cny','val','moon','xmas','qixi','duan'].find(q=>F.split(',').includes(q));if(!k)return;
    const P={cny:[['#E23B2E','#FF6B5A','#F2C14E'],'#FFF1D6'],val:[['#FF8FB8','#FFB3CF','#FF5C8D'],'#FFF0F5'],moon:[['#F5C542','#FFD86E','#FFE9A8'],'#FFF8E6'],xmas:[['#D7261E','#2F8F4E','#FFFFFF'],'#F2FFF4'],qixi:[['#B79CF2','#D7B8FF','#8E7CE0'],'#F6F0FF'],duan:[['#6FBF5B','#4E9A3A','#F2C14E'],'#F2FFE8']}[k];
    cells.forEach((p,i)=>{p.idle=new T.Color(P[0][Math.abs(i*7+Math.floor(p.x*3))%P[0].length]);p.off=new T.Color(P[1])});fieldSet(0,0)};pal()}
+  {const PAS=['#FFD6E5','#FFF0A8','#E4D6FF','#FFC9B8','#FFFFFF','#CDEFFF','#FFB3CF'];cells.forEach((p,i)=>{if(!p.idle)p.idle=new T.Color(PAS[(i*7+Math.floor(p.z*5))%PAS.length])})}/* v502：平常花田是繽紛粉彩花海，不再是一整片白 */
   fieldSet(0,0);window.wyFieldGroup=CG;window.__wyFieldSet=tt=>fieldSet(tt,0)}catch(err){console.error('field',err)}})();
  let fieldT=-1,fieldNext=40;window.wyFieldPlay=()=>{if(fieldT<0)fieldT=0};
  let windAcc=0;movers.push((t,dt)=>{if(!fieldSet)return;if(fieldT>=0){fieldT+=dt;fieldSet(fieldT,t);if(fieldT>8.8){fieldT=-1;fieldSet(0,t)}}else{fieldNext-=dt;if(fieldNext<=0){fieldNext=150;fieldT=0}else{windAcc+=dt;if(windAcc>.05){windAcc=0;fieldSet(0,t)}}}});
@@ -112,9 +102,9 @@ export function setupSea(T, c){
   const n=k===0?10:6;for(let j=0;j<n;j++){const a=j/n*Math.PI*2+.3;if(!freeAng(k,a))continue;if(k===0&&Math.sin(a)>.45&&Math.abs(Math.cos(a))<.55)continue;const pr=I.r+3.4;
    const p=palm();p.position.set(I.x+Math.cos(a)*pr,SEA+1.05,I.z+Math.sin(a)*pr);root.add(p);const h=hibiscus();h.position.set(I.x+Math.cos(a+.3)*(I.r+2.6),SEA+1.1,I.z+Math.sin(a+.3)*(I.r+2.6));root.add(h)}});
  // ---------- 6) 海 ----------
- const uni={uT:{value:0},uDim:{value:1},uC:{value:centers.map(v=>new T.Vector3(v[0],v[1],v[2]))}};const NC=centers.length;
- const sea=new T.Mesh(new T.PlaneGeometry(1600,1600,1,1),new T.ShaderMaterial({uniforms:uni,
-  vertexShader:'varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}',
+ const WB=window.WY_BEND=window.WY_BEND||{k:{value:0},d:{value:20}};const uni={uT:{value:0},uDim:{value:1},uC:{value:centers.map(v=>new T.Vector3(v[0],v[1],v[2]))},wyBendK:WB.k,wyBendD:WB.d};const NC=centers.length;
+ const sea=new T.Mesh(new T.PlaneGeometry(1600,1600,160,160),new T.ShaderMaterial({uniforms:uni,
+  vertexShader:'uniform float wyBendK;uniform float wyBendD;varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vec4 mv=viewMatrix*w;float wz=max(0.,-mv.z-wyBendD);mv.y-=wyBendK*wz*wz;gl_Position=projectionMatrix*mv;}',
   fragmentShader:`uniform float uT;uniform float uDim;uniform vec3 uC[${NC}];varying vec3 vW;float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
   void main(){float d=1e5;for(int i=0;i<${NC};i++){d=min(d,length(vW.xz-uC[i].xy)-uC[i].z);}
    vec3 c=mix(vec3(.42,.93,.86),vec3(.13,.74,.86),smoothstep(4.,16.,d));c=mix(c,vec3(.07,.42,.74),smoothstep(16.,50.,d));c=mix(c,vec3(.10,.33,.62),smoothstep(120.,300.,length(vW.xz-vec2(0.,-50.))));

@@ -5,7 +5,7 @@ export function setupPremiumLighting(scene,renderer,THREE,o){
  const old={hI:hemi.intensity,hG:hemi.groundColor.clone(),sI:sun.intensity,sC:sun.color.clone(),sP:sun.position.clone()};
  const size=o.size||60,c=o.center||new THREE.Vector3();
  const fill=new THREE.DirectionalLight(0xe4ecff,.5);fill.position.set(c.x-60,c.y+40,c.z-70);fill.visible=false;scene.add(fill);
- sun.shadow.mapSize.set(o.mobile?1024:2048,o.mobile?1024:2048);
+ sun.shadow.mapSize.set(2048,2048);/* v503：手機也用 2048，步道與草地上的陰影不再有鋸齒方格（陰影只算一次，不影響順暢） */
  const cam=sun.shadow.camera;cam.left=-size;cam.right=size;cam.top=size;cam.bottom=-size;cam.near=1;cam.far=size*6;cam.updateProjectionMatrix();
  sun.shadow.bias=-.0004;sun.shadow.normalBias=.035;
  sun.target.position.copy(c);scene.add(sun.target);

@@ -366,7 +366,7 @@ draw(false);
 (function(){const wrap=document.getElementById('wyEntryGuide'),txt=document.getElementById('wyEntryGuideText'),btn=document.getElementById('wyEntryGuideToggle');btn.addEventListener('click',()=>{const open=txt.style.display==='none';txt.style.display=open?'block':'none';btn.textContent=open?'收合 ×':'入口提示';btn.setAttribute('aria-expanded',String(open));btn.setAttribute('aria-label',open?'收合入口提示':'展開入口提示');});window.wyEntryGuideVisible=function(visible){wrap.style.display=visible?'block':'none';};})();
 </script>
 <script type="module">
-import {buildChibi} from './chibi-avatar.js?v=477';import {setupWorld} from './wy-world.js?v=501';import {setupOpening} from './wy-opening.js?v=494';import {setupSea} from './wy-sea.js?v=501';import {setupGuideHosts,setupCornerHost,setupHeads,setupServicePointer,setupCelebrate,WY_HOST_LINES} from './guide-host.js?v=492';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=466';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=486';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
+import {applyOfficeLux} from './wy-office-lux.js?v=503';import {applyLobbyLux} from './wy-lobby-lux.js?v=503';import {apply3FLux} from './wy-3f-lux.js?v=503';import {applyLoungeLux} from './wy-lounge-lux.js?v=503';import {buildChibi} from './chibi-avatar.js?v=477';import {setupWorld} from './wy-world.js?v=502';import {setupOpening} from './wy-opening.js?v=494';import {setupSea} from './wy-sea.js?v=503';import {setupGuideHosts,setupCornerHost,setupHeads,setupServicePointer,setupCelebrate,WY_HOST_LINES} from './guide-host.js?v=502';import {CHIBI_STAFF} from './staff.js?v=477';import {createLitigationCourthouse} from './litigation-island.js?v=430';import {createLitigationInterior} from './litigation-interior.js?v=456';import {applyLitigationLuxury} from './litigation-luxury.js?v=460';import {applyRoomLuxury} from './room-luxury.js?v=463';import {applyExteriorLuxury} from './exterior-luxury.js?v=466';import {setupPremiumLighting} from './wy-lighting.js?v=503';import {createBusinessExperience} from './business-experience.js?v=473';import {createBusinessHeadquarters} from './business-island.js?v=20261107-v356-visible-purple-flag';import {createMedicalExterior,createMedicalInterior,createMedicalExperience} from './medical-island.js?v=486';import {createFamilyInterior,createFamilyExperience} from './family-interior.js?v=482';import * as THREE from 'three';import {createNewFairytaleCastle} from './castle.js?v=20261027-v105-matte-wings';import {createCastleGardens} from './castle-garden.js?v=20261026-v76';import{OrbitControls}from'three/addons/controls/OrbitControls.js';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';
 /* v501 記憶體：同一張大圖（Logo 等）不論被載入幾次，都只解碼一次、只上傳一份到顯示卡 */
 {const _wyLoad=THREE.TextureLoader.prototype.load;const _wySrc=new Map();const WY_SHARE=/(office-logo-transparent|official-logo|weiyang-logo-tight-v102|ground-logo-cropped|weiyang-official-logo-v32\d|weiyang-office-wall-v3\d\d)\.png$/;
  THREE.TextureLoader.prototype.load=function(url,onLoad,onProgress,onError){const clean=String(url).replace(/^\.\//,'').split('?')[0];if(!WY_SHARE.test(clean))return _wyLoad.call(this,url,onLoad,onProgress,onError);
@@ -803,8 +803,9 @@ function onBridgeDeck(x,z,extra=0){
 function onPassage(x,z,extra=0){
  return castlePassages.some(p=>pointOnSegmentXZ(x,z,...p.a,...p.b).distance<p.width/2+extra);
 }
+const wySurfaceFns=[];
 function walkingSurfaceY(x,z){
- let y=0;
+ let y=0;for(const f of wySurfaceFns){try{const v=f(x,z);if(v!=null)y=Math.max(y,v-.12)}catch(e){}}
  if(Math.hypot(x,z-8.7)<11.4)y=Math.max(y,1.47);
  for(const bridge of bridges){const q=pointOnSegmentXZ(x,z,bridge.a.x,bridge.a.z,bridge.b.x,bridge.b.z);if(q.distance<4.82)y=Math.max(y,1.065+bridge.a.y-.65+(bridge.b.y-bridge.a.y)*q.t);}
  for(let i=1;i<6;i++)if(Math.hypot(x-xy[i][0],z-xy[i][1])<16.8)y=Math.max(y,islandRise[i]);if(Math.hypot(x,z-3.5)<22.6)y=Math.max(y,1.47);if(Math.hypot(x-WY_CENTER.x,z-WY_CENTER.z)<WY_CENTER.r)y=Math.max(y,WY_CENTER.top);
@@ -1437,6 +1438,7 @@ for(const [key,obj] of [['coffee',espresso],['fridge',fridge],['snacks',snacks]]
 for(const [key,x,z,w,d] of [['spaA',-9,6.55,3.2,3.0],['spaB',-4.4,6.55,3.2,3.0],['pink',-7.10,-3.70,4.5,1.7],['mint',5.40,-3.70,4.5,1.7]]){
  const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,2.4,d),new THREE.MeshBasicMaterial({visible:false}));mesh.position.set(wy323X+x,1.25,z);mesh.userData.wy337=key;wy325.add(mesh);wy337Targets.push(mesh);
 }
+/* v503：茶水間家具依參考圖升級（左前方改粉色半開放式沙發）；互動名牌與點擊範圍跟著新位置 */try{applyLoungeLux({THREE,root:wy325,room:wy323Room,X0:wy323X,targets:wy337Targets})}catch(e){console.error('lounge lux',e)}
 let wy337Timer=null,wy337Tick=null,wy337StoryIndex={pink:0,mint:0};
 const wy337Names=['林律師','夢奇奇','哈姆太郎','薪水掌門人'];
 const wy337Pink=[
@@ -2121,6 +2123,7 @@ function wyVideoTitleSprite(text){
 })();
 // Strong material contrast, not simulated lamp glare. Keep all desks, sofas,
 // printer, reception, official logos, clickable targets, NPC and routes intact.
+/* v503：2F 辦公室家具依參考圖升級（大理石、深藍金邊、白皮椅，大家背對鏡頭面向後牆工作） */try{applyOfficeLux({THREE,root:roomRoot,register:registerOffice})}catch(e){console.error('office lux',e)}
 // Only ONE indoor NPC: original ponytail employee 夢奇奇飼養者.
 const indoorDef={name:'夢奇奇飼養者',skin:'#f6d2b6',hair:'#75432d',top:'#fff9f5',bottom:'#86a9cf',kind:'ponytail'};
 const indoorNpc=makeStaffChibi(indoorDef);
@@ -2780,6 +2783,7 @@ lbBox(wyLiftX,6.88,-9.55,3.62,.31,.08,wyLiftIce,'elevator');
 lbBox(wyLiftX,6.88,-9.49,3.45,.13,.035,'#BDEBF7','elevator');
 // Maintain the original floor numeral and all elevator open/close logic.
 const wy290FirstFloorLiftParts=lobbyRoot.children.slice(wy290FirstFloorLiftStart);
+/* v503：1F 大廳頂級版（依使用者參考圖） */setTimeout(()=>{try{applyLobbyLux(THREE,lobbyRoot)}catch(e){console.error('lobby lux',e)}},0);
 // v381: new second-floor elevator group, independent of the untouched 1F.
 const wyElev2=new THREE.Group();roomRoot.add(wyElev2);
 const wyElevDoors2=[];
@@ -2897,6 +2901,7 @@ const wy3Targets=[];
 wyGlassCabins[3]=wyBuildGlassCabin(wy3Root,8.15,7.25,3);
 wyGlassCabins[3].root.rotation.y=Math.PI;
 
+
 function wy3Mat(c,op=1){return new THREE.MeshStandardMaterial({color:c,roughness:.73,metalness:0,transparent:op<1,opacity:op,side:THREE.DoubleSide,depthWrite:op===1})}
 function wy3Box(x,y,z,w,h,d,c,action){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),wy3Mat(c));m.position.set(x,y,z);wy3Root.add(m);if(action){m.userData.wy3Action=action;wy3Targets.push(m)}return m}
 const wy3ArrivalPlaque=wy3Box(9.72,1.65,5.75,.12,.72,1.05,'#d6b16d','arrivalReplay');
@@ -2936,6 +2941,7 @@ wy3Box(0,6.02,-8.48,19.7,.16,.15,'#d2ad66');
 const wy180HallStart=wy3Root.children.length;
 const wy178DoorX=2.55,wy178DoorZ=6.70;
 const wy201Arrival=new THREE.Group();wy3Root.add(wy201Arrival);
+/* v503：3F 走廊大門＋林律師辦公室頂級版 */setTimeout(()=>{try{apply3FLux(THREE,{root:wy3Root,arrival:wy201Arrival,contents:wy180OfficeContents,doorX:wy178DoorX,doorZ:wy178DoorZ,keep:[wyGlassCabins[3]&&wyGlassCabins[3].root].filter(Boolean),mats:{ivory:wy201Ivory,gold:wy201Gold,brass:wy3Brass,pearl:wy3Pearl,warm:wy201Warm}})}catch(e){console.error('3f lux',e)}},0);
 const wy201Ivory=new THREE.MeshStandardMaterial({color:0xf4eee3,roughness:.62});
 const wy201Gold=new THREE.MeshStandardMaterial({color:0xc4ab83,metalness:.16,roughness:.75});
 // Neutral ivory wall finishes; no yellow emissive fixtures in the entry corridor.
@@ -4152,6 +4158,9 @@ function wy300SyncCaption(){
  const textBottom=y+Math.max(38,wy300Caption.offsetHeight);
  wy300Caption.style.display=officeTop<textBottom+8?'none':'block';
 }
+// v503 動森風到站：畫面由暗淡入＋「叮」一聲（靜音時只淡入）
+window.wyLiftDing=function(){let f=document.getElementById('wyLiftFade');if(!f){f=document.createElement('div');f.id='wyLiftFade';f.style.cssText='position:fixed;inset:0;background:#1B2440;pointer-events:none;z-index:40;opacity:0;transition:opacity .7s ease';document.body.appendChild(f)}f.style.transition='none';f.style.opacity='.92';requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.transition='opacity .7s ease';f.style.opacity='0'}));
+ try{if(localStorage.getItem('wy-sound')==='off'||localStorage.getItem('wy-sound')==='0')return;const A=window.__wyAC=window.__wyAC||new (window.AudioContext||window.webkitAudioContext)();const t0=A.currentTime+.05;[[1318.5,0],[1046.5,.22]].forEach(([fq,d])=>{const o=A.createOscillator(),g=A.createGain();o.type='sine';o.frequency.value=fq;g.gain.setValueAtTime(0,t0+d);g.gain.linearRampToValueAtTime(.16,t0+d+.02);g.gain.exponentialRampToValueAtTime(.001,t0+d+1.1);o.connect(g).connect(A.destination);o.start(t0+d);o.stop(t0+d+1.2)})}catch(e){}};
 function wySetFloor(n){if(wy323Inside)wy323Leave();wyOfficeFloor=[1,2,3].includes(n)?n:1;floorBtn.textContent='電梯｜選擇樓層';wy300SyncCaption();
  document.getElementById('officeUI').querySelector('strong').textContent=wyOfficeFloor===1?'歡迎光臨，這裡很有法度':wyOfficeFloor===2?'德威陽｜2F 今天事務所又怎麼了？':'德威陽｜3F 老闆今天在嗎？';
  officeOrbit.enabled=wyOfficeFloor===2;lobbyOrbit.enabled=wyOfficeFloor===1;wy3Orbit.enabled=wyOfficeFloor===3;
@@ -5246,7 +5255,7 @@ xy.slice(1).forEach(([x,z],j)=>{
 });
 // Main-island globe fountain: basin is solid, even though the water animates.
 /* v501：噴水池往前移到 z=13.3（不擋城堡大門），碰撞跟著實際位置。castle-garden 的花圃在 v494 島面墊高後已埋在草地下看不到，移除它們的隱形牆，城堡兩側可以走到後面。 */
-addSolidCircle(.5,13.3,3.05,'fountain');
+addSolidCircle(.5,16.2,3.05,'fountain');
 // Actual centered round planter from medical-island.js v28, not the walkway.
 addSolidCircle(xy[2][0]+7.5,xy[2][1]+12.4,2.25,'medical-flower-bed');
 // A solid-object registry is reusable for later ponds, parked vehicles, trees,
@@ -5400,27 +5409,55 @@ let tapStart=null;renderer.domElement.addEventListener('pointerdown',e=>{tapStar
  }
 });
 // v176: no repeated global material mutations; preserve each island's original materials.
-/* v501 動森鏡頭：單指左右轉、雙指縮放（拉近時視角變低）、人物面向走路方向、被擋住時顯示剪影、遠處地面微彎。不做任何自動縮放、自動抬升或自動擺動。 */
+/* v501→v502 動森鏡頭：單指左右轉、雙指縮放（高俯角，拉近只小幅降低）、人物面向走路方向、被擋住時開透明圓、遠處地面全部一起彎。不做任何自動縮放、自動抬升或自動擺動。 */
 function wyCamDist(){return camera.position.distanceTo(orbit.target)}
-function wyPhi(d){const P=[[7,1.38],[12,1.32],[23,1.24],[45,.98],[120,.62],[260,.48]];if(d<=P[0][0])return P[0][1];for(let i=1;i<P.length;i++){if(d<=P[i][0]){const a=P[i-1],b=P[i],t=(d-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*t}}return P[P.length-1][1]}
+function wyPhi(d){const P=[[7,.98],[12,.92],[23,.84],[45,.76],[120,.62],[260,.48]];if(d<=P[0][0])return P[0][1];for(let i=1;i<P.length;i++){if(d<=P[i][0]){const a=P[i-1],b=P[i],t=(d-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*t}}return P[P.length-1][1]}
 function wyFollowTarget(){const d=wyCamDist();const fw=new THREE.Vector3(actor.position.x-camera.position.x,0,actor.position.z-camera.position.z);if(fw.lengthSq()>1e-6)fw.normalize();const ahead=Math.min(6,Math.max(0,(d-7)*.4)),up=1.1+Math.max(0,(16-d)*.4);return new THREE.Vector3(actor.position.x+fw.x*ahead,actor.position.y+up,actor.position.z+fw.z*ahead)}
-const WY_BEND={k:{value:0},d:{value:20}};
-function wyBendMat(m){if(!m||m.userData.wyBend||m.isSpriteMaterial||m.isPointsMaterial||m.isShaderMaterial)return;m.userData.wyBend=1;const ob=m.onBeforeCompile;m.onBeforeCompile=(sh,r)=>{if(ob)ob.call(m,sh,r);sh.uniforms.wyBendK=WY_BEND.k;sh.uniforms.wyBendD=WY_BEND.d;sh.vertexShader='uniform float wyBendK;uniform float wyBendD;\n'+sh.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\n{vec4 wyMv=mvPosition;float wz=max(0.,-wyMv.z-wyBendD);wyMv.y-=wyBendK*wz*wz;gl_Position=projectionMatrix*wyMv;}')};const ck=m.customProgramCacheKey?m.customProgramCacheKey.bind(m):null;m.customProgramCacheKey=()=>(ck?ck():'')+'|wyBend';m.needsUpdate=true}
-let wyBendScan=0;function wyBendTick(dt){wyBendScan-=dt;if(wyBendScan<=0){wyBendScan=2;scene.traverse(o=>{if(o.isMesh||o.isInstancedMesh){const mm=o.material;if(Array.isArray(mm))mm.forEach(wyBendMat);else wyBendMat(mm)}})}const d=wyCamDist();WY_BEND.d.value=d;WY_BEND.k.value=!follow?0:d<45?.0016:d>110?0:.0016*(110-d)/65}
+/* v502 動森地面彎曲（全部一起彎）：所有材質在源頭統一套用；大片平面先細分，避免人物、拱門看起來浮起來或島像沉進海裡。天空不彎，室內不彎。 */
+const WY_BEND=window.WY_BEND=window.WY_BEND||{k:{value:0},d:{value:20}};
+const WY_HOLE=window.WY_HOLE={on:{value:0},p:{value:new THREE.Vector2()},r:{value:0},z:{value:0}};
+const WY_BEND_V='{float wz=max(0.,-wyMv.z-wyBendD);wyMv.y-=wyBendK*wz*wz;}';
+const WY_HOLE_F='if(wyHoleMe>.5&&wyHoleOn>.5&&gl_FragCoord.z<wyHoleZ){float wyd=distance(gl_FragCoord.xy,wyHoleP);float wye=smoothstep(wyHoleR*.62,wyHoleR,wyd);float wyn=fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(.06711056,.00583715))));if(wye<wyn)discard;}';
+function wyBendMat(m,hole){if(!m||m.userData.wyNoBend)return;if(m.userData.wyBend){if(hole&&m.userData.wyHoleU)m.userData.wyHoleU.value=1;return}m.userData.wyBend=1;const hu={value:hole?1:0};m.userData.wyHoleU=hu;const ob=m.onBeforeCompile;
+ m.onBeforeCompile=(sh,r)=>{if(ob)ob.call(m,sh,r);Object.assign(sh.uniforms,{wyBendK:WY_BEND.k,wyBendD:WY_BEND.d,wyHoleOn:WY_HOLE.on,wyHoleP:WY_HOLE.p,wyHoleR:WY_HOLE.r,wyHoleZ:WY_HOLE.z,wyHoleMe:hu});
+  let v=sh.vertexShader;const dv='uniform float wyBendK;uniform float wyBendD;\n';
+  if(v.includes('#include <project_vertex>'))v=v.replace('#include <project_vertex>','#include <project_vertex>\n{vec4 wyMv=mvPosition;'+WY_BEND_V+'gl_Position=projectionMatrix*wyMv;}');
+  else v=v.replace(/gl_Position\s*=\s*projectionMatrix\s*\*\s*mvPosition\s*;/,'{vec4 wyMv=mvPosition;'+WY_BEND_V+'gl_Position=projectionMatrix*wyMv;}');
+  sh.vertexShader=dv+v;sh.fragmentShader='uniform float wyHoleOn;uniform vec2 wyHoleP;uniform float wyHoleR;uniform float wyHoleZ;uniform float wyHoleMe;\n'+sh.fragmentShader.replace(/void\s+main\s*\(\s*\)\s*\{/,m0=>m0+'\n'+WY_HOLE_F)};
+ const ck=m.customProgramCacheKey?m.customProgramCacheKey.bind(m):null;m.customProgramCacheKey=()=>(ck?ck():'')+'|wyBend2';m.needsUpdate=true}
+/* 長邊細分：讓大片地面、橋、廣場跟著平順彎曲 */
+function wySubdiv(geo,maxLen){if(geo.groups&&geo.groups.length>1)return null;const g=geo.index?geo.toNonIndexed():geo.clone();const names=Object.keys(g.attributes).filter(n=>!g.morphAttributes[n]);const at=names.map(n=>g.attributes[n]);const P=g.attributes.position;const out=names.map(()=>[]);let tri=0;
+ const vtx=i=>at.map(a=>{const s=a.itemSize,o=[];for(let k=0;k<s;k++)o.push(a.array[i*s+k]);return o});const mid=(a,b)=>a.map((x,j)=>x.map((y,k)=>(y+b[j][k])/2));const len=(a,b)=>Math.hypot(a[0][0]-b[0][0],a[0][1]-b[0][1],a[0][2]-b[0][2]);
+ const emit=(A,B,C)=>{tri++;for(const V of[A,B,C])V.forEach((x,j)=>out[j].push(...x))};
+ const rec=(A,B,C,d)=>{if(tri>60000)return;const ab=len(A,B),bc=len(B,C),ca=len(C,A),mx=Math.max(ab,bc,ca);if(mx<=maxLen||d>10){emit(A,B,C);return}
+  if(mx===ab){const M=mid(A,B);rec(A,M,C,d+1);rec(M,B,C,d+1)}else if(mx===bc){const M=mid(B,C);rec(A,B,M,d+1);rec(A,M,C,d+1)}else{const M=mid(C,A);rec(A,B,M,d+1);rec(M,B,C,d+1)}};
+ for(let i=0;i<P.count;i+=3)rec(vtx(i),vtx(i+1),vtx(i+2),0);if(tri>60000)return null;
+ const ng=new THREE.BufferGeometry();names.forEach((n,j)=>{const a=at[j];ng.setAttribute(n,new THREE.BufferAttribute(new a.array.constructor(out[j]),a.itemSize,a.normalized))});ng.computeBoundingSphere();ng.computeBoundingBox();return ng}
+function wyTess(o){if(o.userData.wyTess||o.isInstancedMesh||o.isSkinnedMesh||!o.geometry||!o.geometry.attributes||!o.geometry.attributes.position)return;o.userData.wyTess=1;const geo=o.geometry;if(!geo.boundingSphere)geo.computeBoundingSphere();const sc=o.getWorldScale(new THREE.Vector3());const s=Math.max(sc.x,sc.y,sc.z)||1;
+ if(geo.boundingSphere.radius*s<4)return;if(geo.userData.wyTessDone){if(geo.userData.wyTessGeo)o.geometry=geo.userData.wyTessGeo;return}geo.userData.wyTessDone=1;const ng=wySubdiv(geo,2.4/s);if(ng){geo.userData.wyTessGeo=ng;ng.userData.wyTessDone=1;o.geometry=ng}}
+let wyBendScan=0;
+function wyBendScanNow(){scene.updateMatrixWorld();scene.traverse(o=>{if(!(o.isMesh||o.isInstancedMesh||o.isSprite||o.isPoints||o.isLine))return;const mm=o.material;const ms=Array.isArray(mm)?mm:[mm];
+  let big=false,hole=false;if(o.geometry){if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();const bs=o.geometry.boundingSphere;const sc=o.getWorldScale(new THREE.Vector3());const R=bs?bs.radius*Math.max(sc.x,sc.y,sc.z):0;big=R>320;
+   if(!big&&!o.userData.wyActor&&!o.isSprite&&!o.isPoints){const bb=new THREE.Box3().setFromObject(o);hole=(bb.max.y-bb.min.y)>.9&&R>.4}}
+  if(big){ms.forEach(m=>{if(m)m.userData.wyNoBend=1});return}if(o.isMesh&&!o.userData.wyActor)wyTess(o);ms.forEach(m=>wyBendMat(m,hole))})}
+function wyMarkActors(){if(actor)actor.traverse(o=>o.userData.wyActor=1);for(const n of staffNPCs)n.root.traverse(o=>o.userData.wyActor=1)}
+function wyBendTick(dt){wyBendScan-=dt;if(wyBendScan<=0){wyBendScan=2;wyMarkActors();wyBendScanNow()}const d=wyCamDist();WY_BEND.d.value=d;WY_BEND.k.value=(!follow||insideOffice)?0:d<45?.0014:d>110?0:.0014*(110-d)/65}
 function wyAngLerp(a,b,t){let d=b-a;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return a+d*t}
 function wyFace(v,dt){if(v.lengthSq()<.0025)return;actor.rotation.y=wyAngLerp(actor.rotation.y,Math.atan2(v.x,v.z),Math.min(1,dt*10))}
-/* 人物被建築或樹擋住時，畫一個半透明的人物剪影，讓玩家知道自己在哪裡；鏡頭本身不動 */
-const wySilMat=new THREE.MeshBasicMaterial({color:'#2F5FB0',transparent:true,opacity:.6,depthTest:false,depthWrite:false});
-let wySilList=[],wySilSig='',wySilOn=false,wySilT=0,wyOccList=[],wyOccListT=0;const wySilRay=new THREE.Raycaster();
-function wySilRebuild(){for(const s of wySilList)s.parent&&s.parent.remove(s);wySilList=[];actor.traverse(o=>{if(o.isMesh&&!o.userData.wySil&&o.visible!==false){const s=new THREE.Mesh(o.geometry,wySilMat);s.userData.wySil=1;s.renderOrder=999;s.visible=wySilOn;s.raycast=()=>{};s.frustumCulled=false;o.add(s);wySilList.push(s)}})}
-function wyOccluders(){const L=[];const skip=new Set();actor.traverse(o=>skip.add(o));for(const n of staffNPCs)n.root.traverse(o=>skip.add(o));scene.traverse(o=>{if(!(o.isMesh||o.isInstancedMesh)||skip.has(o)||o.userData.wySil)return;const m=o.material;if(m&&!Array.isArray(m)&&m.transparent&&m.opacity<.6)return;if(!o.geometry)return;if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();const bs=o.geometry.boundingSphere;if(!bs)return;const sc=o.getWorldScale(new THREE.Vector3());if(bs.radius*Math.max(sc.x,sc.y,sc.z)<.45)return;L.push(o)});return L}
-function wySilTick(dt){if(insideOffice||!follow){if(wySilOn){wySilOn=false;for(const s of wySilList)s.visible=false}return}
- wyOccListT-=dt;if(wyOccListT<=0){wyOccListT=3;wyOccList=wyOccluders();let n=0;actor.traverse(o=>{if(o.isMesh&&!o.userData.wySil)n++});const sig=String(n);if(sig!==wySilSig){wySilSig=sig;wySilRebuild()}}
- wySilT-=dt;if(wySilT>0)return;wySilT=.15;const head=actor.position.clone();head.y+=1.1*actor.scale.y;const dir=head.clone().sub(camera.position);const L=dir.length();dir.normalize();wySilRay.set(camera.position,dir);wySilRay.far=L-.5;let hit=false;
- for(const h of wySilRay.intersectObjects(wyOccList,false)){if(h.distance>.5){hit=true;break}}
- if(hit!==wySilOn){wySilOn=hit;for(const s of wySilList)s.visible=hit}}
-function wyCamTick(){if(insideOffice||window.wyOpeningOn)return;if(follow){const phi=wyPhi(wyCamDist());orbit.minPolarAngle=phi;orbit.maxPolarAngle=phi;orbit.enablePan=false}else{orbit.minPolarAngle=.42;orbit.maxPolarAngle=Math.PI*.49;orbit.enablePan=true}}
-window.__wyCamDbg=()=>({d:wyCamDist(),phi:orbit.getPolarAngle(),sil:wySilOn,occ:wyOccList.length,follow});
+/* v502 遮擋：任天堂式透明圓。人物被擋住時，擋在前面的物件只在人物周圍開一個邊緣柔和的透明圓；人物維持原本樣子。 */
+let wyOccList=[],wyOccListT=0,wyHoleT=0,wyHoleWant=0;const wySilRay=new THREE.Raycaster();let wySilOn=false;
+function wyOccluders(){const L=[];scene.traverse(o=>{if(!(o.isMesh||o.isInstancedMesh)||o.userData.wyActor)return;const m=o.material;if(m&&!Array.isArray(m)&&m.transparent&&m.opacity<.6)return;if(!o.geometry)return;if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();const bs=o.geometry.boundingSphere;if(!bs)return;const sc=o.getWorldScale(new THREE.Vector3());const R=bs.radius*Math.max(sc.x,sc.y,sc.z);if(R<.45||R>320)return;L.push(o)});return L}
+function wySilTick(dt){const hz=WY_HOLE;if(insideOffice||!follow){wySilOn=false;hz.on.value=0;hz.r.value=0;return}
+ wyOccListT-=dt;if(wyOccListT<=0){wyOccListT=3;wyMarkActors();wyOccList=wyOccluders()}
+ wyHoleT-=dt;if(wyHoleT<=0){wyHoleT=.12;const head=actor.position.clone();head.y+=1.0*actor.scale.y;const dir=head.clone().sub(camera.position);const L=dir.length();dir.normalize();wySilRay.set(camera.position,dir);wySilRay.far=L-.4;let hit=false;for(const h of wySilRay.intersectObjects(wyOccList,false)){if(h.distance>.5){hit=true;break}}wySilOn=hit;wyHoleWant=hit?1:0}
+ const pr=renderer.getPixelRatio(),W=renderer.domElement.width,H=renderer.domElement.height;const c=actor.position.clone();c.y+=.75*actor.scale.y;const n=c.clone().project(camera);const top=actor.position.clone();top.y+=1.9*actor.scale.y;const nt=top.clone().project(camera);
+ hz.p.value.set((n.x*.5+.5)*W,(n.y*.5+.5)*H);const target=Math.max(40*pr,Math.abs(nt.y-n.y)*.5*H*1.25)*wyHoleWant;hz.r.value+=(target-hz.r.value)*Math.min(1,dt*8);hz.z.value=(n.z*.5+.5)-.00002;hz.on.value=hz.r.value>2?1:0}
+/* v502 鏡頭：高俯角（接近動森），拉近時只小幅降低；鏡頭碰到建築就停在外面，不穿進牆。 */
+let wyCamBoxes=[],wyCamBoxT=0;
+function wyCamWall(dt){wyCamBoxT-=dt;if(wyCamBoxT<=0){wyCamBoxT=3;wyCamBoxes=[];for(const o of wyOccList){const bb=new THREE.Box3().setFromObject(o);const sz=bb.getSize(new THREE.Vector3());if(sz.y>3.5&&Math.min(sz.x,sz.z)>2.5&&Math.max(sz.x,sz.z)<40)wyCamBoxes.push(bb.expandByScalar(.3))}}
+ for(let k=0;k<14;k++){let inside=false;for(const bb of wyCamBoxes){if(bb.containsPoint(camera.position)){inside=true;break}}if(!inside)break;const off=camera.position.clone().sub(orbit.target).multiplyScalar(.9);if(off.length()<2.6)break;camera.position.copy(orbit.target).add(off)}}
+function wyCamTick(){if(insideOffice||window.wyOpeningOn)return;if(follow){const phi=wyPhi(wyCamDist());orbit.minPolarAngle=phi;orbit.maxPolarAngle=phi;orbit.enablePan=false;try{wyCamWall(1/60)}catch(e){}}else{orbit.minPolarAngle=.42;orbit.maxPolarAngle=Math.PI*.49;orbit.enablePan=true}}
+window.__wyCamDbg=()=>({d:wyCamDist(),phi:orbit.getPolarAngle(),hole:WY_HOLE.r.value,occ:wyOccList.length,follow,k:WY_BEND.k.value});
 /* v501 記憶體：只有正在看的場景留在顯示卡記憶體；換樓層、進出館時釋放其他場景（回來時自動重新載入）。手機畫質上限 2 倍。WebGL 中斷時自動恢復，不會整頁重新載入。 */
 function wyFreeGPU(root){if(!root)return;try{root.traverse(o=>{if(o.userData&&o.userData.wySil)return;if(o.geometry&&o.geometry.dispose)o.geometry.dispose();const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[];for(const m of ms){if(!m)continue;for(const k in m){const t=m[k];if(t&&t.isTexture&&!t.isVideoTexture)t.dispose()}}})}catch(e){console.error('free',e)}}
 const wyFloorScene=n=>n===1?lobbyScene:n===2?officeScene:wy3Scene;
@@ -5477,7 +5514,14 @@ document.getElementById('creator').style.display='flex';wyPreviewResize();const 
   sign.visible=(officeCam.position.z>sign.position.z+0.12);
  }
 }renderer.render(officeScene,officeCam)}else{if(!wy3ArrivalAnim&&!wy177Reveal&&!(wyRide&&wyRide.source===3&&['walk','enter'].includes(wyRide.phase))){wy3Orbit.update();wy210ProtectCamera();}wy180OfficePortal.getWorldQuaternion(wy226ParentWorldQuat);wy223Arrow.quaternion.copy(wy226ParentWorldQuat.invert().multiply(wy3Cam.quaternion));wy260SignsTick();renderer.render(wy3Scene,wy3Cam)}}}else{alignActorToGround();updateDoorPrompt();orbit.update();renderer.render(scene,camera)}if(wyCreatorEl.style.display!=='none'){previewRenderer.render(previewScene,previewCamera)}}animate();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();officeCam.aspect=innerWidth/innerHeight;officeCam.updateProjectionMatrix();lobbyCam.aspect=innerWidth/innerHeight;lobbyCam.updateProjectionMatrix();wy3Cam.aspect=innerWidth/innerHeight;wy3Cam.updateProjectionMatrix();for(let j=1;j<6;j++){themeRooms[j].camera.aspect=innerWidth/innerHeight;themeRooms[j].camera.updateProjectionMatrix()}renderer.setSize(innerWidth,innerHeight)});
-(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();/* v494：沖繩海上熱鬧版（海、沙灘、城堡島重做、中間花田 Logo、船、海鷗、遊客、攤位） */try{setupSea(THREE,{scene,xy,groups:()=>groups,bridgeGroups:()=>bridges.map(b=>b.group),center:WY_CENTER,actor:()=>actor,inside:()=>insideOffice,renderer,camera,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'sea')})}catch(err){console.error('sea',err)}import('./wy-isle-lux.js?v=501').then(m=>{let tk=()=>{};try{tk=m.setupIsleLux(THREE,{scene,groups:()=>groups,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'lux'),inside:()=>insideOffice})}catch(e){console.error('isle lux',e)}window.__wyIsleTick=tk;import('./wy-castle-lux.js?v=501').then(cm=>{let ct=()=>{};try{ct=cm.setupCastleLux(THREE,{root:castleClickTarget,phase:()=>{try{return window.wySky.phase()}catch(e){return 'day'}}})}catch(e){console.error('castle lux',e)}let l2=performance.now();(function L2(){requestAnimationFrame(L2);const n=performance.now();if(!insideOffice)try{ct(Math.min(.05,(n-l2)/1000))}catch(e){}l2=n})()}).catch(e=>console.error('castle lux load',e));let lt=performance.now();(function L(){requestAnimationFrame(L);const n=performance.now();try{tk(Math.min(.05,(n-lt)/1000))}catch(e){}lt=n})()}).catch(e=>console.error('isle lux load',e));status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
+/* v502 四座島建築：底部一圈同色系石材底座＋門口台階（人物走上去平順升高） */
+function wyIslePlinths(){const COL={1:'#E7B482',2:'#A6D6B1',3:'#D8A0AE',4:'#BDA4DE'};const OWN_STEPS={1:1,3:1};/* 訴訟島、家庭島原本門口就有台階，只加底座 */const gold=new THREE.MeshStandardMaterial({color:'#EDBF5E',metalness:.55,roughness:.3,emissive:'#5A3A08',emissiveIntensity:.25});const g=new THREE.Group();g.name='wyIslePlinths';scene.add(g);
+ const kinds={1:'island-building',2:'medical-building',3:'island-building',4:'business-building'};
+ for(const i of[1,2,3,4]){const [cx,cz]=xy[i];const S=walkObstacles.find(o=>o.kind===kinds[i]&&Math.hypot(o.x-cx,o.z-cz)<12);if(!S)continue;const base=walkingSurfaceY(S.x,S.z+S.hz+2.2)-.12;const H=.45,P=.35;const mat=new THREE.MeshStandardMaterial({color:COL[i],roughness:.55});
+  const w=S.hx*2+P*2,d=S.hz*2+P*2;const pl=new THREE.Mesh(new THREE.BoxGeometry(w,H,d),mat);pl.position.set(S.x,base+H/2,S.z);g.add(pl);const tr=new THREE.Mesh(new THREE.BoxGeometry(w+.08,.07,d+.08),gold);tr.position.set(S.x,base+H+.01,S.z);g.add(tr);
+  const fz=S.z+S.hz+P,SW=4.2,SD=.5;const steps=[];for(let k=0;k<(OWN_STEPS[i]?0:3);k++){const h=H*(3-k)/3,zc=fz+SD*(k+.5);const st=new THREE.Mesh(new THREE.BoxGeometry(SW,h,SD),mat);st.position.set(S.x,base+h/2,zc);g.add(st);const ed=new THREE.Mesh(new THREE.BoxGeometry(SW+.04,.05,.07),gold);ed.position.set(S.x,base+h+.005,zc+SD/2-.03);g.add(ed);steps.push([zc-SD/2,zc+SD/2,h])}
+  wySurfaceFns.push((x,z)=>{if(Math.abs(x-S.x)<=SW/2){for(const [z0,z1,h] of steps)if(z>=z0&&z<=z1)return base+h+.12}if(Math.abs(x-S.x)<=w/2&&Math.abs(z-S.z)<=d/2)return base+H+.12;return null})}}
+window.wyCastleTopReady=false;(async()=>{for(let i=0;i<6;i++){await loadIsland(i)}await addOriginalBridge();/* v494：沖繩海上熱鬧版（海、沙灘、城堡島重做、中間花田 Logo、船、海鷗、遊客、攤位） */try{setupSea(THREE,{scene,xy,groups:()=>groups,bridgeGroups:()=>bridges.map(b=>b.group),center:WY_CENTER,actor:()=>actor,inside:()=>insideOffice,renderer,camera,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'sea')})}catch(err){console.error('sea',err)}import('./wy-isle-lux.js?v=501').then(m=>{let tk=()=>{};try{tk=m.setupIsleLux(THREE,{scene,groups:()=>groups,addSolid:(x,z,hx,hz)=>addSolidBox(x,z,hx,hz,'lux'),inside:()=>insideOffice})}catch(e){console.error('isle lux',e)}window.__wyIsleTick=tk;import('./wy-castle-top.js?v=503').then(cm=>{let ct=()=>{};try{ct=cm.setupCastleTop(THREE,castleClickTarget,{fountainZ:16.2,addSurface:f=>wySurfaceFns.push(f),setSolids:L=>{for(let i=walkObstacles.length-1;i>=0;i--){if(walkObstacles[i].kind==='castle')walkObstacles.splice(i,1)}for(const o of L)walkObstacles.push(Object.assign({kind:'castle'},o))}})}catch(e){console.error('castle top',e)}window.wyCastleTopReady=true;try{wyIslePlinths()}catch(e){console.error('plinth',e)}let l2=performance.now();(function L2(){requestAnimationFrame(L2);const n=performance.now();if(!insideOffice)try{ct(Math.min(.05,(n-l2)/1000))}catch(e){}l2=n})()}).catch(e=>{console.error('castle top load',e);window.wyCastleTopReady=true});let lt=performance.now();(function L(){requestAnimationFrame(L);const n=performance.now();try{tk(Math.min(.05,(n-lt)/1000))}catch(e){}lt=n})()}).catch(e=>console.error('isle lux load',e));status.textContent='點擊德威陽城堡即可進入 3D 事務所';})();
 </script><div style="position:fixed;bottom:2px;right:4px;z-index:8;font-size:10px"><a href="guide.html">文字版導覽</a>｜<a href="credits.html" target="_blank">模型授權</a></div>
 
 <script id="wy196UnifiedHeaderNavigation">

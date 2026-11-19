@@ -126,6 +126,11 @@ export function setupCornerHost(THREE,buildChibi,STAFF){
   cloud.querySelector('small').textContent=NAMES[R.host];cloud.querySelector('small').style.color=NAMEC[R.host];cloud.querySelector('span').textContent=text;
   host.className='wyCH';host.style.display='block';cloud.style.display='block';cloud.classList.remove('on');if(!run){run=true;requestAnimationFrame(loop)}
   const at=(t,f)=>timers.push(setTimeout(f,t));at(60,()=>host.classList.add('peek'));at(450,()=>{host.classList.remove('peek');host.classList.add('up');ch.wave()});at(750,()=>cloud.classList.add('on'));if(ms)at(ms,hide);}
+ function sayHost(hostIdx,text,ms){init();clear();if(cur!==hostIdx){if(ch)sc.remove(ch.group);ch=buildChibi(THREE,{...STAFF[hostIdx]});sc.add(ch.group);cur=hostIdx}
+  cloud.querySelector('small').textContent=NAMES[hostIdx];cloud.querySelector('small').style.color=NAMEC[hostIdx];cloud.querySelector('span').textContent=text;
+  host.className='wyCH';host.style.display='block';cloud.style.display='block';cloud.classList.remove('on');if(!run){run=true;requestAnimationFrame(loop)}
+  const at=(t,f)=>timers.push(setTimeout(f,t));at(60,()=>host.classList.add('peek'));at(450,()=>{host.classList.remove('peek');host.classList.add('up');ch.wave()});at(750,()=>cloud.classList.add('on'));if(ms)at(ms,hide)}
+ window.wyCornerSay=(hostIdx,text,ms)=>sayHost(hostIdx,text,ms);
  window.wyCornerRemind=room=>{const R=ROOM[room];if(R)say(room,wyPick(WY_REMIND[R.key]),0)};
  window.wyCornerLeave=room=>{const R=ROOM[room];if(R)say(room,wyPick(WY_LEAVE[R.key]),3200)};
  window.wyCornerHide=hide;
