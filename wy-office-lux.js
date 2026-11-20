@@ -61,7 +61,7 @@ export function applyOfficeLux(ctx) {
   const haloTex = tex(256, 256, (g, S) => { const gr = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2); gr.addColorStop(0, 'rgba(255,214,140,.75)'); gr.addColorStop(1, 'rgba(255,214,140,0)'); g.fillStyle = gr; g.fillRect(0, 0, S, S) });
   const haloM = new T.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: T.AdditiveBlending, opacity: .55 });
   function halo(x, z, w, d) { const o = add(new T.PlaneGeometry(w, d), haloM, x, .09, z); o.rotation.x = -Math.PI / 2; return o }
-  function plush(x, z, r, col, sx = 1) { const g0 = TARGET; const pg = new T.Group(); pg.position.set(x, 0, z); pg.scale.x = sx; g0.add(pg); TARGET = pg; x = 0; z = 0; cyl(x, .04, z, r + .12, r + .12, .05, gold, 48); cyl(x, .07, z, r, r, .06, M(col, { roughness: .95 }), 48); cyl(x, .1, z, r * .72, r * .72, .02, M('#FFF6E4', { roughness: .95 }), 48); cyl(x, .11, z, r * .68, r * .68, .02, M(col, { roughness: .95 }), 48); TARGET = g0 }
+  function plush(x, z, r, col, sx = 1) { const g0 = TARGET; const pg = new T.Group(); pg.position.set(x, 0, z); pg.scale.x = sx; g0.add(pg); TARGET = pg; x = 0; z = 0; cyl(x, .04, z, r + .12, r + .12, .05, gold, 48); cyl(x, .07, z, r, r, .06, M(col, { roughness: .95 }), 48); cyl(x, .106, z, r * .72, r * .72, .02, M('#FFF6E4', { roughness: .95 }), 48); cyl(x, .118, z, r * .68, r * .68, .02, M(col, { roughness: .95 }), 48); /* v507：圓毯內圈上緣錯開桌腳金底座 0.11，避免閃 */ TARGET = g0 }
   // 絨面高背椅（主題色），金色五爪椅腳；面向 -Z（建好後整組旋轉成面向鏡頭）
   function chair(x, z, exec = false, p = TARGET, col = '#F4EDE2') {
     const g = new T.Group(); g.position.set(x, 0, z); g.scale.setScalar(exec ? 1.3 : 1.2); p.add(g);
@@ -166,15 +166,30 @@ export function applyOfficeLux(ctx) {
     for (const [sx, zone] of seats) {
       for (const s of [-1, 1]) { const g = new T.Group(); g.position.set(sx + s * .78, 1.95, z - .35); g.rotation.y = s * .18; TARGET.add(g);
         const b = reg(box(0, 0, 0, 1.55, .92, .07, black, g), zone); const scr = add(new T.PlaneGeometry(1.45, .82), gameM, 0, 0, .04, g); reg(scr, zone); }
-      box(sx, 1.38, z - .4, .12, .4, .12, gold); box(sx, 1.2, z - .4, .7, .04, .35, gold);
-      box(sx, 1.2, z + .3, 1.1, .035, .35, M('#2B2F3A')); box(sx + .8, 1.2, z + .3, .5, .02, .4, M('#3A2F55'));
-      const gameSeat = M('#33416F', { roughness: .5 });
-      // 黑金電競椅（面向 -Z）
+      /* 螢幕底座、鍵盤、滑鼠墊：桌面上緣 y=1.22，全部放在桌面「上面」，不跟桌面同高（避免閃） */
+      box(sx, 1.42, z - .4, .12, .4, .12, gold); box(sx, 1.255, z - .4, .7, .05, .35, gold);
+      box(sx, 1.25, z + .3, 1.1, .045, .35, M('#2B2F3A')); box(sx + .8, 1.235, z + .3, .5, .02, .4, M('#3A2F55'));
+      // v507 高級賽車款電競椅（面向 -Z）：五爪金腳＋黑輪、包覆坐墊、高椅背兩側翼、頭枕、腰枕、扶手；黑色皮革＋紫色飾條＋金邊
       const g = new T.Group(); g.position.set(sx, 0, z + 1.75); TARGET.add(g);
-      for (let k = 0; k < 5; k++) { const a = k * Math.PI * 2 / 5; const arm = box(Math.sin(a) * .34, .12, Math.cos(a) * .34, .1, .07, .7, gold, g); arm.rotation.y = a }
-      cyl(0, .38, 0, .07, .07, .5, gold, 12, g); box(0, .72, 0, 1.0, .24, .95, gameSeat, g);
-      box(0, 1.75, .44, 1.0, 2.0, .26, gameSeat, g); for (const s of [-1, 1]) box(s * .38, 1.75, .3, .12, 1.9, .05, gold, g); box(0, 2.45, .3, .5, .3, .05, gold, g);
-      for (const s of [-1, 1]) box(s * .56, 1.02, .05, .12, .1, .7, gameSeat, g);
+      const lea = M('#24242E', { roughness: .38 }), pur = M('#8A5CF0', { roughness: .35 }), purL = M('#B48CFF', { roughness: .4 }), wheel = M('#15151B', { roughness: .5 });
+      const P = (geo, m, x, y, zz, rx = 0) => { const o = new T.Mesh(geo, m); o.position.set(x, y, zz); o.rotation.x = rx; g.add(o); return o };
+      for (let k = 0; k < 5; k++) { const a = k * Math.PI * 2 / 5; const arm = box(Math.sin(a) * .3, .16, Math.cos(a) * .3, .1, .07, .62, gold, g); arm.rotation.y = a; P(new T.SphereGeometry(.07, 12, 10), wheel, Math.sin(a) * .58, .07, Math.cos(a) * .58) }
+      P(new T.CylinderGeometry(.09, .09, .14, 16), gold, 0, .22, 0); P(new T.CylinderGeometry(.055, .055, .36, 14), M('#D8DCE2', { metalness: .7, roughness: .25 }), 0, .45, 0);
+      // 坐墊：中間黑皮＋兩側紫色隆起包覆
+      P(new RoundedBoxGeometry(1.0, .2, .95, 3, .07), gold, 0, .66, 0);
+      P(new RoundedBoxGeometry(.62, .2, .88, 3, .08), lea, 0, .82, 0);
+      for (const e of [-1, 1]) P(new RoundedBoxGeometry(.2, .28, .9, 3, .09), pur, e * .4, .86, 0);
+      // 椅背：高、上寬下窄（兩片側翼）＋中間黑皮＋紫色細條＋金邊
+      const bz = .42;
+      P(new RoundedBoxGeometry(.96, 1.9, .2, 3, .09), gold, 0, 1.92, bz + .03);
+      P(new RoundedBoxGeometry(.6, 1.78, .22, 3, .1), lea, 0, 1.9, bz - .02);
+      for (const e of [-1, 1]) { const w = P(new RoundedBoxGeometry(.22, 1.5, .3, 3, .1), pur, e * .38, 1.82, bz - .06); w.rotation.y = -e * .25; w.rotation.z = e * .05 }
+      for (const e of [-1, 1]) P(new T.BoxGeometry(.04, 1.5, .02), purL, e * .17, 1.85, bz - .14);
+      // 頭枕＋腰枕（圓胖靠枕）
+      P(new RoundedBoxGeometry(.5, .26, .16, 3, .08), purL, 0, 2.62, bz - .16);
+      P(new RoundedBoxGeometry(.5, .24, .16, 3, .08), purL, 0, 1.28, bz - .16);
+      // 扶手：金柱＋黑色軟墊
+      for (const e of [-1, 1]) { P(new T.BoxGeometry(.08, .42, .08), gold, e * .56, 1.02, .05); P(new RoundedBoxGeometry(.16, .08, .5, 2, .03), lea, e * .56, 1.25, .05) }
     }
     // 兩端發光主機＋喇叭
     for (const s of [-1, 1]) { const px = x + s * (w / 2 - .45);
@@ -182,7 +197,7 @@ export function applyOfficeLux(ctx) {
       box(px, 2.37, z - .3, .72, .04, .82, M('#6A3FB8')); }
     // 中間耳機架
     const hx = x + (seats.length > 1 ? (seats[0][0] + seats[1][0]) / 2 - x : 0);
-    box(hx, 1.2, z - .1, .3, .04, .3, gold); box(hx, 1.55, z - .1, .05, .7, .05, gold); add(new T.TorusGeometry(.2, .05, 8, 24, Math.PI), black, hx, 1.75, z - .1);
+    box(hx, 1.25, z - .1, .3, .05, .3, gold); box(hx, 1.55, z - .1, .05, .7, .05, gold); add(new T.TorusGeometry(.2, .05, 8, 24, Math.PI), black, hx, 1.75, z - .1);
   }
 
   // 深藍牆板＋金框米白嵌板＋金色壁燈（貼牆，穩定暖光）
@@ -340,7 +355,12 @@ export function applyOfficeLux(ctx) {
     for (const [lx, lz] of [[-.38, -.32], [.38, -.32], [-.38, .32], [.38, .32]]) { const lg = new T.Mesh(new T.CylinderGeometry(.05, .035, .42, 10), gold); lg.position.set(lx, .21, lz); g.add(lg) }
     const seat = new T.Mesh(new RoundedBoxGeometry(1.05, .38, 1.0, 4, .17), vel); seat.position.set(0, .6, 0); g.add(seat);
     const cush = new T.Mesh(new RoundedBoxGeometry(.9, .16, .8, 3, .08), velL); cush.position.set(0, .85, -.06); g.add(cush);
-    const back = new T.Mesh(new T.CylinderGeometry(.58, .58, .85, 32, 1, false, Math.PI / 2, Math.PI), vel); back.scale.z = .55; back.position.set(0, 1.2, .2); g.add(back);
+    /* v507：椅背原本是單面半圓殼，從內側看會變透明（像鏤空）；改成雙面＋內層軟墊，前後看都是完整椅背 */
+    const velD = M(col, { roughness: .65, side: T.DoubleSide }), padM = M(col, { roughness: .75, emissive: col, emissiveIntensity: .08, side: T.DoubleSide });
+    const back = new T.Mesh(new T.CylinderGeometry(.58, .58, .85, 32, 1, false, Math.PI / 2, Math.PI), velD); back.scale.z = .55; back.position.set(0, 1.2, .2); g.add(back);
+    const pad = new T.Mesh(new T.CylinderGeometry(.53, .53, .8, 32, 1, false, Math.PI / 2, Math.PI), padM); pad.scale.z = .5; pad.position.set(0, 1.2, .2); g.add(pad);
+    const capS = new T.Shape(); capS.absarc(0, 0, .6, 0, Math.PI, false); capS.absarc(0, 0, .51, Math.PI, 0, true);
+    const cap = new T.Mesh(new T.ShapeGeometry(capS, 24), velD); cap.rotation.x = -Math.PI / 2; cap.scale.y = .55; cap.position.set(0, 1.625, .2); g.add(cap);
     const pip = new T.Mesh(new T.TorusGeometry(.58, .05, 8, 32, Math.PI), gold); pip.scale.y = .55; pip.rotation.x = -Math.PI / 2; pip.position.set(0, 1.63, .2); g.add(pip);
     const band = new T.Mesh(new T.TorusGeometry(.58, .03, 6, 32, Math.PI), gold); band.scale.y = .55; band.rotation.x = -Math.PI / 2; band.position.set(0, .8, .2); g.add(band);
     return g;

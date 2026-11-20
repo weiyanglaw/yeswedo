@@ -95,5 +95,58 @@ export function apply3FLux(T, ctx) {
     add(RB(1.0, .34, .95, .15), ro, 0, .62, 0, c); add(RB(.86, .14, .78, .07), roD, 0, .85, .04, c);
     const bk = add(new T.CylinderGeometry(.52, .52, .9, 28, 1, false, Math.PI / 2, Math.PI), ro, 0, 1.2, .1, c); bk.scale.z = .7;
     const pip = add(new T.TorusGeometry(.52, .04, 8, 28, Math.PI), gold, 0, 1.65, .1, c); pip.rotation.x = Math.PI / 2; pip.rotation.z = Math.PI; pip.scale.y = .7 }
+
+  // ================= v507 三、老闆休息區：動森風豪華寶石綠沙發＋雙層大理石圓茶几＋圓胖單人椅＋專屬地毯 =================
+  // 原本的 L 型沙發在 v503 被上面的 hideIf 誤藏（群組原點落在主管桌範圍）。舊沙發、舊圓桌、舊花紋地毯一律收起，改放這一組。
+  { root.updateMatrixWorld(true); const bx = new T.Box3(), cc = new T.Vector3();
+    const drop = ch => { ch.visible = false; const L = ctx.contents; if (L) { const ix = L.indexOf(ch); if (ix >= 0) L.splice(ix, 1) } };
+    let sofaSign = null, sofaHit = null;
+    for (const ch of [...root.children]) { if (ch === O || ch === A || ch === arrival) continue;
+      let act = ''; ch.traverse(o => { if (o.userData && o.userData.wy3Action) act = o.userData.wy3Action });
+      bx.setFromObject(ch); if (!isFinite(bx.min.x)) continue; bx.getCenter(cc);
+      if (act === 'wy260:sofa') { if (ch.isMesh && ch.material && ch.material.map) sofaSign = ch; else if (ch.isMesh && ch.material && ch.material.visible === false) sofaHit = ch; else drop(ch); continue }
+      // 舊花紋地毯（薄片，x 4.1–8.6）與兩張舊圓桌（x 5–7.4、z 1.3–2.6、高度 < 1）
+      if (ch.isMesh && bx.max.y < .1 && bx.min.x > 3.9 && bx.max.x < 8.8 && bx.min.z > -1 && bx.max.z < 3.2) { drop(ch); continue }
+      if (ch.isGroup && bx.max.y < 1.0 && cc.x > 4.9 && cc.x < 7.5 && cc.z > 1.2 && cc.z < 2.7) drop(ch) }
+    const LG = new T.Group(); LG.name = 'wyBossLounge'; O.add(LG);
+    const emer = M('#2FA37C', { roughness: .62 }), emerD = M('#26906C', { roughness: .66 }), emerL = M('#43B98F', { roughness: .6 });
+    const cream = M('#FFF4E2', { roughness: .7 }), rose = M('#F2A7B4', { roughness: .65 });
+    // 地毯：只鋪在沙發、茶几、單人椅底下（x 4.5–9.55、z 0.25–3.75），三層高度錯開不閃
+    const rug = (w, d, r, y, m) => { const sh = new T.Shape(); const a = -w / 2, b = -d / 2; sh.moveTo(a + r, b); sh.lineTo(-a - r, b); sh.quadraticCurveTo(-a, b, -a, b + r); sh.lineTo(-a, -b - r); sh.quadraticCurveTo(-a, -b, -a - r, -b); sh.lineTo(a + r, -b); sh.quadraticCurveTo(a, -b, a, -b - r); sh.lineTo(a, b + r); sh.quadraticCurveTo(a, b, a + r, b);
+      const gq = new T.ExtrudeGeometry(sh, { depth: .02, bevelEnabled: false, curveSegments: 10 }); gq.rotateX(-Math.PI / 2); const o = new T.Mesh(gq, m); o.position.set(7.0, y, 2.0); LG.add(o); return o };
+    rug(5.0, 3.5, .5, .012, gold); rug(4.84, 3.34, .45, .034, emerD); rug(4.4, 2.9, .38, .056, cream);
+    for (const [dx, dz] of [[-1.7, -1.05], [1.7, -1.05], [-1.7, 1.05], [1.7, 1.05]]) { const f = add(new T.CylinderGeometry(.16, .16, .02, 20), rose, 7.0 + dx, .082, 2.0 + dz, LG) }
+    // 三人座寶石綠絨布大沙發：靠右牆、面向房間（-X），圓胖椅背與扶手、金色圓球腳、上緣金邊
+    const S = new T.Group(); S.position.set(8.75, 0, 2.0); S.rotation.y = Math.PI / 2; LG.add(S);
+    for (const [lx, lz] of [[-1.55, -.5], [1.55, -.5], [-1.55, .45], [1.55, .45]]) { add(new T.SphereGeometry(.13, 16, 12), gold, lx, .13, lz, S) }
+    add(RB(3.5, .42, 1.25, .18), emer, 0, .46, 0, S);
+    for (let k = -1; k <= 1; k++) add(RB(1.02, .2, 1.0, .09), emerL, k * 1.04, .76, -.05, S);
+    add(RB(3.5, 1.0, .42, .2), emer, 0, 1.12, .5, S); add(new T.CylinderGeometry(.06, .06, 3.3, 14), gold, 0, 1.64, .52, S).rotation.z = Math.PI / 2;
+    for (const e of [-1, 1]) { add(RB(.42, .8, 1.28, .2), emer, e * 1.86, .78, .02, S); add(new T.CylinderGeometry(.22, .22, 1.24, 24), emerL, e * 1.86, 1.2, .02, S).rotation.x = Math.PI / 2;
+      for (const zz of [-.62, .64]) add(new T.CircleGeometry(.2, 24), gold, e * 1.86, 1.2, zz, S).rotation.y = zz < 0 ? Math.PI : 0 }
+    // 圓抱枕：中間繡德威陽 Logo，兩側粉色、奶油色
+    const pil = (x, m, logo) => { const pg = new T.Group(); pg.position.set(x, 1.08, .18); pg.rotation.x = -.18; S.add(pg); const pm = new T.Mesh(new T.SphereGeometry(.33, 24, 16), m); pm.scale.set(1, 1, .42); pg.add(pm);
+      if (logo) { const lm = new T.Mesh(new T.CircleGeometry(.2, 32), new T.MeshBasicMaterial({ map: lt, transparent: true })); lm.position.set(0, 0, -.145); lm.rotation.y = Math.PI; pg.add(lm); add(new T.TorusGeometry(.22, .02, 8, 32), gold, 0, 0, -.14, pg) } };
+    pil(-1.1, rose, false); pil(0, cream, true); pil(1.1, rose, false);
+    // 單人沙發（跟大沙發同一款：方圓椅身、兩邊圓筒扶手、金球腳、上緣金邊、一顆小抱枕），在茶几另一側面向大沙發
+    const C = new T.Group(); C.position.set(5.3, 0, 2.0); C.rotation.y = -Math.PI / 2; LG.add(C);
+    for (const [lx, lz] of [[-.62, -.5], [.62, -.5], [-.62, .45], [.62, .45]]) add(new T.SphereGeometry(.12, 16, 12), gold, lx, .12, lz, C);
+    add(RB(1.5, .42, 1.2, .18), emer, 0, .45, 0, C);
+    add(RB(1.0, .2, .98, .09), emerL, 0, .75, -.06, C);
+    add(RB(1.5, .95, .4, .2), emer, 0, 1.1, .48, C); add(new T.CylinderGeometry(.055, .055, 1.36, 14), gold, 0, 1.6, .5, C).rotation.z = Math.PI / 2;
+    for (const e of [-1, 1]) { add(RB(.36, .75, 1.22, .18), emer, e * .62, .76, .0, C); add(new T.CylinderGeometry(.2, .2, 1.18, 24), emerL, e * .62, 1.16, .0, C).rotation.x = Math.PI / 2;
+      for (const zz of [-.6, .6]) add(new T.CircleGeometry(.18, 24), gold, e * .62, 1.16, zz, C).rotation.y = zz < 0 ? Math.PI : 0 }
+    { const pm = add(new T.SphereGeometry(.26, 22, 14), rose, 0, 1.05, .2, C); pm.scale.set(1, 1, .42); pm.rotation.x = -.18 }
+    // 雙層大理石圓茶几：大的在中間、小的靠單人椅；金框、金腳，上面一盆圓球花
+    const tbl = (x, z, r, h) => { const tg = new T.Group(); tg.position.set(x, 0, z); LG.add(tg); add(new T.CylinderGeometry(r, r, .1, 40), cream, 0, h, 0, tg); add(new T.TorusGeometry(r, .04, 8, 40), gold, 0, h - .03, 0, tg).rotation.x = Math.PI / 2;
+      add(new T.CylinderGeometry(.08, .12, h - .12, 14), gold, 0, (h - .12) / 2 + .08, 0, tg); add(new T.CylinderGeometry(r * .55, r * .6, .08, 28), gold, 0, .1, 0, tg); return tg };
+    tbl(7.05, 2.0, .78, .62); tbl(6.1, 3.05, .42, .5);
+    { const vp = new T.Group(); vp.position.set(7.05, .67, 2.0); LG.add(vp); add(new T.CylinderGeometry(.16, .12, .22, 18), gold, 0, .11, 0, vp);
+      const FL = ['#FF7FA8', '#FFC940', '#B784F5', '#FF8F5A', '#6FC8FF'].map(c => M(c, { roughness: .55 })); for (let q = 0; q < 9; q++) { const a = q * 2.4, r = .06 + (q % 3) * .07; add(new T.SphereGeometry(.1, 12, 10), FL[q % 5], Math.cos(a) * r, .3 + (q % 2) * .06, Math.sin(a) * r, vp) } }
+    // 點擊範圍與名牌跟著新沙發
+    if (sofaHit) { sofaHit.geometry.dispose(); sofaHit.geometry = new T.BoxGeometry(1.4, 1.6, 3.8); sofaHit.position.set(8.7, .8, 2.0); sofaHit.rotation.set(0, 0, 0) }
+    if (sofaSign) sofaSign.position.set(8.7, 2.6, 2.0);
+    LG.traverse(o => { if (o.isMesh) o.userData.wy3Action = 'wy260:sofa' });
+    if (ctx.targets) LG.traverse(o => { if (o.isMesh) ctx.targets.push(o) }); }
   return { A, O };
 }

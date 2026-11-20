@@ -34,7 +34,7 @@ export function setupSea(T, c){
  ext(blob(CC.r-.3,96,.75,1),2.2,M('#F3E6C8'),.35,CC.x,CC.z);
  const band=new T.Mesh(new T.TorusGeometry(CC.r+.1,.16,6,120),gold);band.rotation.x=Math.PI/2;band.position.set(CC.x,.25,CC.z);root.add(band);
  const plaza=cyl(12.6,12.6,.12,'#F6EBD6',64);plaza.position.set(0,1.53,9);root.add(plaza);
- const pe=new T.Mesh(new T.TorusGeometry(12.6,.16,8,96),gold);pe.rotation.x=Math.PI/2;pe.position.set(0,1.6,9);root.add(pe);
+ /* v507 陳老闆：拿掉城堡廣場外圍這一圈立體金環（只拿這一圈） */
  for(let i=0;i<6;i++){const st=cyl(1.15,1.15,.12,'#F2E4C8',20);st.position.set(Math.sin(i*.7)*1,1.53,22.3+i*1.55);root.add(st)}
  const lamp=(x,z)=>{const l=new T.Group();l.position.set(x,1.55,z);const p=cyl(.14,.2,3.4,navy,10);p.position.y=1.7;l.add(p);const h=cyl(.45,.35,.7,M('#FFF4D2',{emissive:'#FFD98A',emissiveIntensity:.6}),8);h.position.y=3.65;l.add(h);const top=new T.Mesh(new T.ConeGeometry(.6,.5,8),navy);top.position.y=4.2;l.add(top);const tip=sph(.14,gold);tip.position.y=4.5;l.add(tip);root.add(l);c.addSolid&&c.addSolid(x,z,.3,.3)};
  [[-10.2,17.8],[10.2,17.8],[-12.6,3],[12.6,3]].forEach(([x,z])=>lamp(x,z));

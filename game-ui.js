@@ -146,6 +146,7 @@
   '<a class="guMi" href="guide.html"><b>文字版導覽</b><small>一頁看懂德威陽</small></a>'+
   '<a class="guMi line" href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener"><b>LINE 諮詢</b><small>@wylaw</small></a>'+
   '<div class="guMi" data-m="photo" style="background:linear-gradient(180deg,#FFE7A8,#D9A84E);box-shadow:0 3px 0 #8A6224"><b style="color:#4A2E08">跟成員合照</b><small style="color:#6a4a14">存下來分享</small></div>'+
+  '<div class="guMi" data-m="album"><b>紀念相簿</b><small>各島拍過的紀念照</small></div>'+
   '<div class="guMi" data-m="sound"><b>音效</b><div class="guSeg"><span data-s="on">開</span><span data-s="off">關</span></div></div>'+
   '<div class="guMi" data-m="home"><b>回城堡</b><small>回到德威陽城堡</small></div></div>';
  const toast=document.createElement('div');toast.className='gu guToast gone';toast.textContent='搖桿走動　點標示互動';
@@ -172,6 +173,7 @@
   shine(){[1047,1319,1568,2093].forEach((f,i)=>mbox(f,i*.07,.1,.6));sparkle(.3,6,.04)},
   pop(){babble(0,560,4,.08);squeak(1300,.33,.1,.14)},
   open(){squeak(900,0,.1,.09);squeak(1250,.08,.1,.1);mbox(1568,.17,.08,.5)},
+  spin(){[784,988,1175,1568].forEach((f,i)=>squeak(f,i*.09,.09,.11));sparkle(.36,5,.04);mbox(2093,.42,.1,.45)},
   done(){[1047,1319,1568,2093,1568,2093,2637].forEach((f,i)=>mbox(f,i*.085,.1,.55));sparkle(.62,8,.045);squeak(1500,.62,.1,.15)}};
  let lastSfx={};
  window.wySfx=k=>{if(!soundOn||!SFX[k])return;const now=performance.now();if(lastSfx[k]&&now-lastSfx[k]<120)return;lastSfx[k]=now;try{const a=ac();if(a&&a.state==='suspended')a.resume();SFX[k]()}catch(e){}};
@@ -216,7 +218,8 @@
   else if(m==='help'){menu.querySelector('.guHelp').classList.toggle('on')}
   else if(m==='sound'){const s=e.target.closest('[data-s]');soundOn=s?s.dataset.s==='on':!soundOn;try{localStorage.setItem('wy-sound',soundOn?'on':'off')}catch(err){}syncMenu();syncSnd();if(soundOn)window.wySfx('tap')}
   else if(m==='home'){menu.classList.remove('on');const h=$('home');if(h)h.click()}
-  else if(m==='photo'){menu.classList.remove('on');takePhoto()}});
+  else if(m==='photo'){menu.classList.remove('on');takePhoto()}
+  else if(m==='album'){menu.classList.remove('on');try{window.wyOpenAlbum&&window.wyOpenAlbum()}catch(err){}}});
  /* 主按鈕：大門前改為「進入」 */
  document.addEventListener('click',e=>{const it=e.target.closest&&e.target.closest('#interact');if(!it||!playing)return;press(it);window.wySfx('tap');
   if(mode==='out'&&atDoor>=0){e.stopImmediatePropagation();e.preventDefault();const g=G();g&&g.enter(atDoor)}

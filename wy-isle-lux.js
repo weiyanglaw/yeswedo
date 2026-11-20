@@ -5,7 +5,7 @@ export function setupIsleLux(T, c){
  const GOLD=M('#F4C552',{metalness:.55,roughness:.28});const NAVY=M('#2B3A67',{roughness:.6});const ctex=(w,h,fn)=>{const cv=document.createElement('canvas');cv.width=w;cv.height=h;fn(cv.getContext('2d'),w,h);const t=new T.CanvasTexture(cv);t.colorSpace=T.SRGBColorSpace;return t};const WHITE=M('#FFF8EE',{roughness:.5});
  const box=(w,h,d,m)=>new T.Mesh(new T.BoxGeometry(w,h,d),m);const cyl=(a,b,h,m,s=16)=>new T.Mesh(new T.CylinderGeometry(a,b,h,s),m);
  const sph=(r,m,sx=1,sy=1,sz=1,s=16)=>{const o=new T.Mesh(new T.SphereGeometry(r,s,Math.max(8,s*.7|0)),m);o.scale.set(sx,sy,sz);return o};
- const at=(o,x,y,z,p)=>{o.position.set(x,y,z);(p||root).add(o);return o};
+ const at=(o,x,y,z,p)=>{o.position.set(x,y,z);o.userData.wyIsleLux=1;(p||root).add(o);return o};
  const root=new T.Group();root.name='wyIsleLux';scene.add(root);const movers=[];const glow=[];
  const glowM=(col,em='#FFC86A')=>{const m=new T.MeshStandardMaterial({color:col,roughness:.35,emissive:em,emissiveIntensity:.15});glow.push(m);return m};
  const solid=(x,z,hx,hz)=>{try{c.addSolid&&c.addSolid(x,z,hx,hz)}catch(e){}};
@@ -45,7 +45,7 @@ export function setupIsleLux(T, c){
  // ================= 企業島（紫）：頂樓停機坪＋金色直升機 =================
  {const g=G[4];
  // 1) 頂樓停機坪＋金色直升機
- {const g=new T.Group();g.position.set(IX+.6,19.62,IZ-5.6);root.add(g);
+ {const g=new T.Group();g.name='wyOldHeli';g.position.set(IX+.6,19.62,IZ-5.6);root.add(g);
   const pad=cyl(2.7,2.7,.18,NAVY,40);g.add(pad);const ring=new T.Mesh(new T.TorusGeometry(2.45,.09,8,48),GOLD);ring.rotation.x=Math.PI/2;ring.position.y=.11;g.add(ring);
   const hT=ctex(128,128,(x,w,h)=>{x.clearRect(0,0,w,h);x.fillStyle='#FFFFFF';x.font='bold 100px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText('H',w/2,h/2+6)});const hm=new T.Mesh(new T.PlaneGeometry(2.2,2.2),new T.MeshBasicMaterial({map:hT,transparent:true}));hm.rotation.x=-Math.PI/2;hm.position.y=.1;g.add(hm);
   const lights=[];for(let k=0;k<8;k++){const a=k/8*Math.PI*2;const l=new T.Mesh(new T.SphereGeometry(.12,8,6),new T.MeshStandardMaterial({color:'#9AD8FF',emissive:'#5AC8FF',emissiveIntensity:1}));l.position.set(Math.cos(a)*2.75,.14,Math.sin(a)*2.75);g.add(l);lights.push(l)}
