@@ -45,7 +45,7 @@ export function setupCastleLux(T, c){
  // ---------- 4) 頂級圓拱大門（不會動） ----------
  {const z=3.42,W=3.5,yb=1.0,ys=4.3,R2=W/2;
   const sh=new T.Shape();sh.moveTo(-W/2,0);sh.lineTo(W/2,0);sh.lineTo(W/2,ys-yb);sh.absarc(0,ys-yb,R2,0,Math.PI,false);sh.lineTo(-W/2,0);
-  const door=new T.Mesh(new T.ShapeGeometry(sh,24),M('#1D3557',{roughness:.55}));door.position.set(0,yb,z);g.add(door);
+  const door=new T.Mesh(new T.ShapeGeometry(sh,24),M('#1D3557',{roughness:.55}));door.position.set(0,yb,z);g.add(door);door.userData.wyDoor={w:W,h:ys-yb+R2,isle:0,bottom:true};
   const fr=new T.Shape();const W2=W+.5;fr.moveTo(-W2/2,0);fr.lineTo(W2/2,0);fr.lineTo(W2/2,ys-yb);fr.absarc(0,ys-yb,W2/2,0,Math.PI,false);fr.lineTo(-W2/2,0);const hole=new T.Path();hole.moveTo(-W/2,0);hole.lineTo(W/2,0);hole.lineTo(W/2,ys-yb);hole.absarc(0,ys-yb,R2,0,Math.PI,false);hole.lineTo(-W/2,0);fr.holes.push(hole);
   const frame=new T.Mesh(new T.ExtrudeGeometry(fr,{depth:.12,bevelEnabled:false,curveSegments:24}),GOLD);frame.position.set(0,yb,z-.04);g.add(frame);
   // 金框面板（每扇上下兩格）、中縫、門環

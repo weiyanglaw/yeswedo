@@ -1,6 +1,6 @@
 // 德威陽｜有法度 v494 沖繩海上熱鬧版：翡翠漸層海、白沙灘、椰子樹、扶桑花、城堡島重做（草地＋廣場＋橋頭）、
 // 中間的骨牌花田 Logo、可愛的船／海鷗／遊客／攤位、遠方小島。
-import {buildLuxFountain} from './wy-fountain.js?v=503';
+import {buildLuxFountain} from './wy-fountain.js?v=509';
 export function setupSea(T, c){
  const scene=c.scene, xy=c.xy, G=c.groups(), CEN=c.center, SEA=-1.25;
  const MC=new Map();const M=(col,o)=>{const k=col+(o?JSON.stringify(o):'');if(!MC.has(k))MC.set(k,new T.MeshStandardMaterial({color:col,roughness:.62,...(o||{})}));return MC.get(k)};
@@ -18,7 +18,7 @@ export function setupSea(T, c){
   if(i>0&&o.parent===g&&t==='SphereGeometry'&&Math.abs((p.radius||0)-.45)<.01){o.material=M(['#FFB3CB','#FFFFFF','#FFF1D6','#F6D27A'][Math.floor(Math.random()*4)])}}));
  // 四座主題島：島面外圈改成草地，側面砂岩加金色腰線（跟城堡島同一套）
  {const g5=new T.Mesh(new T.CircleGeometry(17.25,72),M('#9FDB82'));g5.rotation.x=-Math.PI/2;g5.position.set(xy[5][0],.04,xy[5][1]);root.add(g5);const b5=new T.Mesh(new T.TorusGeometry(17.05,.15,6,96),gold);b5.rotation.x=Math.PI/2;b5.position.set(xy[5][0],-.9,xy[5][1]);root.add(b5)}
- for(let i=1;i<=4;i++){const g=G[i];let topY=.12;try{const rc=new T.Raycaster(new T.Vector3(xy[i][0]+16.4,40,xy[i][1]),new T.Vector3(0,-1,0));const ms=[];g.traverse(o=>{if(o.isMesh&&o.visible)ms.push(o)});const h=rc.intersectObjects(ms,false)[0];if(h)topY=h.point.y}catch(e){}
+ for(let i=1;i<=4;i++){const g=G[i];let topY=.12;try{const rc=new T.Raycaster(new T.Vector3(xy[i][0]+16.4,40,xy[i][1]),new T.Vector3(0,-1,0));const ms=[];g.traverse(o=>{if(o.isMesh&&o.visible)ms.push(o)});const h=rc.intersectObjects(ms,false).find(x=>x.point.y<2.5);/* v508：只找島面，不要碰到建築屋頂（訴訟島草環曾浮在屋頂高度） */if(h)topY=h.point.y}catch(e){}
   const ringG=new T.Mesh(new T.RingGeometry(14,17.25,72),M('#9FDB82',{side:T.DoubleSide}));ringG.rotation.x=-Math.PI/2;ringG.position.set(xy[i][0],topY+.03,xy[i][1]);root.add(ringG);
   const bd=new T.Mesh(new T.TorusGeometry(17.05,.15,6,96),gold);bd.rotation.x=Math.PI/2;bd.position.set(xy[i][0],-.9,xy[i][1]);root.add(bd)}
  // ---------- 2) 城堡島重做 ----------
@@ -35,7 +35,7 @@ export function setupSea(T, c){
  const band=new T.Mesh(new T.TorusGeometry(CC.r+.1,.16,6,120),gold);band.rotation.x=Math.PI/2;band.position.set(CC.x,.25,CC.z);root.add(band);
  const plaza=cyl(12.6,12.6,.12,'#F6EBD6',64);plaza.position.set(0,1.53,9);root.add(plaza);
  /* v507 陳老闆：拿掉城堡廣場外圍這一圈立體金環（只拿這一圈） */
- for(let i=0;i<6;i++){const st=cyl(1.15,1.15,.12,'#F2E4C8',20);st.position.set(Math.sin(i*.7)*1,1.53,22.3+i*1.55);root.add(st)}
+ /* v509：陳老闆回報「一進城堡廣場有一條灰白色的路」，查明是這六塊灰白圓踏石（不是走路煙霧），拿掉 */
  const lamp=(x,z)=>{const l=new T.Group();l.position.set(x,1.55,z);const p=cyl(.14,.2,3.4,navy,10);p.position.y=1.7;l.add(p);const h=cyl(.45,.35,.7,M('#FFF4D2',{emissive:'#FFD98A',emissiveIntensity:.6}),8);h.position.y=3.65;l.add(h);const top=new T.Mesh(new T.ConeGeometry(.6,.5,8),navy);top.position.y=4.2;l.add(top);const tip=sph(.14,gold);tip.position.y=4.5;l.add(tip);root.add(l);c.addSolid&&c.addSolid(x,z,.3,.3)};
  [[-10.2,17.8],[10.2,17.8],[-12.6,3],[12.6,3]].forEach(([x,z])=>lamp(x,z));
  [[-16.8,13.5],[16.8,13.5],[-18.5,1],[18.5,1]].forEach(([x,z])=>{const hb=hibiscus();hb.position.set(x,1.9,z);root.add(hb);c.addSolid&&c.addSolid(x,z,1.2,1.2)});
@@ -57,7 +57,7 @@ export function setupSea(T, c){
  // ---------- 3) 橋頭：石板平台＋兩根深藍金燈柱 ----------
  (window.wyLinks||[]).forEach(L=>{[L.pts[0],L.pts[L.pts.length-1]].forEach((p,j)=>{const q=j?L.pts[L.pts.length-2]:L.pts[1];const ang=Math.atan2(q[0]-p[0],q[2]-p[2]);const head=new T.Group();head.position.set(p[0],p[1]+.86,p[2]);head.rotation.y=ang;root.add(head);
   {const hb=hibiscus();hb.scale.multiplyScalar(.8);hb.position.set((j?-1:1)*7.4,-.7,j?1.6:-1.6);head.add(hb)}
-  for(const s of [-1,1]){const pl=new T.Group();pl.position.set(s*5.3,-.3,0);head.add(pl);const pp=cyl(.22,.3,3.8,navy,12);pp.position.y=1.9;pl.add(pp);const rg=new T.Mesh(new T.TorusGeometry(.32,.08,6,16),gold);rg.rotation.x=Math.PI/2;rg.position.y=2.9;pl.add(rg);
+  for(const s of [-1,1]){const pl=new T.Group();pl.position.set(s*5.3,-.3,0);pl.userData.wyBridgeLamp=1;head.add(pl);const pp=cyl(.22,.3,3.8,navy,12);pp.position.y=1.9;pl.add(pp);const rg=new T.Mesh(new T.TorusGeometry(.32,.08,6,16),gold);rg.rotation.x=Math.PI/2;rg.position.y=2.9;pl.add(rg);
    const lt=sph(.55,M('#FFF4D2',{emissive:'#FFD98A',emissiveIntensity:.7}),1,1,1,14);lt.position.y=4.2;pl.add(lt);const cp=new T.Mesh(new T.ConeGeometry(.5,.45,10),navy);cp.position.y=4.85;pl.add(cp)}})});
  // ---------- 4) 中間的骨牌花田 Logo 島 ----------
  const CG=new T.Group();CG.position.set(CEN.x,0,CEN.z);CG.userData.dyn=1;root.add(CG);
@@ -237,7 +237,8 @@ export function setupSea(T, c){
   drop.forEach(o=>{o.parent&&o.parent.remove(o);o.geometry.dispose()});return drop.length}catch(e){console.error('freeze',e);return 0}}
  const frozen=[];window.wySeaFreeze=()=>freeze(root);
  // ---------- 每格更新 ----------
- setTimeout(()=>{freeze(root);try{const bg=c.bridgeGroups?c.bridgeGroups():[];if(bg.length)freeze(bg)}catch(e){}},300);
+ /* v509：等島名立牌擺好、旁邊的樹收起來之後才合併（合併後的樹就拿不掉了）；最多等 25 秒 */
+ {const t0=performance.now();const go=()=>{freeze(root);try{const bg=c.bridgeGroups?c.bridgeGroups():[];if(bg.length)freeze(bg)}catch(e){}};const wait=()=>{if(window.wySignCams)setTimeout(go,9000);else if(performance.now()-t0>25000)go();else setTimeout(wait,500)};setTimeout(wait,300)}
  let t=0,last=performance.now();(function tick(){requestAnimationFrame(tick);const now=performance.now();const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;const inside=c.inside&&c.inside();root.visible=!inside;for(const f of frozen)f.visible=!inside;if(inside)return;for(const f of movers){try{f(t,dt)}catch(e){}}})();
 window.wySeaReady=true;
  return root}

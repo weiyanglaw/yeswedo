@@ -46,7 +46,7 @@ function ensure() {
     if (d.t === 'photo' && d.src) shrink(d.src).then(src => { const A = load(); const first = !A[ISL[d.k][0]]; A[ISL[d.k][0]] = src; if (!store(A)) { delete A.set; store(A) } if (first && ISL.every(i => A[i[0]])) setTimeout(() => { closePhoto(); openSet() }, 1800) }); });
 }
 function shrink(src) { return new Promise(r => { const im = new Image(); im.onload = () => { const s = Math.min(1, 1000 / im.width); const c = document.createElement('canvas'); c.width = im.width * s | 0; c.height = im.height * s | 0; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); r(c.toDataURL('image/jpeg', .82)) }; im.onerror = () => r(src); im.src = src }) }
-export function openPhoto(i) { ensure(); const k = ISL[i] && ISL[i][0]; if (!k) return; frame.innerHTML = '<iframe allow="web-share" src="./photo/' + k + '/index.html?v=507"></iframe>'; frame.style.display = 'block'; try { window.wySfx && window.wySfx('open') } catch (e) { } }
+export function openPhoto(i) { ensure(); const k = ISL[i] && ISL[i][0]; if (!k) return; frame.innerHTML = '<iframe allow="web-share" src="./ph-' + k + '.html?v=509"></iframe>'; frame.style.display = 'block'; try { window.wySfx && window.wySfx('open') } catch (e) { } }
 function closePhoto() { if (!frame) return; frame.style.display = 'none'; frame.innerHTML = '' }
 function shell(title, sub, inner) {
   box.innerHTML = `<div class="c"><div class="br"><img alt="德威陽國際法律事務所" src="./office-logo-transparent.png"><div><b>德威陽國際法律事務所</b><small>Wei &amp; Yang International Law Firm</small></div><button class="x" data-a="close" aria-label="關閉">×</button></div><div class="bd"><h3>${title}</h3>${sub ? `<p class="sub">${sub}</p>` : ''}${inner}</div></div>`;

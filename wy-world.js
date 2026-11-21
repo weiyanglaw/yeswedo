@@ -89,9 +89,9 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
  const festApi={moon,dot,glow:(m,i)=>glowMats.set(m,i),phase:()=>cur,
   setSnow(){snow=true;motes.userData.snow=1;motes.material.map=dot;motes.material.size=.95;motes.material.color.set('#ffffff');motes.material.blending=T.NormalBlending;motes.material.opacity=.95;motes.material.needsUpdate=true},
   tintMotes(col){motes.userData.tint=col;motes.material.color.set(col);motes.material.needsUpdate=true}};
- import('./wy-fest.js?v=502').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
- let skyTickFn=null;import('./wy-sky.js?v=500').then(m=>{try{skyTickFn=m.setupSky(T,c,festApi)}catch(e){console.error('sky',e)}}).catch(e=>console.error('sky load',e));
- let fwTickFn=null;import('./wy-fireworks.js?v=501').then(m=>{try{fwTickFn=m.setupFireworks(T,c,festApi)}catch(e){console.error('fw',e)}}).catch(e=>console.error('fw load',e));
+ import('./wy-fest.js?v=509').then(m=>{try{festTickFn=m.setupFest(T,c,festApi)}catch(e){console.error('fest',e)}}).catch(e=>console.error('fest load',e));
+ let skyTickFn=null;import('./wy-sky.js?v=509').then(m=>{try{skyTickFn=m.setupSky(T,c,festApi)}catch(e){console.error('sky',e)}}).catch(e=>console.error('sky load',e));
+ let fwTickFn=null;import('./wy-fireworks.js?v=509').then(m=>{try{fwTickFn=m.setupFireworks(T,c,festApi)}catch(e){console.error('fw',e)}}).catch(e=>console.error('fw load',e));
  function festTick(dt,now){if(festTickFn)festTickFn(dt,now);if(fwTickFn)try{fwTickFn(dt)}catch(e){}if(skyTickFn)try{skyTickFn(dt)}catch(e){}if(WY_SEASON==='summer'&&!snow)motes.visible=moteNight}
  /* ---------- v489 流暢度：依實際幀率自動調整解析度 ---------- */
  const prCap=Math.min(window.devicePixelRatio||1,2),prMin=Math.min(prCap,1.75);let prNow=renderer.getPixelRatio(),pfN=0,pfT=performance.now(),pfGood=0;
@@ -113,8 +113,8 @@ const ms=Array.isArray(o.material)?o.material:[o.material];let size=-1;for(const
   motes.visible=!inside;if(!inside){const arr=mg.attributes.position.array;for(let i=0;i<M;i++){const v=mv[i];v[3]+=dt;let x=arr[i*3]+(v[0]+Math.sin(v[3])*.4)*dt*(moteNight?.6:1),y=arr[i*3+1]+v[1]*dt*(snow?2.2:(moteNight?.15:1))+(moteNight?Math.sin(v[3]*1.3)*.01:0),z=arr[i*3+2]+(v[2]+Math.cos(v[3]*.8)*.4)*dt*(moteNight?.6:1);
     if(y<.5)y=18;if(y>20)y=2;if(x-ax>35)x-=70;if(x-ax<-35)x+=70;if(z-az>35)z-=70;if(z-az<-35)z+=70;arr[i*3]=x;arr[i*3+1]=y;arr[i*3+2]=z}mg.attributes.position.needsUpdate=true}
   /* 小灰塵 */
-  if(a&&!inside){if(lastA){const sp=Math.hypot(ax-lastA[0],az-lastA[1])/Math.max(dt,.001);dustCd-=dt;if(sp>2.2&&dustCd<=0){dustCd=.14;const s=dust[di++%dust.length];s.visible=true;s.userData.t=0;s.position.set(ax+(Math.random()-.5)*.4,a.position.y+.25,az+(Math.random()-.5)*.4)}}lastA=[ax,az]}
-  for(const s of dust){if(!s.visible)continue;s.userData.t+=dt;const t=s.userData.t/.55;if(t>=1){s.visible=false;continue}const k=.5+t*1.1;s.scale.set(k,k,1);s.position.y+=dt*.6;s.material.opacity=.75*(1-t)}
+  if(a&&!inside){if(lastA){const sp=Math.hypot(ax-lastA[0],az-lastA[1])/Math.max(dt,.001);dustCd-=dt;const autoW=(window.__wyAutoWalking&&window.__wyAutoWalking())||window.__wyDoorBusy;/* v508 灰塵：小一點、淡一點、短一點，自動走路時不出 */if(!autoW&&sp>2.6&&dustCd<=0){dustCd=.22;const s=dust[di++%dust.length];s.visible=true;s.userData.t=0;s.position.set(ax+(Math.random()-.5)*.4,a.position.y+.25,az+(Math.random()-.5)*.4)}}lastA=[ax,az]}
+  for(const s of dust){if(!s.visible)continue;s.userData.t+=dt;const t=s.userData.t/.35;if(t>=1){s.visible=false;continue}const k=.28+t*.55;s.scale.set(k,k,1);s.position.y+=dt*.45;s.material.opacity=.38*(1-t)}
   /* 家具彈跳 */
   for(let i=hops.length-1;i>=0;i--){const o=hops[i],h=o.userData.wyHop,t=(now-h.t0)/380;if(t>=1){o.position.y=h.y;delete o.userData.wyHop;hops.splice(i,1);continue}o.position.y=h.y+Math.sin(t*Math.PI)*.22*(1-t*.3)}
  }

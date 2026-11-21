@@ -59,7 +59,7 @@ export function setupCastleTop(T,R,api={}){
  {const dz=BZ-.05,W=2.3,H=2.1,DY=Y0+.6;
   const arch=(w,h)=>{const sh=new T.Shape();sh.moveTo(-w/2,0);sh.lineTo(w/2,0);sh.lineTo(w/2,h);sh.absarc(0,h,w/2,0,Math.PI,false);sh.lineTo(-w/2,0);return sh};
   add(new T.ExtrudeGeometry(arch(W+.5,H),{depth:.28,bevelEnabled:false}),GOLD,0,DY,dz-.2);
-  add(new T.ExtrudeGeometry(arch(W,H),{depth:.32,bevelEnabled:false}),NAVY,0,DY,dz-.18);
+  {const dm=add(new T.ExtrudeGeometry(arch(W,H),{depth:.32,bevelEnabled:false}),NAVY,0,DY,dz-.18);if(dm&&dm.userData)dm.userData.wyDoor={w:W,h:H+W/2,isle:0,bottom:true,zf:.32}}
   const fr=add(new T.TorusGeometry(W/2+.1,.07,8,40,Math.PI),GOLD,0,DY+H,dz+.16);box(.14,H,.14,GOLD,-(W/2+.1),DY+H/2,dz+.16);box(.14,H,.14,GOLD,(W/2+.1),DY+H/2,dz+.16);
   box(.07,H+W/2-.08,.1,GOLD,0,DY+(H+W/2)/2,dz+.16);
   const lt=new T.TextureLoader().load('office-logo-transparent.png');lt.colorSpace=T.SRGBColorSpace;

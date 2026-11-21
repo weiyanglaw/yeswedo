@@ -1,4 +1,4 @@
-import { buildRefLift } from './wy-lift-ref.js?v=5071';
+import { buildRefLift } from './wy-lift-ref.js?v=509';
 // v503 電梯：以原本的電梯為準，只改五樣（陳老闆 2026-11-19）
 // 1. 門楣數字改成放大的扇形指針樓層錶（撐滿門楣深藍條、粗金框、粗圓頭指針、大數字）
 // 2. 門楣藍燈條改暖金柔光，Logo 金框圓徽放在燈條中間（整個在門楣內）

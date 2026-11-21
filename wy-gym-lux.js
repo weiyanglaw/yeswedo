@@ -110,7 +110,7 @@ export function applyGymLux(T, ctx) {
     gym.traverse(o => { if (o.isMesh && o.parent && o.parent !== gym && o.parent !== G && o.geometry && o.geometry.parameters && Math.abs((o.geometry.parameters.depth || 0) - .6) < .01 && Math.abs((o.geometry.parameters.width || 0) - .055) < .01) { o.visible = false; const p = o.parent; for (const [y, h] of [[.18, .06], [4.32, .06], [2.25, .04]]) { const e = new T.Mesh(new T.BoxGeometry(.06, h, .6), goldB); e.position.set(.01, y, 0); p.add(e) } for (const z of [-.29, .29]) { const e = new T.Mesh(new T.BoxGeometry(.06, 4.2, .04), goldB); e.position.set(.01, 2.25, z); p.add(e) } } });
     CUR = G;
     // 上下燈條：在金框內側 6 公分，不貼在玻璃面上
-    for (const y of [.32, 4.36]) { for (const z of [Z0 + .07, Z1 - .07]) box(cx, y, z, W - .14, .07, .05, glow); box(X0 + .07, y, cz, .05, .07, D - .14, glow); for (const [a, b] of [[Z0 + .07, 3.0], [4.85, Z1 - .07]]) box(X1 - .07, y, (a + b) / 2, .05, .07, b - a, glow) }
+    for (const y of [.15, 4.36]) { /* v508：下燈條移到腰板下方，不再跟腰板疊在同一面（之前會閃） */ for (const z of [Z0 + .07, Z1 - .07]) box(cx, y, z, W - .14, .07, .05, glow); box(X0 + .07, y, cz, .05, .07, D - .14, glow); for (const [a, b] of [[Z0 + .07, 3.0], [4.85, Z1 - .07]]) box(X1 - .07, y, (a + b) / 2, .05, .07, b - a, glow) }
     // 腰線、上緣細金線（每面兩條）
     for (const y of [1.25, 3.55]) { for (const z of [Z0 + .035, Z1 - .035]) box(cx, y, z, W, .03, .025, goldB); box(X0 + .035, y, cz, .025, .03, D, goldB) }
     // 每面直向細金分隔線

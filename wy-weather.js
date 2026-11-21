@@ -189,15 +189,19 @@ function render() {
 export function openWeather() { ensure(); render(); fetchAll().then(() => { if (box.style.display === 'flex') render() }) }
 export function setupWeather(O) {
   ensure();
-  const st = document.createElement('div'); st.id = 'wyWxLine'; st.textContent = '法律氣象台 讀取中…';
-  const hud = document.getElementById('hud'); if (hud) { hud.append(st); hud.style.cursor = 'pointer'; hud.addEventListener('click', () => openWeather()) }
-  const line = () => { const W = wx('台北'); st.textContent = '台北 ' + DESC(W.code) + ' ' + W.t + '°C｜點我看法律氣象台' };
+  // v508：原本把天氣放在 #hud 裡，但新版左上名牌是 game-ui 的 .guBadge，#hud 被藏起來所以看不到；改成名牌正下方一顆可點的天氣小膠囊
+  const st = document.createElement('button'); st.id = 'wyWxChip'; st.type = 'button'; st.textContent = '法律氣象台 讀取中…';
+  st.style.cssText = 'position:fixed;z-index:61;left:14px;top:calc(env(safe-area-inset-top,0px) + 84px);display:none;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:2px solid #E0B64E;background:#FFFDF3F2;color:#1A2B4C;font:800 13px "Huninn","PingFang TC","Noto Sans TC",system-ui;box-shadow:0 3px 10px #0003;cursor:pointer';
+  document.body.append(st); st.addEventListener('click', () => openWeather());
+  const place = () => { const b = document.querySelector('.guBadge'); if (b) { const r = b.getBoundingClientRect(); if (r.height) st.style.top = (r.bottom + 6) + 'px' } };
+  (function vis() { let ok = true; try { ok = !O.ready || O.ready() } catch (e) { } const b = document.querySelector('.guBadge'); const bv = !b || getComputedStyle(b).opacity !== '0'; st.style.display = ok && bv ? 'flex' : 'none'; if (ok) place(); setTimeout(vis, 600) })();
+  const line = () => { const W = wx('台北'); st.textContent = '台北 ' + DESC(W.code) + ' ' + W.t + '°C｜法律氣象台' };
   fetchAll().then(line); line();
   rib = document.createElement('div'); rib.id = 'wyWXr'; document.body.append(rib); rib.addEventListener('click', () => { rib.classList.remove('on'); openWeather() });
   // 每天第一次進城堡廣場：左上角滑出小橫幅 3 秒
   const key = 'wy-wx-day', today = new Date().toDateString();
   let shown = false; try { shown = localStorage.getItem(key) === today } catch (e) { }
-  if (!shown) { const tryShow = () => { if (O.ready && !O.ready()) { setTimeout(tryShow, 1500); return } fetchAll().then(() => { const W = wx('台北'), P = pickLine(new Date()), s = STAFF[P.k] || STAFF.sun; rib.innerHTML = `<img src="./${s[0]}" alt=""><div><b>德威陽法律氣象台</b><span>台北 ${DESC(W.code)} ${W.t}°C｜點我看今日提醒</span></div>`; rib.classList.add('on'); try { localStorage.setItem(key, today) } catch (e) { } setTimeout(() => rib.classList.remove('on'), 3000) }) }; setTimeout(tryShow, 1200) }
+  if (!shown) { const tryShow = () => { if (O.ready && !O.ready()) { setTimeout(tryShow, 1500); return } fetchAll().then(() => { const W = wx('台北'), P = pickLine(new Date()), s = STAFF[P.k] || STAFF.sun; rib.innerHTML = `<img src="./${s[0]}" alt=""><div><b>德威陽法律氣象台</b><span>台北 ${DESC(W.code)} ${W.t}°C｜點我看今日提醒</span></div>`; rib.classList.add('on'); try { localStorage.setItem(key, today) } catch (e) { } setTimeout(() => rib.classList.remove('on'), 4000) }) }; setTimeout(tryShow, 2500) }
   return { openWeather };
 }
 export const _test = { pickLine, fest, kindOf, DAY, FEST };

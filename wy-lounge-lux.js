@@ -18,6 +18,8 @@ export function applyLoungeLux(ctx) {
   }
   // 舊家具的點擊目標移除（新家具重新登記）
   for (let i = targets.length - 1; i >= 0; i--) { const o = targets[i]; let h = false; for (let q = o; q; q = q.parent) if (hidden.includes(q)) h = true; if (h && o.geometry && o.geometry.type !== 'PlaneGeometry') targets.splice(i, 1) }
+  // v508：被新家具取代、永遠不會再顯示的舊家具，直接從場景移除，釋放記憶體（畫面不變）
+  for (const ch of hidden) { if (ch.parent) ch.parent.remove(ch); }
 
   // ---------- 2) 材質 ----------
   const tex = (w, h, f) => { const c = document.createElement('canvas'); c.width = w; c.height = h; f(c.getContext('2d'), w, h); const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 8; return t };

@@ -63,7 +63,7 @@ export function buildMedicalNew(T, target) {
   box(6.0, 1.8, .6, ivory, 0, 8.3, 4.1); box(6.2, .14, .7, gold, 0, 9.22, 4.1);
   medal(2.25, '#1E6448', 0, 9.6, 4.5);
   // 大門：金框玻璃雙開門
-  box(4.2, 4.4, .16, new T.MeshPhysicalMaterial({ color: '#E8D6A6', roughness: .1, metalness: .3, clearcoat: 1, emissive: '#8a6a2a', emissiveIntensity: .35 }), 0, .36 + 2.2, 3.1);
+  box(4.2, 4.4, .16, new T.MeshPhysicalMaterial({ color: '#E8D6A6', roughness: .1, metalness: .3, clearcoat: 1, emissive: '#8a6a2a', emissiveIntensity: .35 }), 0, .36 + 2.2, 3.1).userData.wyDoor = { w: 4.2, h: 4.4, isle: 2, bars: true };
   for (const x of [-2.15, 0, 2.15]) box(.18, 4.5, .3, gold, x, .36 + 2.25, 3.2); box(4.5, .2, .3, gold, 0, .36 + 4.45, 3.2); box(4.5, .16, .3, gold, 0, .36 + 2.4, 3.2);
   // 台階
   for (let k = 0; k < 3; k++) box(9.6 - k * .6, .16, 1.2 - k * .3, marble, 0, .36 + .08 + k * .16, 6.4 - k * .35);
@@ -130,12 +130,12 @@ export function buildLitigationNew(T, target) {
   const Y0 = .3, H = 8.6, FZ = 2.4, W = 24; /* v507 調高到跟原本一樣高（原本大柱約 8.4） */
   // 主體：橘牆、圓弧轉角、米白線腳與分層女兒牆
   box(W - 3, H, 8, orange, 0, Y0 + H / 2, FZ - 4); for (const s of [-1, 1]) { cyl(1.5, H, orange, s * (W / 2 - 1.5), Y0 + H / 2, FZ - 1.5, P, 32); box(3, H, 5, orange, s * (W / 2 - 1.5), Y0 + H / 2, FZ - 4.5); cyl(1.62, .45, ivory, s * (W / 2 - 1.5), Y0 + H + .2, FZ - 1.5, P, 32) }
-  box(W - 2.6, .45, 8.4, ivory, 0, Y0 + H + .2, FZ - 4); box(W - 2.5, .1, 8.5, gold, 0, Y0 + H + .45, FZ - 4); box(W - 2.6, .35, 8.4, ivory2, 0, Y0 + .17, FZ - 4);
-  box(W - 5, .8, 7, ivory, 0, Y0 + H + .85, FZ - 4.3); box(W - 4.9, .1, 7.1, gold, 0, Y0 + H + 1.28, FZ - 4.3);
-  // 屋頂綠植
-  for (const [x, z, r] of [[-7, -2.5, .9], [-4.5, -4.2, .7], [6.8, -3.2, .8], [9.5, -2.2, .6], [-9.8, -3.5, .6]]) add(new T.SphereGeometry(r, 14, 10), green, x, Y0 + H + 1.4 + r * .6, FZ + z);
+  /* v508 屋頂改回亮面反光（陳老闆：之前屋頂是亮亮的） */ const roofG = new T.MeshPhysicalMaterial({ color: '#FFF3E0', roughness: .14, metalness: .08, clearcoat: 1, clearcoatRoughness: .05, emissive: '#3a2a14', emissiveIntensity: .12 });
+  box(W - 2.6, .45, 8.4, roofG, 0, Y0 + H + .2, FZ - 4); box(W - 2.5, .1, 8.5, gold, 0, Y0 + H + .45, FZ - 4); box(W - 2.6, .35, 8.4, ivory2, 0, Y0 + .17, FZ - 4);
+  box(W - 5, .8, 7, roofG, 0, Y0 + H + .85, FZ - 4.3); box(W - 4.9, .1, 7.1, gold, 0, Y0 + H + 1.28, FZ - 4.3);
+  // v508 陳老闆：屋頂綠植拿掉
   // 中央頂樓＋立起的橘色大圓徽
-  box(9, 1.6, 4.5, ivory, 0, Y0 + H + 2.0, FZ - 2.8); box(9.2, .12, 4.7, gold, 0, Y0 + H + 2.85, FZ - 2.8); for (let k = 0; k < 10; k++) box(.25, .3, .25, gold, -4.2 + k * .93, Y0 + H + 1.2, FZ - .5);
+  box(9, 1.6, 4.5, roofG, 0, Y0 + H + 2.0, FZ - 2.8); box(9.2, .12, 4.7, gold, 0, Y0 + H + 2.85, FZ - 2.8); for (let k = 0; k < 10; k++) box(.25, .3, .25, gold, -4.2 + k * .93, Y0 + H + 1.2, FZ - .5);
   medal(1.75, '#E2703A', 0, Y0 + H + 2.6, FZ - .3);
   /* v507 正面線條（照參考圖：Logo 兩旁女兒牆多層線腳，粗線條、左右對稱） */
   { const zf = FZ + .03; // 主簷下：金線＋齒狀線腳
@@ -150,29 +150,23 @@ export function buildLitigationNew(T, target) {
     // 大門上方門楣：金線兩道
     box(6.2, .08, .1, gold, 0, Y0 + H - .05, FZ + .92); box(6.2, .08, .1, gold, 0, Y0 + H - .38, FZ + .92) }
   // 中央大門：深色玻璃＋金框
-  { const DW = 3.6, DH = 6.8; box(DW, DH, .2, glass, 0, Y0 + DH / 2, FZ + .05); for (const x of [-DW / 2, 0, DW / 2]) box(.16, DH + .1, .3, gold, x, Y0 + DH / 2, FZ + .14); for (const y of [.05, DH * .55, DH]) box(DW + .2, .14, .3, gold, 0, Y0 + y, FZ + .14); for (const x of [-DW / 4, DW / 4]) box(.06, DH, .2, gold, x, Y0 + DH / 2, FZ + .12) }
+  { const DW = 3.6, DH = 6.8; box(DW, DH, .2, glass, 0, Y0 + DH / 2, FZ + .05).userData.wyDoor = { w: DW, h: DH, isle: 1, bars: true }; for (const x of [-DW / 2, 0, DW / 2]) box(.16, DH + .1, .3, gold, x, Y0 + DH / 2, FZ + .14); for (const y of [.05, DH * .55, DH]) box(DW + .2, .14, .3, gold, 0, Y0 + y, FZ + .14); for (const x of [-DW / 4, DW / 4]) box(.06, DH, .2, gold, x, Y0 + DH / 2, FZ + .12) }
   box(6, .9, 1.2, ivory, 0, Y0 + H - .45, FZ + .3);
   // 左右各一對白色直條紋大柱
   for (const s of [-1, 1]) for (const dx of [2.85, 3.85]) { const x = s * dx; cyl(.4, H - .6, ivory, x, Y0 + (H - .6) / 2 + .25, FZ + 1.0, P, 24);
     for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; box(.06, H - .9, .06, ivory2, x + Math.sin(a) * .4, Y0 + (H - .6) / 2 + .25, FZ + 1.0 + Math.cos(a) * .4) }
-    cyl(.58, .4, gold, x, Y0 + .25, FZ + 1.0, P, 24); cyl(.58, .45, gold, x, Y0 + H - .3, FZ + 1.0, P, 24) }
+    cyl(.58, .42, gold, x, Y0 + .26, FZ + 1.0, P, 24); /* v508：柱座頂面原本跟最上面台階同高會閃，墊高 1 公分 */ cyl(.58, .45, gold, x, Y0 + H - .3, FZ + 1.0, P, 24) }
   // 大柱外側：橘色圓鼓＋三道細長窗
-  for (const s of [-1, 1]) { const x = s * 6.0, z = FZ + .3; cyl(1.6, H - .3, orange, x, Y0 + (H - .3) / 2, z, P, 36); cyl(1.75, .45, ivory, x, Y0 + H - .15, z, P, 36); cyl(1.75, .12, gold, x, Y0 + H + .1, z, P, 36); cyl(1.72, .35, ivory, x, Y0 + .17, z, P, 36); cyl(1.68, .1, gold, x, Y0 + 2.8, z, P, 36);
+  for (const s of [-1, 1]) { const x = s * 6.0, z = FZ + .3; cyl(1.6, H - .3, orange, x, Y0 + (H - .3) / 2, z, P, 36); cyl(1.75, .45, ivory, x, Y0 + H - .15, z, P, 36); cyl(1.77, .12, gold, x, Y0 + H + .1, z, P, 36); /* v508：金環原本跟米白圓環一樣粗、側面重疊會閃，加粗 2 公分 */ cyl(1.72, .35, ivory, x, Y0 + .17, z, P, 36); cyl(1.68, .1, gold, x, Y0 + 2.8, z, P, 36);
     for (let k = -1; k <= 1; k++) { const a = k * .55; const w = box(.42, 4.2, .1, slit, x + Math.sin(a) * 1.61, Y0 + 5.4, z + Math.cos(a) * 1.61); w.rotation.y = a; const f = box(.56, 4.35, .05, gold, x + Math.sin(a) * 1.6, Y0 + 5.4, z + Math.cos(a) * 1.6); f.rotation.y = a;
       const w2 = box(.42, 1.8, .1, slit, x + Math.sin(a) * 1.61, Y0 + 1.5, z + Math.cos(a) * 1.61); w2.rotation.y = a } }
   // 兩翼金框拱窗
   for (const x of [-9.0, -10.7, 9.0, 10.7]) { const w = archWinK(K, T, P, glass, x, Y0 + 3.9, FZ + .02, 1.3, 5.6); }
   for (const s of [-1, 1]) { const w = archWinK(K, T, P, glass, s * (W / 2 - .2), Y0 + 3.9, FZ - 2.3, 1.2, 5.4, s * Math.PI / 2) }
-  // 右後方獨立米白殿堂＋綠色圓頂
-  { const DY = 3.4; const BX = 3.5, BZ = FZ - 10.5, BY = Y0 + DY + 4.2; P.userData.dy = DY; box(11, 5.6, 6, ivory, BX, Y0 + DY + 2.8 + 2.4, BZ); box(11.3, .14, 6.3, gold, BX, Y0 + DY + 8.05, BZ); for (let k = 0; k < 6; k++) cyl(.28, 3.8, ivory, BX - 4.2 + k * 1.68, Y0 + DY + 5.9, BZ + 3.1, P, 16);
-    for (let k = 0; k < 5; k++) box(.9, 2.6, .1, glass, BX - 3.4 + k * 1.68, Y0 + DY + 5.9, BZ + 3.02);
-    cyl(3.0, 1.4, ivory, BX, Y0 + DY + 8.75, BZ, P, 40); cyl(3.15, .14, gold, BX, Y0 + DY + 9.5, BZ, P, 40); add(new T.SphereGeometry(3.05, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2), jade, BX, Y0 + DY + 9.5, BZ);
-    for (let k = 0; k < 12; k++) { const rb = add(new T.TorusGeometry(3.12, .07, 8, 30, Math.PI / 2), gold, BX, Y0 + DY + 9.5, BZ); rb.rotation.set(0, k / 12 * Math.PI * 2, Math.PI / 2) }
-    cyl(.5, .6, ivory, BX, Y0 + DY + 12.85, BZ, P, 16); add(new T.SphereGeometry(.3, 12, 8), gold, BX, Y0 + DY + 13.35, BZ); add(new T.ConeGeometry(.14, .7, 10), gold, BX, Y0 + DY + 13.9, BZ);
-    for (const s of [-1, 1]) { const x = BX + s * 4.4; cyl(1.25, 2.0, ivory, x, Y0 + DY + 9.0, BZ, P, 24); cyl(1.35, .12, gold, x, Y0 + DY + 10.0, BZ, P, 24); add(new T.SphereGeometry(1.28, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), jade, x, Y0 + DY + 10.0, BZ); add(new T.SphereGeometry(.2, 10, 8), gold, x, Y0 + DY + 11.35, BZ); add(new T.ConeGeometry(.1, .55, 8), gold, x, Y0 + DY + 11.75, BZ) }
-    medal(1.05, '#E2703A', BX, Y0 + DY + 8.4, BZ + 3.2); flag('#1E6448', BX + .2, Y0 + DY + 13.6, BZ, P) }
+  // v508 陳老闆：拿掉右後方的綠色圓頂殿堂（看起來像多一棟醫療島）；只保留原本的高度設定
+  { const DY = 3.4; P.userData.dy = DY }
   // 左前高旗桿：橘色大旗
-  flag('#E2703A', -3.6, Y0 + H + 1.3, FZ - 4.2);
+  // v508 陳老闆：屋頂左邊的小旗拿掉（保留中央大旗）
   // 半圓金邊台階
   for (let k = 0; k < 3; k++) { add(new T.CylinderGeometry(5.4 - k * .8, 5.4 - k * .8, .15, 64, 1, false, -Math.PI / 2, Math.PI), marble, 0, Y0 + .075 + k * .15, FZ + .4); const e = add(new T.TorusGeometry(5.4 - k * .8, .05, 6, 64, Math.PI), gold, 0, Y0 + .15 + k * .15, FZ + .4); e.rotation.x = -Math.PI / 2 }
   // 弧形花圃（綠籬＋花＋金邊）
@@ -262,7 +256,7 @@ export function buildFamilyNew(T, target) {
     const pr = new T.Shape(); pr.moveTo(-3.1, 0); pr.lineTo(3.1, 0); pr.lineTo(0, 1.3); pr.closePath(); add(new T.ExtrudeGeometry(pr, { depth: 2.8, bevelEnabled: false }), roofM, 0, Y1 + .35, pz - 2.25);
     const pf = new T.Shape(); pf.moveTo(-2.7, .12); pf.lineTo(2.7, .12); pf.lineTo(0, 1.05); pf.closePath(); add(new T.ExtrudeGeometry(pf, { depth: .08, bevelEnabled: false }), ivory, 0, Y1 + .35, pz + .58);
     /* v507 門口小屋頂：兩道金色斜邊線＋米白屋簷帶＋中央小金徽（線條克制，不亂） */ for (const e of [-1, 1]) { const rk = box(3.4, .14, .16, gold, e * 1.55, Y1 + .35 + .66, pz + .68); rk.rotation.z = -e * Math.atan2(1.3, 3.1) } box(6.3, .22, .2, ivory, 0, Y1 + .3, pz + .62); box(6.3, .07, .22, gold, 0, Y1 + .43, pz + .63); { const md = add(new T.TorusGeometry(.22, .05, 8, 24), gold, 0, Y1 + .8, pz + .7); add(new T.CircleGeometry(.2, 20), M('#8C2A44'), 0, Y1 + .8, pz + .69) }
-    const door = win(0, Y0 + 1.95, 3.4, 3.6, FZ + .06, 0); for (let k = 0; k < 3; k++) box(5.2 - k * .5, .15, 1.0 - k * .25, marble, 0, Y0 + .075 + k * .15, pz + 1.8 - k * .3) }
+    const door = win(0, Y0 + 1.95, 3.4, 3.6, FZ + .06, 0); door.children[1].userData.wyDoor = { w: 3.4, h: 3.6, isle: 3, see: true }; /* v508：門中間加了一條中線，原有兩條直線平均排到左右兩扇的正中間，四格一樣寬 */ for (const c of door.children) { const q = c.geometry && c.geometry.parameters; if (q && Math.abs(q.width - .06) < .001 && Math.abs(q.height - 3.6) < .001 && Math.abs(c.position.x) > .01) c.position.x = Math.sign(c.position.x) * 3.4 / 4 } for (let k = 0; k < 3; k++) box(5.2 - k * .5, .15, 1.0 - k * .25, marble, 0, Y0 + .075 + k * .15, pz + 1.8 - k * .3) }
   // 酒紅垂掛旗
   for (const s of [-1, 1]) { const x = s * 9.3; const c = document.createElement('canvas'); c.width = 256; c.height = 640; const g = c.getContext('2d'); const draw = im => { g.clearRect(0, 0, 256, 640); g.fillStyle = '#8C2A44'; g.beginPath(); g.moveTo(0, 0); g.lineTo(256, 0); g.lineTo(256, 540); g.lineTo(128, 640); g.lineTo(0, 540); g.closePath(); g.fill(); g.strokeStyle = '#F0CF86'; g.lineWidth = 14; g.beginPath(); g.moveTo(14, 0); g.lineTo(14, 534); g.lineTo(128, 624); g.lineTo(242, 534); g.lineTo(242, 0); g.stroke();
       if (im) { const cc = document.createElement('canvas'); cc.width = cc.height = 300; const gg = cc.getContext('2d'); gg.drawImage(im, 0, 0, 300, 300); gg.globalCompositeOperation = 'source-in'; gg.fillStyle = '#F6DC9A'; gg.fillRect(0, 0, 300, 300); g.drawImage(cc, -22, 70) } t.needsUpdate = true };
@@ -274,7 +268,7 @@ export function buildFamilyNew(T, target) {
   const planter = (x, z) => { box(2.2, 1.0, 2.2, ivory2, x, Y0 + .5, z); box(2.3, .1, 2.3, gold, x, Y0 + 1.02, z); for (let k = 0; k < 9; k++) add(new T.SphereGeometry(.34, 12, 8), M(['#D9264E', '#C81E46', '#F07A9A', '#FF9FB8'][k % 4], { roughness: .7 }), x - .7 + (k % 3) * .7, Y0 + 1.3 + (k % 2) * .15, z - .7 + Math.floor(k / 3) * .7) };
   for (const x of [-4.4, 4.4, -10.4, 10.4]) planter(x, FZ + 3.4);
   for (const s of [-1, 1]) { box(4.2, .8, .9, M('#3f9a4e', { roughness: .85 }), s * 7.4, Y0 + .4, FZ + 3.6); topiary(s * 6.6, FZ + 1.4, 1.0) }
-  { const g = new T.Group(); g.position.set(13.2, Y0, FZ + .5); P.add(g); add(new T.CylinderGeometry(.28, .42, 3.4, 10), M('#7a5638'), 0, 1.7, 0, g);
+  { const g = new T.Group(); g.position.set(15.0, Y0, FZ + 3.2); P.add(g); /* v509：櫻花樹往外移，不再插進房子 */ add(new T.CylinderGeometry(.28, .42, 3.4, 10), M('#7a5638'), 0, 1.7, 0, g);
     for (const [a, b, c, r, k] of [[0, 4.4, 0, 1.9, 0], [1.3, 3.9, .5, 1.4, 1], [-1.2, 4.0, -.3, 1.4, 2], [.3, 5.4, -.6, 1.3, 1], [-.5, 3.6, 1.1, 1.1, 0], [.9, 4.9, .9, 1.0, 2]]) add(new T.SphereGeometry(r, 16, 12), M(['#F6B3CC', '#F29BBE', '#FAC8DA'][k], { roughness: .8 }), a, b, c, g) }
   return P;
 }
@@ -334,7 +328,7 @@ export function buildBusinessNew(T, target) {
     box(9.6, .5, 2.4, ivory, 0, Y0 + 3.6, pz - .3); for (let k = 0; k <= 18; k++) cyl(.06, .6, ivory, -4.5 + k * .5, Y0 + 4.15, pz + .8, P, 8); box(9.4, .1, .14, gold, 0, Y0 + 4.48, pz + .8);
     for (const x of [-4.2, -2.6, 2.6, 4.2]) { cyl(.36, 3.4, ivory, x, Y0 + 1.7, pz + .4, P, 20); cyl(.5, .3, gold, x, Y0 + .15, pz + .4, P, 20); cyl(.5, .3, gold, x, Y0 + 3.3, pz + .4, P, 20) }
     const warm = new T.MeshPhysicalMaterial({ color: '#F6DEAA', roughness: .1, clearcoat: 1, emissive: '#D69A44', emissiveIntensity: .6 });
-    box(4.2, 2.9, .12, warm, 0, Y0 + 1.45, FZ + 1.92); for (const x of [-2.1, -.7, .7, 2.1]) box(.12, 3.0, .2, gold, x, Y0 + 1.5, FZ + 2.0); box(4.4, .14, .2, gold, 0, Y0 + 2.95, FZ + 2.0);
+    box(4.2, 2.9, .12, warm, 0, Y0 + 1.45, FZ + 1.92).userData.wyDoor = { w: 4.2, h: 2.9, isle: 4 }; for (const x of [-2.1, -1.05, 1.05, 2.1]) box(.12, 3.0, .2, gold, x, Y0 + 1.5, FZ + 2.0); /* v508：配合中線，直線改成平均四格 */ box(4.4, .14, .2, gold, 0, Y0 + 2.95, FZ + 2.0);
     for (const s of [-1, 1]) { box(2.2, 2.6, .1, roomM, s * 6.4, Y0 + 1.6, FZ + 1.92); box(2.4, .1, .14, gold, s * 6.4, Y0 + 2.95, FZ + 1.98) }
     for (let k = 0; k < 3; k++) box(6.4 - k * .5, .15, 1.1 - k * .25, marble, 0, Y0 + .075 + k * .15, pz + 1.6 - k * .3) }
   // 右側高旗桿＋紫旗
