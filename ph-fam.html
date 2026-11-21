@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>家庭生活島｜全家福油畫</title>
+<style>
+  :root{--navy:#8C2A44;--gold:#E6C27A;--gold2:#F6DC9A;--ink:#24314F}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#BFE3F7;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;color:var(--ink);overflow:hidden}
+  #stage{position:relative;margin:0 auto;height:100%;max-width:100vw;aspect-ratio:780/1688;overflow:hidden}
+  #bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #ship{position:absolute;width:44%;left:110%;top:4%;transition:none;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.18))}
+  #scan{position:absolute;left:0;right:0;top:0;height:6%;background:linear-gradient(rgba(120,255,200,0),rgba(120,255,200,.75),rgba(120,255,200,0));opacity:0;pointer-events:none}
+  #oldmast{position:absolute;left:49.4%;top:19.5%;width:1%;height:4%;background:linear-gradient(90deg,#B98C3A,#F6DC9A,#B98C3A);border-radius:3px;opacity:0;transition:opacity .6s}
+  #spot{position:absolute;left:20%;top:82%;width:24%;transform:translate(-50%,-50%);cursor:pointer}
+  #cam{width:100%;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25));animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-4px)}}
+  #bub{position:absolute;left:50%;top:-26%;transform:translateX(-50%) scale(0);transition:transform .25s;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:5px 14px;font-weight:700;color:var(--navy);font-size:15px;white-space:nowrap;box-shadow:0 4px 8px rgba(0,0,0,.15)}
+  #bub.on{transform:translateX(-50%) scale(1)}
+  #bub:after{content:'';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);border:8px solid transparent;border-top-color:var(--gold)}
+  #me{position:absolute;width:19%;left:74%;top:92%;transform:translate(-50%,-90%);transition:left .5s ease,top .5s ease;pointer-events:none;filter:drop-shadow(0 6px 5px rgba(0,0,0,.25))}
+  .hud{position:absolute;left:4%;right:4%;top:2.5%;display:flex;align-items:center;gap:10px;background:rgba(31,46,92,.92);color:#fff;border:2px solid var(--gold);border-radius:18px;padding:8px 12px;font-size:14px}
+  .hud img{width:38px;height:38px;border-radius:50%;background:#fff;border:2px solid var(--gold);padding:3px}
+  .hint{pointer-events:none;position:absolute;left:50%;top:11%;transform:translateX(-50%);background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:16px;padding:8px 14px;font-size:14px;white-space:nowrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;border:3px solid var(--gold);background:linear-gradient(#2B3E78,#1F2E5C);color:var(--gold2);font-weight:700;border-radius:999px;cursor:pointer;font-family:inherit}
+  #shoot{position:absolute;right:6%;bottom:5%;width:84px;height:84px;font-size:18px;display:none;box-shadow:0 0 0 6px rgba(246,220,154,.35)}
+  #pick{position:absolute;left:0;right:0;bottom:5%;display:none;text-align:center}
+  #pick p{margin:0 auto 10px;display:inline-block;background:rgba(255,255,255,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 14px;font-size:15px}
+  #pick .row{display:flex;justify-content:center;gap:10px}
+  #pick .btn{padding:12px 16px;font-size:16px}
+  #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+  #card{position:fixed;inset:0;background:rgba(20,28,56,.72);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:14px;z-index:5}
+  #card img{width:min(86vw,460px);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  #card small{color:#fff;font-size:13px;opacity:.9}
+  #card .btn{padding:10px 22px;font-size:15px}
+  #nameBox{position:absolute;left:4%;bottom:24%;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:14px;padding:5px 8px;font-size:12px}
+  #nameBox input{border:0;background:transparent;font:inherit;font-size:13px;width:9.5em;color:var(--ink)}
+  #nameBox button{border:0;background:var(--gold);color:var(--navy);border-radius:10px;font-size:12px;padding:3px 7px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="bg" src="ph-fam-bg.jpg" alt="">
+  <div id="scan"></div>
+  <div id="spot"><canvas id="cam" width="200" height="260"></canvas><div id="bub">拍照</div></div>
+  <img id="me" src="ph-fam-seat-you.png" alt="">
+  <div class="hud"><img src="ph-fam-logo.png" alt=""><div><div style="font-weight:700">家庭生活島</div><div style="font-size:12px;opacity:.85">全家福油畫</div></div></div>
+  <div class="hint" id="hint">點一下相機就拍照</div>
+  <button class="btn" id="shoot">拍照</button>
+  
+  <div id="flash"></div>
+</div>
+<div id="card"><img id="pass" alt="全家福油畫"><small>手機長按圖片即可儲存或分享</small><button class="btn" id="closeCard">收下油畫</button></div>
+<div id="done" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(20,28,56,.55);z-index:6"><div style="width:min(88vw,380px);background:#FFFBF2;border:4px solid #E6C27A;border-radius:24px;padding:18px;text-align:center"><div id="dT" style="font-weight:700;font-size:18px;color:#1F2E5C"></div><div id="stamps" style="display:flex;justify-content:center;gap:8px;margin:12px 0"></div><div style="font-size:14px;color:#5a5040;line-height:1.6">五座島各有一張不同的紀念照<br>全部收集，就能合成「德威陽紀念套組」</div><div id="dN" style="margin:12px 0 4px;font-size:14px;color:#1F2E5C;font-weight:700"></div><div id="dL" style="font-size:13px;color:#8A7A5C"></div><button class="btn" id="goNext" style="margin-top:12px;padding:10px 22px;font-size:15px">繼續探索</button></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const NAMES=['收據比錢還多','合約看三遍的人','截圖存證大魔王','準時繳費模範生','口說無憑研究員','白紙黑字信仰者','押金一定要回來','錄音筆不離身','定型化契約剋星','吃瓜但不吃虧','小字條款放大鏡','存證信函收藏家','和解比賽冠軍','有法度練習生'];
+/* 正式版用訪客建立角色時的名字；試玩版先用一個範例 */ const MYNAME=(()=>{try{const p=JSON.parse(localStorage.getItem('weiyangVisitorProfile')||'{}');if(p.name&&p.name!=='法律探險家')return p.name}catch(e){}return NAMES[Math.floor(Math.random()*NAMES.length)]})();
+const L=src=>{const i=new Image();i.src=src;return i};const logo=L('ph-fam-logo.png'),me=$('#me'),ST=[0,1,2,3].map(k=>L('ph-fam-staff'+k+'.png'));
+const gold=(img,s,col)=>{const c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');g.drawImage(img,0,0,s,s);g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,s,s);return c};
+function drawCam(){const c=$('#cam'),g=c.getContext('2d');g.clearRect(0,0,200,260);g.strokeStyle='#B98C3A';g.lineWidth=10;g.lineCap='round';
+  g.beginPath();g.moveTo(100,140);g.lineTo(40,250);g.moveTo(100,140);g.lineTo(160,250);g.moveTo(100,140);g.lineTo(100,252);g.stroke();
+  g.fillStyle='#8C2A44';g.beginPath();g.roundRect(20,40,160,104,26);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=7;g.stroke();
+  g.fillStyle='#E6C27A';g.beginPath();g.roundRect(54,22,56,26,8);g.fill();g.fillStyle='#F7D98A';g.beginPath();g.arc(152,62,9,0,7);g.fill();
+  g.fillStyle='#E6C27A';g.beginPath();g.arc(100,92,40,0,7);g.fill();g.fillStyle='#6E1F36';g.beginPath();g.arc(100,92,32,0,7);g.fill();
+  g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.arc(90,82,10,0,7);g.fill();if(logo.naturalWidth)g.drawImage(gold(logo,40,'#F6DC9A'),80,72)}
+logo.onload=drawCam;drawCam();
+let atSpot=false;
+$('#spot').onclick=()=>{if(atSpot)return;atSpot=true;me.style.left='40%';me.style.top='92%';$('#bub').classList.add('on');$('#hint').textContent='喀嚓！';setTimeout(shoot,550)};
+function shoot(){$('#bub').classList.remove('on');$('#hint').textContent='德威陽一家集合囉！';const f=$('#flash');setTimeout(()=>{f.style.background='#FFF3D6';f.style.opacity=.95;setTimeout(()=>f.style.opacity=0,220);setTimeout(paint,300)},900)}
+// 全家福油畫：客廳背景、酒紅絲絨沙發、訪客坐中間、四位成員圍旁；油畫筆觸＋金色雕花畫框＋名牌
+function paint(){const W=1000,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  // 畫框
+  const fr=g.createLinearGradient(0,0,W,H);fr.addColorStop(0,'#F7DFA0');fr.addColorStop(.5,'#C99A48');fr.addColorStop(1,'#F2D28A');g.fillStyle=fr;g.beginPath();g.roundRect(0,0,W,H,30);g.fill();
+  g.strokeStyle='#9A7230';g.lineWidth=6;g.beginPath();g.roundRect(26,26,W-52,H-52,22);g.stroke();g.strokeStyle='#FBEAB8';g.lineWidth=3;g.beginPath();g.roundRect(44,44,W-88,H-88,18);g.stroke();
+  for(const [x,y] of [[70,70],[W-70,70],[70,H-70],[W-70,H-70]]){g.fillStyle='#FBEAB8';g.beginPath();g.arc(x,y,20,0,7);g.fill();g.fillStyle='#B98C3A';g.beginPath();g.arc(x,y,10,0,7);g.fill()}
+  const X0=80,Y0=80,PW=W-160,PH=880;g.save();g.beginPath();g.rect(X0,Y0,PW,PH);g.clip();
+  // 背景：暖色牆、窗、吊燈
+  const bg=g.createLinearGradient(0,Y0,0,Y0+PH);bg.addColorStop(0,'#6E2A38');bg.addColorStop(.55,'#A6574F');bg.addColorStop(1,'#E9C9A0');g.fillStyle=bg;g.fillRect(X0,Y0,PW,PH);
+  g.fillStyle='rgba(255,225,170,.35)';g.beginPath();g.roundRect(X0+PW/2-170,Y0+60,340,300,{upperLeft:170,upperRight:170,lowerLeft:6,lowerRight:6});g.fill();
+  g.strokeStyle='rgba(255,230,180,.6)';g.lineWidth=6;g.stroke();
+  const lg=g.createRadialGradient(X0+PW/2,Y0+40,0,X0+PW/2,Y0+40,300);lg.addColorStop(0,'rgba(255,236,190,.8)');lg.addColorStop(1,'rgba(255,236,190,0)');g.fillStyle=lg;g.fillRect(X0,Y0,PW,PH);
+  g.fillStyle='#F6D58A';for(let k=-2;k<=2;k++){g.beginPath();g.arc(X0+PW/2+k*34,Y0+36+Math.abs(k)*8,11,0,7);g.fill()}
+  { const lx=X0+PW/2,ly=Y0+205,lr=118;g.fillStyle='#6E1F36';g.beginPath();g.arc(lx,ly,lr,0,7);g.fill();g.strokeStyle='#F2D28A';g.lineWidth=8;g.stroke();g.lineWidth=2;g.beginPath();g.arc(lx,ly,lr-14,0,7);g.stroke();if(logo.naturalWidth)g.drawImage(gold(logo,256,'#F6DC9A'),lx-100,ly-100,200,200) }
+  // 地毯
+  g.fillStyle='#7A2338';g.beginPath();g.ellipse(X0+PW/2,Y0+PH-40,PW*.48,90,0,0,7);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=5;g.stroke();
+  // 沙發（酒紅絲絨、金腳）
+  const sx=X0+PW/2,sy=Y0+PH-250;g.fillStyle='#8C2A44';g.beginPath();g.roundRect(sx-360,sy-150,720,230,{upperLeft:120,upperRight:120,lowerLeft:30,lowerRight:30});g.fill();
+  g.fillStyle='#A23A55';g.beginPath();g.roundRect(sx-330,sy+20,660,110,30);g.fill();for(const e of[-1,1]){g.fillStyle='#7A2338';g.beginPath();g.roundRect(sx+e*330-60,sy-40,120,190,60);g.fill()}
+  g.fillStyle='#E6C27A';for(const e of[-1,1])g.fillRect(sx+e*300-8,sy+130,16,40);
+  g.fillStyle='rgba(255,220,200,.25)';for(let k=-2;k<=2;k++){g.beginPath();g.arc(sx+k*120,sy-70,10,0,7);g.fill()}
+  // 人物：後排林律師、夢奇奇站著；前排哈姆太郎、訪客（中）、薪水掌門人坐著
+  /* 依頭的寬度統一比例（包包頭、馬尾不會讓人變小） */ const put=(img,cx,by,h)=>{if(!img.naturalWidth)return;const w=h*img.naturalWidth/img.naturalHeight;g.drawImage(img,cx-w/2,by-h,w,h)};
+  put(ST[0],sx-150,sy-60,300);put(ST[1],sx+150,sy-60,315);
+  put(ST[2],sx-255,sy+120,255);put(ST[3],sx+258,sy+128,350);put(me,sx,sy+135,290);
+  // 油畫效果：暖色調＋筆觸紋理＋暗角
+  const im=g.getImageData(X0,Y0,PW,PH),d=im.data;let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let y=0;y<PH;y++)for(let x=0;x<PW;x++){const i=(y*PW+x)*4;const n=(Math.sin(x*.18+Math.sin(y*.05)*3)*Math.cos(y*.21+x*.02))*9+(rnd()-.5)*10;d[i]=Math.min(255,d[i]*1.04+n+6);d[i+1]=Math.min(255,d[i+1]*.98+n);d[i+2]=Math.min(255,d[i+2]*.88+n-6)}
+  g.putImageData(im,X0,Y0);const vg=g.createRadialGradient(X0+PW/2,Y0+PH/2,PH*.35,X0+PW/2,Y0+PH/2,PH*.78);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(40,10,10,.45)');g.fillStyle=vg;g.fillRect(X0,Y0,PW,PH);g.restore();
+  g.strokeStyle='#9A7230';g.lineWidth=4;g.strokeRect(X0,Y0,PW,PH);
+  // 名牌（大字、排得下）
+  const py=Y0+PH+28,ph=H-py-60;const pl=g.createLinearGradient(0,py,0,py+ph);pl.addColorStop(0,'#2B1A12');pl.addColorStop(1,'#4A2A1A');g.fillStyle=pl;g.beginPath();g.roundRect(X0+10,py,PW-20,ph,16);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=3;g.stroke();
+  g.fillStyle='#F6DC9A';g.textAlign='center';g.textBaseline='middle';g.font='700 54px "Noto Serif TC","Songti TC",serif';g.fillText('德威陽一家，歡迎您',W/2,py+56);
+  g.font='600 32px "Noto Sans TC",sans-serif';g.fillStyle='#FFF0CC';g.fillText(MYNAME+'　與德威陽四位成員',W/2,py+118);
+  g.font='600 28px "Noto Sans TC",sans-serif';g.fillStyle='#E8D3A6';g.fillText('婚姻家事・親權扶養・遺囑繼承・家事保護',W/2,py+172);
+  g.font='700 30px "Noto Sans TC",sans-serif';g.fillStyle='#F6DC9A';g.fillText('德威陽國際法律事務所　LINE：@wylaw',W/2,py+226);g.font='400 18px "Noto Sans TC",sans-serif';g.fillStyle='#C9B48A';g.fillText('趣味內容',W/2,py+268);g.textAlign='left';
+  $('#pass').src=c.toDataURL('image/jpeg',.9);$('#card').style.display='flex';$('#hint').textContent='全家福完成！'}
+$('#closeCard').onclick=()=>{$('#card').style.display='none';showDone();atSpot=false;me.style.left='74%';me.style.top='92%';};
+function showDone(){const h=$('#hint');h.textContent='已收進「我的紀念相簿」，選單裡隨時可以再看';h.style.display='block';clearTimeout(window.__tt);window.__tt=setTimeout(()=>{h.textContent='點一下相機就拍照'},2600)}
+$('#goNext').onclick=()=>{$('#done').style.display='none';$('#hint').textContent='正式版：地上會出現金色腳印，帶你走到企業商務島'};
+</script>
+
+<style>#wyBack{position:fixed;right:10px;top:10px;z-index:20;padding:8px 14px;border-radius:999px;border:3px solid #E6C27A;background:#fff;color:#1F2E5C;font:800 14px "Noto Sans TC",sans-serif}
+#wyAct{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}#wyAct .btn{padding:10px 16px;font-size:15px}
+.hud{right:110px!important}</style>
+<button id="wyBack" type="button">返回島上</button>
+<script>
+(()=>{const K=3;const post=m=>{try{parent.postMessage(Object.assign({wy507:1,k:K},m),'*')}catch(e){}};
+document.getElementById('wyBack').onclick=()=>post({t:'close'});setTimeout(()=>{const sp=document.getElementById('spot');if(sp)sp.click()},700);
+const pass=document.getElementById('pass');let last='';
+new MutationObserver(()=>{if(pass.src&&pass.src!==last&&pass.src.startsWith('data:')){last=pass.src;post({t:'photo',src:pass.src})}}).observe(pass,{attributes:true,attributeFilter:['src']});
+const card=document.getElementById('card'),cb=document.getElementById('closeCard');const sm=card.querySelector('small');if(sm)sm.textContent='已自動收進選單裡的紀念相簿';
+const row=document.createElement('div');row.id='wyAct';const sv=document.createElement('button');sv.className='btn';sv.textContent='存到手機';const sh=document.createElement('button');sh.className='btn';sh.textContent='分享';
+cb.textContent='繼續逛';cb.parentNode.insertBefore(row,cb);row.append(sv,sh,cb);
+const blob=async()=>(await fetch(pass.src)).blob();
+sv.onclick=async()=>{const a=document.createElement('a');a.href=pass.src;a.download='德威陽紀念照.jpg';document.body.append(a);a.click();a.remove()};
+sh.onclick=async()=>{try{const b=await blob();const f=new File([b],'德威陽紀念照.jpg',{type:b.type});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'德威陽｜有法度',text:'我在德威陽 3D 法律探索島拍了紀念照！https://weiyanglaw.github.io/yeswedo/'});else if(navigator.share)await navigator.share({title:'德威陽｜有法度',url:'https://weiyanglaw.github.io/yeswedo/'});else sv.onclick()}catch(e){}};
+const gn=document.getElementById('goNext');if(gn){gn.textContent='繼續逛';gn.onclick=()=>{document.getElementById('done').style.display='none';post({t:'close'})}}
+})();
+</script></body>
+</html>

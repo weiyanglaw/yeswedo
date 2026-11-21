@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>企業商務島｜雜誌封面</title>
+<style>
+  :root{--navy:#4A3383;--gold:#E6C27A;--gold2:#F6DC9A;--ink:#24314F}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#BFE3F7;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;color:var(--ink);overflow:hidden}
+  #stage{position:relative;margin:0 auto;height:100%;max-width:100vw;aspect-ratio:780/1688;overflow:hidden}
+  #bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #ship{position:absolute;width:44%;left:110%;top:4%;transition:none;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.18))}
+  #scan{position:absolute;left:0;right:0;top:0;height:6%;background:linear-gradient(rgba(120,255,200,0),rgba(120,255,200,.75),rgba(120,255,200,0));opacity:0;pointer-events:none}
+  #oldmast{position:absolute;left:49.4%;top:19.5%;width:1%;height:4%;background:linear-gradient(90deg,#B98C3A,#F6DC9A,#B98C3A);border-radius:3px;opacity:0;transition:opacity .6s}
+  #spot{position:absolute;left:20%;top:82%;width:24%;transform:translate(-50%,-50%);cursor:pointer}
+  #cam{width:100%;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25));animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-4px)}}
+  #bub{position:absolute;left:50%;top:-26%;transform:translateX(-50%) scale(0);transition:transform .25s;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:5px 14px;font-weight:700;color:var(--navy);font-size:15px;white-space:nowrap;box-shadow:0 4px 8px rgba(0,0,0,.15)}
+  #bub.on{transform:translateX(-50%) scale(1)}
+  #bub:after{content:'';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);border:8px solid transparent;border-top-color:var(--gold)}
+  #me{position:absolute;width:19%;left:74%;top:92%;transform:translate(-50%,-90%);transition:left .5s ease,top .5s ease;pointer-events:none;filter:drop-shadow(0 6px 5px rgba(0,0,0,.25))}
+  .hud{position:absolute;left:4%;right:4%;top:2.5%;display:flex;align-items:center;gap:10px;background:rgba(31,46,92,.92);color:#fff;border:2px solid var(--gold);border-radius:18px;padding:8px 12px;font-size:14px}
+  .hud img{width:38px;height:38px;border-radius:50%;background:#fff;border:2px solid var(--gold);padding:3px}
+  .hint{pointer-events:none;position:absolute;left:50%;top:11%;transform:translateX(-50%);background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:16px;padding:8px 14px;font-size:14px;white-space:nowrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;border:3px solid var(--gold);background:linear-gradient(#2B3E78,#1F2E5C);color:var(--gold2);font-weight:700;border-radius:999px;cursor:pointer;font-family:inherit}
+  #shoot{position:absolute;right:6%;bottom:5%;width:84px;height:84px;font-size:18px;display:none;box-shadow:0 0 0 6px rgba(246,220,154,.35)}
+  #pick{position:absolute;left:0;right:0;bottom:5%;display:none;text-align:center}
+  #pick p{margin:0 auto 10px;display:inline-block;background:rgba(255,255,255,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 14px;font-size:15px}
+  #pick .row{display:flex;justify-content:center;gap:10px}
+  #pick .btn{padding:12px 16px;font-size:16px}
+  #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+  #card{position:fixed;inset:0;background:rgba(20,28,56,.72);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:14px;z-index:5}
+  #card img{width:min(86vw,460px);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  #card small{color:#fff;font-size:13px;opacity:.9}
+  #card .btn{padding:10px 22px;font-size:15px}
+  #nameBox{position:absolute;left:4%;bottom:24%;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:14px;padding:5px 8px;font-size:12px}
+  #nameBox input{border:0;background:transparent;font:inherit;font-size:13px;width:9.5em;color:var(--ink)}
+  #nameBox button{border:0;background:var(--gold);color:var(--navy);border-radius:10px;font-size:12px;padding:3px 7px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="bg" src="ph-biz-bg.jpg" alt="">
+  <div id="scan"></div>
+  <div id="spot"><canvas id="cam" width="200" height="260"></canvas><div id="bub">拍照</div></div>
+  <img id="me" src="ph-biz-seat-you.png" alt="">
+  <div class="hud"><img src="ph-biz-logo.png" alt=""><div><div style="font-weight:700">企業商務島</div><div style="font-size:12px;opacity:.85">雜誌封面</div></div></div>
+  <div class="hint" id="hint">點一下相機就拍照</div>
+  <button class="btn" id="shoot">拍照</button>
+  
+  <div id="flash"></div>
+</div>
+<div id="card"><img id="pass" alt="雜誌封面"><small>手機長按圖片即可儲存或分享</small><button class="btn" id="closeCard">收下封面</button></div>
+<div id="done" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(20,28,56,.55);z-index:6"><div style="width:min(88vw,380px);background:#FFFBF2;border:4px solid #E6C27A;border-radius:24px;padding:18px;text-align:center"><div id="dT" style="font-weight:700;font-size:18px;color:#1F2E5C"></div><div id="stamps" style="display:flex;justify-content:center;gap:8px;margin:12px 0"></div><div style="font-size:14px;color:#5a5040;line-height:1.6">五座島各有一張不同的紀念照<br>全部收集，就能合成「德威陽紀念套組」</div><div id="dN" style="margin:12px 0 4px;font-size:14px;color:#1F2E5C;font-weight:700"></div><div id="dL" style="font-size:13px;color:#8A7A5C"></div><button class="btn" id="goNext" style="margin-top:12px;padding:10px 22px;font-size:15px">繼續探索</button></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const NAMES=['收據比錢還多','合約看三遍的人','截圖存證大魔王','準時繳費模範生','口說無憑研究員','白紙黑字信仰者','押金一定要回來','錄音筆不離身','定型化契約剋星','吃瓜但不吃虧','小字條款放大鏡','存證信函收藏家','和解比賽冠軍','有法度練習生'];
+/* 正式版用訪客建立角色時的名字；試玩版先用一個範例 */ const MYNAME=(()=>{try{const p=JSON.parse(localStorage.getItem('weiyangVisitorProfile')||'{}');if(p.name&&p.name!=='法律探險家')return p.name}catch(e){}return NAMES[Math.floor(Math.random()*NAMES.length)]})();
+const L=src=>{const i=new Image();i.src=src;return i};const logo=L('ph-biz-logo.png'),me=$('#me'),ST=[0,1,2,3].map(k=>L('ph-biz-staff'+k+'.png'));
+const gold=(img,s,col)=>{const c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');g.drawImage(img,0,0,s,s);g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,s,s);return c};
+function drawCam(){const c=$('#cam'),g=c.getContext('2d');g.clearRect(0,0,200,260);g.strokeStyle='#B98C3A';g.lineWidth=10;g.lineCap='round';
+  g.beginPath();g.moveTo(100,140);g.lineTo(40,250);g.moveTo(100,140);g.lineTo(160,250);g.moveTo(100,140);g.lineTo(100,252);g.stroke();
+  g.fillStyle='#4A3383';g.beginPath();g.roundRect(20,40,160,104,26);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=7;g.stroke();
+  g.fillStyle='#E6C27A';g.beginPath();g.roundRect(54,22,56,26,8);g.fill();g.fillStyle='#F7D98A';g.beginPath();g.arc(152,62,9,0,7);g.fill();
+  g.fillStyle='#E6C27A';g.beginPath();g.arc(100,92,40,0,7);g.fill();g.fillStyle='#33245E';g.beginPath();g.arc(100,92,32,0,7);g.fill();
+  g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.arc(90,82,10,0,7);g.fill();if(logo.naturalWidth)g.drawImage(gold(logo,40,'#F6DC9A'),80,72)}
+logo.onload=drawCam;drawCam();
+let atSpot=false;
+$('#spot').onclick=()=>{if(atSpot)return;atSpot=true;me.style.left='40%';me.style.top='92%';$('#bub').classList.add('on');$('#hint').textContent='喀嚓！';setTimeout(shoot,550)};
+function shoot(){$('#bub').classList.remove('on');$('#hint').textContent='封面拍攝中…';const f=$('#flash');setTimeout(()=>{f.style.background='#F1E6FF';f.style.opacity=.95;setTimeout(()=>f.style.opacity=0,220);setTimeout(makeCard,300)},900)}
+// 商業雜誌封面：WEIYANG BUSINESS 刊頭、紫色大樓背景、訪客當封面人物、年度風雲人物、封面小標
+function makeCard(){const W=900,H=1200,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  const bgI=$('#bg');g.drawImage(bgI,0,bgI.naturalHeight*.08,bgI.naturalWidth,bgI.naturalWidth*H/W,0,0,W,H);
+  const ov=g.createLinearGradient(0,0,0,H);ov.addColorStop(0,'rgba(40,20,80,.55)');ov.addColorStop(.35,'rgba(60,30,110,.15)');ov.addColorStop(.62,'rgba(40,20,80,.45)');ov.addColorStop(.78,'rgba(25,12,55,.88)');ov.addColorStop(1,'rgba(20,10,45,.96)');g.fillStyle=ov;g.fillRect(0,0,W,H);
+  // 刊頭
+  g.fillStyle='#F6DC9A';g.font='900 128px Georgia,"Times New Roman",serif';g.textBaseline='alphabetic';g.fillText('WEIYANG',40,150);g.font='700 34px Georgia,serif';g.fillText('BUSINESS',48,196);
+    /* 事務所名稱帶（大、清楚） */ g.fillStyle='rgba(20,10,50,.78)';g.fillRect(0,214,W,76);g.fillStyle='#F6DC9A';g.fillRect(0,214,W,4);g.fillRect(0,286,W,4);g.font='800 38px "Noto Sans TC",sans-serif';g.fillText('德威陽國際法律事務所',40,256);g.font='600 22px "Noto Sans TC",sans-serif';g.fillStyle='#FFFFFF';g.fillText('林柏均律師：台灣律師・美國紐約州律師',430,258);
+  { const lx=165,ly=432,lr=112;g.fillStyle='rgba(42,26,90,.92)';g.beginPath();g.arc(lx,ly,lr,0,7);g.fill();g.strokeStyle='#F6DC9A';g.lineWidth=8;g.stroke();g.lineWidth=2;g.beginPath();g.arc(lx,ly,lr-14,0,7);g.stroke();if(logo.naturalWidth)g.drawImage(gold(logo,256,'#F6DC9A'),lx-95,ly-95,190,190) }
+  // 封面人物
+  const mw=400;g.save();g.shadowColor='rgba(0,0,0,.4)';g.shadowBlur=30;g.drawImage(me,W-mw-10,H-mw-290,mw,mw);g.restore();
+  // 大標
+  g.fillStyle='#F6DC9A';g.font='900 74px "Noto Sans TC",sans-serif';g.fillText('年度風雲人物',40,H-250);
+  g.fillStyle='#FFFFFF';g.font='700 46px "Noto Sans TC",sans-serif';g.fillText(MYNAME,40,H-186);
+  // 封面小標（左側）
+  const tags=['合約看三遍的經營哲學','跨國生意，先問德威陽','公司治理的第一課','中・英・日 三語談判'];
+  tags.forEach((t,i)=>{const y=620+i*76;g.fillStyle='rgba(20,10,50,.55)';g.fillRect(36,y-34,440,52);g.fillStyle='#F6DC9A';g.fillRect(40,y-30,8,44);g.fillStyle='#FFFFFF';g.font='700 30px "Noto Sans TC",sans-serif';g.fillText(t,62,y)});
+  // 條碼與底線
+  g.fillStyle='#FFFFFF';g.fillRect(W-230,H-150,190,100);g.fillStyle='#111';for(let k=0;k<34;k++){const w=(k*7)%3+1;g.fillRect(W-220+k*5,H-140,w,62)}g.font='600 14px Georgia,serif';g.fillText('WY 2024',W-180,H-60);
+  g.fillStyle='#F6DC9A';g.font='800 40px "Noto Sans TC",sans-serif';g.fillText('LINE：@wylaw',40,H-112);g.fillStyle='rgba(255,255,255,.92)';g.font='600 24px "Noto Sans TC",sans-serif';g.fillText('跨國商務・公司治理・合約審閱',40,H-72);g.font='400 16px "Noto Sans TC",sans-serif';g.fillText('趣味內容，非真實刊物',40,H-40);
+  $('#pass').src=c.toDataURL('image/jpeg',.9);$('#card').style.display='flex';$('#hint').textContent='登上封面了！'}
+$('#closeCard').onclick=()=>{$('#card').style.display='none';showDone();atSpot=false;me.style.left='74%';me.style.top='92%';};
+function showDone(){const h=$('#hint');h.textContent='已收進「我的紀念相簿」，選單裡隨時可以再看';h.style.display='block';clearTimeout(window.__tt);window.__tt=setTimeout(()=>{h.textContent='點一下相機就拍照'},2600)}
+$('#goNext').onclick=()=>{$('#done').style.display='none';$('#hint').textContent='正式版：地上會出現金色腳印，帶你走到法律知識島'};
+</script>
+
+<style>#wyBack{position:fixed;right:10px;top:10px;z-index:20;padding:8px 14px;border-radius:999px;border:3px solid #E6C27A;background:#fff;color:#1F2E5C;font:800 14px "Noto Sans TC",sans-serif}
+#wyAct{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}#wyAct .btn{padding:10px 16px;font-size:15px}
+.hud{right:110px!important}</style>
+<button id="wyBack" type="button">返回島上</button>
+<script>
+(()=>{const K=4;const post=m=>{try{parent.postMessage(Object.assign({wy507:1,k:K},m),'*')}catch(e){}};
+document.getElementById('wyBack').onclick=()=>post({t:'close'});setTimeout(()=>{const sp=document.getElementById('spot');if(sp)sp.click()},700);
+const pass=document.getElementById('pass');let last='';
+new MutationObserver(()=>{if(pass.src&&pass.src!==last&&pass.src.startsWith('data:')){last=pass.src;post({t:'photo',src:pass.src})}}).observe(pass,{attributes:true,attributeFilter:['src']});
+const card=document.getElementById('card'),cb=document.getElementById('closeCard');const sm=card.querySelector('small');if(sm)sm.textContent='已自動收進選單裡的紀念相簿';
+const row=document.createElement('div');row.id='wyAct';const sv=document.createElement('button');sv.className='btn';sv.textContent='存到手機';const sh=document.createElement('button');sh.className='btn';sh.textContent='分享';
+cb.textContent='繼續逛';cb.parentNode.insertBefore(row,cb);row.append(sv,sh,cb);
+const blob=async()=>(await fetch(pass.src)).blob();
+sv.onclick=async()=>{const a=document.createElement('a');a.href=pass.src;a.download='德威陽紀念照.jpg';document.body.append(a);a.click();a.remove()};
+sh.onclick=async()=>{try{const b=await blob();const f=new File([b],'德威陽紀念照.jpg',{type:b.type});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'德威陽｜有法度',text:'我在德威陽 3D 法律探索島拍了紀念照！https://weiyanglaw.github.io/yeswedo/'});else if(navigator.share)await navigator.share({title:'德威陽｜有法度',url:'https://weiyanglaw.github.io/yeswedo/'});else sv.onclick()}catch(e){}};
+const gn=document.getElementById('goNext');if(gn){gn.textContent='繼續逛';gn.onclick=()=>{document.getElementById('done').style.display='none';post({t:'close'})}}
+})();
+</script></body>
+</html>

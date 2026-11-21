@@ -173,11 +173,35 @@
   shine(){[1047,1319,1568,2093].forEach((f,i)=>mbox(f,i*.07,.1,.6));sparkle(.3,6,.04)},
   pop(){babble(0,560,4,.08);squeak(1300,.33,.1,.14)},
   open(){squeak(900,0,.1,.09);squeak(1250,.08,.1,.1);mbox(1568,.17,.08,.5)},
+  ding(){mbox(1319,0,.28,.55);mbox(1047,.24,.4,.55);sparkle(.1,4,.03)},
   spin(){[784,988,1175,1568].forEach((f,i)=>squeak(f,i*.09,.09,.11));sparkle(.36,5,.04);mbox(2093,.42,.1,.45)},
   done(){[1047,1319,1568,2093,1568,2093,2637].forEach((f,i)=>mbox(f,i*.085,.1,.55));sparkle(.62,8,.045);squeak(1500,.62,.1,.15)}};
  let lastSfx={};
  window.wySfx=k=>{if(!soundOn||!SFX[k])return;const now=performance.now();if(lastSfx[k]&&now-lastSfx[k]<120)return;lastSfx[k]=now;try{const a=ac();if(a&&a.state==='suspended')a.resume();SFX[k]()}catch(e){}};
  document.addEventListener('pointerdown',()=>{const a=AC;if(a&&a.state==='suspended')a.resume()},{passive:true});
+ /* v508 聲音設計（陳老闆定案）：
+    大門＝陳老闆本人錄的「Yes, we do!」（全站唯一真人聲）
+    電梯到站＝「Yes, we do」節奏的音樂盒旋律（有回音、悠揚）
+    四位成員說話＝音樂盒音色但乾淨、短、沒回音，每人三個音、各有個性 */
+ const VO={},VURL={yes:'yes-we-do.wav?v=509'};
+ const wavBuf=(a,ab)=>{const dv=new DataView(ab);let p=12,off=0,len=0,rate=22050;while(p<dv.byteLength-8){const id=String.fromCharCode(dv.getUint8(p),dv.getUint8(p+1),dv.getUint8(p+2),dv.getUint8(p+3)),sz=dv.getUint32(p+4,true);if(id==='fmt ')rate=dv.getUint32(p+12,true);if(id==='data'){off=p+8;len=sz;break}p+=8+sz}const n=len>>1,b=a.createBuffer(1,n,rate),ch=b.getChannelData(0);for(let i=0;i<n;i++)ch[i]=dv.getInt16(off+i*2,true)/32768;return b};
+ const voLoad=k=>{if(VO[k])return VO[k].p;const a=ac();if(!a)return Promise.reject();VO[k]={p:fetch(VURL[k]).then(r=>r.arrayBuffer()).then(ab=>(VO[k].buf=wavBuf(a,ab)))};return VO[k].p};
+ window.wyVoice=k=>{if(!soundOn||!VURL[k])return;try{const a=ac();if(!a)return;if(a.state==='suspended')a.resume();const play=buf=>{const s=a.createBufferSource();s.buffer=buf;const g=a.createGain();g.gain.value=1;s.connect(g);g.connect(a.destination);s.start()};if(VO[k]&&VO[k].buf)play(VO[k].buf);else voLoad(k).then(play).catch(()=>{})}catch(e){}};
+ document.addEventListener('pointerdown',()=>{try{voLoad('yes').catch(()=>{})}catch(e){}},{once:true,passive:true});
+ let REV=null;const rev=()=>{const a=ac();if(REV)return REV;const len=Math.floor(a.sampleRate*1.6),b=a.createBuffer(2,len,a.sampleRate);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2)}const cv=a.createConvolver();cv.buffer=b;const w=a.createGain();w.gain.value=.22;cv.connect(w);w.connect(a.destination);REV=cv;return cv};
+ const partials=(f,t0,vol,dur,P,wet)=>{const a=ac(),t=a.currentTime+t0,out=a.createGain();out.gain.value=vol;out.connect(a.destination);if(wet)out.connect(rev());P.forEach(([r,amp,dk])=>{if(f*r>15000)return;const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f*r;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amp,t+.003);g.gain.exponentialRampToValueAtTime(.0001,t+dur*dk);o.connect(g);g.connect(out);o.start(t);o.stop(t+dur+.1)})};
+ const mbx=(f,t0,vol,dur)=>partials(f,t0,vol,dur,[[1,1,1],[3.98,.25,.35],[2,.2,.6],[6.1,.06,.15]],true);
+ const mbxDry=(f,t0,vol,dur)=>partials(f,t0,vol,dur,[[1,1,1],[3.98,.3,.25],[2,.15,.5]],false);
+ const bell=(f,t0,vol,dur)=>partials(f,t0,vol,dur,[[1,1,1],[2,.45,.7],[3.01,.18,.45],[4.17,.08,.3],[5.43,.05,.22]],true);
+ window.wyChime=()=>{if(!soundOn)return;try{const a=ac();if(!a)return;if(a.state==='suspended')a.resume();mbx(1175,0,.12,.9);mbx(1319,.17,.12,.9);mbx(1568,.42,.14,1.8);bell(784,.42,.05,2.2);for(let i=0;i<6;i++)mbx(2637+i*300,.62+i*.035,.025,.4)}catch(e){}};
+ const MBV={
+  lin:{root:587,vol:.1,len:.7,st:[[1,0],[1.26,.2],[1,.42]],q:[[1,0],[1.122,.2],[1.335,.42]],ex:[[1,0],[1.26,.2],[1.5,.42]]},
+  mq:{root:1568,vol:.05,len:.38,st:[[1,0],[1.26,.12],[1.122,.25]],q:[[1,0],[1.122,.12],[1.335,.25]],ex:[[1.26,0],[1.5,.12],[2,.25]]},
+  pay:{root:1047,vol:.065,len:.4,st:[[1,0],[1,.14],[.891,.28]],q:[[1,0],[1,.14],[1.122,.28]],ex:[[1.122,0],[1.122,.14],[1.335,.28]]},
+  ham:{root:880,vol:.075,len:.32,st:[[1,0],[1.5,.17],[1.26,.27]],q:[[1,0],[1.26,.17],[1.682,.27]],ex:[[1.335,0],[1,.17],[2,.27]]}};
+ const whoKey=n=>{n=String(n||'');if(/林|律師/.test(n))return 'lin';if(/夢奇奇|飼養/.test(n))return 'mq';if(/薪水|掌門/.test(n))return 'pay';if(/哈姆/.test(n))return 'ham';return null};
+ let lastSpeak=0;
+ window.wySpeak=(who,text)=>{if(!soundOn)return;const k=MBV[who]?who:whoKey(who);if(!k)return;const now=performance.now();if(now-lastSpeak<250)return;lastSpeak=now;try{const a=ac();if(!a)return;if(a.state==='suspended')a.resume();const M=MBV[k],t=String(text||''),q=/[？?]\s*$/.test(t),ex=/[！!]/.test(t);M[q?'q':ex?'ex':'st'].forEach(([r,tt])=>mbxDry(M.root*r,tt,M.vol,M.len))}catch(e){}};
 
  /* ---------- 狀態 ---------- */
  const G=()=>window.__wyGame;

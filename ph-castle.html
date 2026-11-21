@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>德威陽城堡｜飛艇登船證</title>
+<style>
+  :root{--navy:#1F2E5C;--gold:#E6C27A;--gold2:#F6DC9A;--ink:#24314F}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#BFE3F7;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;color:var(--ink);overflow:hidden}
+  #stage{position:relative;margin:0 auto;height:100%;max-width:100vw;aspect-ratio:780/1688;overflow:hidden}
+  #bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #ship{position:absolute;width:44%;left:110%;top:4%;transition:none;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.18))}
+  #mast{position:absolute;left:49.4%;top:19.5%;width:1%;height:4%;background:linear-gradient(90deg,#B98C3A,#F6DC9A,#B98C3A);border-radius:3px;opacity:0;transition:opacity .6s}
+  #spot{position:absolute;left:20%;top:82%;width:24%;transform:translate(-50%,-50%);cursor:pointer}
+  #cam{width:100%;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25));animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-4px)}}
+  #bub{position:absolute;left:50%;top:-26%;transform:translateX(-50%) scale(0);transition:transform .25s;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:5px 14px;font-weight:700;color:var(--navy);font-size:15px;white-space:nowrap;box-shadow:0 4px 8px rgba(0,0,0,.15)}
+  #bub.on{transform:translateX(-50%) scale(1)}
+  #bub:after{content:'';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);border:8px solid transparent;border-top-color:var(--gold)}
+  #me{position:absolute;width:19%;left:74%;top:92%;transform:translate(-50%,-90%);transition:left .5s ease,top .5s ease;pointer-events:none;filter:drop-shadow(0 6px 5px rgba(0,0,0,.25))}
+  .hud{position:absolute;left:4%;right:4%;top:2.5%;display:flex;align-items:center;gap:10px;background:rgba(31,46,92,.92);color:#fff;border:2px solid var(--gold);border-radius:18px;padding:8px 12px;font-size:14px}
+  .hud img{width:38px;height:38px;border-radius:50%;background:#fff;border:2px solid var(--gold);padding:3px}
+  .hint{pointer-events:none;position:absolute;left:50%;top:11%;transform:translateX(-50%);background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:16px;padding:8px 14px;font-size:14px;white-space:nowrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;border:3px solid var(--gold);background:linear-gradient(#2B3E78,#1F2E5C);color:var(--gold2);font-weight:700;border-radius:999px;cursor:pointer;font-family:inherit}
+  #shoot{position:absolute;right:6%;bottom:5%;width:84px;height:84px;font-size:18px;display:none;box-shadow:0 0 0 6px rgba(246,220,154,.35)}
+  #pick{position:absolute;left:0;right:0;bottom:5%;display:none;text-align:center}
+  #pick p{margin:0 auto 10px;display:inline-block;background:rgba(255,255,255,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 14px;font-size:15px}
+  #pick .row{display:flex;justify-content:center;gap:10px}
+  #pick .btn{padding:12px 16px;font-size:16px}
+  #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+  #card{position:fixed;inset:0;background:rgba(20,28,56,.72);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:14px;z-index:5}
+  #card img{width:min(96vw,560px);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  #card small{color:#fff;font-size:13px;opacity:.9}
+  #card .btn{padding:10px 22px;font-size:15px}
+  #nameBox{position:absolute;left:4%;bottom:24%;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:14px;padding:5px 8px;font-size:12px}
+  #nameBox input{border:0;background:transparent;font:inherit;font-size:13px;width:9.5em;color:var(--ink)}
+  #nameBox button{border:0;background:var(--gold);color:var(--navy);border-radius:10px;font-size:12px;padding:3px 7px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="bg" src="ph-castle-bg_castle.jpg" alt="">
+  <div id="mast"></div>
+  <canvas id="ship" width="560" height="300"></canvas>
+  <div id="spot"><canvas id="cam" width="200" height="260"></canvas><div id="bub">拍照</div></div>
+  <img id="me" src="ph-castle-seat-you.png" alt="">
+  <div class="hud"><img src="ph-castle-logo.png" alt=""><div><div style="font-weight:700">德威陽城堡</div><div style="font-size:12px;opacity:.85">飛艇登船證</div></div></div>
+  <div class="hint" id="hint">點一下相機就拍照</div>
+  <button class="btn" id="shoot">拍照</button>
+  <div id="pick"><p>飛艇到了！要飛去哪裡？<br><small style="font-size:13px;color:#5a5040">選一個城市，就會拍成你的登船紀念照</small></p><div class="row"><button class="btn" data-c="TPE">台北</button><button class="btn" data-c="NYC">紐約</button><button class="btn" data-c="TYO">東京</button></div></div>
+  <div id="flash"></div>
+</div>
+<div id="card"><img id="pass" alt="登船證"><small>手機長按圖片即可儲存或分享</small><button class="btn" id="closeCard">收下登船證</button></div>
+<div id="done" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(20,28,56,.55);z-index:6"><div style="width:min(88vw,380px);background:#FFFBF2;border:4px solid #E6C27A;border-radius:24px;padding:18px;text-align:center"><div style="font-weight:700;font-size:18px;color:#1F2E5C">收進紀念相簿了！</div><div id="stamps" style="display:flex;justify-content:center;gap:8px;margin:12px 0"></div><div style="font-size:14px;color:#5a5040;line-height:1.6">五座島各有一張不同的紀念照<br>全部收集，就能合成「德威陽紀念套組」</div><div style="margin:12px 0 4px;font-size:14px;color:#1F2E5C;font-weight:700">下一站推薦：訴訟法律島</div><div style="font-size:13px;color:#5a5040">從城堡往左邊的橋走過去，沿路還有很多東西可以逛</div><div style="font-size:13px;color:#8A7A5C">跨國案件想先問問看？LINE：@wylaw</div><button class="btn" id="goNext" style="margin-top:12px;padding:10px 22px;font-size:15px">繼續探索</button></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const NAMES=['收據比錢還多','合約看三遍的人','截圖存證大魔王','準時繳費模範生','口說無憑研究員','白紙黑字信仰者','押金一定要回來','錄音筆不離身','定型化契約剋星','吃瓜但不吃虧','小字條款放大鏡','存證信函收藏家','和解比賽冠軍','有法度練習生'];
+/* 正式版用訪客建立角色時的名字；試玩版先用一個範例 */ const MYNAME=(()=>{try{const p=JSON.parse(localStorage.getItem('weiyangVisitorProfile')||'{}');if(p.name&&p.name!=='法律探險家')return p.name}catch(e){}return NAMES[Math.floor(Math.random()*NAMES.length)]})();
+const logo=new Image();logo.src='ph-castle-logo.png';const bg=$('#bg');const me=$('#me');
+// 飛艇（深藍艇身、金色環帶、Logo、吊艙）
+const sc=$('#ship'),sg=sc.getContext('2d');
+function drawShip(){sg.clearRect(0,0,560,300);
+  const gr=sg.createLinearGradient(0,30,0,210);gr.addColorStop(0,'#3B53A0');gr.addColorStop(1,'#1F2E5C');
+  sg.fillStyle=gr;sg.beginPath();sg.ellipse(280,120,240,92,0,0,Math.PI*2);sg.fill();
+  sg.fillStyle='rgba(255,255,255,.18)';sg.beginPath();sg.ellipse(250,82,170,26,0,0,Math.PI*2);sg.fill();
+  sg.strokeStyle='#E6C27A';sg.lineWidth=7;for(const x of[150,410]){sg.beginPath();sg.ellipse(x,120,14,88,0,0,Math.PI*2);sg.stroke()}
+  sg.fillStyle='#1F2E5C';sg.beginPath();sg.moveTo(42,120);sg.lineTo(0,62);sg.lineTo(14,120);sg.lineTo(0,178);sg.closePath();sg.fill();sg.strokeStyle='#E6C27A';sg.lineWidth=4;sg.stroke();
+  sg.fillStyle='#F6DC9A';sg.beginPath();sg.arc(280,120,58,0,7);sg.fill();sg.fillStyle='#1F2E5C';sg.beginPath();sg.arc(280,120,52,0,7);sg.fill();
+  if(logo.complete&&logo.naturalWidth){const c=document.createElement('canvas');c.width=c.height=96;const g=c.getContext('2d');g.drawImage(logo,0,0,96,96);g.globalCompositeOperation='source-in';g.fillStyle='#F6DC9A';g.fillRect(0,0,96,96);sg.drawImage(c,232,72)}
+  sg.fillStyle='#F6DC9A';sg.beginPath();sg.roundRect(220,214,120,40,14);sg.fill();sg.fillStyle='#1F2E5C';sg.beginPath();sg.roundRect(228,220,104,28,10);sg.fill();
+  sg.fillStyle='#FFE6A8';for(let k=0;k<4;k++){sg.beginPath();sg.roundRect(236+k*25,226,17,16,4);sg.fill()}
+  sg.strokeStyle='#B98C3A';sg.lineWidth=3;sg.beginPath();sg.moveTo(240,206);sg.lineTo(244,216);sg.moveTo(320,206);sg.lineTo(316,216);sg.stroke()}
+logo.onload=()=>{drawShip();drawCam()};drawShip();
+// 動森風金色相機腳架（拍照點）
+function drawCam(){const c=$('#cam'),g=c.getContext('2d');g.clearRect(0,0,200,260);g.strokeStyle='#B98C3A';g.lineWidth=10;g.lineCap='round';
+  g.beginPath();g.moveTo(100,140);g.lineTo(40,250);g.moveTo(100,140);g.lineTo(160,250);g.moveTo(100,140);g.lineTo(100,252);g.stroke();
+  g.fillStyle='#1F2E5C';g.beginPath();g.roundRect(20,40,160,104,26);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=7;g.stroke();
+  g.fillStyle='#E6C27A';g.beginPath();g.roundRect(54,22,56,26,8);g.fill();g.fillStyle='#F7D98A';g.beginPath();g.arc(152,62,9,0,7);g.fill();
+  g.fillStyle='#E6C27A';g.beginPath();g.arc(100,92,40,0,7);g.fill();g.fillStyle='#24386A';g.beginPath();g.arc(100,92,32,0,7);g.fill();
+  g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.arc(90,82,10,0,7);g.fill();
+  if(logo.naturalWidth){const k=document.createElement('canvas');k.width=k.height=40;const kg=k.getContext('2d');kg.drawImage(logo,0,0,40,40);kg.globalCompositeOperation='source-in';kg.fillStyle='#F6DC9A';kg.fillRect(0,0,40,40);g.drawImage(k,80,72)}}
+drawCam();
+// 飛艇移動
+let shipT=null;const setShip=(l,t)=>{sc.style.left=l+'%';sc.style.top=t+'%'};
+function flyShip(from,to,ms,cb){const t0=performance.now();cancelAnimationFrame(shipT);const step=n=>{let k=Math.min(1,(n-t0)/ms);const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;setShip(from[0]+(to[0]-from[0])*e,from[1]+(to[1]-from[1])*e+Math.sin(k*Math.PI)*-3);if(k<1)shipT=requestAnimationFrame(step);else cb&&cb()};shipT=requestAnimationFrame(step)}
+// 平常：飛艇在遠方慢慢飄過
+let idle=true;(function drift(){if(!idle)return;flyShip([110,4],[-50,6],16000,()=>{setTimeout(()=>{if(idle){setShip(110,4);drift()}},2500)})})();
+const DOCK=[28,9.5];
+// 走到拍照點
+let atSpot=false;
+$('#spot').onclick=()=>{if(atSpot)return;atSpot=true;me.style.left='40%';me.style.top='92%';$('#bub').classList.add('on');$('#hint').textContent='喀嚓！';setTimeout(shoot,550)};
+function shoot(){$('#bub').classList.remove('on');idle=false;$('#hint').textContent='飛艇正在停靠城堡…';
+  const cur=[parseFloat(sc.style.left)||110,parseFloat(sc.style.top)||4];
+  flyShip(cur,DOCK,1300,()=>{$('#mast').style.opacity=1;$('#hint').style.display='none';$('#pick').style.display='block'})}
+const CITY={TPE:['台北','TAIPEI'],NYC:['紐約','NEW YORK'],TYO:['東京','TOKYO']};
+document.querySelectorAll('#pick .btn').forEach(b=>b.onclick=()=>{$('#pick').style.display='none';const f=$('#flash');f.style.opacity=.95;setTimeout(()=>f.style.opacity=0,180);setTimeout(()=>makePass(b.dataset.c),260)});
+// 登船證
+// 三個城市的地標（細緻手繪：台北 101、紐約自由女神、東京鐵塔），每個城市配色不同
+function cityScene(g,code,x,y,w,h){const sky={TPE:['#FF9FB0','#FFD3A0','#FFF0D0'],NYC:['#3B5FA8','#9DB8E6','#F7DDBA'],TYO:['#F3A6BE','#FCDCE5','#FFF6F4']}[code];
+  const gr=g.createLinearGradient(0,y,0,y+h);gr.addColorStop(0,sky[0]);gr.addColorStop(.62,sky[1]);gr.addColorStop(1,sky[2]);g.fillStyle=gr;g.fillRect(x,y,w,h);
+  const base=y+h*.8,lw=v=>{g.lineWidth=v};
+  if(code==='TPE'){ // 象山稜線＋城市＋101
+    g.fillStyle='rgba(96,140,120,.55)';g.beginPath();g.moveTo(x,base-h*.05);g.bezierCurveTo(x+w*.15,base-h*.25,x+w*.3,base-h*.2,x+w*.42,base-h*.1);g.bezierCurveTo(x+w*.55,base-h*.02,x+w*.62,base-h*.3,x+w*.98,base-h*.12);g.lineTo(x+w,base);g.lineTo(x,base);g.fill();
+    g.fillStyle='rgba(70,100,95,.55)';for(let k=0;k<12;k++){const bw=w*.07,bh=h*(.06+((k*41)%7)*.018);g.fillRect(x+k*w*.085,base-bh,bw,bh)}
+    const cx=x+w*.73,S=h/430;const seg=(yb,bw,tw,hh)=>{const gg=g.createLinearGradient(cx-tw,0,cx+tw,0);gg.addColorStop(0,'#2F6E6A');gg.addColorStop(.5,'#6FB2AA');gg.addColorStop(1,'#2F6E6A');g.fillStyle=gg;g.beginPath();g.moveTo(cx-bw,yb);g.lineTo(cx+bw,yb);g.lineTo(cx+tw,yb-hh);g.lineTo(cx-tw,yb-hh);g.closePath();g.fill();g.strokeStyle='rgba(220,255,245,.55)';lw(1);for(let r=1;r<4;r++){const yy=yb-hh*r/4,ww=bw+(tw-bw)*r/4;g.beginPath();g.moveTo(cx-ww,yy);g.lineTo(cx+ww,yy);g.stroke()}g.strokeStyle='#235450';lw(1.5);g.beginPath();g.moveTo(cx,yb);g.lineTo(cx,yb-hh);g.stroke()};
+    // 基座（裙樓）
+    g.fillStyle='#3E7F79';g.beginPath();g.moveTo(cx-34*S,base);g.lineTo(cx+34*S,base);g.lineTo(cx+22*S,base-46*S);g.lineTo(cx-22*S,base-46*S);g.fill();
+    let yb=base-46*S;for(let k=0;k<8;k++){seg(yb,17*S,24*S,26*S);yb-=26*S;g.fillStyle='#E9D59A';g.fillRect(cx-25*S,yb-1,50*S,2.5*S)}
+    seg(yb,13*S,16*S,14*S);yb-=14*S;seg(yb,9*S,11*S,10*S);yb-=10*S;g.fillStyle='#2F6E6A';g.fillRect(cx-3*S,yb-40*S,6*S,40*S);g.fillStyle='#E9D59A';g.beginPath();g.arc(cx,yb-14*S,4*S,0,7);g.fill();g.beginPath();g.arc(cx,yb-26*S,3*S,0,7);g.fill();
+    // 如意紋圓形裝飾
+    g.strokeStyle='#E9D59A';lw(2);g.beginPath();g.arc(cx,base-60*S,6*S,0,7);g.stroke()}
+  if(code==='NYC'){ // 曼哈頓天際線＋自由女神
+    g.fillStyle='rgba(50,70,120,.5)';for(let k=0;k<14;k++){const bw=w*.06,bh=h*(.1+((k*53)%9)*.028);g.fillRect(x+k*w*.07,base-bh,bw,bh);g.fillStyle='rgba(255,236,190,.5)';for(let r=0;r<bh/12;r++)g.fillRect(x+k*w*.07+4,base-bh+6+r*12,bw-8,3);g.fillStyle='rgba(50,70,120,.5)'}
+    { const ex=x+w*.2;g.fillStyle='rgba(40,60,110,.65)';g.fillRect(ex-14,base-h*.5,28,h*.5);g.fillRect(ex-9,base-h*.6,18,h*.1);g.fillRect(ex-5,base-h*.66,10,h*.06);g.fillRect(ex-1.5,base-h*.76,3,h*.1)}
+    g.fillStyle='rgba(120,160,200,.5)';g.fillRect(x,base,w,h*.03);
+    const cx=x+w*.74,S=h/430,G1='#5E9E8E',G2='#3F7A6C',G3='#8CC2B2';
+    // 底座（星形堡＋石座）
+    g.fillStyle='#BFAE92';g.beginPath();g.moveTo(cx-48*S,base);g.lineTo(cx+48*S,base);g.lineTo(cx+40*S,base-14*S);g.lineTo(cx-40*S,base-14*S);g.fill();
+    g.fillStyle='#D3C3A6';g.beginPath();g.moveTo(cx-30*S,base-14*S);g.lineTo(cx+30*S,base-14*S);g.lineTo(cx+24*S,base-84*S);g.lineTo(cx-24*S,base-84*S);g.fill();g.fillStyle='#B8A586';g.fillRect(cx-27*S,base-90*S,54*S,8*S);g.fillStyle='#C2B091';for(let k=0;k<3;k++)g.fillRect(cx-16*S+k*12*S,base-70*S,7*S,22*S);
+    // 長袍身體
+    const fy=base-90*S;const rg=g.createLinearGradient(cx-24*S,0,cx+24*S,0);rg.addColorStop(0,G2);rg.addColorStop(.45,G3);rg.addColorStop(1,G2);g.fillStyle=rg;
+    g.beginPath();g.moveTo(cx-24*S,fy);g.quadraticCurveTo(cx-20*S,fy-60*S,cx-13*S,fy-108*S);g.lineTo(cx+12*S,fy-108*S);g.quadraticCurveTo(cx+20*S,fy-60*S,cx+24*S,fy);g.closePath();g.fill();
+    g.strokeStyle=G2;lw(1.5*S);for(let k=-2;k<=2;k++){g.beginPath();g.moveTo(cx+k*7*S,fy);g.quadraticCurveTo(cx+k*5*S,fy-50*S,cx+k*3*S,fy-100*S);g.stroke()}
+    // 左手抱法典
+    g.fillStyle=G1;g.beginPath();g.moveTo(cx-12*S,fy-100*S);g.lineTo(cx-22*S,fy-70*S);g.lineTo(cx-14*S,fy-66*S);g.lineTo(cx-6*S,fy-92*S);g.fill();g.fillStyle=G3;g.save();g.translate(cx-20*S,fy-82*S);g.rotate(-.25);g.fillRect(-8*S,-14*S,14*S,26*S);g.restore();
+    // 右手高舉火炬
+    g.fillStyle=G1;g.beginPath();g.moveTo(cx+8*S,fy-104*S);g.lineTo(cx+16*S,fy-112*S);g.lineTo(cx+20*S,fy-160*S);g.lineTo(cx+12*S,fy-160*S);g.lineTo(cx+4*S,fy-116*S);g.fill();
+    g.fillStyle=G2;g.fillRect(cx+12*S,fy-172*S,9*S,14*S);g.fillStyle=G1;g.fillRect(cx+10*S,fy-176*S,13*S,5*S);
+    const fl=g.createRadialGradient(cx+16*S,fy-186*S,0,cx+16*S,fy-186*S,18*S);fl.addColorStop(0,'#FFF3B0');fl.addColorStop(.5,'#F6C85A');fl.addColorStop(1,'rgba(246,200,90,0)');g.fillStyle=fl;g.beginPath();g.arc(cx+16*S,fy-186*S,18*S,0,7);g.fill();
+    g.fillStyle='#F2B23A';g.beginPath();g.moveTo(cx+10*S,fy-176*S);g.quadraticCurveTo(cx+12*S,fy-196*S,cx+17*S,fy-204*S);g.quadraticCurveTo(cx+24*S,fy-192*S,cx+22*S,fy-176*S);g.fill();
+    // 頭與冠（七道光芒）
+    g.fillStyle=G3;g.beginPath();g.arc(cx,fy-118*S,10*S,0,7);g.fill();g.fillStyle=G1;g.fillRect(cx-11*S,fy-127*S,22*S,6*S);
+    for(let k=0;k<7;k++){const a=-Math.PI/2+(k-3)*.32;g.beginPath();g.moveTo(cx+Math.cos(a-.08)*10*S,fy-124*S+Math.sin(a-.08)*6*S);g.lineTo(cx+Math.cos(a)*24*S,fy-124*S+Math.sin(a)*20*S);g.lineTo(cx+Math.cos(a+.08)*10*S,fy-124*S+Math.sin(a+.08)*6*S);g.fill()}}
+  if(code==='TYO'){ // 富士山＋櫻花＋東京鐵塔
+    g.fillStyle='rgba(110,130,180,.75)';g.beginPath();g.moveTo(x-w*.05,base);g.lineTo(x+w*.24,base-h*.3);g.quadraticCurveTo(x+w*.3,base-h*.34,x+w*.36,base-h*.3);g.lineTo(x+w*.66,base);g.fill();
+    g.fillStyle='#FFFFFF';g.beginPath();g.moveTo(x+w*.2,base-h*.255);g.lineTo(x+w*.24,base-h*.3);g.quadraticCurveTo(x+w*.3,base-h*.34,x+w*.36,base-h*.3);g.lineTo(x+w*.4,base-h*.255);g.lineTo(x+w*.36,base-h*.24);g.lineTo(x+w*.33,base-h*.265);g.lineTo(x+w*.3,base-h*.235);g.lineTo(x+w*.27,base-h*.265);g.lineTo(x+w*.24,base-h*.24);g.fill();
+    g.fillStyle='rgba(90,100,140,.45)';for(let k=0;k<12;k++){const bw=w*.07,bh=h*(.04+((k*29)%6)*.014);g.fillRect(x+k*w*.085,base-bh,bw,bh)}
+    const cx=x+w*.74,S=h/430,RED='#E6492E',WH='#FFFFFF';const half=yy=>{const t=(base-yy)/(290*S);return 44*S*Math.pow(1-t,1.6)+3*S};
+    const band=(y0,y1,col)=>{g.fillStyle=col;g.beginPath();g.moveTo(cx-half(y0),y0);g.lineTo(cx+half(y0),y0);g.lineTo(cx+half(y1),y1);g.lineTo(cx-half(y1),y1);g.closePath();g.fill()};
+    const bands=[[0,40,RED],[40,70,WH],[70,110,RED],[110,135,WH],[135,170,RED],[170,190,WH],[190,220,RED],[220,236,WH],[236,262,RED],[262,272,WH],[272,290,RED]];
+    for(const [a,b,c] of bands)band(base-a*S,base-b*S,c);
+    // 拱腳鏤空
+    g.fillStyle=sky[2];g.beginPath();g.moveTo(cx-30*S,base);g.quadraticCurveTo(cx,base-56*S,cx+30*S,base);g.fill();
+    // 桁架交叉線
+    g.strokeStyle='rgba(120,20,10,.55)';lw(1.2);for(let yy=base-60*S;yy>base-280*S;yy-=14*S){const a=half(yy),b=half(yy-14*S);g.beginPath();g.moveTo(cx-a,yy);g.lineTo(cx+b,yy-14*S);g.moveTo(cx+a,yy);g.lineTo(cx-b,yy-14*S);g.stroke()}
+    // 大展望台、特別展望台、天線
+    for(const [yy,hw,hh] of [[base-120*S,30*S,14*S],[base-232*S,14*S,9*S]]){g.fillStyle=WH;g.fillRect(cx-hw,yy-hh,hw*2,hh);g.fillStyle='#8FB8E6';g.fillRect(cx-hw+3,yy-hh+3,hw*2-6,hh-7);g.fillStyle=RED;g.fillRect(cx-hw-2,yy-hh-3,hw*2+4,4)}
+    g.fillStyle=WH;g.fillRect(cx-2*S,base-330*S,4*S,42*S);g.fillStyle=RED;for(let k=0;k<4;k++)g.fillRect(cx-2*S,base-330*S+k*11*S,4*S,5*S);
+    // 櫻花樹＋花瓣
+    for(const [tx,r] of [[x+w*.08,46],[x+w*.42,36]]){g.fillStyle='#8A5A44';g.fillRect(tx-3,base-h*.12,6,h*.12);g.fillStyle='#F7B7C9';for(const [a,b,c] of [[0,0,1],[-.6,.3,.75],[.6,.25,.8],[0,-.5,.7]]){g.beginPath();g.arc(tx+a*r,base-h*.16+b*r,r*c*.7,0,7);g.fill()}}
+    g.fillStyle='#F9C5D5';for(let k=0;k<26;k++){g.beginPath();g.ellipse(x+((k*71)%w),y+((k*113)%(h*.7)),4,2.5,k,0,7);g.fill()}}
+  g.fillStyle='rgba(255,255,255,.78)';g.fillRect(x,base,w,h-base+y);}
+function makePass(code){const W=1200,H=620,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+  // 底卡
+  g.fillStyle='#FFFBF2';g.beginPath();g.roundRect(0,0,W,H,36);g.fill();
+  g.fillStyle='#1F2E5C';g.beginPath();g.roundRect(0,0,W,110,{upperLeft:36,upperRight:36,lowerLeft:0,lowerRight:0});g.fill();
+  g.strokeStyle='#E6C27A';g.lineWidth=6;g.beginPath();g.roundRect(10,10,W-20,H-20,30);g.stroke();
+  if(logo.naturalWidth){const lc=document.createElement('canvas');lc.width=lc.height=84;const lg=lc.getContext('2d');lg.drawImage(logo,0,0,84,84);lg.globalCompositeOperation='source-in';lg.fillStyle='#F6DC9A';lg.fillRect(0,0,84,84);g.drawImage(lc,34,14)}
+  g.fillStyle='#F6DC9A';g.font='700 40px "Noto Serif TC","Songti TC",serif';g.textBaseline='middle';g.fillText('德威陽飛艇　登船證',134,46);g.font='600 22px Georgia,serif';g.fillText('WEI & YANG AIRSHIP · BOARDING PASS',136,86);
+  // 照片：目的地的城市風景（每個城市都不一樣）＋飛艇＋人物，左上角小圓圖是出發的德威陽城堡
+  const px=40,py=140,pw=420,ph=430;g.save();g.beginPath();g.roundRect(px,py,pw,ph,22);g.clip();cityScene(g,code,px,py,pw,ph);
+  g.drawImage(sc,px+pw*.03,py+ph*.05,pw*.46,pw*.46*300/560);
+  const mw=pw*.52;g.drawImage(me,px+pw*.3-mw/2,py+ph-mw*1.0,mw,mw);
+  { const r=46,cx=px+pw-r-14,cy=py+r+14;g.save();g.beginPath();g.arc(cx,cy,r,0,7);g.clip();const iw=bg.naturalWidth,ih=bg.naturalHeight;g.drawImage(bg,iw*.05,ih*.08,iw*.9,iw*.9,cx-r,cy-r,r*2,r*2);g.restore();g.strokeStyle='#E6C27A';g.lineWidth=5;g.beginPath();g.arc(cx,cy,r,0,7);g.stroke();g.fillStyle='#1F2E5C';g.beginPath();g.roundRect(cx-44,cy+r-6,88,26,10);g.fill();g.fillStyle='#F6DC9A';g.font='700 15px "Noto Sans TC",sans-serif';g.textAlign='center';g.fillText('出發地',cx,cy+r+8);g.textAlign='left' }
+  g.restore();
+  g.strokeStyle='#E6C27A';g.lineWidth=5;g.beginPath();g.roundRect(px,py,pw,ph,22);g.stroke();
+  // 欄位
+  const X=500;const lab=(t,x,y)=>{g.fillStyle='#8A7A5C';g.font='500 20px "Noto Sans TC",sans-serif';g.fillText(t,x,y)};const val=(t,x,y,s=40)=>{g.fillStyle='#1F2E5C';g.font=`700 ${s}px "Noto Sans TC",sans-serif`;g.fillText(t,x,y)};
+  lab('旅客 PASSENGER',X,168);val(MYNAME,X,212,36);
+  lab('出發 FROM',X,276);val('德威陽城堡',X,322,38);g.fillStyle='#8A7A5C';g.font='600 20px Georgia,serif';g.fillText('WEIYANG CASTLE',X,356);
+  g.fillStyle='#E6C27A';g.font='700 46px Georgia,serif';g.fillText('→',X+262,322);
+  lab('目的地 TO',X+330,276);val(CITY[code][0],X+330,322,38);g.fillStyle='#8A7A5C';g.font='600 20px Georgia,serif';g.fillText(CITY[code][1],X+330,356);
+  lab('航班 FLIGHT',X,410);val('WY 2024',X,450,32);lab('座位 SEAT',X+250,410);val('有法度',X+250,450,32);lab('語言 LANGUAGE',X+430,410);g.fillStyle='#1F2E5C';g.font='700 22px "Noto Sans TC",sans-serif';g.fillText('中文・English・日本語',X+430,450);
+  g.strokeStyle='#E6C27A';g.lineWidth=2;g.setLineDash([10,8]);g.beginPath();g.moveTo(X,486);g.lineTo(W-40,486);g.stroke();g.setLineDash([]);
+  g.fillStyle='#1F2E5C';g.font='700 26px "Noto Sans TC",sans-serif';g.fillText('從德威陽出發，跨國案件一站處理',X,526);
+  g.fillStyle='#1F2E5C';g.font='700 23px "Noto Sans TC",sans-serif';g.fillText('德威陽國際法律事務所　LINE：@wylaw',X,564);g.fillStyle='#8A7A5C';g.font='500 18px "Noto Sans TC",sans-serif';g.fillText('林柏均律師：台灣律師｜美國紐約州律師　趣味內容，非真實票券',X,596);
+  $('#pass').src=c.toDataURL('image/png');$('#card').style.display='flex'}
+$('#closeCard').onclick=()=>{$('#card').style.display='none';showDone();$('#mast').style.opacity=0;const cur=[parseFloat(sc.style.left),parseFloat(sc.style.top)];
+  flyShip(cur,[-55,-2],1800,()=>{idle=true;atSpot=false;me.style.left='74%';me.style.top='92%';$('#hint').style.display='block';$('#hint').textContent='點一下相機就拍照';setShip(110,4);(function drift(){if(!idle)return;flyShip([110,4],[-50,6],16000,()=>{setTimeout(()=>{if(idle){setShip(110,4);drift()}},2500)})})()})};
+function showDone(){const h=$('#hint');h.textContent='已收進「我的紀念相簿」，選單裡隨時可以再看';h.style.display='block';clearTimeout(window.__tt);window.__tt=setTimeout(()=>{h.textContent='點一下相機就拍照'},2600)}
+$('#goNext').onclick=()=>{$('#done').style.display='none';$('#hint').textContent='正式版：地上會出現金色腳印，帶你走到訴訟法律島'};
+</script>
+
+<style>#wyBack{position:fixed;right:10px;top:10px;z-index:20;padding:8px 14px;border-radius:999px;border:3px solid #E6C27A;background:#fff;color:#1F2E5C;font:800 14px "Noto Sans TC",sans-serif}
+#wyAct{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}#wyAct .btn{padding:10px 16px;font-size:15px}
+.hud{right:110px!important}</style>
+<button id="wyBack" type="button">返回島上</button>
+<script>
+(()=>{const K=0;const post=m=>{try{parent.postMessage(Object.assign({wy507:1,k:K},m),'*')}catch(e){}};
+document.getElementById('wyBack').onclick=()=>post({t:'close'});setTimeout(()=>{const sp=document.getElementById('spot');if(sp)sp.click()},700);
+const pass=document.getElementById('pass');let last='';
+new MutationObserver(()=>{if(pass.src&&pass.src!==last&&pass.src.startsWith('data:')){last=pass.src;post({t:'photo',src:pass.src})}}).observe(pass,{attributes:true,attributeFilter:['src']});
+const card=document.getElementById('card'),cb=document.getElementById('closeCard');const sm=card.querySelector('small');if(sm)sm.textContent='已自動收進選單裡的紀念相簿';
+const row=document.createElement('div');row.id='wyAct';const sv=document.createElement('button');sv.className='btn';sv.textContent='存到手機';const sh=document.createElement('button');sh.className='btn';sh.textContent='分享';
+cb.textContent='繼續逛';cb.parentNode.insertBefore(row,cb);row.append(sv,sh,cb);
+const blob=async()=>(await fetch(pass.src)).blob();
+sv.onclick=async()=>{const a=document.createElement('a');a.href=pass.src;a.download='德威陽紀念照.jpg';document.body.append(a);a.click();a.remove()};
+sh.onclick=async()=>{try{const b=await blob();const f=new File([b],'德威陽紀念照.jpg',{type:b.type});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'德威陽｜有法度',text:'我在德威陽 3D 法律探索島拍了紀念照！https://weiyanglaw.github.io/yeswedo/'});else if(navigator.share)await navigator.share({title:'德威陽｜有法度',url:'https://weiyanglaw.github.io/yeswedo/'});else sv.onclick()}catch(e){}};
+const gn=document.getElementById('goNext');if(gn){gn.textContent='繼續逛';gn.onclick=()=>{document.getElementById('done').style.display='none';post({t:'close'})}}
+})();
+</script></body>
+</html>

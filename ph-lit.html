@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>訴訟法律島｜漫畫格</title>
+<style>
+  :root{--navy:#C85A2A;--gold:#E6C27A;--gold2:#F6DC9A;--ink:#24314F}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#BFE3F7;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;color:var(--ink);overflow:hidden}
+  #stage{position:relative;margin:0 auto;height:100%;max-width:100vw;aspect-ratio:780/1688;overflow:hidden}
+  #bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  #ship{position:absolute;width:44%;left:110%;top:4%;transition:none;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.18))}
+  #scan{position:absolute;left:0;right:0;top:0;height:6%;background:linear-gradient(rgba(120,255,200,0),rgba(120,255,200,.75),rgba(120,255,200,0));opacity:0;pointer-events:none}
+  #oldmast{position:absolute;left:49.4%;top:19.5%;width:1%;height:4%;background:linear-gradient(90deg,#B98C3A,#F6DC9A,#B98C3A);border-radius:3px;opacity:0;transition:opacity .6s}
+  #spot{position:absolute;left:20%;top:82%;width:24%;transform:translate(-50%,-50%);cursor:pointer}
+  #cam{width:100%;display:block;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25));animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-4px)}}
+  #bub{position:absolute;left:50%;top:-26%;transform:translateX(-50%) scale(0);transition:transform .25s;background:#fff;border:3px solid var(--gold);border-radius:18px;padding:5px 14px;font-weight:700;color:var(--navy);font-size:15px;white-space:nowrap;box-shadow:0 4px 8px rgba(0,0,0,.15)}
+  #bub.on{transform:translateX(-50%) scale(1)}
+  #bub:after{content:'';position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);border:8px solid transparent;border-top-color:var(--gold)}
+  #me{position:absolute;width:19%;left:74%;top:92%;transform:translate(-50%,-90%);transition:left .5s ease,top .5s ease;pointer-events:none;filter:drop-shadow(0 6px 5px rgba(0,0,0,.25))}
+  .hud{position:absolute;left:4%;right:4%;top:2.5%;display:flex;align-items:center;gap:10px;background:rgba(31,46,92,.92);color:#fff;border:2px solid var(--gold);border-radius:18px;padding:8px 12px;font-size:14px}
+  .hud img{width:38px;height:38px;border-radius:50%;background:#fff;border:2px solid var(--gold);padding:3px}
+  .hint{pointer-events:none;position:absolute;left:50%;top:11%;transform:translateX(-50%);background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:16px;padding:8px 14px;font-size:14px;white-space:nowrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;border:3px solid var(--gold);background:linear-gradient(#2B3E78,#1F2E5C);color:var(--gold2);font-weight:700;border-radius:999px;cursor:pointer;font-family:inherit}
+  #shoot{position:absolute;right:6%;bottom:5%;width:84px;height:84px;font-size:18px;display:none;box-shadow:0 0 0 6px rgba(246,220,154,.35)}
+  #pick{position:absolute;left:0;right:0;bottom:5%;display:none;text-align:center}
+  #pick p{margin:0 auto 10px;display:inline-block;background:rgba(255,255,255,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 14px;font-size:15px}
+  #pick .row{display:flex;justify-content:center;gap:10px}
+  #pick .btn{padding:12px 16px;font-size:16px}
+  #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+  #card{position:fixed;inset:0;background:rgba(20,28,56,.72);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:14px;z-index:5}
+  #card img{width:min(86vw,460px);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  #card small{color:#fff;font-size:13px;opacity:.9}
+  #card .btn{padding:10px 22px;font-size:15px}
+  #nameBox{position:absolute;left:4%;bottom:24%;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.92);border:2px solid var(--gold);border-radius:14px;padding:5px 8px;font-size:12px}
+  #nameBox input{border:0;background:transparent;font:inherit;font-size:13px;width:9.5em;color:var(--ink)}
+  #nameBox button{border:0;background:var(--gold);color:var(--navy);border-radius:10px;font-size:12px;padding:3px 7px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="bg" src="ph-lit-bg.jpg" alt="">
+  <div id="scan"></div>
+  <div id="spot"><canvas id="cam" width="200" height="260"></canvas><div id="bub">拍照</div></div>
+  <img id="me" src="ph-lit-seat-you.png" alt="">
+  <div class="hud"><img src="ph-lit-logo.png" alt=""><div><div style="font-weight:700">訴訟法律島</div><div style="font-size:12px;opacity:.85">漫畫格「異議！」</div></div></div>
+  <div class="hint" id="hint">點一下相機就拍照</div>
+  <button class="btn" id="shoot">拍照</button>
+  
+  <div id="pick" style="position:absolute;left:0;right:0;bottom:5%;display:none;text-align:center"><p style="margin:0 auto 10px;display:inline-block;background:rgba(255,255,255,.95);border:2px solid var(--gold);border-radius:14px;padding:6px 14px;font-size:15px">要說哪一句？</p><div style="display:flex;justify-content:center;gap:8px"><button class="btn" data-l="0" style="padding:11px 14px;font-size:16px">異議！</button><button class="btn" data-l="1" style="padding:11px 14px;font-size:16px">我有證據！</button><button class="btn" data-l="2" style="padding:11px 14px;font-size:16px">有法度！</button></div></div>
+  <div id="flash"></div>
+</div>
+<div id="card"><img id="pass" alt="漫畫格"><small>手機長按圖片即可儲存或分享</small><button class="btn" id="closeCard">收下漫畫</button></div>
+<div id="done" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(20,28,56,.55);z-index:6"><div style="width:min(88vw,380px);background:#FFFBF2;border:4px solid #E6C27A;border-radius:24px;padding:18px;text-align:center"><div id="dT" style="font-weight:700;font-size:18px;color:#1F2E5C"></div><div id="stamps" style="display:flex;justify-content:center;gap:8px;margin:12px 0"></div><div style="font-size:14px;color:#5a5040;line-height:1.6">五座島各有一張不同的紀念照<br>全部收集，就能合成「德威陽紀念套組」</div><div id="dN" style="margin:12px 0 4px;font-size:14px;color:#1F2E5C;font-weight:700"></div><div id="dL" style="font-size:13px;color:#8A7A5C"></div><button class="btn" id="goNext" style="margin-top:12px;padding:10px 22px;font-size:15px">繼續探索</button></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const NAMES=['收據比錢還多','合約看三遍的人','截圖存證大魔王','準時繳費模範生','口說無憑研究員','白紙黑字信仰者','押金一定要回來','錄音筆不離身','定型化契約剋星','吃瓜但不吃虧','小字條款放大鏡','存證信函收藏家','和解比賽冠軍','有法度練習生'];
+/* 正式版用訪客建立角色時的名字；試玩版先用一個範例 */ const MYNAME=(()=>{try{const p=JSON.parse(localStorage.getItem('weiyangVisitorProfile')||'{}');if(p.name&&p.name!=='法律探險家')return p.name}catch(e){}return NAMES[Math.floor(Math.random()*NAMES.length)]})();
+const L=src=>{const i=new Image();i.src=src;return i};const logo=L('ph-lit-logo.png'),me=$('#me'),ST=[0,1,2,3].map(k=>L('ph-lit-staff'+k+'.png'));
+const gold=(img,s,col)=>{const c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');g.drawImage(img,0,0,s,s);g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,s,s);return c};
+function drawCam(){const c=$('#cam'),g=c.getContext('2d');g.clearRect(0,0,200,260);g.strokeStyle='#B98C3A';g.lineWidth=10;g.lineCap='round';
+  g.beginPath();g.moveTo(100,140);g.lineTo(40,250);g.moveTo(100,140);g.lineTo(160,250);g.moveTo(100,140);g.lineTo(100,252);g.stroke();
+  g.fillStyle='#C85A2A';g.beginPath();g.roundRect(20,40,160,104,26);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=7;g.stroke();
+  g.fillStyle='#E6C27A';g.beginPath();g.roundRect(54,22,56,26,8);g.fill();g.fillStyle='#F7D98A';g.beginPath();g.arc(152,62,9,0,7);g.fill();
+  g.fillStyle='#E6C27A';g.beginPath();g.arc(100,92,40,0,7);g.fill();g.fillStyle='#9A4420';g.beginPath();g.arc(100,92,32,0,7);g.fill();
+  g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.arc(90,82,10,0,7);g.fill();if(logo.naturalWidth)g.drawImage(gold(logo,40,'#F6DC9A'),80,72)}
+logo.onload=drawCam;drawCam();
+let atSpot=false;
+$('#spot').onclick=()=>{if(atSpot)return;atSpot=true;me.style.left='40%';me.style.top='92%';$('#bub').classList.add('on');$('#hint').textContent='喀嚓！';setTimeout(shoot,550)};
+function shoot(){$('#bub').classList.remove('on');$('#hint').textContent='選一句台詞';$('#pick').style.display='block'}
+document.addEventListener('click',e=>{const b=e.target.closest('#pick .btn');if(!b)return;LINE=+b.dataset.l;$('#pick').style.display='none';const f=$('#flash');(()=>{f.style.background='#FFE9D6';f.style.opacity=.95;setTimeout(()=>f.style.opacity=0,220);setTimeout(makeCard,300)})()});
+// 漫畫格：三句台詞各有不同的法庭場景（不跟林律師合照）
+// 異議！＝法庭律師席、我有證據！＝證據白板、有法度！＝法院大門前正義天秤
+let LINE=0;const LINES=['異議！','我有證據！','有法度！'];const MQ=new Image();MQ.src='ph-lit-mq_ref.png';const JUDGE=new Image();JUDGE.src='ph-lit-judge.png';const TH=new Image();TH.src='ph-lit-tpl_head.png';const TF=new Image();TF.src='ph-lit-tpl_foot.png';
+function scales(g,sx,sy,S,col){g.save();g.strokeStyle=col;g.fillStyle=col;g.lineWidth=5*S;g.lineCap='round';
+  g.beginPath();g.moveTo(sx,sy-40*S);g.lineTo(sx,sy+60*S);g.stroke();g.beginPath();g.moveTo(sx-26*S,sy+64*S);g.lineTo(sx+26*S,sy+64*S);g.lineWidth=9*S;g.stroke();g.lineWidth=5*S;
+  g.beginPath();g.arc(sx,sy-46*S,8*S,0,7);g.fill();g.beginPath();g.moveTo(sx-62*S,sy-28*S);g.quadraticCurveTo(sx,sy-40*S,sx+62*S,sy-28*S);g.stroke();
+  for(const e of[-1,1]){const px=sx+e*62*S,py=sy-28*S;g.lineWidth=2*S;g.beginPath();g.moveTo(px,py);g.lineTo(px-20*S,py+40*S);g.moveTo(px,py);g.lineTo(px+20*S,py+40*S);g.stroke();g.beginPath();g.ellipse(px,py+42*S,26*S,7*S,0,0,Math.PI);g.fill()}g.restore()}
+function scene(g,X,Y,W,H,k){const wood=(x,y,w,h,c1,c2)=>{const gr=g.createLinearGradient(0,y,0,y+h);gr.addColorStop(0,c1);gr.addColorStop(1,c2);g.fillStyle=gr;g.fillRect(x,y,w,h)};
+  if(k===0){wood(X,Y,W,H,'#C98A55','#8E5A33');g.strokeStyle='rgba(60,30,10,.35)';g.lineWidth=4;for(let x=X;x<X+W;x+=90){g.strokeRect(x+10,Y+30,70,260)}
+    g.fillStyle='rgba(60,30,10,.35)';g.beginPath();g.arc(X+W*.5,Y+H*.2,56,0,7);g.fill();g.strokeStyle='#E6C27A';g.lineWidth=5;g.stroke();scales(g,X+W*.5,Y+H*.2,.66,'#E6C27A');
+    /* 法官：坐在法官席正後方，下半身被法官席擋住；整個人「模糊」（失焦、看不清五官），不是變淡 */
+    { const S=H/700,jh=320*S,jw=JUDGE.naturalWidth?jh*JUDGE.naturalWidth/JUDGE.naturalHeight:0,jx=X+W*.74,top=Y+H*.52-jh*.9;
+      if(JUDGE.naturalWidth){const L=jx-jw/2;g.save();g.filter='blur(1.5px)';g.drawImage(JUDGE,L,top,jw,jh);g.restore();/* 只有臉失焦：法官袍（黑袍藍邊）、法槌看得清楚 */g.save();g.beginPath();g.ellipse(L+jw*.31,top+jh*.55,jw*.31,jh*.24,0,0,7);g.clip();g.filter='blur(7px)';g.drawImage(JUDGE,L,top,jw,jh);g.restore()}
+      g.save();g.translate(jx+jw*.4,top+jh*.5);g.rotate(.12);g.fillStyle='#FFFFFF';g.strokeStyle='#1B1B1B';g.lineWidth=6;g.font='900 '+Math.round(50*S)+'px "Noto Sans TC",sans-serif';g.strokeText('咚！',0,0);g.fillText('咚！',0,0);g.restore(); }
+    wood(X+W*.2,Y+H*.52,W*.62,H*.1,'#7A4526','#5A3018');g.fillStyle='#E6C27A';g.fillRect(X+W*.2,Y+H*.52,W*.62,10);
+    wood(X,Y+H*.62,W,H*.38,'#B07A48','#7A4E2C');g.fillStyle='#5A3018';g.fillRect(X+W*.05,Y+H*.58,W*.3,H*.14);g.fillStyle='#E6C27A';g.fillRect(X+W*.05,Y+H*.58,W*.3,6);
+    }
+  if(k===1){wood(X,Y,W,H,'#EEE6DA','#D6CAB8');g.fillStyle='#FFFFFF';g.fillRect(X+W*.08,Y+H*.08,W*.84,H*.5);g.strokeStyle='#8A7A66';g.lineWidth=8;g.strokeRect(X+W*.08,Y+H*.08,W*.84,H*.5);
+    const docs=[[.14,.14,.16,.2,'#FFF7D6'],[.36,.12,.18,.14,'#DDEBFF'],[.6,.16,.14,.2,'#FFE1E1'],[.18,.38,.2,.14,'#E6F7E6'],[.62,.4,.18,.12,'#FFF7D6']];
+    for(const [a,b,c,d,col] of docs){g.fillStyle=col;g.fillRect(X+W*a,Y+H*b,W*c,H*d);g.strokeStyle='#999';g.lineWidth=2;g.strokeRect(X+W*a,Y+H*b,W*c,H*d);g.fillStyle='#E2453A';g.beginPath();g.arc(X+W*(a+c/2),Y+H*b+6,7,0,7);g.fill();g.fillStyle='#888';for(let r=0;r<3;r++)g.fillRect(X+W*a+10,Y+H*b+22+r*16,W*c-20,4)}
+    g.strokeStyle='#E2453A';g.lineWidth=3;g.beginPath();g.moveTo(X+W*.22,Y+H*.15);g.lineTo(X+W*.45,Y+H*.13);g.lineTo(X+W*.67,Y+H*.17);g.lineTo(X+W*.71,Y+H*.41);g.lineTo(X+W*.28,Y+H*.39);g.closePath();g.stroke();
+    wood(X,Y+H*.66,W,H*.34,'#9C6A3E','#6E4526');g.fillStyle='rgba(255,255,255,.7)';g.fillRect(X+W*.62,Y+H*.6,W*.12,H*.08);g.fillStyle='#E2453A';g.fillRect(X+W*.62,Y+H*.6,W*.12,10)}
+  if(k===2){const sk=g.createLinearGradient(0,Y,0,Y+H);sk.addColorStop(0,'#FFC27A');sk.addColorStop(1,'#FFE9C8');g.fillStyle=sk;g.fillRect(X,Y,W,H);
+    g.fillStyle='#FFF6E6';g.beginPath();g.moveTo(X+W*.08,Y+H*.3);g.lineTo(X+W/2,Y+H*.1);g.lineTo(X+W*.92,Y+H*.3);g.fill();g.fillRect(X+W*.1,Y+H*.3,W*.8,H*.06);
+    for(let c=0;c<6;c++){const cx=X+W*.16+c*W*.136;g.fillStyle='#FFF6E6';g.fillRect(cx-16,Y+H*.36,32,H*.34);g.fillStyle='rgba(200,170,130,.5)';for(let r=0;r<3;r++)g.fillRect(cx-10+r*8,Y+H*.37,3,H*.32)}
+    for(let st=0;st<4;st++){g.fillStyle=st%2?'#F2E3CC':'#FFF2DE';g.fillRect(X+W*(.06-st*.02),Y+H*(.7+st*.05),W*(.88+st*.04),H*.05)}
+    scales(g,X+W*.62,Y+H*.19,.75,'#C99A48');}}
+// 照德威陽 IG 漫畫「德威陽｜有法度」的版型：上方 Logo＋事務所名＋大標、黃色副標條；編號粉紅標題格；圓角對話框（黃色重點字）；
+// 下方黃色標語＋咖啡色服務條＋ LINE／官網／Facebook／Instagram；角落綠葉
+const TITLES=['法庭上，一句話扭轉局面！','證據準備好，說話才有分量！','打官司，就要有法度！'];
+const SAYS=[['異議！','這個問題','跟本案無關！'],['我有證據！','白紙黑字','都在這裡！'],['有法度！','程序走對了','才有底氣！']];
+function rr(g,x,y,w,h,r){g.beginPath();g.roundRect(x,y,w,h,r)}
+function leaf(g,x,y,s,rot){g.save();g.translate(x,y);g.rotate(rot);g.fillStyle='#4FA34A';for(let k=0;k<5;k++){g.save();g.rotate((k-2)*.38);g.beginPath();g.ellipse(0,-s*.55,s*.18,s*.5,0,0,7);g.fill();g.restore()}g.restore()}
+function makeCard(){const W=1254,H=1270,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');g.textBaseline='middle';
+  const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#D8EEFB');sky.addColorStop(.2,'#FFFDF6');sky.addColorStop(1,'#FFF8EA');g.fillStyle=sky;g.fillRect(0,0,W,H);
+  // 上方：直接用德威陽 IG 漫畫原版的刊頭（Logo、事務所名、德威陽｜有法度、右上角綁馬尾女生）
+  if(TH.naturalWidth)g.drawImage(TH,0,0,W,186);
+  g.fillStyle='#1B1B1B';g.textAlign='center';g.font='900 '+(MYNAME.length>6?38:42)+'px "Noto Sans TC",sans-serif';g.fillText('訴訟法律島，'+MYNAME+' 開庭！',618,146,560);g.textAlign='left';
+  // 主格
+  const X=24,Y=196,PW=W-48,PH=860;g.lineWidth=7;g.strokeStyle='#1B1B1B';g.fillStyle='#FFFFFF';g.fillRect(X,Y,PW,PH);
+  g.save();g.beginPath();g.rect(X,Y,PW,PH);g.clip();scene(g,X,Y+70,PW,PH-70,LINE);g.restore();
+  // 編號粉紅標題
+  g.fillStyle='#F6B7C2';rr(g,X+70,Y+16,PW-100,64,32);g.fill();g.stroke();g.fillStyle='#FFFFFF';g.beginPath();g.arc(X+60,Y+48,40,0,7);g.fill();g.stroke();
+  g.fillStyle='#1B1B1B';g.font='900 50px Arial,sans-serif';g.textAlign='center';g.fillText(String(LINE+1),X+60,Y+50);g.textAlign='left';g.font='900 40px "Noto Sans TC",sans-serif';g.fillText(TITLES[LINE],X+120,Y+50);
+  // 人物＋手邊道具
+  const cx=X+PW*(LINE===0?.42:.56),mw=440,cT=Y+PH-mw+(LINE===2?-60:24),cR=cx+mw/2+40,hy=cT+400;g.drawImage(me,cx-mw/2,cT,mw,mw);g.strokeStyle='#1B1B1B';g.lineWidth=7;
+  if(LINE===1){ /* 證據：牛皮紙卷宗夾＋迴紋針＋紅色印章 */ g.save();g.translate(cR+40,hy-80);g.rotate(.1);g.fillStyle='#D9A866';rr(g,-80,-110,160,210,10);g.fill();g.stroke();g.fillStyle='#C8914E';rr(g,-80,-128,70,26,8);g.fill();g.stroke();
+    g.fillStyle='#FFFFFF';g.fillRect(-62,-92,124,170);g.strokeRect(-62,-92,124,170);g.fillStyle='#1B1B1B';g.font='800 28px "Noto Sans TC",sans-serif';g.textAlign='center';g.fillText('證 據',0,-62);g.fillStyle='#9A9A9A';for(let k=0;k<4;k++)g.fillRect(-46,-30+k*20,92,6);
+    g.strokeStyle='#D23A2E';g.lineWidth=4;g.beginPath();g.arc(28,52,20,0,7);g.stroke();g.fillStyle='#D23A2E';g.font='800 16px "Noto Sans TC",sans-serif';g.fillText('附件',28,53);g.strokeStyle='#8C8C8C';g.lineWidth=5;rr(g,-60,-104,20,40,10);g.stroke();g.restore();g.textAlign='left';g.strokeStyle='#1B1B1B';g.lineWidth=7}
+  if(LINE===2){ /* 六法全書：精裝書，書背燙金、頁緣 */ g.save();g.translate(cR+40,hy-60);g.rotate(-.12);g.fillStyle='#F4EBD8';rr(g,-60,-94,132,184,6);g.fill();g.stroke();g.fillStyle='#7E1F24';rr(g,-72,-100,132,184,8);g.fill();g.stroke();
+    g.fillStyle='#5E1418';g.fillRect(-72,-100,22,184);g.fillStyle='#E9C46A';g.fillRect(-46,-80,92,4);g.fillRect(-46,56,92,4);g.font='800 30px "Noto Serif TC",serif';g.textAlign='center';g.fillText('六法',-2,-30);g.fillText('全書',-2,10);g.font='600 14px "Noto Serif TC",serif';g.fillText('2026',-2,40);g.restore();g.textAlign='left'}
+  // 驚嘆線
+  g.strokeStyle='#E23A2E';g.lineWidth=8;g.lineCap='round';for(let k=0;k<3;k++){g.beginPath();g.moveTo(cx-mw/2-20+k*22,cT+150-k*24);g.lineTo(cx-mw/2-56+k*22,cT+128-k*24);g.stroke()}
+  // 對話框（白底圓角＋黃色重點字）
+  const [big,l2,l3]=SAYS[LINE];const bx=X+30,by=Y+100,bw=420,bh=230;g.fillStyle='#FFFFFF';g.strokeStyle='#1B1B1B';g.lineWidth=5;
+  /* 尖角短短朝向人物左上方，停在頭外面，不戳到臉 */ g.beginPath();g.moveTo(bx+bw-150,by+bh-6);g.lineTo(bx+bw-40,by+bh+20);g.lineTo(bx+bw-90,by+bh-6);g.closePath();g.fill();g.stroke();rr(g,bx,by,bw,bh,40);g.fill();g.stroke();
+  g.fillStyle='#FFE36A';g.fillRect(bx+30,by+40,Math.min(360,big.length*72),66);g.fillStyle='#E23A2E';g.font='900 72px "Noto Sans TC",sans-serif';g.fillText(big,bx+34,by+74);
+  g.fillStyle='#1B1B1B';g.font='800 40px "Noto Sans TC",sans-serif';g.fillText(l2,bx+34,by+144);g.fillText(l3,bx+34,by+192);
+  g.strokeStyle='#1B1B1B';g.lineWidth=7;g.strokeRect(X,Y,PW,PH);
+  // 黃色標語（同 IG 漫畫）＋原版頁尾（服務項目、LINE／官網／Facebook／Instagram、綠葉）
+  const sy=Y+PH+10;g.fillStyle='#FEF673';rr(g,200,sy,W-400,62,14);g.fill();g.fillStyle='#1B1B1B';g.font='900 42px "Noto Sans TC",sans-serif';g.textAlign='right';g.fillText('訴訟要有法度，',W/2+60,sy+33);g.textAlign='left';g.fillStyle='#E23A2E';g.fillText('找德威陽！',W/2+60,sy+33);
+  if(TF.naturalWidth)g.drawImage(TF,0,H-130,W,130);
+  $('#pass').src=c.toDataURL('image/jpeg',.9);$('#card').style.display='flex';$('#hint').textContent='漫畫完成！'}
+$('#closeCard').onclick=()=>{$('#card').style.display='none';showDone();atSpot=false;me.style.left='74%';me.style.top='92%';};
+function showDone(){const h=$('#hint');h.textContent='已收進「我的紀念相簿」，選單裡隨時可以再看';h.style.display='block';clearTimeout(window.__tt);window.__tt=setTimeout(()=>{h.textContent='點一下相機就拍照'},2600)}
+$('#goNext').onclick=()=>{$('#done').style.display='none';$('#hint').textContent='正式版：地上會出現金色腳印，帶你走到醫療法律島'};
+</script>
+
+<style>#wyBack{position:fixed;right:10px;top:10px;z-index:20;padding:8px 14px;border-radius:999px;border:3px solid #E6C27A;background:#fff;color:#1F2E5C;font:800 14px "Noto Sans TC",sans-serif}
+#wyAct{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}#wyAct .btn{padding:10px 16px;font-size:15px}
+.hud{right:110px!important}</style>
+<button id="wyBack" type="button">返回島上</button>
+<script>
+(()=>{const K=1;const post=m=>{try{parent.postMessage(Object.assign({wy507:1,k:K},m),'*')}catch(e){}};
+document.getElementById('wyBack').onclick=()=>post({t:'close'});setTimeout(()=>{const sp=document.getElementById('spot');if(sp)sp.click()},700);
+const pass=document.getElementById('pass');let last='';
+new MutationObserver(()=>{if(pass.src&&pass.src!==last&&pass.src.startsWith('data:')){last=pass.src;post({t:'photo',src:pass.src})}}).observe(pass,{attributes:true,attributeFilter:['src']});
+const card=document.getElementById('card'),cb=document.getElementById('closeCard');const sm=card.querySelector('small');if(sm)sm.textContent='已自動收進選單裡的紀念相簿';
+const row=document.createElement('div');row.id='wyAct';const sv=document.createElement('button');sv.className='btn';sv.textContent='存到手機';const sh=document.createElement('button');sh.className='btn';sh.textContent='分享';
+cb.textContent='繼續逛';cb.parentNode.insertBefore(row,cb);row.append(sv,sh,cb);
+const blob=async()=>(await fetch(pass.src)).blob();
+sv.onclick=async()=>{const a=document.createElement('a');a.href=pass.src;a.download='德威陽紀念照.jpg';document.body.append(a);a.click();a.remove()};
+sh.onclick=async()=>{try{const b=await blob();const f=new File([b],'德威陽紀念照.jpg',{type:b.type});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'德威陽｜有法度',text:'我在德威陽 3D 法律探索島拍了紀念照！https://weiyanglaw.github.io/yeswedo/'});else if(navigator.share)await navigator.share({title:'德威陽｜有法度',url:'https://weiyanglaw.github.io/yeswedo/'});else sv.onclick()}catch(e){}};
+const gn=document.getElementById('goNext');if(gn){gn.textContent='繼續逛';gn.onclick=()=>{document.getElementById('done').style.display='none';post({t:'close'})}}
+})();
+</script></body>
+</html>

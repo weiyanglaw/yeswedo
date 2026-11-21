@@ -2,7 +2,7 @@
 // 原則：家具、位置、走道、顏色全部不變；只把材質改為石材紋、木紋烤漆、絨布、拋光金屬，並加柔和陰影。
 // 左前方正義女神像改為新雕塑（justice.js），位置與高度對齊原雕像，互動區域維持 'usa'。
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
-import {createJustice} from './justice.js?v=460';
+import {createJustice} from './justice.js?v=509';
 export function applyLitigationLuxury(root,THREE,renderer,scene,interior){
  /* ---------- 頂級版：程式繪製材質（非圖片、非 AI） ---------- */
  const pmrem=new THREE.PMREMGenerator(renderer);
