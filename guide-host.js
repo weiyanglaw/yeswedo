@@ -59,12 +59,15 @@ export function setupGuideHosts(THREE,buildChibi,STAFF,list){
   else if(state==='leave'){g.rotation.y+=(0-g.rotation.y)*0.12}
   chibi.tick(now);renderer.render(scene,cam)}
  function clear(){timers.forEach(clearTimeout);timers=[]}
+ /* v514 不卡頓：第一次進館時才建立小畫面與人物會停頓約 1 秒，改成載入時先在背景建好，之後重複使用 */
+ const chibiCache={};function getChibi(h){return chibiCache[h]||(chibiCache[h]=buildChibi(THREE,{...STAFF[h]}))}
+ window.wyGuideWarm=()=>{try{init();for(const h of [1,2,3]){const c=getChibi(h);scene.add(c.group);renderer.setSize(150,165,false);renderer.render(scene,cam);scene.remove(c.group)}}catch(e){console.error('guide warm',e)}};
  function show(cfg){init();clear();active=cfg;const el=cfg.el;let r=el.getBoundingClientRect();if(r.width<10)return;
   if(r.top<190){const room=window.innerHeight-198;if(r.height>room){el.style.setProperty('max-height',room+'px','important');el.style.overflowY='auto'}r=el.getBoundingClientRect();if(r.top<190){el.style.setProperty('top','calc(50% + '+Math.ceil(190-r.top)+'px)','important');r=el.getBoundingClientRect()}}
   const z=parseInt(getComputedStyle(el).zIndex)||95;host.style.zIndex=z-1;cloud.style.zIndex=z+1;
   host.style.left=(r.left+14)+'px';host.style.top=(r.top-163)+'px';cloud.style.left=Math.min(r.left+150,window.innerWidth-200)+'px';cloud.style.top=(r.top-162)+'px';
   host.className='wyGH';host.style.display='block';cloud.style.display='block';cloud.classList.remove('on');
-  if(curHost!==cfg.host){if(chibi)scene.remove(chibi.group);chibi=buildChibi(THREE,{...STAFF[cfg.host]});scene.add(chibi.group);curHost=cfg.host}
+  if(curHost!==cfg.host){if(chibi)scene.remove(chibi.group);chibi=getChibi(cfg.host);scene.add(chibi.group);curHost=cfg.host}
   chibi.group.rotation.y=0;chibi.group.position.y=0;
   let line=pick(cfg.key);const ind=(window.wyAvatarProfile&&window.wyAvatarProfile.industry)||'';
   if(!industryShown&&ind){industryShown=true;line=WY_INDUSTRY_LINES[ind]||GENERIC}

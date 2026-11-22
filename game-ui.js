@@ -115,21 +115,34 @@
   #guSplash .hd span{display:block;margin-top:5px;font-size:10px;color:#FFE7B0;white-space:nowrap;letter-spacing:.5px}
   #guSplash .bar{width:min(230px,62vw);height:10px;border-radius:99px;background:#ffffff1f;border:1.5px solid #D9B56A88;overflow:hidden;margin-top:6px}
   #guSplash .bar b{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#D9A84E,#FFE7A8);transition:width .4s}
-  #guSplash .tip{font-size:11.5px;color:#C9D4EA;letter-spacing:1px}`;
+  #guSplash .tip{font-size:11.5px;color:#C9D4EA;letter-spacing:1px}
+  #guSplash .hd div{transition:filter .3s}#guSplash .hd div.on i{transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+  #guSplash .hd.talking div.on:not(.talk){filter:brightness(.62) saturate(.8)}
+  #guSplash .hd div.talk i{transform:translateY(-6px) scale(1.14)}
+  #guSplash .hd div.talk span{color:#FFE7A8;font-weight:700}
+  #guSplash .say{position:relative;min-height:38px;max-width:min(300px,84vw);padding:8px 16px;border-radius:16px;background:#FFF8EC;color:#1A2B4C;font-size:14px;font-weight:700;letter-spacing:1px;box-shadow:0 0 0 2.5px #D9B56A,0 8px 18px #0006;display:flex;align-items:center;justify-content:center;white-space:nowrap;opacity:0;transition:opacity .25s}
+  #guSplash .say.on{opacity:1}
+  #guSplash .say:before{content:"";position:absolute;top:-9px;left:var(--ax,50%);margin-left:-9px;border:9px solid transparent;border-top:0;border-bottom-color:#D9B56A}
+  #guSplash .say:after{content:"";position:absolute;top:-6px;left:var(--ax,50%);margin-left:-7px;border:7px solid transparent;border-top:0;border-bottom-color:#FFF8EC}
+  #guSplash .say b{display:inline-block;transition:opacity .2s}`;
   document.head.appendChild(st);
   const sp=document.createElement('div');sp.id='guSplash';
   let stars='';for(let i=0;i<22;i++)stars+='<i class="sp" style="left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*2.6).toFixed(2)+'s"></i>';
   const NM=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'],KEY=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'];
-  sp.innerHTML=stars+'<div class="lg"><img src="office-logo-transparent.png" alt="德威陽"></div><div class="fm">德威陽國際法律事務所</div><div class="tt">YES, WE DO! 有法度</div><div class="hd">'+NM.map(n=>'<div><i></i><span>'+n+'</span></div>').join('')+'</div><div class="bar"><b></b></div><div class="tip">準備法律探索島中…</div>';
+  sp.innerHTML=stars+'<div class="lg"><img src="office-logo-transparent.png" alt="德威陽"></div><div class="fm">德威陽國際法律事務所</div><div class="tt">YES, WE DO! 有法度</div><div class="hd">'+NM.map(n=>'<div><i></i><span>'+n+'</span></div>').join('')+'</div><div class="say"><b></b></div><div class="bar"><b></b></div><div class="tip">準備法律探索島中…</div>';
   document.body.appendChild(sp);
   /* v490：移除開頁瞬間就顯示的靜態遮罩，改由動畫載入畫面接手 */
   requestAnimationFrame(()=>{const pre=document.getElementById('guPre');if(pre)pre.remove()});
   const t0=performance.now();let prog=0,done=false,headsOn=false;const bar=sp.querySelector('.bar b');
   const step=setInterval(()=>{if(done)return;prog=Math.min(88,prog+(88-prog)*.06+.4);bar.style.width=prog+'%';
-   if(!headsOn&&(window.wyGetStickers||window.wyGetHeads)){headsOn=true;let H={};try{H=window.wyGetStickers?window.wyGetStickers():window.wyGetHeads()}catch(e){}const ds=sp.querySelectorAll('.hd div');ds.forEach((d,i)=>{const img=H[KEY[i]];if(img)d.querySelector('i').style.backgroundImage='url('+img+')';setTimeout(()=>d.classList.add('on'),i*180)})}
+   if(!headsOn&&(window.wyGetStickers||window.wyGetHeads)){headsOn=true;let H={};try{H=window.wyGetStickers?window.wyGetStickers():window.wyGetHeads()}catch(e){}const ds=sp.querySelectorAll('.hd div');ds.forEach((d,i)=>{const img=H[KEY[i]];if(img)d.querySelector('i').style.backgroundImage='url('+img+')';setTimeout(()=>d.classList.add('on'),i*180)})
+    /* v514 陪選預覽：四位成員輪流說一句，介紹等一下要做什麼（不延長載入時間，載完就照常進下一步） */
+    {const SAY=['歡迎來到有法度群島！','等一下先選您的造型','每座島都能走進去逛','好多小遊戲等您來玩'];const say=sp.querySelector('.say'),sb=say.querySelector('b'),hd=sp.querySelector('.hd');let k=0;
+     const next=()=>{if(done||!sp.isConnected)return;ds.forEach(d=>d.classList.remove('talk'));const d=ds[k];d.classList.add('talk');hd.classList.add('talking');const rh=hd.getBoundingClientRect(),rd=d.getBoundingClientRect();sb.textContent=SAY[k];say.classList.add('on');const rs=say.getBoundingClientRect();say.style.setProperty('--ax',Math.max(18,Math.min(rs.width-18,rd.left+rd.width/2-rs.left))+'px');k=(k+1)%4;setTimeout(next,1500)};
+     setTimeout(next,4*180+350)}}
    const cr=document.getElementById('creator');const ready=!!window.__wyGame||(cr&&cr.style.display&&cr.style.display!=='none');
-   if(ready&&headsOn&&performance.now()-t0>2600&&!window.__guHold){done=true;bar.style.width='100%';setTimeout(()=>{sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)},950)}
-   if(performance.now()-t0>20000&&!done&&!window.__guHold){done=true;sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)}},120);
+   if(ready&&headsOn&&performance.now()-t0>2600&&!window.__guHold&&(window.wyWorldReady||performance.now()-t0>30000)){/* v514：島上全部準備好才離開載入畫面（最多等 30 秒） */done=true;bar.style.width='100%';setTimeout(()=>{sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)},950)}
+   if(performance.now()-t0>32000&&!done&&!window.__guHold){done=true;sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)}},120);
  })();
  /* ---------- 元件 ---------- */
  const badge=document.createElement('div');badge.className='gu guBadge';badge.style.display='none';
