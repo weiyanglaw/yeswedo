@@ -130,3 +130,22 @@ export function setupLetters() {
   tick();
   return { tick };
 }
+
+// v510 視窗太高被手機底部切到（例如 3F 公益律師）：自動等比例縮小到整個放得下，按鈕一定看得到；內容、比例、顏色不變
+(function fitPanels() {
+  const fit = () => {
+    const H = (window.visualViewport ? window.visualViewport.height : innerHeight) - 20;
+    const list = new Set();
+    document.querySelectorAll('.wyl-head').forEach(h => h.parentElement && list.add(h.parentElement));
+    document.querySelectorAll('#wy3M .c').forEach(c => list.add(c));
+    list.forEach(el => {
+      if (!el.offsetParent && getComputedStyle(el).position !== 'fixed') return;
+      const z = parseFloat(el.style.zoom) || 1;
+      const h = el.getBoundingClientRect().height / z;
+      if (!h) return;
+      const want = h > H ? Math.max(.6, H / h) : 1;
+      if (Math.abs(want - z) > .01) el.style.zoom = want.toFixed(3);
+    });
+  };
+  setInterval(fit, 400); addEventListener('resize', fit);
+})();

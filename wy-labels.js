@@ -115,7 +115,7 @@ export function actionCanvas(text, place, w = W) {
   return { canvas: c, aspect: c.width / c.height, bind(tex) { paint(c, actionSVG(text, place), tex); } };
 }
 // 直接做好 three.js 貼圖
-export function personTexture(T, name) { const p = personCanvas(name); const t = new T.CanvasTexture(p.canvas); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; p.bind(t); t.userData = { aspect: p.aspect, wyLabel: 'person' }; return t; }
+export function personTexture(T, name) { const p = personCanvas(name); const t = new T.CanvasTexture(p.canvas); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; p.bind(t); t.userData = { aspect: p.aspect, wyLabel: 'person', wyText: name }; return t; }
 export function actionTexture(T, text, place) { const p = actionCanvas(text, place); const t = new T.CanvasTexture(p.canvas); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; p.bind(t); t.userData = { aspect: p.aspect, wyLabel: 'action' }; return t; }
 export const PERSONS = ['林柏均 律師', '夢奇奇飼養者', '薪水掌門人', '哈姆太郎'];
 
@@ -181,6 +181,10 @@ export function addNameTags(T, models) {
     let has = false; root.traverse(o => { if (o.isSprite && o.material && o.material.map && o.material.map.userData && o.material.map.userData.wyLabel === 'person') has = true; });
     if (has) { root.userData.wyNameTag = true; continue; }
     const raw = (m.def && m.def.name) || root.userData.label || ''; const c = classify(raw); if (!c || c.type !== 'person') continue;
+    /* v510：場景裡已經有同名的名牌跟著這個人（不是掛在人物底下的那種），就不再加第二個，避免兩個名牌疊在一起 */
+    { let top = root; while (top.parent) top = top.parent; const rp = root.getWorldPosition(new T.Vector3()), wp = new T.Vector3(); let dup = false;
+      top.traverse(o => { if (dup || !o.isSprite || !o.material || !o.material.map) return; const u = o.material.map.userData || {}; const tx = u.wyText || ''; if (u.wyLabel !== 'person' || tx !== c.text) return; o.getWorldPosition(wp); if (Math.hypot(wp.x - rp.x, wp.z - rp.z) < 6) dup = true; });
+      if (dup) { root.userData.wyNameTag = true; continue; } }
     let tex = _personTex.get(c.text); if (!tex) { tex = personTexture(T, c.text); _personTex.set(c.text, tex); }
     root.updateMatrixWorld(true);
     const bb = new T.Box3().setFromObject(root); const s = root.getWorldScale(new T.Vector3()).x || 1;

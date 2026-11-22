@@ -128,7 +128,7 @@ export function setupOpening(T, c){
  window.wyOpening={play,skip,openLetter};
  const btn=document.getElementById('startExplore');
  if(btn)btn.addEventListener('click',()=>{if(btn.disabled)return;
-  let seen=false;try{seen=localStorage.getItem('wy-opened')==='1'&&!c.alwaysPlay}catch(e){}
+  let seen=false;try{/* v510 陳老闆：律師函開場每次進站都播（可按「跳過」）；只有測試程式會略過 */seen=localStorage.getItem('wy-test-skip')==='1'}catch(e){}
   if(seen){setTimeout(addMenu,30);return}
   play();setTimeout(()=>{if(!document.getElementById('creator')?.classList.contains('finished')){if(ov){ov.remove();ov=null}document.body.classList.remove('wy-opening');return}const cam=c.camera;cam.position.set(0,165,140);c.orbit.target.set(0,0,-56);try{c.orbit.update()}catch(e){}},30)},true);
 }

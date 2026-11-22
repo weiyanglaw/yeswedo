@@ -4,8 +4,8 @@ const COLOR = { castle: '#3F63B5', lit: '#EF9B6B', med: '#5CBF9B', fam: '#D46F84
 const ISLE = { '訴訟法律島': 'lit', '醫療法律島': 'med', '家庭生活島': 'fam', '企業商務島': 'biz', '法律知識島': 'know' };
 const mix = (h, t, f) => { const n = i => parseInt(h.slice(i, i + 2), 16); const c = [n(1), n(3), n(5)].map(v => Math.round(t ? v + (255 - v) * f : v * f)); return '#' + c.map(v => v.toString(16).padStart(2, '0')).join(''); };
 const css = `
-@font-face{font-family:"WYSerifB";src:url(wy-serif-b.woff?v=509) format("woff");font-weight:900;font-display:swap}
-@font-face{font-family:"WYSerifS";src:url(wy-serif-s.woff?v=509) format("woff");font-weight:600;font-display:swap}
+@font-face{font-family:"WYSerifB";src:url(wy-serif-b.woff?v=510) format("woff");font-weight:900;font-display:swap}
+@font-face{font-family:"WYSerifS";src:url(wy-serif-s.woff?v=510) format("woff");font-weight:600;font-display:swap}
 #wyTitleA2{position:fixed;z-index:66;left:calc(12px + env(safe-area-inset-left,0px));top:calc(24px + env(safe-area-inset-top,0px));width:min(300px,calc(100vw - 86px));height:62px;pointer-events:none;display:none}
 #wyTitleA2 .pl{position:absolute;inset:0;border-radius:16px;box-shadow:0 5px 0 var(--d),0 9px 16px #0003,inset 0 1px 0 #ffffff66;background:linear-gradient(180deg,var(--l),var(--c) 60%,var(--m))}
 #wyTitleA2 .f1{position:absolute;inset:4px;border-radius:12px;border:1.3px solid #f3d58a}
@@ -47,7 +47,7 @@ export function install() {
   if (document.getElementById('wyTitleA2')) return;
   const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
   const el = document.createElement('div'); el.id = 'wyTitleA2';
-  el.innerHTML = `<div class="pl"><div class="f1"></div><div class="f2"></div>${corner('left:5px;top:5px')}${corner('right:5px;top:5px;transform:scaleX(-1)')}${corner('left:5px;bottom:5px;transform:scaleY(-1)')}${corner('right:5px;bottom:5px;transform:scale(-1,-1)')}<div class="t"></div><div class="s">WEI &amp; YANG ・ 德威陽國際法律事務所</div></div><div class="lg"><img src="wy-title-logo.png?v=509" alt=""></div>${sun}`;
+  el.innerHTML = `<div class="pl"><div class="f1"></div><div class="f2"></div>${corner('left:5px;top:5px')}${corner('right:5px;top:5px;transform:scaleX(-1)')}${corner('left:5px;bottom:5px;transform:scaleY(-1)')}${corner('right:5px;bottom:5px;transform:scale(-1,-1)')}<div class="t"></div><div class="s">WEI &amp; YANG ・ 德威陽國際法律事務所</div></div><div class="lg"><img src="wy-title-logo.png?v=510" alt=""></div>${sun}`;
   document.body.appendChild(el);
   const ui = document.getElementById('officeUI'); const strong = ui && ui.querySelector('strong'); if (!strong) return;
   strong.classList.add('wyA2Hidden');

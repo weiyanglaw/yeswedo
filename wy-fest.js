@@ -1,8 +1,8 @@
 // 德威陽｜有法度 v493 節日裝飾：春節（含元宵）、西洋情人節、端午、七夕、中秋、聖誕
 // 日期每年自動判斷（台北時間）；預覽：index.html?fest=cny / val / duan / qixi / moon / xmas，可用逗號同時預覽（例如 cny,val），元宵加 &yuan=1。
 // 所有裝飾都綁在島嶼、橋、廣場的位置上（xy 與島半徑），之後島嶼重排時會跟著移動。
-import {makeOutfits} from './wy-outfit.js?v=509';
-import {makeHeads} from './wy-heads.js?v=509';
+import {makeOutfits} from './wy-outfit.js?v=510';
+import {makeHeads} from './wy-heads.js?v=510';
 export function setupFest(T, c, api){
  const scene=c.scene, xy=c.xy, gy=(x,z)=>{try{return c.groundY?c.groundY(x,z):0}catch(e){return 0}};
  const solid=(x,z,hx,hz)=>{try{c.addSolid&&c.addSolid(x,z,hx,hz)}catch(e){}};

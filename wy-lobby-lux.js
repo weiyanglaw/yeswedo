@@ -180,7 +180,7 @@ export function applyLobbyLux(T, root) {
   }
   // ---------- 角落植物：金色高花盆的發財樹與花叢 ----------
   { const FLW = ['#FF7FA8', '#FFC940', '#B784F5', '#FF8F5A', '#FF6FB0'].map(c => M(c, { roughness: .55 })), LV = [M('#4FB25A', { roughness: .6 }), M('#7ACB5E', { roughness: .6 })];
-    let n = 0; for (const [px, pz] of [[-11.6, -9.3], [5.6, -9.4], [-11.6, 9.0], [11.6, 9.0]]) { const g = new T.Group(); g.position.set(px, 0, pz); g.scale.setScalar(1.25); G.add(g);
+    let n = 0; for (const [px, pz] of [[-11.6, -9.3], [5.6, -9.4], [-11.6, 9.0], [11.6, 9.0]]) { if (px === 5.6) { n++; continue } /* v510 陳老闆：電梯左邊植物疊太多，拿掉這盆花叢 */ const g = new T.Group(); g.position.set(px, 0, pz); g.scale.setScalar(1.25); G.add(g);
       add(new T.CylinderGeometry(.42, .36, 1.5, 28), gold, 0, .75, 0, g); add(new T.TorusGeometry(.42, .05, 8, 28), gold, 0, 1.5, 0, g).rotation.x = Math.PI / 2;
       if (n++ % 2 === 0) { for (let k = 0; k < 3; k++) add(new T.CylinderGeometry(.06, .09, 1.3, 8), M('#B98955'), Math.cos(k * 2.1) * .06, 2.1, Math.sin(k * 2.1) * .06, g); for (const [x, y, z, r] of [[0, 3.1, 0, .55], [-.45, 2.8, .1, .42], [.45, 2.85, -.1, .44], [.1, 2.75, .45, .4], [-.1, 2.9, -.45, .4], [0, 3.5, .05, .38]]) add(new T.SphereGeometry(r, 16, 12), LV[(x > 0) | 0], x, y, z, g) }
       else { for (let k = 0; k < 7; k++) { const a = k * .9; add(new T.SphereGeometry(.34, 14, 10), LV[k % 2], Math.cos(a) * .3, 1.85 + (k % 3) * .12, Math.sin(a) * .3, g) } for (let k = 0; k < 9; k++) { const a = k * 2.4, r = .18 + (k % 3) * .14; add(new T.SphereGeometry(.15, 10, 8), FLW[k % FLW.length], Math.cos(a) * r, 2.1 + (k % 3) * .18, Math.sin(a) * r, g) } } } }

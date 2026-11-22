@@ -122,7 +122,7 @@ export function setupDoors(T, { scene, game }) {
   function enterSeq(i, done) {
     const d = doors[i], A = game.actor && game.actor();
     if (busy) return;
-    if (!d || !A || Math.hypot(A.position.x - d.center.x, A.position.z - d.center.z) > 9) { done(); return }   // 從遠處點建築：直接進去
+    if (!d || !A || Math.hypot(A.position.x - d.center.x, A.position.z - d.center.z) > 9) { try { window.wyVoice && window.wyVoice('yes') } catch (e) { } done(); return }   /* v510：從遠處進去也要聽到 YES WE DO */   // 從遠處點建築：直接進去
     busy = true; window.__wyDoorBusy = true;
     const p0 = A.position.clone(), face = Math.atan2(d.center.x - p0.x, d.center.z - p0.z);
     let r0 = A.rotation.y; const dr = Math.atan2(Math.sin(face - r0), Math.cos(face - r0));

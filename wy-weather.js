@@ -143,8 +143,8 @@ const css = `
 #wyWX .x{border:0;background:#e9f3ee;color:#1f5a43;font-size:20px;width:36px;height:36px;border-radius:10px;font-weight:700}
 #wyWX .bd{padding:10px 12px 12px}
 #wyWX h3{margin:0 0 8px;font:900 21px 'Noto Serif TC',serif;color:#1F2E5C;text-align:center}
-#wyWX .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
-#wyWX .chip{flex:0 0 auto;scroll-snap-align:start;border:2px solid #E6C27A;background:#FFF8EA;border-radius:13px;padding:5px 8px;display:flex;align-items:center;gap:3px;font:800 13px system-ui;color:#1F2E5C}
+#wyWX .rtabs{display:flex;gap:5px;margin:0 0 7px}.rtab{flex:1;border:2px solid #E6C27A;background:#FFF8EA;border-radius:11px;padding:5px 0;font:800 13px system-ui;color:#1F2E5C;white-space:nowrap}.rtab.on{background:#1F2E5C;color:#F6DC9A;border-color:#1F2E5C}.chips{display:flex;flex-wrap:wrap;gap:6px;padding:2px 2px 8px}
+#wyWX .chip{flex:0 0 auto;border:2px solid #E6C27A;background:#FFF8EA;border-radius:13px;padding:5px 8px;display:flex;align-items:center;gap:3px;font:800 13px system-ui;color:#1F2E5C}
 #wyWX .chip.on{background:#1F2E5C;color:#F6DC9A}
 #wyWX .studio{border-radius:16px;overflow:hidden;border:3px solid #E6C27A;background:linear-gradient(#24376B,#1A2852)}
 #wyWX .bar{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:#E6C27A;font:900 17px 'Noto Serif TC',serif;color:#1F2E5C}
@@ -168,17 +168,21 @@ const css = `
 `;
 let box, city = '台北', rib;
 try { city = localStorage.getItem('wy-wx-city') || '台北' } catch (e) { }
+/* v510 陳老闆定案乙：同一張卡片上先點區域、再點城市（兩下到任何城市），不另開視窗；記住上次城市 */
+const REG = [['北部', ['台北', '新北', '基隆', '桃園', '新竹']], ['中部', ['苗栗', '台中', '彰化', '南投', '雲林']], ['南部', ['嘉義', '台南', '高雄', '屏東']], ['東部離島', ['宜蘭', '花蓮', '台東', '澎湖', '金門', '連江']], ['海外', ['紐約', '東京']]];
+let reg = (REG.find(x => x[1].includes(city)) || REG[0])[0];
 function ensure() {
   if (box) return; const st = document.createElement('style'); st.textContent = css; document.head.append(st);
   box = document.createElement('div'); box.id = 'wyWX'; document.body.append(box);
-  box.addEventListener('click', e => { const b = e.target.closest('[data-c],button'); if (!b) return; if (b.dataset.a === 'close') { box.style.display = 'none'; return } if (b.dataset.c) { city = b.dataset.c; try { localStorage.setItem('wy-wx-city', city) } catch (e) { } render(); const ch = box.querySelector('.chip.on'); ch && ch.scrollIntoView({ inline: 'center', block: 'nearest' }) } });
+  box.addEventListener('click', e => { const b = e.target.closest('[data-c],[data-r],button'); if (!b) return; if (b.dataset.a === 'close') { box.style.display = 'none'; return } if (b.dataset.r) { reg = b.dataset.r; render(); return } if (b.dataset.c) { city = b.dataset.c; try { localStorage.setItem('wy-wx-city', city) } catch (e) { } render(); } });
 }
 function render() {
   const now = new Date(), P = pickLine(now), W = wx(city), st = STAFF[P.k] || STAFF.sun;
   const ttl = P.f ? FEST_NAME[P.f] + '｜' : '';
   box.innerHTML = `<div class="c"><div class="br"><img alt="德威陽國際法律事務所" src="./office-logo-transparent.png"><div><b>德威陽國際法律事務所</b><small>Wei &amp; Yang International Law Firm</small></div><button class="x" data-a="close" aria-label="關閉">×</button></div>
   <div class="bd"><h3>德威陽法律氣象台</h3>
-  <div class="chips">${CITIES.map(([n]) => { const w = wx(n); return `<button class="chip${n === city ? ' on' : ''}" data-c="${n}">${iconSVG(ICON(w.code), 22)}${n} ${w.t}°</button>` }).join('')}</div>
+  <div class="rtabs">${REG.map(([r]) => `<button class="rtab${r === reg ? ' on' : ''}" data-r="${r}">${r}</button>`).join('')}</div>
+  <div class="chips">${(REG.find(x => x[0] === reg) || REG[0])[1].map(n => { const w = wx(n); return `<button class="chip${n === city ? ' on' : ''}" data-c="${n}">${iconSVG(ICON(w.code), 22)}${n} ${w.t}°</button>` }).join('')}</div>
   <div class="studio"><div class="bar">${city}<small>${now.getMonth() + 1}/${now.getDate()} ${ttl}${W.est ? '季節參考' : '目前實況'}</small></div>
    <div class="stage"><img class="anchor" src="./${st[0]}" alt="${st[1]}"><div class="screen">${iconSVG(ICON(W.code), 64)}<div><div class="big">${W.t}°C</div><div class="cond">${DESC(W.code)}</div><div class="hl">最高 ${W.hi}° ／ 最低 ${W.lo}°</div></div></div></div>
    <div class="tip"><b>${st[1]}｜今日法律提醒</b>${P.line[0]}</div></div>

@@ -1,6 +1,6 @@
 // 德威陽｜有法度 v494 沖繩海上熱鬧版：翡翠漸層海、白沙灘、椰子樹、扶桑花、城堡島重做（草地＋廣場＋橋頭）、
 // 中間的骨牌花田 Logo、可愛的船／海鷗／遊客／攤位、遠方小島。
-import {buildLuxFountain} from './wy-fountain.js?v=509';
+import {buildLuxFountain} from './wy-fountain.js?v=510';
 export function setupSea(T, c){
  const scene=c.scene, xy=c.xy, G=c.groups(), CEN=c.center, SEA=-1.25;
  const MC=new Map();const M=(col,o)=>{const k=col+(o?JSON.stringify(o):'');if(!MC.has(k))MC.set(k,new T.MeshStandardMaterial({color:col,roughness:.62,...(o||{})}));return MC.get(k)};
@@ -94,13 +94,13 @@ export function setupSea(T, c){
  const palm=()=>{const p=new T.Group();const lean=(Math.random()-.5)*.4;const tr=cyl(.22,.38,5.2,'#B98A5E',8);tr.position.y=2.6;tr.rotation.z=lean;p.add(tr);for(let l=0;l<7;l++){const lf=sph(1,'#4FB46A',2.3,.18,.7,10);const la=l/7*Math.PI*2;lf.position.set(Math.cos(la)*1.6+lean*-2.6,5.2,Math.sin(la)*1.6);lf.rotation.y=-la;lf.rotation.z=-.35;p.add(lf)}for(let k=0;k<3;k++){const co=sph(.3,'#8A6A3A',1,1,1,8);co.position.set(lean*-2.6+Math.cos(k*2)*.4,4.9,Math.sin(k*2)*.4);p.add(co)}return p};
 
  const linkDirs=isles.map(()=>[]);(window.wyLinks||[]).forEach(L=>{const ends=[L.pts[0],L.pts[L.pts.length-1]];ends.forEach(p=>{isles.forEach((I,k)=>{if(Math.hypot(p[0]-I.x,p[2]-I.z)<I.r+3)linkDirs[k].push(Math.atan2(p[2]-I.z,p[0]-I.x))})})});
- const freeAng=(k,a)=>linkDirs[k].every(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>.42);
+ const freeAng=(k,a,m=.42)=>linkDirs[k].every(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>m);
  const centers=[];
  isles.forEach((I,k)=>{centers.push([I.x,I.z,I.r]);
   const sand=cyl(I.r+2.2,I.r+6.5,1.6,'#FBF1DC',72);sand.position.set(I.x,SEA+.25,I.z);root.add(sand);
   const foam=new T.Mesh(new T.TorusGeometry(I.r+6.3,.35,6,96),new T.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:.75}));foam.rotation.x=Math.PI/2;foam.position.set(I.x,SEA+.05,I.z);foam.userData.dyn=1;root.add(foam);const ph=k;movers.push(t=>{foam.material.opacity=.55+.25*Math.sin(t*1.6+ph)});
-  const n=k===0?10:6;for(let j=0;j<n;j++){const a=j/n*Math.PI*2+.3;if(!freeAng(k,a))continue;if(k===0&&Math.sin(a)>.45&&Math.abs(Math.cos(a))<.55)continue;const pr=I.r+3.4;
-   const p=palm();p.position.set(I.x+Math.cos(a)*pr,SEA+1.05,I.z+Math.sin(a)*pr);root.add(p);const h=hibiscus();h.position.set(I.x+Math.cos(a+.3)*(I.r+2.6),SEA+1.1,I.z+Math.sin(a+.3)*(I.r+2.6));root.add(h)}});
+  const n=k===0?10:6;for(let j=0;j<n;j++){const a=j/n*Math.PI*2+.3;if(!freeAng(k,a,.5))continue;if(k===0&&Math.sin(a)>.45&&Math.abs(Math.cos(a))<.55)continue;const pr=I.r+3.4;
+   const p=palm();p.position.set(I.x+Math.cos(a)*pr,SEA+1.05,I.z+Math.sin(a)*pr);root.add(p);/* v510 陳老闆：橋口兩側的扶桑花盆會擋路、擠在路燈旁，離橋口太近的不放 */if(freeAng(k,a+.3,.62)){const h=hibiscus();h.position.set(I.x+Math.cos(a+.3)*(I.r+2.6),SEA+1.1,I.z+Math.sin(a+.3)*(I.r+2.6));root.add(h)}}});
  // ---------- 6) 海 ----------
  const WB=window.WY_BEND=window.WY_BEND||{k:{value:0},d:{value:20}};const uni={uT:{value:0},uDim:{value:1},uC:{value:centers.map(v=>new T.Vector3(v[0],v[1],v[2]))},wyBendK:WB.k,wyBendD:WB.d};const NC=centers.length;
  const sea=new T.Mesh(new T.PlaneGeometry(1600,1600,160,160),new T.ShaderMaterial({uniforms:uni,

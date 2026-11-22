@@ -13,7 +13,7 @@ export function setupFireworks(T, c, api){
   // 太密的點抽稀，維持手機效能
   const MAX=1400;targets=pts.length>MAX?pts.filter((_,k)=>k%Math.ceil(pts.length/MAX)===0):pts}catch(e){console.error('fw logo',e)}})();
  const shows=[];
- const tip=document.createElement('div');tip.textContent='截圖分享這一刻';tip.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:92px;z-index:60;background:rgba(31,52,96,.88);color:#FFE7A8;font:600 13px/1.2 "Noto Sans TC",sans-serif;padding:8px 12px;border-radius:14px;border:1px solid #F0C75E;opacity:0;transition:opacity .4s;pointer-events:none';document.body.appendChild(tip);
+ const tip=document.createElement('div');tip.textContent='截圖分享這一刻';tip.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:calc(166px + env(safe-area-inset-top,0px));/* v510：移到名牌與氣象台下面，不重疊 */z-index:60;background:rgba(31,52,96,.88);color:#FFE7A8;font:600 13px/1.2 "Noto Sans TC",sans-serif;padding:8px 12px;border-radius:14px;border:1px solid #F0C75E;opacity:0;transition:opacity .4s;pointer-events:none';document.body.appendChild(tip);
  let tipT=0;
  function launch(){if(!targets||(c.inside&&c.inside()))return false;
   const fw=new T.Vector3();camera.getWorldDirection(fw);const hf=fw.clone();hf.y=0;if(hf.lengthSq()<1e-4)hf.set(0,0,-1);hf.normalize();
@@ -29,7 +29,7 @@ export function setupFireworks(T, c, api){
   const side=[];for(let s=0;s<4;s++){const n=80,pp=new Float32Array(n*3),vel=[];for(let i=0;i<n;i++){const u=Math.random()*Math.PI*2,v=Math.acos(2*Math.random()-1),sp=9+Math.random()*4;vel.push([Math.sin(v)*Math.cos(u)*sp,Math.cos(v)*sp,Math.sin(v)*Math.sin(u)*sp])}
    const sg=new T.BufferGeometry();sg.setAttribute('position',new T.BufferAttribute(pp,3));const sp2=new T.Points(sg,new T.PointsMaterial({size:1.6,map:dot,color:['#FF8FB8','#9AD8FF','#FFB23D','#B8F28A'][s],transparent:true,depthWrite:false,blending:T.AdditiveBlending,fog:false}));
    const off=new T.Vector3((s<2?-1:1)*(26+Math.random()*10),(s%2?8:-4)+Math.random()*6,(Math.random()-.5)*10);sp2.position.copy(center).add(off.applyAxisAngle(new T.Vector3(0,1,0),Math.atan2(hf.x,hf.z)));sp2.visible=false;scene.add(sp2);side.push({p:sp2,vel,at:1.6+s*.45})}
-  shows.push({t:0,P,rk,start,center,side});tipT=6;tip.style.opacity=1;try{api.boom&&api.boom()}catch(e){}return true}
+  shows.push({t:0,P,rk,start,center,side});tipT=6;tip.style.opacity=1;clearTimeout(tip.__h);tip.__h=setTimeout(()=>{tip.style.opacity=0;tipT=0},6000);/* v510：一定 6 秒後收起（進室內不會一直掛著） */try{api.boom&&api.boom()}catch(e){}return true}
  window.wyLogoFireworks=()=>launch();
  // 逛完四間辦公室
  const KEY='wy-visited-rooms-v498',DONE='wy-fw-allrooms-v498';

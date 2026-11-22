@@ -299,7 +299,7 @@ export function buildBusinessNew(T, target) {
   // v507 每層樓天花板的暖黃燈帶（像參考圖窗裡的黃光線條），穩定不閃
   const lampM = new T.MeshBasicMaterial({ color: '#FFD98A' });
   // 兩側較矮大樓（往後退、四角倒角）＋每層燈帶＋屋頂女兒牆與金柱頭
-  for (const s of [-1, 1]) { const bx = s * 7.6, bz = FZ - 2.2, by = Y0 + 3.4, bh = 9.2; facade(bx, bz, 5.6, bh, by, 3, 3, 6);
+  for (const s of [-1, 1]) { const bx = s * 7.6, bz = FZ - 2.2, by = Y0 + 3.4, bh = 9.2; facade(bx, bz, 5.6, bh, by, 3, 3, 6); /* v510 陳老闆：兩側大樓下半部後面是空的（看得到穿透），補上一樓實心牆，正面柱廊不動 */ box(5.5, 3.4, 5.2, purpleD, bx, Y0 + 1.7, bz - 3.4);
     for (let r = 0; r < 3; r++) box(5.3, .1, .12, lampM, bx, by + (r + 1) * bh / 3 - .28, bz + .16);
     for (const sx of [-1, 1]) { const c = box(1.1, bh, 1.1, purple, bx + sx * 2.8, by + bh / 2, bz - .45); c.rotation.y = Math.PI / 4; box(.07, bh, .08, gold, bx + sx * 3.2, by + bh / 2, bz - .1) }
     const ty = by + bh + .95; box(6.0, .5, .25, ivory, bx, ty, bz + .1); box(6.1, .08, .3, gold, bx, ty + .28, bz + .1); for (const sx of [-1, 1]) { box(.35, .8, .35, ivory, bx + sx * 2.9, ty + .2, bz + .1); add(new T.SphereGeometry(.2, 12, 8), gold, bx + sx * 2.9, ty + .75, bz + .1) } }

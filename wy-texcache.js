@@ -10,6 +10,8 @@ if (!THREE.TextureLoader.prototype.__wyCached) {
     let key; try { key = new URL((this.path || '') + url, document.baseURI).pathname } catch (e) { key = url }
     const tex = new THREE.Texture();
     let e = cache.get(key);
+    /* v510：原稿已被省記憶體放掉的，重新載入一份，不拿空殼去用 */
+    if (e && e.source && e.source.data && e.source.data.__mfStub) { cache.delete(key); e = null }
     if (!e) {
       e = { source: null, wait: [], fail: [] }; cache.set(key, e);
       orig.call(this, url, t => { e.source = t.source; const w = e.wait; e.wait = null; w.forEach(f => f()) }, onProgress, err => { cache.delete(key); const f = e.fail; e.fail = null; f.forEach(x => x(err)) });
