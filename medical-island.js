@@ -446,25 +446,29 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  // Keep the original interactive chibi staff. No GLB replacement.
  // v134: clean, recognisable two-seat sofa: continuous base, padded back, two seat cushions and symmetrical arms.
  // Keep the original sofa footprint and consultation clearance unchanged.
- const sofaFrame=material(0x88B5B3),sofaCushion=material(0xB7D8D5),sofaTrim=material(0xA1C8C5);
- box(5.0,.48,2.25,sofaFrame,-7.7,.53,-.35);
- box(4.48,.29,1.82,sofaCushion,-7.7,.89,-.21);
- box(4.55,1.35,.42,sofaFrame,-7.7,1.34,-1.26);
- for(const dx of [-1.12,1.12]){
-  box(2.10,.12,1.67,sofaCushion,-7.7+dx,1.07,-.22);
-  box(2.08,1.02,.22,sofaCushion,-7.7+dx,1.46,-1.02);
- }
- for(const dx of [-2.34,2.34]){
-  box(.32,.88,2.10,sofaTrim,-7.7+dx,.94,-.35);
-  box(.32,.13,2.10,sofaCushion,-7.7+dx,1.44,-.35);
- }
+ /* v510 陳老闆：醫療島沙發做成圓滾滾的動森風（薄荷綠為主＋奶油白坐墊＋香檳金腳），位置、大小、互動不變 */
+ const sofaFrame=material(0x7CC8AE,0,.7),sofaCushion=material(0xFFF6E3,0,.85),sofaPipe=material(0xD8B46A,.45,.35),sofaPillow=material(0xF3B7A6,0,.85);
+ const SX=-7.7,SZ=-.35;
+ const cap=(r,len,mat,x,y,z,axis)=>{const m=add(new THREE.CapsuleGeometry(r,len,8,20),mat,x,y,z);if(axis==='x')m.rotation.z=Math.PI/2;if(axis==='z')m.rotation.x=Math.PI/2;return m};
+ cap(.42,3.7,sofaFrame,SX,.62,SZ+.35,'x');cap(.42,3.7,sofaFrame,SX,.62,SZ-.45,'x');     // 圓胖底座（兩條圓柱併成）
+ box(4.4,.5,1.2,sofaFrame,SX,.6,SZ-.05);
+ for(const dx of [-1.08,1.08]){const c=cap(.26,1.62,sofaCushion,SX+dx,1.0,SZ+.1,'x');c.scale.set(1,1,3.0)}   // 鼓鼓的坐墊
+ cap(.46,3.5,sofaFrame,SX,1.55,SZ-.88,'x');                                            // 圓滾滾椅背
+ for(const dx of [-1.08,1.08]){const b=cap(.24,1.5,sofaCushion,SX+dx,1.5,SZ-.5,'x');b.scale.set(1,1.55,1)}  // 靠墊
+ for(const dx of [-2.25,2.25]){cap(.4,1.2,sofaFrame,SX+dx,1.0,SZ-.05,'z');const t=add(new THREE.SphereGeometry(.18,20,14),sofaPipe,SX+dx,1.0,SZ+1.02);t.scale.set(1,1,.35)}   // 圓扶手＋金色釦
+ for(const dx of [-1.9,1.9])for(const dz of [-.65,.75]){const l=add(new THREE.SphereGeometry(.13,16,12),sofaPipe,SX+dx,.17,SZ+dz);l.scale.set(1,1.2,1)}   // 圓金腳
+ for(const dx of [-1.55,1.55]){const pl=cap(.2,.36,sofaPillow,SX+dx,1.45,SZ-.3,'x');pl.scale.set(1,1.4,.6);pl.rotation.y=dx<0?.25:-.25}   // 珊瑚粉小抱枕
  box(2.85,.18,1.55,stone,-7.7,.86,1.55);
  for(const dx of [-1.08,1.08])for(const dz of [-.52,.52])box(.18,.72,.18,walnut,-7.7+dx,.44,1.55+dz);
  // v46: one substantial consultation chair facing the case sofa, not a waiting area.
- const chairMat=material(0xB7CFC9);
- box(1.65,.65,1.55,chairMat,-3.55,.64,1.20);
- box(1.65,1.36,.38,chairMat,-2.96,1.42,1.20);
- for(const dz of [-.64,.64])box(1.38,.76,.23,chairMat,-3.55,.98,1.20+dz);
+ /* v510：單人諮詢椅改成同款圓滾滾扶手椅（薄荷綠＋奶油白），位置與點擊範圍不變 */
+ {const fr=material(0x7CC8AE,0,.7),cu=material(0xFFF6E3,0,.85),gd=material(0xD8B46A,.45,.35);
+  const cp=(r,len,mat,x,y,z,axis)=>{const m=add(new THREE.CapsuleGeometry(r,len,8,20),mat,x,y,z);if(axis==='x')m.rotation.z=Math.PI/2;if(axis==='z')m.rotation.x=Math.PI/2;return m};
+  box(1.4,.5,1.3,fr,-3.55,.58,1.20);
+  {const c=cp(.24,.8,cu,-3.65,.98,1.20,'z');c.scale.set(2.4,1,1)}
+  cp(.4,1.0,fr,-2.98,1.45,1.20,'z');
+  for(const dz of [-.66,.66])cp(.3,.9,fr,-3.55,1.0,1.20+dz,'x');
+  for(const dx of [-.55,.55])for(const dz of [-.55,.55]){const g=add(new THREE.SphereGeometry(.11,14,10),gd,-3.55+dx,.14,1.20+dz);g.scale.set(1,1.2,1)}}
  // Contact hotspot is attached to the SINGLE consultation chair, not a screen-top button.
  const contactChairHit=box(1.85,1.9,1.85,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-3.55,1.20,1.20);
  // Case file: a visible, clickable object on the table.
