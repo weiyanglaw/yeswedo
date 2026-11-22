@@ -183,7 +183,7 @@
     大門＝陳老闆本人錄的「Yes, we do!」（全站唯一真人聲）
     電梯到站＝「Yes, we do」節奏的音樂盒旋律（有回音、悠揚）
     四位成員說話＝音樂盒音色但乾淨、短、沒回音，每人三個音、各有個性 */
- const VO={},VURL={yes:'yes-we-do.wav?v=509'};
+ const VO={},VURL={yes:'yes-we-do.wav?v=510'};
  const wavBuf=(a,ab)=>{const dv=new DataView(ab);let p=12,off=0,len=0,rate=22050;while(p<dv.byteLength-8){const id=String.fromCharCode(dv.getUint8(p),dv.getUint8(p+1),dv.getUint8(p+2),dv.getUint8(p+3)),sz=dv.getUint32(p+4,true);if(id==='fmt ')rate=dv.getUint32(p+12,true);if(id==='data'){off=p+8;len=sz;break}p+=8+sz}const n=len>>1,b=a.createBuffer(1,n,rate),ch=b.getChannelData(0);for(let i=0;i<n;i++)ch[i]=dv.getInt16(off+i*2,true)/32768;return b};
  const voLoad=k=>{if(VO[k])return VO[k].p;const a=ac();if(!a)return Promise.reject();VO[k]={p:fetch(VURL[k]).then(r=>r.arrayBuffer()).then(ab=>(VO[k].buf=wavBuf(a,ab)))};return VO[k].p};
  window.wyVoice=k=>{if(!soundOn||!VURL[k])return;try{const a=ac();if(!a)return;if(a.state==='suspended')a.resume();const play=buf=>{const s=a.createBufferSource();s.buffer=buf;const g=a.createGain();g.gain.value=1;s.connect(g);g.connect(a.destination);s.start()};if(VO[k]&&VO[k].buf)play(VO[k].buf);else voLoad(k).then(play).catch(()=>{})}catch(e){}};

@@ -50,7 +50,7 @@ export function setupGuideHosts(THREE,buildChibi,STAFF,list){
  let renderer=null,scene=null,cam=null,chibi=null,curHost=-1,timers=[],running=false,state='hide',lastBeat=0,active=null,industryShown=false;
  const bags={};
  function pick(k){if(!bags[k]||!bags[k].length)bags[k]=[...WY_HOST_LINES[k]].sort(()=>Math.random()-.5);return bags[k].shift()}
- function init(){if(renderer)return;renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(150,165);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0,0);
+ function init(){if(renderer)return;renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});if(window.__wyMFGuard)window.__wyMFGuard(renderer);else(window.__wyMFReg=window.__wyMFReg||[]).push(renderer);renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.setSize(150,165);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor(0,0);
   scene=new THREE.Scene();scene.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.6));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,3);scene.add(d);const f=new THREE.DirectionalLight(0xffe8e0,.6);f.position.set(-3,2,2);scene.add(f);
   cam=new THREE.PerspectiveCamera(24,150/165,.1,50);cam.position.set(0,1.0,7.0);cam.lookAt(0,.95,0);host.querySelector('.fig').appendChild(renderer.domElement)}
  function loop(now){if(!running)return;requestAnimationFrame(loop);if(!chibi)return;const g=chibi.group;
@@ -114,7 +114,7 @@ export function setupCornerHost(THREE,buildChibi,STAFF){
  const host=document.createElement('div');host.className='wyCH';host.innerHTML='<div class="fig"></div>';document.body.appendChild(host);
  const cloud=document.createElement('div');cloud.className='wyCHCloud';cloud.innerHTML='<button class="x" aria-label="關閉">×</button><small></small><span></span><br><a href="https://line.me/R/ti/p/@wylaw" target="_blank" rel="noopener">LINE 聯繫我們</a>';document.body.appendChild(cloud);
  let r=null,sc=null,cam=null,ch=null,cur=-1,timers=[],run=false;
- function init(){if(r)return;r=new THREE.WebGLRenderer({antialias:true,alpha:true});r.setPixelRatio(Math.min(2,window.devicePixelRatio||1));r.setSize(130,150);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
+ function init(){if(r)return;r=new THREE.WebGLRenderer({antialias:true,alpha:true});if(window.__wyMFGuard)window.__wyMFGuard(r);else(window.__wyMFReg=window.__wyMFReg||[]).push(r);r.setPixelRatio(Math.min(2,window.devicePixelRatio||1));r.setSize(130,150);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
   sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.6));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,3);sc.add(d);
   cam=new THREE.PerspectiveCamera(24,130/150,.1,50);cam.position.set(0,1.0,7.0);cam.lookAt(0,.95,0);host.querySelector('.fig').appendChild(r.domElement)}
  function loop(now){if(!run)return;requestAnimationFrame(loop);if(ch){ch.group.rotation.y+=(0.3-ch.group.rotation.y)*.05;ch.tick(now);r.render(sc,cam)}}
@@ -162,7 +162,7 @@ export function setupHeads(THREE,buildChibi,STAFF){
  // v491/v492：貼紙式頭像（正面、拍大一點，馬尾與包子頭完整露出）；另有揮手兩格
  const stickerCache={};
  function renderStickers(wave){const key=wave?'w':'n';if(stickerCache[key])return stickerCache[key];const out={};stickerCache[key]=out;
-  try{const S=128,r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(2);r.setSize(S,S);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
+  try{const S=128,r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});if(window.__wyMFGuard)window.__wyMFGuard(r);else(window.__wyMFReg=window.__wyMFReg||[]).push(r);r.setPixelRatio(2);r.setSize(S,S);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
    const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.7));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,4);sc.add(d);const cam=new THREE.PerspectiveCamera(22,1,.1,50);
    const snap=()=>{const cv=document.createElement('canvas');cv.width=cv.height=S*2;const g=cv.getContext('2d');for(let a=0;a<16;a++){g.save();g.translate(Math.cos(a/16*Math.PI*2)*6,Math.sin(a/16*Math.PI*2)*6);g.drawImage(r.domElement,0,0);g.restore()}
     g.globalCompositeOperation='source-in';g.fillStyle='#fff';g.fillRect(0,0,S*2,S*2);g.globalCompositeOperation='source-over';g.drawImage(r.domElement,0,0);return cv.toDataURL('image/png')};
@@ -175,7 +175,7 @@ export function setupHeads(THREE,buildChibi,STAFF){
  window.wyGetStickers=()=>renderStickers(false);
  window.wyGetWaveStickers=()=>renderStickers(true);
  window.wyGetHeads=function(){if(cache)return cache;cache={};
-  try{const S=96,r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(2);r.setSize(S,S);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
+  try{const S=96,r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});if(window.__wyMFGuard)window.__wyMFGuard(r);else(window.__wyMFReg=window.__wyMFReg||[]).push(r);r.setPixelRatio(2);r.setSize(S,S);r.outputColorSpace=THREE.SRGBColorSpace;r.setClearColor(0,0);
    const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight(0xfff4ee,0xd9c4b8,1.7));const d=new THREE.DirectionalLight(0xffeedd,2.2);d.position.set(2,4,4);sc.add(d);
    const cam=new THREE.PerspectiveCamera(22,1,.1,50);
    NAMES.forEach((n,i)=>{const c=buildChibi(THREE,{...STAFF[i]});sc.add(c.group);c.group.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(c.group);const h=b.max.y-b.min.y,cy=b.max.y-h*.47;

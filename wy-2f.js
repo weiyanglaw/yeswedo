@@ -5,7 +5,7 @@
  function close(){if(!ov)return;const f=ov.querySelector('iframe');try{f.src='about:blank'}catch(e){}ov.remove();ov=null;try{window.wySfx&&window.wySfx('tap')}catch(e){}}
  window.wy2fOpen=function(g){if(ov)close();ov=document.createElement('div');ov.id='wy2fOv';
   ov.style.cssText='position:fixed;inset:0;z-index:9000;background:rgba(11,31,47,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s';
-  const f=document.createElement('iframe');f.src='wy-2f-games.html?v=509&embed=1&g='+g;f.allow='autoplay';f.title='德威陽 2 樓互動';
+  const f=document.createElement('iframe');f.src='wy-2f-games.html?v=510&embed=1&g='+g;f.allow='autoplay';f.title='德威陽 2 樓互動';
   f.style.cssText='border:0;background:transparent;width:min(440px,96vw);height:min(calc(86dvh),800px);color-scheme:normal';
   ov.appendChild(f);ov.addEventListener('click',e=>{if(e.target===ov)close()});document.body.appendChild(ov);requestAnimationFrame(()=>ov.style.opacity='1');
   try{window.wySfx&&window.wySfx('tap')}catch(e){}};
