@@ -7,7 +7,7 @@ const ISLE = {
   biz: ['企業島', '#9A80D0', '#563C8C'], know: ['知識島', '#3C93B6', '#1F5F78'], castle: ['事務所', '#3F63B5', '#1A2C66'],
 };
 // 視窗外層 id → 島
-const MAP = { 'wy-lit-games': 'lit', wyLitigationInfo433: 'lit', wyFee: 'lit', wyFiling: 'lit', wyMediation: 'lit', wyMedicalExperience: 'med', wyFamilyExperience: 'fam', wy410BusinessPanel: 'biz', wyRC: null, wy3MovieModal: 'castle', wy317Overlay: 'castle', wyLF: 'castle', wy3M: 'castle', wy3P: 'castle', wy3U: 'castle', wy3B: 'castle', wy3L: 'castle', wy3F: 'castle' };
+const MAP = { 'wy-lit-games': 'lit', wyLitigationInfo433: 'lit', wyFee: 'lit', wyFiling: 'lit', wyMediation: 'lit', wyMedicalExperience: 'med', wyFamilyExperience: 'fam', wy410BusinessPanel: 'biz', wyRC: null, wy3MovieModal: 'castle', wy317Overlay: 'castle', wyLF: 'castle', wy3M: 'castle', wy3P: 'castle', wy3U: 'castle', wy3B: 'castle', wy3L: 'castle', wy3F: 'castle', wyLobbyDialog: 'castle' };
 const SKIP = new Set(['wyJustice']);
 const GR = 'M0,-8 C3.4,-5 3.6,2.5 0,6.5 C-3.6,2.5 -3.4,-5 0,-8Z';
 function wheatSVG() {
