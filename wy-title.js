@@ -78,12 +78,12 @@ export function install() {
     el.style.display = show ? 'block' : 'none'; document.body.classList.toggle('wyA2On', show); if (!show) return;
     /* v509：搭電梯時上方樓層名牌先收起來，只留「電梯上升中 1F → 2F」，兩個不會疊在一起 */
     { const rs = document.getElementById('wyRideShade'); el.style.visibility = rs && rs.style.display !== 'none' ? 'hidden' : ''; }
-    const key = strong.textContent + '|' + (window.wyIsNight ? 1 : 0); if (key === last) return; last = key;
+    const key = strong.textContent; /* v513：標題一律太陽，不判斷白天晚上（陳老闆 11-22） */ if (key === last) return; last = key;
     const p = parse(strong.textContent), c = COLOR[p.k];
     el.style.setProperty('--c', c); el.style.setProperty('--l', mix(c, 1, .28)); el.style.setProperty('--m', mix(c, 0, .88)); el.style.setProperty('--d', mix(c, 0, .6)); el.style.setProperty('--s', mix(c, 0, .55));
     const t = el.querySelector('.t'); t.innerHTML = (p.fl ? `<b>${p.fl}</b>` : '') + p.t;
     t.style.fontSize = (p.t.length > 9 ? 15.5 : 18) + 'px';
-    el.classList.toggle('night', !!window.wyIsNight);
+    el.classList.remove('night');
   };
   new MutationObserver(() => { sync(); syncCtl(); }).observe(ui, { attributes: true, attributeFilter: ['style'], subtree: true, childList: true, characterData: true });
   { const rs = document.getElementById('wyRideShade'); if (rs) new MutationObserver(() => sync()).observe(rs, { attributes: true, attributeFilter: ['style'] }); }

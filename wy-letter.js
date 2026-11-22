@@ -33,7 +33,9 @@ function closeBtnOf(panel) {
 function dress(shell, key) {
   // 照 11-21 定案 E 稿：厚金漸層外框（8px）＋內圈咖啡細線、奶油橫線信紙、信紙內右上大郵票、
   // 信頭＝Logo＋小字事務所名＋島色大標題＋金線、底部署名條、右上框外金圈關閉鈕、右側框外一株麥穗
-  const panel = panelOf(shell); if (!panel || panel.dataset.wyLetter) return;
+  const panel = panelOf(shell); if (!panel) return;
+  // v511：視窗內容整個重畫時（例如電梯選樓層），信頭和郵票會被清掉，要重新放上
+  if (panel.dataset.wyLetter && panel.querySelector(':scope > .wyl-stamp')) return;
   panel.dataset.wyLetter = '1';
   const isle = ISLE[key || islandNow()] || ISLE.castle;
   const wasPos = getComputedStyle(panel).position;

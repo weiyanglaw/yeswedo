@@ -7,7 +7,7 @@ export function setupRedraw(THREE) {
   const fnv = (h, u) => { for (let i = 0; i < u.length; i++) { h ^= u[i]; h = Math.imul(h, 16777619) >>> 0 } return h };
   const words = a => a.byteLength % 4 === 0 ? new Uint32Array(a.buffer, a.byteOffset, a.byteLength / 4) : new Uint8Array(a.buffer, a.byteOffset, a.byteLength);
   const plain = g => {
-    for (const n in g.attributes) { const a = g.attributes[n]; if (a.isInterleavedBufferAttribute || !a.array) return false }
+    for (const n in g.attributes) { const a = g.attributes[n]; if (a.isInterleavedBufferAttribute || !a.array || !a.array.length || a.__mfQueued) return false /* v511：已被省記憶體放掉備份的形狀不能再重算，否則會變黑 */ }
     if (g.morphAttributes && Object.keys(g.morphAttributes).length) return false;
     return true;
   };
@@ -85,8 +85,9 @@ export function setupRedraw(THREE) {
     const inUse = new Set(); const chk = [];
     for (const [o, g] of undo) chk.push(g);
     // 舊形狀已經沒人用了就釋放顯示記憶體
-    const users = new Map(); for (const [o] of undo) users.set(o, o.geometry);
-    for (const g of new Set(chk)) { let used = false; for (const [o, cur] of users) if (cur === g) { used = true; break } if (!used) try { g.dispose() } catch (e) { } }
+    // v514 不卡頓：先把「目前還在用的形狀」收成一份清單，再一次比對（原本兩層迴圈，物件多時會停頓）；結果相同
+    const cur = new Set(); for (const [o] of undo) cur.add(o.geometry);
+    for (const g of new Set(chk)) { if (!cur.has(g)) try { g.dispose() } catch (e) { } }
   }
   return { collect, apply, revert, freeOld };
 }

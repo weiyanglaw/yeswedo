@@ -13,13 +13,14 @@ export function setupOpening(T, c){
  #wyOp .letter.away{transform:translate(40vw,-62vh) scale(.08) rotate(20deg);opacity:0}
  #wyOp .fun{position:absolute;top:11px;right:11px;background:#F26D8E;color:#fff;font-size:11px;padding:2px 9px;border-radius:999px;letter-spacing:2px}
  #wyOp .hd{display:flex;align-items:center;gap:9px;border-bottom:2px solid #D9B56A;padding-bottom:8px;margin-bottom:8px}
- #wyOp .hd img{width:38px;height:38px}#wyOp .hd b{display:block;font-family:${S};font-size:19px;letter-spacing:3px}#wyOp .hd small{font-size:10.5px;color:#8A6224;letter-spacing:2px}
+ #wyOp .hd img{width:38px;height:38px}#wyOp .hd small.hd2{display:block;margin-top:2px;font-size:9.5px;line-height:1.4;letter-spacing:.3px;color:#6B5A3E}#wyOp .hd b{display:block;font-family:${S};font-size:19px;letter-spacing:3px}#wyOp .hd small{font-size:10.5px;color:#8A6224;letter-spacing:2px}
  #wyOp .row{font-size:13.5px;line-height:1.7}#wyOp .k{display:inline-block;min-width:4.2em;color:#8A6224}#wyOp .who{color:#C8342B;font-size:15px}
  #wyOp ol{margin:2px 0 0;padding-left:1.5em;font-size:13px;line-height:1.65}
+ #wyOp ol li{word-break:keep-all;line-break:strict;text-wrap:pretty}
  #wyOp .sig{position:relative;display:flex;align-items:flex-end;margin-top:8px;min-height:84px}
  #wyOp .sig .lin{display:flex;align-items:center;gap:5px;font-size:12px}#wyOp .sig .lin img{width:48px;height:48px}#wyOp .sig .date{font-size:11px;color:#777}
- #wyOp .slot{position:absolute;right:2px;bottom:2px;width:78px;height:78px;border:2px dashed #C8342B66;border-radius:8px;display:grid;place-items:center;color:#C8342B99;font-size:11px}
- #wyOp .seal{position:absolute;right:2px;bottom:2px;width:78px;height:78px;border:4px solid #C8342B;border-radius:10px;color:#C8342B;display:grid;grid-template-columns:1fr 1fr;place-items:center;font-family:${S};font-weight:900;font-size:23px;line-height:1;padding:3px;background:#C8342B0c;opacity:0;transform:scale(3) rotate(-24deg)}
+ #wyOp .slot{position:absolute;right:2px;bottom:2px;width:80px;height:80px;border:2px dashed #C8342B66;border-radius:50%;display:grid;place-items:center;color:#C8342B99;font-size:11px}
+ #wyOp .seal{position:absolute;right:2px;bottom:2px;width:80px;height:80px;border-radius:50%;color:#C8342B;display:block;background:center/100% 100% no-repeat;opacity:0;transform:scale(3) rotate(-24deg)}
  #wyOp .seal.down{animation:wyOpStamp .42s cubic-bezier(.5,0,.75,0) forwards}
  @keyframes wyOpStamp{0%{opacity:0;transform:scale(3) rotate(-24deg)}70%{opacity:1;transform:scale(.92) rotate(-8deg)}100%{opacity:.92;transform:scale(1) rotate(-8deg)}}
  #wyOp .sign{font-family:${S};font-size:20px;color:#233a6a;display:inline-block;clip-path:inset(0 100% 0 0);transition:clip-path 1s ease-out}#wyOp .sign.on{clip-path:inset(0)}
@@ -60,15 +61,18 @@ export function setupOpening(T, c){
  const kind='letter';
  const today=()=>{const d=new Date();return (d.getFullYear()-1911)+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日'};
  const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
- const name=()=>{const iv=document.getElementById('visitorName');if(iv&&iv.value.trim())return iv.value.trim();try{return (JSON.parse(localStorage.getItem('weiyangVisitorProfile')||'{}').name)||'法律探險家'}catch(e){return '法律探險家'}};
+ const name0=()=>{const iv=document.getElementById('visitorName');if(iv&&iv.value.trim())return iv.value.trim();try{return (JSON.parse(localStorage.getItem('weiyangVisitorProfile')||'{}').name)||'法律探險家'}catch(e){return '法律探險家'}};const name=()=>{const n=name0();return window.wyCleanName?window.wyCleanName(n):n};
  const heads=()=>{let H={};try{H=window.wyGetStickers?window.wyGetStickers():(window.wyGetHeads?window.wyGetHeads():{})}catch(e){}return ['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'].map(n=>H[n]||'')};
  let AC=null;function thud(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(localStorage.getItem('wy-sound')==='off')return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type='sine';o.frequency.setValueAtTime(180,t);o.frequency.exponentialRampToValueAtTime(55,t+.25);g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.32)}catch(e){}}
  const sfx=k=>{try{window.wySfx&&window.wySfx(k)}catch(e){}};
  function confetti(){const cols=['#FFD36E','#F26D8E','#7FC8F8','#B8E986','#FFFFFF','#D9A84E'];for(let i=0;i<70;i++){const d=document.createElement('div');d.className='wyOpCf';d.style.left=Math.random()*100+'vw';d.style.background=cols[i%cols.length];document.body.appendChild(d);const dx=(Math.random()-.5)*160,rot=Math.random()*720;d.animate([{transform:'translate(0,0) rotate(0)'},{transform:`translate(${dx}px,${innerHeight+60}px) rotate(${rot}deg)`}],{duration:1400+Math.random()*1200,delay:Math.random()*250,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>d.remove()}}
- function letterHTML(H){const n=esc(name());const seal='<div class="seal"><span>德</span><span>威</span><span>陽</span><span>印</span></div>';
-  if(kind==='letter')return `<span class="fun">趣味</span><div class="hd"><img src="${LOGO}" alt=""><div><b>有法度律師函</b><small>德威陽國際法律事務所</small></div></div>
+ // v514 有法度印：外圈直接用事務所 Logo 的麥穗與雙圓環，染成印泥紅，中間清空放「有法度」
+ let RING=null;const ringP=new Promise(res=>{const im=new Image();im.onload=()=>{try{const s=480,cv=document.createElement('canvas');cv.width=cv.height=s;const g=cv.getContext('2d');const k=im.naturalWidth/2048;g.drawImage(im,439*k,333*k,1200*k,1200*k,0,0,s,s);g.globalCompositeOperation='destination-out';g.beginPath();g.arc(s/2,s/2,s*.333,0,Math.PI*2);g.fill();g.globalCompositeOperation='source-in';g.fillStyle='#C8342B';g.fillRect(0,0,s,s);RING=cv;res(cv)}catch(e){res(null)}};im.onerror=()=>res(null);im.src=LOGO});
+ const paintRing=()=>ringP.then(cv=>{if(!cv||!ov)return;const s=ov.querySelector('.seal');if(s)s.style.backgroundImage='url('+cv.toDataURL()+')'});
+ function letterHTML(H){const n=esc(name());const seal='<div class="seal"><svg viewBox="0 0 80 80" width="80" height="80"><text x="40" y="42" text-anchor="middle" fill="#C8342B" stroke="none" font-size="15" font-weight="900" font-family="Noto Serif TC,Songti TC,serif">有法度</text><text x="40" y="52" text-anchor="middle" fill="#C8342B" stroke="none" font-size="6" font-weight="700" letter-spacing=".5" font-family="Arial,sans-serif">YES, WE DO!</text></svg></div>';
+  if(kind==='letter')return `<span class="fun">趣味</span><div class="hd"><img src="${LOGO}" alt=""><div><b>有法度律師函</b><small>德威陽國際法律事務所</small><small class="hd2">主持律師 林柏均（台灣律師・美國紐約州律師）<br>LINE @wylaw｜weiandyang.com</small></div></div>
    <div class="row"><span class="k">受文者</span><span class="who">${n}</span> 台端</div><div class="row"><span class="k">主旨</span>通知台端已正式成為有法度島民，請查照。</div>
-   <ol><li>經查台端品味出眾、眼光獨到，完全符合入島資格。</li><li>自即日起，台端得自由探索訴訟、醫療、家庭、企業四座島嶼；如有法律問題，歡迎透過 LINE @wylaw 與本所聯繫。</li><li>台端如繼續保持有法度，本所將不另行通知，特此函告。</li></ol>
+   <ol><li>經查台端品味出眾、眼光獨到，完全符合入島資格。</li><li>自即日起，台端得自由探索訴訟、醫療、家庭、企業四座島嶼，各島均有本所相關法律服務之介紹；本所城堡 24 小時燈火通明，台端隨時來訪皆可。</li><li>台端如於島上玩得太開心而忘記時間，本所概不負責，特此函告。</li></ol>
    <div class="sig"><div><div class="lin">${H[0]?`<img src="${H[0]}" alt="">`:''}德威陽國際法律事務所<br>林律師</div><div class="date">中華民國 ${today()}</div></div><div class="slot">蓋章處</div>${seal}</div><div class="foot">本函為網站遊戲趣味內容，不具任何法律效力</div>`;
   return ''}
  // 鏡頭路徑：雲上 → 俯衝群島 → 人物背後
@@ -87,7 +91,7 @@ export function setupOpening(T, c){
   setTimeout(()=>{thud();sfx('done');L.classList.add('shk');confetti();
    const hd=ov.querySelector('.heads');const rc=L.getBoundingClientRect();hd.style.top=(rc.top-116)+'px';ov.querySelector('.yes').style.top=Math.max(44,rc.top-150)+'px';let WV={};try{WV=window.wyGetWaveStickers?window.wyGetWaveStickers():{}}catch(e){}const NM=['林律師','夢奇奇飼養者','哈姆太郎','薪水掌門人'];
    heads().forEach((src,i)=>{if(!src)return;const im=document.createElement('img');im.src=src;hd.appendChild(im);const fr=WV[NM[i]]||null;
-    setTimeout(()=>{im.classList.add('on');sfx('pop');if(fr&&fr[0]){let k=0;setTimeout(()=>{im.src=fr[0];const iv=setInterval(()=>{if(!ov){clearInterval(iv);return}k++;im.src=fr[k%2]},190);setTimeout(()=>clearInterval(iv),1900)},420)}},250+i*180)});setTimeout(()=>ov&&ov.querySelector('.yes').classList.add('go2'),900);
+    setTimeout(()=>{im.classList.add('on');sfx('pop');if(fr&&fr[0]){let k=0;setTimeout(()=>{im.src=fr[0];const iv=setInterval(()=>{if(!ov){clearInterval(iv);return}k++;im.src=fr[k%2]},190);setTimeout(()=>clearInterval(iv),1900)},420)}},250+i*180)});setTimeout(()=>{if(!ov)return;ov.querySelector('.yes').classList.add('go2');/* v514 陳老闆：蓋章後播本人錄的 Yes, we do!（和大字同時出現；大門照舊每次都播） */try{window.wyVoice&&window.wyVoice('yes')}catch(e){}},900);
    setTimeout(()=>{L.classList.add('away');sfx('flip');
     ov.querySelectorAll('.cl').forEach(el=>{const dx=+el.dataset.dx,dy=+el.dataset.dy;el.style.transform=`translate(${dx}vw,${dy}vh) scale(1.6)`;el.style.opacity='0'});ov.querySelector('.sky').style.opacity='0';hd.classList.add('out');flyDown()},2200)},330)}
  function play(){if(ov)return;window.wyOpeningOn=true;document.body.classList.add('wy-opening');ov=document.createElement('div');ov.id='wyOp';
@@ -95,12 +99,12 @@ export function setupOpening(T, c){
   B.forEach(([x,y,sz,dx,dy])=>{cl+=`<div class="cl" data-dx="${dx}" data-dy="${dy}" style="left:${x}%;top:${y}%;width:${sz*2.6}px;height:${sz*1.9}px;margin:-${sz*.95}px 0 0 -${sz*1.3}px"></div>`});
   const H=heads();
   ov.innerHTML=`<div class="sky"></div>${cl}<div class="letter">${letterHTML(H)}</div><div class="yes"><b>YES, WE DO!</b></div><div class="heads"></div>
-   <div class="point">${H[0]?`<img src="${H[0]}" alt="">`:''}<i></i></div><button class="go" type="button">${kind==='letter'?'點一下　蓋上事務所印章':'點一下　簽上您的名字'}</button><button class="skip" type="button">跳過 ›</button>`;
-  document.body.appendChild(ov);
+   <div class="point">${H[0]?`<img src="${H[0]}" alt="">`:''}<i></i></div><button class="go" type="button">${kind==='letter'?'點一下　蓋上有法度印章':'點一下　簽上您的名字'}</button><button class="skip" type="button">跳過 ›</button>`;
+  document.body.appendChild(ov);paintRing();
   const a=c.actor().position;c.camera.position.set(0,165,140);c.orbit.target.set(0,0,-56);try{c.orbit.update()}catch(e){}
   let signed=kind==='letter';const go=ov.querySelector('.go');
   const arm=()=>{clearTimeout(nudgeT);nudgeT=setTimeout(()=>{if(stamped||!ov)return;go.classList.add('nudge');ov.querySelector('.point').classList.add('on')},3000)};arm();
-  go.onclick=()=>{go.classList.remove('nudge');ov.querySelector('.point').classList.remove('on');if(!signed){signed=true;sfx('tap');ov.querySelector('.sign').classList.add('on');go.textContent='請林律師　蓋上事務所印章';arm();return}stamp()};
+  go.onclick=()=>{go.classList.remove('nudge');ov.querySelector('.point').classList.remove('on');if(!signed){signed=true;sfx('tap');ov.querySelector('.sign').classList.add('on');go.textContent='請林律師　蓋上有法度印章';arm();return}stamp()};
   ov.querySelector('.skip').onclick=skip;
 }
  // 選單：我的律師函（存圖分享）
@@ -113,15 +117,15 @@ export function setupOpening(T, c){
   g.fillStyle='#D9B56A';rr(54,54,972,1060,40);g.fill();g.fillStyle='#FFF8EC';rr(64,64,952,1040,34);g.fill();
   const HS=heads();const [logo,...hs]=await Promise.all([load(LOGO),...HS.map(load)]);
   if(logo)g.drawImage(logo,104,100,110,110);g.textBaseline='middle';g.fillStyle='#1A2B4C';g.font='900 60px '+S;g.fillText('有法度律師函',236,140);
-  g.fillStyle='#8A6224';g.font='30px '+F;g.fillText('德威陽國際法律事務所',238,196);g.fillStyle='#F26D8E';rr(860,96,120,52,26);g.fill();g.fillStyle='#fff';g.textAlign='center';g.fillText('趣味',920,123);g.textAlign='left';
-  g.fillStyle='#D9B56A';g.fillRect(104,240,872,5);
-  let y=310;const n=name();const ln=(k,v,col)=>{g.fillStyle='#8A6224';g.font='36px '+F;g.fillText(k,110,y);g.fillStyle=col||'#1A2B4C';g.fillText(v,290,y);y+=72};
-  const wrap=(t,x,mw,lh)=>{let s='';for(const ch of t){if(g.measureText(s+ch).width>mw){g.fillText(s,x,y);y+=lh;s=ch}else s+=ch}if(s){g.fillText(s,x,y);y+=lh}};
-  if(kind==='letter'){ln('受文者',n+'　台端','#C8342B');g.fillStyle='#8A6224';g.font='36px '+F;g.fillText('主旨',110,y);g.fillStyle='#1A2B4C';wrap('通知台端已正式成為有法度島民，請查照。',290,690,58);y+=14;g.font='34px '+F;['一、經查台端品味出眾、眼光獨到，完全符合入島資格。','二、如有法律問題，歡迎透過 LINE @wylaw 與本所聯繫。','三、台端如繼續保持有法度，本所將不另行通知。'].forEach(t=>{wrap(t,110,860,56);y+=8})}
+  g.fillStyle='#8A6224';g.font='28px '+F;g.fillText('德威陽國際法律事務所',238,190);g.fillStyle='#6B5A3E';g.font='23px '+F;g.fillText('主持律師 林柏均（台灣律師・美國紐約州律師）',238,228);g.fillStyle='#F26D8E';rr(860,96,120,52,26);g.fill();g.fillStyle='#fff';g.textAlign='center';g.fillText('趣味',920,123);g.textAlign='left';
+  g.fillStyle='#D9B56A';g.fillRect(104,256,872,5);
+  let y=320;const n=name();const ln=(k,v,col)=>{g.fillStyle='#8A6224';g.font='36px '+F;g.fillText(k,110,y);g.fillStyle=col||'#1A2B4C';g.fillText(v,290,y);y+=72};
+  const wrap=(t,x,mw,lh)=>{/* v514 只在標點後換行（同網頁上的律師函），太長的片段才逐字換 */const seg=t.match(/[^，。、；：！？]*[，。、；：！？]?/g).filter(Boolean);let s='';const out=()=>{g.fillText(s,x,y);y+=lh;s=''};for(const p of seg){if(g.measureText(s+p).width<=mw){s+=p;continue}if(s)out();if(g.measureText(p).width<=mw){s=p;continue}for(const ch of p){if(g.measureText(s+ch).width>mw)out();s+=ch}}if(s)out()};
+  if(kind==='letter'){ln('受文者',n+'　台端','#C8342B');g.fillStyle='#8A6224';g.font='36px '+F;g.fillText('主旨',110,y);g.fillStyle='#1A2B4C';wrap('通知台端已正式成為有法度島民，請查照。',290,690,58);y+=14;g.font='34px '+F;['一、經查台端品味出眾、眼光獨到，完全符合入島資格。','二、自即日起，台端得自由探索訴訟、醫療、家庭、企業四座島嶼，各島均有本所相關法律服務之介紹；本所城堡 24 小時燈火通明，台端隨時來訪皆可。','三、台端如於島上玩得太開心而忘記時間，本所概不負責，特此函告。'].forEach(t=>{wrap(t,110,860,56);y+=8})}
 
-  const hy=Math.min(Math.max(y+10,600),660);hs.forEach((im,i)=>{if(im)g.drawImage(im,170+i*190,hy,150,150)});g.fillStyle='#8A6224';g.font='28px '+F;g.textAlign='center';g.fillText('四位成員歡迎您入島',540,hy+178);g.textAlign='left';
+  const hy=Math.min(Math.max(y+10,600),660);const roomH=y+10<=hy;if(roomH)hs.forEach((im,i)=>{if(im)g.drawImage(im,170+i*190,hy,150,150)});if(roomH){g.fillStyle='#8A6224';g.font='28px '+F;g.textAlign='center';g.fillText('四位成員歡迎您入島',540,hy+178)}g.textAlign='left';
   if(hs[0])g.drawImage(hs[0],104,880,150,150);g.fillStyle='#1A2B4C';g.font='34px '+F;g.fillText('德威陽國際法律事務所',266,930);g.fillText('林律師',266,980);g.fillStyle='#888';g.font='28px '+F;g.fillText('中華民國 '+today(),266,1030);
-  g.save();g.translate(860,960);g.rotate(-8*Math.PI/180);g.globalAlpha=.9;g.strokeStyle='#C8342B';g.lineWidth=10;rr(-95,-95,190,190,20);g.stroke();g.fillStyle='#C8342B';g.font='900 66px '+S;g.textAlign='center';[['德',-42,-40],['威',42,-40],['陽',-42,44],['印',42,44]].forEach(([ch,x,yy])=>g.fillText(ch,x,yy));g.restore();
+  g.save();g.translate(860,960);g.rotate(-8*Math.PI/180);g.globalAlpha=.9;g.fillStyle='#C8342B';const RG=RING||await ringP;if(RG)g.drawImage(RG,-104,-104,208,208);g.textAlign='center';g.textBaseline='middle';g.font='900 36px '+S;g.fillText('有法度',0,-4);g.font='700 13px Arial,sans-serif';g.fillText('YES, WE DO!',0,25);g.restore();g.textBaseline='middle';
   g.textAlign='center';g.fillStyle='#aaa';g.font='24px '+F;g.fillText('本函為網站遊戲趣味內容，不具任何法律效力',540,1080);
   g.fillStyle='#FFE7B0';g.font='40px '+F;g.fillText('我在德威陽，有法度！',540,1172);g.fillStyle='#C9D4EA';g.font='28px '+F;g.fillText('LINE @wylaw　｜　Google 搜尋「德威陽 有法度」',540,1236);g.fillStyle='#D9B56A';g.font='24px '+F;g.fillText('weiandyang.com',540,1288);
   v.querySelector('img').src=cv.toDataURL('image/jpeg',.9);v.style.display='flex';try{document.querySelector('.guMenu')?.classList.remove('on')}catch(e){}}
