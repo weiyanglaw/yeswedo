@@ -150,7 +150,7 @@
  function skipIntro(){jcT.forEach(clearTimeout);jcT=[];const q=x=>box.querySelector(x);if(!q('.jc-stage'))return;q('.jc-ch.mq').classList.add('in');q('.jc-ch.wy').classList.add('in');['#jcB0','#jcB1'].forEach(x=>q(x).classList.remove('on'));q('#jcB2').classList.add('on');q('.jc-next').classList.add('on')}
  function build(){
   box=document.createElement('div');box.id='wyJustice';
-  box.innerHTML=css()+'<div class="j-brand"><img alt="德威陽國際法律事務所" src="./office-logo-transparent.png"><div><b>德威陽國際法律事務所</b><small>Wei &amp; Yang International Law Firm</small></div><button class="j-x" data-close="1" aria-label="關閉">×</button></div>'+
+  box.innerHTML=css()+'<style>#wyJustice .j-title{background:none!important;border:0!important;box-shadow:none!important;padding:0 16px 4px!important;margin:0!important}#wyJustice .j-title p{background:none!important;color:#9A6B3A!important;font-size:12.5px!important;margin:0!important;padding:0!important}</style>'+'<div class="j-brand"><img alt="德威陽國際法律事務所" src="./office-logo-transparent.png"><div><b>德威陽國際法律事務所</b><small>Wei &amp; Yang International Law Firm</small></div><button class="j-x" data-close="1" aria-label="關閉">×</button></div>'+
    '<div class="j-title"><h1>正義女神的兩條路</h1><p>訴訟島｜美國訴訟入門</p></div><div class="j-body" id="jBody"></div><div class="j-small">制度說明為一般性介紹，美國各州規定不盡相同，個案仍須評估。</div>';
   document.body.appendChild(box);
   box.addEventListener('click',e=>{

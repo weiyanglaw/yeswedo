@@ -7,8 +7,8 @@ const ISLE = {
   biz: ['企業島', '#9A80D0', '#563C8C'], know: ['知識島', '#3C93B6', '#1F5F78'], castle: ['事務所', '#3F63B5', '#1A2C66'],
 };
 // 視窗外層 id → 島
-const MAP = { 'wy-lit-games': 'lit', wyLitigationInfo433: 'lit', wyFee: 'lit', wyFiling: 'lit', wyMediation: 'lit', wyMedicalExperience: 'med', wyFamilyExperience: 'fam', wy410BusinessPanel: 'biz', wyRC: null, wy3MovieModal: 'castle', wy317Overlay: 'castle', wyLF: 'castle', wy3M: 'castle', wy3P: 'castle', wy3U: 'castle', wy3B: 'castle', wy3L: 'castle', wy3F: 'castle', wyLobbyDialog: 'castle' };
-const SKIP = new Set(['wyJustice']);
+const MAP = { wyBench: 'lit', wyJusticeLink: 'lit', wyJustice: 'lit', 'wy-lit-games': 'lit', wyLitigationInfo433: 'lit', wyFee: 'lit', wyFiling: 'lit', wyMediation: 'lit', wyMedicalExperience: 'med', wyFamilyExperience: 'fam', wy410BusinessPanel: 'biz', wyRC: null, wy3MovieModal: 'castle', wy317Overlay: 'castle', wyLF: 'castle', wy3M: 'castle', wy3P: 'castle', wy3U: 'castle', wy3B: 'castle', wy3L: 'castle', wy3F: 'castle', wyLobbyDialog: 'castle' };
+const SKIP = new Set([]); /* v515 陳老闆：訴訟島全部用信紙外框，大法官席、正義女神也一樣 */
 const GR = 'M0,-8 C3.4,-5 3.6,2.5 0,6.5 C-3.6,2.5 -3.4,-5 0,-8Z';
 function wheatSVG() {
   const P = []; for (let k = 0; k <= 50; k++) { const t = k / 50; P.push([10 + 4 * Math.sin(t * 2), 70 - 60 * t]); }
@@ -28,16 +28,20 @@ function panelOf(shell) {
   return area > 200 * 120 ? best : null;
 }
 function closeBtnOf(panel) {
-  return [...panel.querySelectorAll('button')].find(b => /^[×✕x✖]$|關閉|✕/.test(b.textContent.trim()) && b.textContent.trim().length <= 6);
+  const bs = [...panel.querySelectorAll('button')];
+  return bs.find(b => /^[×✕x✖]$|關閉|✕/.test(b.textContent.trim()) && b.textContent.trim().length <= 6) || bs.find(b => /(^|[\s_-])(close|x)(\s|$)|Close/.test(b.className + '') && b.textContent.trim().length <= 6);
 }
 function dress(shell, key) {
   // 照 11-21 定案 E 稿：厚金漸層外框（8px）＋內圈咖啡細線、奶油橫線信紙、信紙內右上大郵票、
   // 信頭＝Logo＋小字事務所名＋島色大標題＋金線、底部署名條、右上框外金圈關閉鈕、右側框外一株麥穗
   const panel = panelOf(shell); if (!panel) return;
   // v511：視窗內容整個重畫時（例如電梯選樓層），信頭和郵票會被清掉，要重新放上
-  if (panel.dataset.wyLetter && panel.querySelector(':scope > .wyl-stamp')) return;
+  if (panel.dataset.wyLetter && panel.querySelector(':scope > .wyl-stamp')) {
+    /* v515：同一個視窗在不同島重複使用（接待櫃檯），郵票與標題顏色要換成目前這座島 */
+    if (!key && shell.dataset.isle && panel.dataset.wylIsle !== shell.dataset.isle) { const I = ISLE[shell.dataset.isle] || ISLE.castle; panel.dataset.wylIsle = shell.dataset.isle; const st = panel.querySelector(':scope > .wyl-stamp'); st.style.background = I[1]; st.style.outlineColor = I[1]; const sp = st.querySelector('span'); if (sp) sp.textContent = I[0]; const hh = panel.querySelector('.wyl-ht h1,.wyl-ht h2,.wyl-ht h3,.wyl-ht h4'); if (hh) hh.style.setProperty('color', I[2], 'important'); }
+    return; }
   panel.dataset.wyLetter = '1';
-  const isle = ISLE[key || islandNow()] || ISLE.castle;
+  const isle = ISLE[key || shell.dataset.isle || islandNow()] || ISLE.castle; panel.dataset.wylIsle = shell.dataset.isle || '';
   const wasPos = getComputedStyle(panel).position;
   imp(panel, {
     border: '8px solid transparent', 'border-radius': '30px',
@@ -47,11 +51,11 @@ function dress(shell, key) {
   });
   // 郵票：信紙裡面右上角
   const stamp = document.createElement('div'); stamp.className = 'wyl-stamp';
-  stamp.innerHTML = `<img src="office-logo-transparent.png" alt="" style="width:54px;height:54px;margin:-8px 0 -6px;object-fit:contain;filter:brightness(1.6) saturate(.6)"><span>${isle[0]}</span>`;
-  stamp.style.cssText = `position:absolute;right:16px;top:16px;width:70px;height:82px;background:${isle[1]};border:3.5px dotted #FFF8EA;outline:2px solid ${isle[1]};display:flex;flex-direction:column;align-items:center;justify-content:center;color:#FFF3D6;font:900 ${isle[0].length > 3 ? 12 : 14}px/1.15 'PingFang TC','Noto Sans TC',system-ui;transform:rotate(6deg);pointer-events:none;z-index:3;box-shadow:0 2px 4px rgba(0,0,0,.25);text-align:center`;
+  stamp.innerHTML = `<img src="office-logo-transparent.png" alt="" style="width:46px;height:46px;margin:-6px 0 -5px;object-fit:contain;filter:brightness(1.6) saturate(.6)"><span>${isle[0]}</span>`;
+  stamp.style.cssText = `position:absolute;right:16px;top:12px;width:60px;height:70px;background:${isle[1]};border:3.5px dotted #FFF8EA;outline:2px solid ${isle[1]};display:flex;flex-direction:column;align-items:center;justify-content:center;color:#FFF3D6;font:900 ${isle[0].length > 3 ? 12 : 14}px/1.15 'PingFang TC','Noto Sans TC',system-ui;transform:rotate(6deg);pointer-events:none;z-index:3;box-shadow:0 2px 4px rgba(0,0,0,.25);text-align:center`;
   // 信頭：Logo＋小字事務所名＋（原本標題改成島色大字）＋金線
   // 面板原本自帶的 Logo 名稱條（Logo＋德威陽國際法律事務所）跟新信頭重複，藏起來
-  for (const im of panel.querySelectorAll('img[src*="logo"]')) { let p = im.parentElement; for (let k = 0; k < 3 && p && p !== panel && !/德威陽/.test(p.textContent || ''); k++) p = p.parentElement; if (!p || p === panel) continue; const t = (p.textContent || '').trim(); if (!/德威陽/.test(t) || t.length >= 90 || p.querySelectorAll('h1,h2,h3,h4').length) continue;
+  for (const im of panel.querySelectorAll('img[src*="logo"]')) { let p = im.parentElement; for (let k = 0; k < 3 && p && p !== panel && !/德威陽/.test(p.textContent || ''); k++) p = p.parentElement; if (!p || p === panel || im.closest('.wyl-keep')) continue; const t = (p.textContent || '').trim(); if (!/德威陽/.test(t) || t.length >= 90 || p.querySelectorAll('h1,h2,h3,h4').length) continue;
     if (!p.querySelector('button')) { imp(p, { display: 'none' }); continue; }
     // 名稱條裡放著關閉鈕：只藏 Logo 和字，關閉鈕留著（它會被移到框外）
     for (const c of [...p.children]) if (!c.matches('button') && !c.querySelector('button')) imp(c, { display: 'none' });
@@ -76,6 +80,10 @@ function dress(shell, key) {
   if (peekMode) { stamp.style.right = '96px'; head.style.paddingRight = '170px'; rule.style.marginRight = '0';
     // 標題移到信頭下一行、整行寬，才不會被郵票和 Q 版頭擠到換行
     if (heading && heading.parentElement && heading.parentElement.classList.contains('wyl-ht')) { head.after(heading); imp(heading, { margin: '8px 0 0', 'text-align': 'left', ...(padL < 8 ? { 'padding-left': '14px', 'padding-right': '14px' } : {}) }); } }
+  /* v515 陳老闆：標題太長（例如「接待櫃檯｜事務所今天又怎麼了？」）時，標題移到金線下面整行寬，不擠成三行、不被郵票蓋到 */
+  if (!peekMode && heading && heading.parentElement && heading.parentElement.classList.contains('wyl-ht') && heading.textContent.trim().length > 6) { rule.after(heading); imp(heading, { margin: '2px 0 10px', 'text-align': 'left', 'font-size': heading.textContent.trim().length > 13 ? '15.5px' : '18px', 'line-height': '1.35', ...(padL < 8 ? { 'padding-left': '14px', 'padding-right': '14px' } : {}) }); const hh = heading; const fixTop = () => { if (!hh.isConnected || !panel.getClientRects().length) return; const pr = panel.getBoundingClientRect(), sr = stamp.getBoundingClientRect(), hr = hh.getBoundingClientRect(); if (sr.height && hr.top < sr.bottom + 4 && hr.right > sr.left - 4) { const cur = parseFloat(hh.style.marginTop) || 2; hh.style.setProperty('margin-top', (cur + sr.bottom + 6 - hr.top) + 'px', 'important'); } }; panel.__wylFix = fixTop; }
+  /* v515 陳老闆：郵票不要離標題太近：標題若在郵票旁邊，往下推到郵票下面（包含林律師探頭的 3 樓視窗） */
+  if (heading && !panel.__wylFix && !(heading.parentElement && heading.parentElement.classList.contains('wyl-ht'))) { const hh = heading; panel.__wylFix = () => { if (!hh.isConnected || !panel.getClientRects().length) return; const sr = stamp.getBoundingClientRect(), hr = hh.getBoundingClientRect(); if (sr.height && hr.top < sr.bottom + 6 && hr.right > sr.left - 10) { const cur = parseFloat(getComputedStyle(hh).marginTop) || 0; hh.style.setProperty('margin-top', (cur + sr.bottom + 8 - hr.top) + 'px', 'important'); } }; }
   // 底部署名條
   const foot = document.createElement('div'); foot.className = 'wyl-foot';
   foot.textContent = '德威陽國際法律事務所 ・ LINE @wylaw';
@@ -92,14 +100,15 @@ function dress(shell, key) {
   const wheat = document.createElement('div'); wheat.className = 'wyl-wheat'; wheat.innerHTML = wheatSVG();
   wheat.style.cssText = 'position:fixed;width:30px;height:80px;transform:rotate(18deg);pointer-events:none;z-index:2147482999';
   document.body.append(wheat);
+  let px = null; /* v515：關閉鈕用「替身」放在最上層，按下去轉給原本的關閉鈕，原本的事件都照常運作 */
   const follow = () => {
-    if (!panel.isConnected) { wheat.remove(); return; }
+    if (!panel.isConnected) { wheat.remove(); if (px) px.remove(); return; }
     const hidden = getComputedStyle(shell).display === 'none' || panel.getClientRects().length === 0;
-    wheat.style.display = hidden ? 'none' : 'block'; if (cb) cb.style.setProperty('visibility', hidden ? 'hidden' : 'visible', 'important');
-    if (!hidden) { const r = panel.getBoundingClientRect(); wheat.style.left = Math.min(r.right - 22, innerWidth - 30) + 'px'; wheat.style.top = (r.bottom - 62 - 80) + 'px'; if (cb && !cb.dataset.wylIn) { let trapped = false; for (let a = cb.parentElement; a && a !== document.body; a = a.parentElement) { const cs = getComputedStyle(a); if (cs.transform !== 'none' || cs.filter !== 'none' || cs.perspective !== 'none' || cs.contain.includes('paint')) { trapped = true; break; } }
-      if (trapped) { // 外層有變形會把框外的鈕切掉：改放在信紙右上角內側，郵票往左讓位
-        cb.dataset.wylIn = '1'; panel.append(cb); if (peekMode) { imp(cb, { position: 'absolute', left: '10px', right: 'auto', top: '10px' }); head.style.paddingLeft = '44px'; } else { imp(cb, { position: 'absolute', left: 'auto', right: '10px', top: '10px' }); stamp.style.right = '58px'; const hd = panel.querySelector('.wyl-head'), rl = panel.querySelector('.wyl-rule'); if (hd) hd.style.paddingRight = '112px'; if (rl) rl.style.marginRight = '112px'; } }
-      else { cb.style.setProperty('left', (peekMode ? Math.max(4, r.left - 10) : Math.min(innerWidth - 42, r.right - 28)) + 'px', 'important'); cb.style.setProperty('top', (r.top - 10) + 'px', 'important'); } } }
+    wheat.style.display = hidden ? 'none' : 'block'; if (px) px.style.setProperty('visibility', hidden ? 'hidden' : 'visible', 'important');
+    if (!hidden) { if (panel.__wylFix) { const f = panel.__wylFix; panel.__wylFix = null; requestAnimationFrame(() => requestAnimationFrame(f)); setTimeout(f, 500); } window.__wylT = performance.now(); document.body.classList.add('wyl-open'); const r = panel.getBoundingClientRect(); wheat.style.left = Math.min(r.right - 22, innerWidth - 30) + 'px'; wheat.style.top = (r.bottom - 62 - 80) + 'px';
+      /* v515 陳老闆：關閉鈕一律放在信紙右上角「框內」、最上層，郵票往左讓位，不再被郵票蓋住或被外層切掉 */
+      if (cb) { if (!px) { px = cb.cloneNode(true); px.removeAttribute('id'); px.removeAttribute('onclick'); px.dataset.wylBody = '1'; px.onclick = e => { e.preventDefault(); e.stopPropagation(); const cur = cb.isConnected ? cb : (closeBtnOf(panel) || closeBtnOf(shell)); if (cur) cur.click(); }; document.body.append(px); cb.style.setProperty('display', 'none', 'important'); if (!peekMode) { stamp.style.right = '58px'; const hd = panel.querySelector('.wyl-head'), rl = panel.querySelector('.wyl-rule'); if (hd) hd.style.paddingRight = '138px'; if (rl) rl.style.marginRight = '138px'; } else { head.style.paddingLeft = '44px'; } }
+        px.style.setProperty('left', (peekMode ? Math.max(4, r.left + 12) : Math.min(innerWidth - 46, r.right - 52)) + 'px', 'important'); px.style.setProperty('top', Math.max(4, r.top + 12) + 'px', 'important'); } }
     requestAnimationFrame(follow);
   };
   follow();
@@ -151,3 +160,7 @@ export function setupLetters() {
   };
   setInterval(fit, 400); addEventListener('resize', fit);
 })();
+
+/* v515 陳老闆：視窗開著時，左下角成員的提醒泡泡先收起來，不蓋住視窗按鈕；視窗關掉再出現 */
+(function () { try { const st = document.createElement('style'); st.textContent = 'body.wyl-open .wyCH,body.wyl-open .wyCHCloud{opacity:0!important;pointer-events:none!important;transition:opacity .25s}'; document.head.appendChild(st); } catch (e) { }
+  setInterval(() => { if (document.body.classList.contains('wyl-open') && performance.now() - (window.__wylT || 0) > 300) document.body.classList.remove('wyl-open'); }, 250); })();

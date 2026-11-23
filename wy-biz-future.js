@@ -40,31 +40,7 @@ export function apply(T, scene) {
     const halo = add(new T.TorusGeometry(1.05, .03, 6, 48), cyan, x, 2.0, z); halo.rotation.x = Math.PI / 2.4;
     const beams = add(new T.CylinderGeometry(.55, .85, 1.2, 24, 1, true), new T.MeshBasicMaterial({ color: '#B79CFF', transparent: true, opacity: .16, side: T.DoubleSide, depthWrite: false }), x, 1.2, z);
     anim.push(t => { cry.rotation.y = t * .9; cry.position.y = 2.0 + Math.sin(t * 1.6) * .12; halo.rotation.z = t * .6 }) }
-  // 2. 發光地球＋小飛機繞著飛（右前方）
-  { const x = cx + 4.6, z = Z0 + 10.8; pedestal(x, z); const G = new T.Group(); G.position.set(x, 2.05, z); root.add(G);
-    const earth = add(new T.SphereGeometry(.85, 32, 20), M('#B7D8FF', .45, .05, '#6FA8FF', .35), 0, 0, 0, G);
-    const landM = M('#9FE0B8', .6, 0, '#5CC98C', .3); for (const [la, lo, r] of [[.5, .3, .32], [-.2, 1.4, .26], [.3, 2.6, .3], [-.5, 3.8, .22], [.1, 5.0, .28]]) { const l = add(new T.SphereGeometry(r, 14, 8), landM, Math.cos(la) * Math.cos(lo) * .78, Math.sin(la) * .78, Math.cos(la) * Math.sin(lo) * .78, earth); l.scale.set(1, .55, 1); l.lookAt(0, 0, 0) }
-    for (const k of [0, 1]) { const ln = add(new T.TorusGeometry(.9 + k * .02, .012, 6, 60), cyan, 0, 0, 0, G); ln.rotation.x = Math.PI / 2 + (k ? .9 : 0) }
-    // 動森風胖胖小飛機：放大、金邊、螺旋槳會轉、繞地球飛時會上下起伏和左右傾斜
-    const orbit = new T.Group(); orbit.rotation.z = .25; G.add(orbit); const plane = new T.Group(); plane.position.set(1.75, 0, 0); plane.scale.setScalar(1.55); orbit.add(plane); const bank = new T.Group(); plane.add(bank);
-    const cream = M('#FFF7EC', .45), vio = M('#8E6FD8', .45, .1), gld = M('#E0B65E', .28, .65), win = M('#BFE6FF', .2, 0, '#9BD6FF', .5);
-    // 機身細長（像客機），主翼長而平，尾翼清楚：一看就是飛機
-    const body = add(new T.CapsuleGeometry(.1, .62, 10, 20), cream, 0, 0, 0, bank); body.rotation.x = Math.PI / 2;
-    const nose = add(new T.SphereGeometry(.1, 16, 12), vio, 0, 0, .4, bank); nose.scale.set(1, 1, 1.25);
-    const stripe = add(new T.CylinderGeometry(.102, .102, .62, 24, 1, true), M('#B9A3E3', .5), 0, -.035, 0, bank); stripe.rotation.x = Math.PI / 2; stripe.scale.set(1, .35, 1);
-    for (const z of [.22, -.22]) add(new T.TorusGeometry(.102, .012, 6, 24), gld, 0, 0, z, bank);
-    for (const z of [.27, .15, .03, -.09, -.21]) for (const sd of [-1, 1]) { const w = add(new T.SphereGeometry(.026, 8, 6), win, sd * .095, .035, z, bank); w.scale.set(.4, 1, 1) }
-    const cock = add(new T.SphereGeometry(.07, 12, 8), win, 0, .06, .33, bank); cock.scale.set(1, .6, 1.3);
-    for (const sd of [-1, 1]) { // 主翼：長、平、往後掠，翼前緣金邊、翼尖金色
-      const wg = add(new T.BoxGeometry(.62, .035, .2), vio, sd * .38, -.02, .03, bank); wg.rotation.y = sd * .18;
-      const le = add(new T.CylinderGeometry(.02, .02, .62, 8), gld, sd * .38, -.02, .135, bank); le.rotation.z = Math.PI / 2; le.rotation.y = sd * .18;
-      add(new T.SphereGeometry(.045, 10, 8), gld, sd * .69, -.02, -.02, bank).scale.set(.8, .8, 2.2);
-      const eng = add(new T.CapsuleGeometry(.045, .12, 6, 12), cream, sd * .3, -.09, .07, bank); eng.rotation.x = Math.PI / 2; add(new T.TorusGeometry(.046, .01, 6, 16), gld, sd * .3, -.09, .16, bank) }
-    for (const sd of [-1, 1]) { const tw = add(new T.BoxGeometry(.26, .025, .11), vio, sd * .15, .01, -.36, bank); tw.rotation.y = sd * .2 }
-    const fin = add(new T.BoxGeometry(.025, .2, .15), vio, 0, .12, -.36, bank); fin.rotation.x = -.35; add(new T.BoxGeometry(.03, .03, .15), gld, 0, .215, -.4, bank).rotation.x = -.35;
-    const prop = new T.Group(); prop.position.set(0, 0, .53); bank.add(prop); add(new T.SphereGeometry(.035, 10, 8), gld, 0, 0, 0, prop); for (const k of [0, 1]) { const bl = add(new T.CapsuleGeometry(.02, .16, 4, 8), gld, 0, 0, 0, prop); bl.rotation.z = k * Math.PI / 2 }
-    const trail = add(new T.TorusGeometry(1.75, .02, 4, 70, 1.3), M('#FFFFFF', .5, 0, '#E9DDFF', 1.1), 0, 0, 0, orbit); trail.rotation.x = Math.PI / 2;
-    anim.push(t => { earth.rotation.y = t * .35; orbit.rotation.y = -t * .7; prop.rotation.z = t * 22; plane.position.y = Math.sin(t * 2.1) * .18; bank.rotation.z = Math.sin(t * 1.3) * .35; bank.rotation.x = Math.cos(t * 2.1) * .12 }) }
+  // v515 陳老闆：小地球儀拿掉，只留「國際商務」的大地球儀（飛機改成繞大地球儀飛）
   const t0 = performance.now(); const probe = add(new T.SphereGeometry(.001, 3, 2), new T.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }), 0, 0, 0); probe.frustumCulled = false;
   probe.onBeforeRender = () => { const t = (performance.now() - t0) / 1000; for (const f of anim) f(t) };
   return root;

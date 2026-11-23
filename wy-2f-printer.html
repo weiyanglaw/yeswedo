@@ -43,6 +43,7 @@ body.emb{background:transparent!important;padding:0!important}
 .xcl{position:absolute;top:-4px;right:-4px;z-index:50;width:38px;height:38px;border-radius:50%;border:2px solid #fff;background:linear-gradient(#FFEFB8,#E9C46A 40%,#C08A2E);color:#5A3A10;font:900 21px/1 sans-serif;box-shadow:0 3px 0 #8A6424,0 4px 10px #0005;cursor:pointer;display:none}
 body.emb .xcl{display:block}
 body.emb .tabs{display:none!important}
+body.emb{min-height:0!important;height:100vh;overflow:hidden;display:block!important}body.emb .card{transform-origin:top center;margin:0 auto!important}
 </style></head><body>
 <div class="card"><div class="in">
 <div class="hd"><img id="lg"><div><small>德威陽 2 樓</small><b>辦公室叛亂中</b></div></div>
@@ -174,4 +175,5 @@ body.emb .tabs{display:none!important}
 </script><script>wyRiotGame(document.getElementById("stage"))</script>
 <script>/* v514 網站內嵌 */(function(){const Q=new URLSearchParams(location.search+'&'+location.hash.slice(1));if(!Q.has('embed'))return;document.body.classList.add('emb');
 const card=document.querySelector('.card');if(card){const x=document.createElement('button');x.className='xcl';x.setAttribute('aria-label','關閉');x.textContent='×';x.onclick=()=>{try{const st=document.getElementById('stage');if(st)st.innerHTML=''}catch(e){}parent.postMessage('wy2fClose','*')};card.append(x)}
+/* v515 視窗一定完整放進框內：內容比框高就等比縮小，標題列和關閉鈕不會被切掉 */const fit=()=>{if(!card)return;card.style.transform='none';const h=card.scrollHeight+12,w=card.offsetWidth+8;const k=Math.min(1,innerHeight/h,innerWidth/w);card.style.transform=k<1?'scale('+k+')':'none';card.style.marginTop=k<1?'4px':(Math.max(4,(innerHeight-h)/2))+'px'};fit();addEventListener('resize',fit);setTimeout(fit,300);setTimeout(fit,1200);
 })();</script></body></html>

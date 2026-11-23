@@ -290,14 +290,14 @@ const LOT = [
 let C = null, CR = null;
 export function openCoffee() {
   ensure(); stopAll(); const B = getN(CKEY);
-  shell('老闆今天第幾杯？', `<div class="start"><img src="${LIN}" alt="林律師" style="width:110px;height:110px;object-fit:contain"><p>林律師越晚越有精神，<br>台北的案子做完，紐約的又來了。</p><p><b style="color:#b0782a">按住倒咖啡，倒到金線就放開</b>。<br>倒太多或來不及，咖啡機會過熱罷工！</p>${B ? `<p style="color:#1f6b4f">咖啡機最久撐到：${hmLong(B)}</p>` : ''}<button class="big" data-a="go-cof">開始倒咖啡</button></div>
+  shell('老闆今天第幾杯？', `<div class="start"><img src="${LIN}" alt="林律師" style="width:110px;height:110px;object-fit:contain"><p>林律師越晚越有精神，<br>台北的案子做完，紐約的又來了。</p><p><b style="color:#b0782a">按住倒咖啡，倒到金線就放開</b>。<br>三關九杯，台北、紐約、東京一路倒，<br>陪林律師撐到天亮！</p>${B ? `<p style="color:#1f6b4f">咖啡機最久撐到：${hmLong(B)}</p>` : ''}<button class="big" data-a="go-cof">開始倒咖啡</button></div>
   <div class="say" id="bSay"><b>哈姆太郎</b>看看咖啡機跟不跟得上林律師！</div>`);
 }
 function playCoffee() {
   stopAll();
   shell('老闆今天第幾杯？', `<div class="bar" id="bb"><div class="plate" id="bpl"><span>台北 18:00 ｜ 紐約 05:00</span></div><div class="mach" id="bmc"><b>德威陽</b><div class="heat"><u id="bht"></u></div><i></i></div><div class="stream" id="bst"></div><div id="bcup"></div><div class="hint" id="bh">按住畫面倒咖啡</div></div>
   <div class="say" id="bSay"><b>林律師</b>晚上才正要開始，來一杯！</div>`);
-  C = { m: 18 * 60, heat: 0, fill: 0, hold: false, started: false, end: false, n: 0, busy: false, served: 0 };
+  C = { m: 18 * 60, heat: 0, fill: 0, hold: false, started: false, end: false, n: 0, busy: false, served: 0, cnt: 0, stg: 1 };
   const bar = box.querySelector('#bb');
   bar.addEventListener('pointerdown', e => { e.preventDefault(); if (C.end || C.busy) return; au(); if (!C.started) { C.started = true; box.querySelector('#bh').textContent = '' } C.hold = true });
   const up = () => { if (C.hold) { C.hold = false; cJudge() } }; bar.addEventListener('pointerup', up); bar.addEventListener('pointerleave', up); bar.addEventListener('pointercancel', up);
@@ -315,20 +315,28 @@ function playCoffee() {
 function cHeat() { C.heat = Math.max(0, C.heat); const u = box.querySelector('#bht'); if (u) { u.style.width = Math.min(100, C.heat * 100) + '%'; u.style.background = C.heat > .7 ? '#e0503f' : C.heat > .4 ? '#e8913a' : '#f3c64f' } const mc = box.querySelector('#bmc'); if (mc) mc.classList.toggle('hot', C.heat > .7) }
 function cNext() {
   C.n++; C.fill = 0; C.busy = false; const n = C.n;
-  C.kind = n >= 4 && Math.random() < .18 ? 'ny' : n >= 3 && Math.random() < .12 ? 'gold' : '';
+  C.kind = n === 5 ? 'ny' : n === 8 ? 'gold' : '';
   const si = C.kind === 'ny' ? 5 : Math.floor(Math.random() * Math.min(5, 1 + Math.floor(n / 2)));
   const [nm, w, h] = SIZE[si]; C.target = .8;
-  C.pat0 = C.pat = Math.max(2.3, 5.2 - n * .2) * (C.kind === 'ny' ? 1.25 : 1);
-  const rs = C.kind === 'ny' ? '紐約來電！大會議' : C.kind === 'gold' ? '金色咖啡豆，倒剛好會降溫' : (isNight(C.m) ? REASON.night : REASON.eve)[Math.floor(Math.random() * 4)];
+  C.pat0 = C.pat = [0, 5.2, 4.2, 3.4][C.stg] * (C.kind === 'ny' ? 1.25 : 1);
+  const rs = C.kind === 'ny' ? '紐約來電！大會議' : C.kind === 'gold' ? '金色咖啡豆，倒剛好會降溫' : (C.stg === 3 ? ['東京客戶早上視訊', '日文合約要回覆', '大阪來信了', '東京九點開會'] : C.stg === 2 ? REASON.night : REASON.eve)[Math.floor(Math.random() * 4)];
   box.querySelector('#bcup').innerHTML = `<div class="cup${C.kind === 'gold' ? ' gold' : ''}" style="width:${w}px;height:${h}px"><div class="liq"></div><div class="gl" style="bottom:${C.target * 100}%"></div><div class="slv">${esc(SLEEVE[(n - 1) % SLEEVE.length])}</div>${nm === '水桶' ? '' : '<div class="hd"></div>'}</div>`;
   const od = box.querySelector('.order'); if (od) od.remove();
   const d = document.createElement('div'); d.className = 'order pop' + (C.kind ? ' sp' : ''); d.innerHTML = `<b>${hm(C.m)}</b><span>${esc(rs)}</span><small>${nm}</small><div class="pt"><u></u></div>`; box.querySelector('#bb').append(d);
-  box.querySelector('#bpl').innerHTML = `<span class="in">台北 ${hm(C.m)} ｜ 紐約 ${hm(C.m + 11 * 60)}</span>`;
+  box.querySelector('#bpl').innerHTML = `<span class="in">台北 ${hm(C.m)} ｜ 紐約 ${hm(C.m + 11 * 60)}</span>`;{let sg=box.querySelector('#bstg');if(!sg){sg=document.createElement('div');sg.id='bstg';sg.style.cssText='position:absolute;right:8px;bottom:8px;z-index:4;padding:4px 10px;border-radius:999px;background:#1A2C66;color:#FFE7B0;font:800 12px sans-serif;letter-spacing:.5px;box-shadow:0 2px 4px #0003';box.querySelector('#bb').append(sg)}sg.textContent=STG[C.stg][0]}
   if (C.kind === 'ny') { say('林律師', '紐約來電！這杯要大的！'); lin('nod') }
 }
 function bubble(who, t) { const b = box.querySelector('#bb'); if (!b) return; b.querySelectorAll('.bub').forEach(e => e.remove()); const e = document.createElement('div'); e.className = 'bub'; e.innerHTML = `<small>${esc(who)}</small>${esc(t)}`; b.append(e); T(() => e.remove(), 1400) }
 function judge(t, col) { const b = box.querySelector('#bb'); const j = document.createElement('div'); j.className = 'judge'; j.textContent = t; j.style.color = col; b.append(j); T(() => j.remove(), 820) }
-function cAdvance() { C.m += 30; T(() => { if (!C.end) cNext() }, 650) }
+/* v515 陳老闆：三關、每關 3 杯，共 9 杯，大約 1 分鐘；撐完就是台北早上 9 點 */
+const STG = [null, ['第一關　台北晚上', '前上市公司法務長，合約逐條看'], ['第二關　紐約上班', '台美雙律師，台北紐約兩地執業'], ['第三關　東京早上', '中文、English、日本語，三語服務']];
+const TIMES = [18 * 60, 19 * 60 + 30, 21 * 60, 23 * 60, 24 * 60 + 30, 26 * 60, 30 * 60, 31 * 60 + 30, 32 * 60 + 30];
+function cAdvance() { C.cnt++; if (C.cnt >= 9) { T(() => cFinish(true), 700); return }
+  C.m = TIMES[C.cnt];
+  if (C.cnt % 3 === 0) { const prev = STG[C.stg]; C.stg++; const nx = STG[C.stg];
+    T(() => { if (C.end) return; judge('過關！', '#1f6b4f'); bubble('林律師', prev[1]); say('夢奇奇', nx[0] + '開始！') }, 500);
+    T(() => { if (!C.end) cNext() }, 1900); return }
+  T(() => { if (!C.end) cNext() }, 650) }
 function cLate() { C.busy = true; C.hold = false; C.heat += .25; judge('來不及！', '#d2443f'); say('薪水掌門人', '律師等不及，自己去倒了！'); note(200, 0, .2, .05, 'sawtooth'); cAdvance() }
 function cJudge() {
   if (C.busy || C.end) return; const d = C.fill - C.target;
@@ -343,16 +351,16 @@ function cJudge() {
     chime(); lin('yay'); say('林律師', pf ? '剛剛好，下一件案子！' : '可以，繼續工作！') }
   cAdvance();
 }
-function cFinish() {
+function cFinish(win) {
   if (C.end) return; C.end = true; C.hold = false; cancelAnimationFrame(raf);
   const mc = box.querySelector('#bmc'); if (mc) mc.classList.add('dead'); const st = box.querySelector('#bst'); if (st) st.style.height = '0px';
-  bubble('咖啡機', '我要請特休！'); say('林律師', '沒關係，我喝水繼續。'); lin('nod'); [392, 330, 262].forEach((f, i) => note(f, i * .14, .25, .05, 'sine'));
+  if (win) { bubble('林律師', '台北上班了，紐約剛下班。'); say('夢奇奇', '撐過一整夜，咖啡機也辛苦了！') } else { bubble('咖啡機', '我要請特休！'); say('林律師', '沒關係，我喝水繼續。') } lin('nod'); [392, 330, 262].forEach((f, i) => note(f, i * .14, .25, .05, 'sine'));
   const reach = C.m, B = getN(CKEY), isRec = reach > B; if (isRec) setN(CKEY, reach);
   const L = LOT[dayKey() % LOT.length]; CR = { reach, L, isRec, B }; SHARE = 'cof';
   T(() => {
-    const h = reach / 60; const title = h >= 26 ? '咖啡機鐵人' : h >= 23 ? '咖啡機好夥伴' : '咖啡機見習生';
+    const h = reach / 60; const title = win ? '24 小時都在工作的事務所' : h >= 30 ? '咖啡機好夥伴' : h >= 23 ? '咖啡機見習生' : '咖啡機剛暖機';
     const rec = isRec ? '<span class="rec">新紀錄！</span>' : `<span class="rec" style="background:#1f6b4f">最久紀錄 ${hmLong(B)}</span>`;
-    shell('老闆今天第幾杯？', `<div class="end"><b>${title}</b><p>咖啡機撐到 <b style="color:#b0782a">${hmLong(reach)}</b> 就罷工了，<br>林律師還在處理紐約的案子。</p>${rec}</div>
+    shell('老闆今天第幾杯？', `<div class="end"><b>${title}</b>${win ? `<p>九杯全部倒完，撐到<b style="color:#b0782a">台北早上 9 點</b>。<br>台北、紐約、東京，今天都顧到了。</p>` : `<p>咖啡機撐到 <b style="color:#b0782a">${hmLong(reach)}</b> 就罷工了，<br>林律師還在處理紐約的案子。</p>`}${rec}</div>
     <div class="lot"><b>今日咖啡籤</b><p><small>${esc(L[0])}</small>${esc(L[1])}</p><p><small>${esc(L[2])}</small>${esc(L[3])}</p><div class="ft">台美雙律師｜中英日三語｜24 小時都在工作</div></div>
     <button class="big" data-a="go-cof">再倒一次</button>
     ${brand()}

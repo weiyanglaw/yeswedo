@@ -529,10 +529,8 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  const mint=material(0xA7C6BB),paper=material(0xFFF8E8),teal=material(0x2E6668);
  const exhibit=(x,z,w,d,action)=>{const base=box(w,.86,d,cream,x,.53,z);box(w+.10,.10,d+.10,gold,x,1.01,z);register(base,action);return base;};
  // 1: mediation and medical-dispute scenarios, left-front.
- const round=add(new THREE.CylinderGeometry(1.05,1.05,.14,32),stone,-4.65,1.13,4.45);
- cyl(.15,.22,1.05,gold,-4.65,.57,4.45);register(round,'mediation');
- for(const [x,z] of [[-6.2,4.45],[-3.15,4.45]]){box(.70,.40,.74,mint,x,.44,z);box(.72,.90,.18,teal,x,.98,z+.40);}
- const papers=box(.62,.045,.50,paper,-4.65,1.23,4.45);register(papers,'mediation');
+ /* v515 陳老闆：前面的協商圓桌和兩張方塊椅拿掉，「醫療糾紛協商」改成點後面的薄荷綠沙發 */
+ const sofaHit=box(4.9,2.2,2.3,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),-7.7,1.1,-.35);register(sofaHit,'mediation');
  // 2: records reader integrated with the original evidence cabinet, right wall.
  const fileReader=box(.16,1.20,1.40,teal,8.25,2.80,-3.80);register(fileReader,'records');
  for(let i=0;i<3;i++)box(.18,.12,.94,paper,8.10,3.19-i*.33,-3.80);
@@ -572,8 +570,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
  exhibit(-9.45,5.30,2.75,1.24,'consent');
  const consentPaper=box(.84,.055,.65,paper,-9.4,1.12,5.24);register(consentPaper,'consent');
  const pen=box(.06,.06,.62,navy,-8.84,1.16,5.27);register(pen,'consent');
- const timeline=box(1.32,1.55,.14,navy,-10.2,2.07,2.10);register(timeline,'consent');
- for(let i=0;i<4;i++)box(.72,.055,.035,i===2?gold:mint,-10.20,2.55-i*.33,2.21);
+ /* v515 陳老闆：沙發旁的黑色板子拿掉 */
  // 5: liability desk with three decision switches, right side.
  const liability=box(.25,1.10,2.60,teal,8.95,2.76,2.05);register(liability,'liability');
  for(const zz of [1.34,2.05,2.76])register(box(.27,.25,.44,gold,8.78,2.81,zz),'liability');
@@ -646,7 +643,7 @@ export function createMedicalInterior(room,THREE,staffFactory,GLTFLoader){
   staffNameLabel.position.set(guide.position.x,guide.position.y+3.6,guide.position.z);root.add(staffNameLabel);register(staffNameLabel,'staff');
  }
  // v133: five interaction labels plus one non-interactive staff nameplate.
- hint('醫療糾紛協商',-4.65,2.35,4.45,'mediation');
+ hint('醫療糾紛協商',-7.7,2.75,-.35,'mediation');
  hint('病歷證據探索',5.0,4.0,-3.8,'records');
  hint('X光醫療鑑定',-5.0,4.55,-6.02,'forensics');
  hint('心電圖事件回放',4.8,6.70,-7.60,'ecg');

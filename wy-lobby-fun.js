@@ -253,14 +253,16 @@ export function openPaper(){
  else{do{lastN=pick(NEWS.length,lastN)}while(fest&&NEWS[lastN][4]);d=NEWS[lastN]}
  const now=new Date(),wk='日一二三四五六'[now.getDay()];
  const date=`${now.getFullYear()-1911}年${now.getMonth()+1}月${now.getDate()}日　星期${wk}`;
+ /* v515：日報一天一期，從網站上線日（2026/11/24）算第 1 期 */const issue=Math.max(1,Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-new Date(2026,10,24))/864e5)+1);
  box.className='lf-np';
  box.innerHTML=shell('今日頭條有法度',
-  `<div class="np"><div class="np-head"><b>有法度日報</b><small>YES, WE DO! DAILY</small></div>
-  <div class="np-date"><span>${date}</span><span>法律生活版</span></div>
+  `<div class="np"><div class="np-head wyl-keep" style="display:flex;align-items:center;justify-content:center;gap:10px"><img src="${LOGO}" alt="" style="width:54px;height:54px;object-fit:contain;filter:brightness(1.5) saturate(.7);flex:none"><div style="text-align:center"><b>有法度日報</b><small>YES, WE DO! DAILY</small><small style="display:block;margin-top:3px;letter-spacing:1px;opacity:.95">德威陽國際法律事務所　出版</small></div></div>
+  <div class="np-date"><span>${date}</span><span>第 ${issue} 期｜非賣品</span></div>
   <div class="np-main"><span class="np-tag">${tag}</span><p class="np-h">${esc(d[0])}</p>
   <p class="np-sub">${esc(d[3])}</p>
   <p class="np-s"><b>記者觀察：</b>${esc(d[1])}</p>
-  <div class="np-motto"><b>編輯台小語</b>${esc(MOTTO[lastM])}</div></div></div>
+  <div class="np-motto"><b>編輯台小語</b>${esc(MOTTO[lastM])}</div></div>
+  <div style="margin-top:8px;padding-top:6px;border-top:1.5px solid #2E6B4F;display:flex;justify-content:space-between;gap:6px;font:700 11px/1.4 sans-serif;color:#2E6B4F;flex-wrap:wrap"><span>發行｜德威陽國際法律事務所</span><span>LINE @wylaw</span></div></div>
   <div class="lf-res"><div class="lf-wy"><b>德威陽怎麼幫您？</b>${esc(d[2])}</div></div>`,'paper','翻下一版');
  box.style.display='flex';
 }

@@ -90,7 +90,18 @@
  /* 圓體字 */
  .wyGHCloud,.wyCHCloud,#wyRC .rc-band b,#wyRC .rc-n,.wy175Guide h3,#wyMedicalGuide h3,#wyFamilyGuide h3,#wyMainGuide h3{font-family:${F}!important;font-weight:400!important}
  @media (max-height:760px){.wy175Guide,#wyMedicalGuide,#wyFamilyGuide,#wyMainGuide{padding:15px 18px 13px!important}.wy175Guide p,#wyMedicalGuide p,#wyFamilyGuide p,#wyMainGuide p{margin:0 0 7px!important}.wy175Guide h3,#wyMedicalGuide h3,#wyFamilyGuide h3,#wyMainGuide h3{margin:8px 0 9px!important}.wy175Guide button,#wyMedicalGuide button,#wyFamilyGuide button,#wyMainGuide button{margin-top:10px!important;min-height:42px!important}}
- `;document.head.appendChild(css);
+ 
+ /* v515 右上按鈕：動森風圓胖泡泡，小一點、排一直排貼右邊，不擋畫面 */
+ .gu.guTR{flex-direction:column!important;align-items:flex-end!important;gap:4px!important;right:8px!important}
+ .guTR .guRB{display:flex;flex-direction:column;align-items:center}
+ .guTR .guRB .guRnd{width:40px!important;height:40px!important;border-width:2.5px!important}
+ .guTR .guRB .guRnd svg{width:19px!important;height:19px!important}
+ .guTR .guRB .guLbl{font-size:10px!important;padding:0 6px!important;margin-top:-3px!important;line-height:1.5!important}
+ .guTR .guRB:active .guRnd{transform:scale(.9) translateY(2px)}
+ .guTR .guSW .guSnd{position:static!important;width:40px!important;height:40px!important;border-width:2.5px!important;margin:0!important;right:auto!important;top:auto!important}
+ .guTR .guSW .guSnd svg{width:19px!important;height:19px!important}
+ .gu.guToast{top:auto!important;bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}
+`;document.head.appendChild(css);
 
 
  /* ---------- v487 載入畫面品牌動畫 ---------- */
@@ -141,8 +152,8 @@
      const next=()=>{if(done||!sp.isConnected)return;ds.forEach(d=>d.classList.remove('talk'));const d=ds[k];d.classList.add('talk');hd.classList.add('talking');const rh=hd.getBoundingClientRect(),rd=d.getBoundingClientRect();sb.textContent=SAY[k];say.classList.add('on');const rs=say.getBoundingClientRect();say.style.setProperty('--ax',Math.max(18,Math.min(rs.width-18,rd.left+rd.width/2-rs.left))+'px');k=(k+1)%4;setTimeout(next,1500)};
      setTimeout(next,4*180+350)}}
    const cr=document.getElementById('creator');const ready=!!window.__wyGame||(cr&&cr.style.display&&cr.style.display!=='none');
-   if(ready&&headsOn&&performance.now()-t0>2600&&!window.__guHold&&(window.wyWorldReady||performance.now()-t0>30000)){/* v514：島上全部準備好才離開載入畫面（最多等 30 秒） */done=true;bar.style.width='100%';setTimeout(()=>{sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)},950)}
-   if(performance.now()-t0>32000&&!done&&!window.__guHold){done=true;sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)}},120);
+   if(ready&&headsOn&&performance.now()-t0>2600&&!window.__guHold){/* v514.1：恢復原本，不再等島上全部準備好（會卡在載入畫面） */done=true;bar.style.width='100%';setTimeout(()=>{sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)},950)}
+   if(performance.now()-t0>20000&&!done&&!window.__guHold){done=true;sp.classList.add('out');setTimeout(()=>{sp.remove();clearInterval(step)},650)}},120);
  })();
  /* ---------- 元件 ---------- */
  const badge=document.createElement('div');badge.className='gu guBadge';badge.style.display='none';
@@ -225,11 +236,15 @@
  function shine(){tab.classList.remove('guShine');void tab.offsetWidth;tab.classList.add('guShine')}
  function flipTo(c,t1,t2,sound=true){tab.classList.remove('guFlip');void tab.offsetWidth;tab.classList.add('guFlip');setTimeout(()=>paint(c,t1,t2),300);setTimeout(shine,420);if(sound)window.wySfx('flip')}
  function rbtn(ic,lb,c,act){return '<div class="guRB" data-act="'+act+'" style="--c1:'+c[0]+';--c2:'+c[1]+';--d:'+c[2]+'"><div class="guRnd">'+IC[ic]+'</div><span class="guLbl">'+lb+'</span></div>'}
- function setOut(){mode='out';snd.style.display='grid';document.body.classList.add('gu-out');document.body.classList.remove('gu-room');badge.style.display='flex';tr.style.display='flex';tr.innerHTML=rbtn('menu','選單',THEME[0],'menu');toast.classList.add('gone')}
+ function setOut(){mode='out';snd.style.display='grid';document.body.classList.add('gu-out');document.body.classList.remove('gu-room');badge.style.display='flex';tr.style.display='flex';tr.innerHTML=rbtn('menu','選單',THEME[0],'menu');addSnd();toast.classList.add('gone')}
  function setRoom(i){mode='room';snd.style.display='grid';curRoom=i;document.body.classList.remove('gu-out');document.body.classList.add('gu-room');badge.style.display='flex';tr.style.display='flex';
-  const c=THEME[i];tr.innerHTML=rbtn('book','指南',c,'guide')+rbtn('door','回島上',THEME[0],'leave');
+  const c=THEME[i];tr.innerHTML=rbtn('book','指南',c,'guide')+rbtn('door','回島上',THEME[0],'leave');addSnd();
   flipTo(c,['','訴訟法律島','醫療法律島','家庭生活島','企業商務島'][i],SLOGAN[i]);
   clearTimeout(toastT);toast.textContent='搖桿走動　點標示互動';toast.classList.remove('gone');toastT=setTimeout(()=>toast.classList.add('gone'),3500)}
+ const g0=()=>{try{const g=G();return g&&g.floor?g.floor():1}catch(e){return 1}};
+ /* v515 陳老闆：城堡也有「回島上」，按鈕全島統一（一直排、貼右邊、音效在最下面） */
+ function setCastle(){mode='castle';snd.style.display='grid';document.body.classList.remove('gu-out','gu-room');badge.style.display='none';tr.style.display='flex';tr.innerHTML=rbtn('door','回島上',THEME[0],'leaveCastle');addSnd();toast.classList.add('gone')}
+ function addSnd(){let w=tr.querySelector('.guSW');if(!w){w=document.createElement('div');w.className='guRB guSW';w.innerHTML='<span class="guLbl">音效</span>'}w.prepend(snd);tr.append(w)}
  function setHidden(){mode='hidden';snd.style.display='none';document.body.classList.remove('gu-out','gu-room');badge.style.display='none';tr.style.display='none';toast.classList.add('gone');menu.classList.remove('on')}
 
  /* ---------- 轉場（圓圈收合，中心停一下 Logo） ---------- */
@@ -246,7 +261,8 @@
  tr.addEventListener('click',e=>{const b=e.target.closest('.guRB');if(!b)return;press(b);window.wySfx('tap');const a=b.dataset.act;
   if(a==='menu'){syncMenu();setTimeout(()=>menu.classList.add('on'),90)}
   else if(a==='guide'){const g=G();g&&g.openGuide(curRoom)}
-  else if(a==='leave'){const g=G();if(g)window.wyIris(()=>g.leave())}});
+  else if(a==='leave'){const g=G();if(g)window.wyIris(()=>g.leave())}
+  else if(a==='leaveCastle'){if(window.wyLeaveCastle){if(g0()===1)window.wyIris(()=>window.wyLeaveCastle());else window.wyLeaveCastle()}}});
  function syncMenu(){const ov=window.__wyGame&&window.__wyGame.overview?window.__wyGame.overview():true;menu.querySelectorAll('[data-v]').forEach(s=>s.classList.toggle('on',(s.dataset.v==='overview')===!!ov));menu.querySelectorAll('[data-s]').forEach(s=>s.classList.toggle('on',(s.dataset.s==='on')===soundOn));const sk=window.wySky?window.wySky.mode:'auto';menu.querySelectorAll('[data-k]').forEach(s=>s.classList.toggle('on',s.dataset.k===sk))}
  menu.addEventListener('click',e=>{if(e.target===menu){menu.classList.remove('on');return}
   const mi=e.target.closest('.guMi');if(!mi)return;press(mi);window.wySfx('tap');const m=mi.dataset.m;
@@ -335,7 +351,7 @@
    else if(atDoor>=0&&area>=0){const s=tab.querySelector('span');if(s.textContent!=='按金色按鈕進入參觀')s.textContent='按金色按鈕進入參觀'}
    else if(area>=0){const s=tab.querySelector('span');if(s.textContent==='按金色按鈕進入參觀'||/^按金色按鈕(?!進入)/.test(s.textContent))s.textContent=OUT_HINT[area]}}
   else if(room>=1&&room<=4){if(mode!=='room'||curRoom!==room)setRoom(room)}
-  else{if(mode!=='hidden')setHidden();const it=$('interact'),f=g.floor();if(it){const lb=f===3?'互動':'交談';if(it.textContent!==lb)it.textContent=lb;it.classList.toggle('dim',f===3);it.classList.remove('glow')}}
+  else{if(window.wyCastleCanLeave&&window.wyCastleCanLeave()){if(mode!=='castle')setCastle()}else if(mode!=='hidden')setHidden();const it=$('interact'),f=g.floor();if(it){const lb=f===3?'互動':'交談';if(it.textContent!==lb)it.textContent=lb;it.classList.toggle('dim',f===3);it.classList.remove('glow')}}
   /* 指南打開時讓位 */
   const guideOpen=[...document.querySelectorAll('.wy175Guide,#wyMedicalGuide,#wyFamilyGuide,#wyMainGuide')].some(vis);document.body.classList.toggle('gu-guide',guideOpen);
   /* 左下角人物出現時，下方提示先讓開 */

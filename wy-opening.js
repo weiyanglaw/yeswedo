@@ -6,17 +6,19 @@ export function setupOpening(T, c){
  #wyOp{position:fixed;inset:0;z-index:2147482000;font-family:${F};color:#1A2B4C;overflow:hidden;-webkit-tap-highlight-color:transparent}
  #wyOp .sky{position:absolute;inset:0;background:linear-gradient(180deg,#BFE3FF,#EAF6FF 60%,#FFF4E6);transition:opacity 1.2s}
  #wyOp .cl{position:absolute;border-radius:50%;background:radial-gradient(closest-side,#fff 60%,#ffffffd8 76%,#fff0);transition:transform 1.5s cubic-bezier(.5,0,.3,1),opacity 1.5s}
- #wyOp .letter{position:absolute;left:50%;top:50%;width:min(350px,90vw);transform:translate(-50%,-50%);background:#FFF8EC;border-radius:18px;padding:16px 15px 14px;box-shadow:0 0 0 3px #D9B56A,0 0 0 7px #ffffffaa,0 18px 40px #1A2B4C55;animation:wyOpIn .8s cubic-bezier(.3,1.5,.5,1) .5s both;transition:transform .9s cubic-bezier(.6,0,.3,1),opacity .9s}
+ #wyOp .letter{position:absolute;left:50%;top:50%;width:min(370px,92vw);box-sizing:border-box;transform:translate(-50%,-50%);background:#FFF8EC;border-radius:18px;padding:16px 15px 14px;box-shadow:0 0 0 3px #D9B56A,0 0 0 7px #ffffffaa,0 18px 40px #1A2B4C55;animation:wyOpIn .8s cubic-bezier(.3,1.5,.5,1) .5s both;transition:transform .9s cubic-bezier(.6,0,.3,1),opacity .9s}
  @keyframes wyOpIn{0%{transform:translate(-50%,-160%) rotate(-8deg);opacity:0}100%{transform:translate(-50%,-50%);opacity:1}}
  #wyOp .letter.shk{animation:wyOpShk .35s}
  @keyframes wyOpShk{0%,100%{transform:translate(-50%,-50%)}25%{transform:translate(calc(-50% - 4px),calc(-50% + 3px)) rotate(-.6deg)}50%{transform:translate(calc(-50% + 4px),calc(-50% - 2px)) rotate(.5deg)}}
  #wyOp .letter.away{transform:translate(40vw,-62vh) scale(.08) rotate(20deg);opacity:0}
  #wyOp .fun{position:absolute;top:11px;right:11px;background:#F26D8E;color:#fff;font-size:11px;padding:2px 9px;border-radius:999px;letter-spacing:2px}
- #wyOp .hd{display:flex;align-items:center;gap:9px;border-bottom:2px solid #D9B56A;padding-bottom:8px;margin-bottom:8px}
- #wyOp .hd img{width:38px;height:38px}#wyOp .hd small.hd2{display:block;margin-top:2px;font-size:9.5px;line-height:1.4;letter-spacing:.3px;color:#6B5A3E}#wyOp .hd b{display:block;font-family:${S};font-size:19px;letter-spacing:3px}#wyOp .hd small{font-size:10.5px;color:#8A6224;letter-spacing:2px}
+ #wyOp .hd{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;border-bottom:2px solid #D9B56A;padding-bottom:9px;margin-bottom:9px}
+ #wyOp .hd img{width:92px;height:92px;margin:-12px 0 -10px;filter:drop-shadow(0 2px 4px #8A622433)}#wyOp .hd b{display:block;font-family:${S};font-size:22px;letter-spacing:4px;color:#1A2B4C;margin-top:2px}#wyOp .hd small{display:block;font-size:12px;color:#8A6224;letter-spacing:3px;font-weight:700}
+ #wyOp .hd small.hd2{margin-top:3px;font-size:11px;line-height:1.5;letter-spacing:.5px;color:#6B5A3E;font-weight:500}
+ #wyOp .promo{margin-top:8px;padding:6px 8px;border-radius:10px;background:#1A2B4C;color:#FFE7B0;text-align:center;font-size:11.5px;letter-spacing:.5px;line-height:1.5}#wyOp .promo b{color:#fff;font-weight:800}
  #wyOp .row{font-size:13.5px;line-height:1.7}#wyOp .k{display:inline-block;min-width:4.2em;color:#8A6224}#wyOp .who{color:#C8342B;font-size:15px}
  #wyOp ol{margin:2px 0 0;padding-left:1.5em;font-size:13px;line-height:1.65}
- #wyOp ol li{word-break:keep-all;line-break:strict;text-wrap:pretty}
+ #wyOp ol li,#wyOp .row{word-break:normal;overflow-wrap:anywhere;line-break:strict;text-wrap:pretty}
  #wyOp .sig{position:relative;display:flex;align-items:flex-end;margin-top:8px;min-height:84px}
  #wyOp .sig .lin{display:flex;align-items:center;gap:5px;font-size:12px}#wyOp .sig .lin img{width:48px;height:48px}#wyOp .sig .date{font-size:11px;color:#777}
  #wyOp .slot{position:absolute;right:2px;bottom:2px;width:80px;height:80px;border:2px dashed #C8342B66;border-radius:50%;display:grid;place-items:center;color:#C8342B99;font-size:11px}
@@ -70,10 +72,10 @@ export function setupOpening(T, c){
  let RING=null;const ringP=new Promise(res=>{const im=new Image();im.onload=()=>{try{const s=480,cv=document.createElement('canvas');cv.width=cv.height=s;const g=cv.getContext('2d');const k=im.naturalWidth/2048;g.drawImage(im,439*k,333*k,1200*k,1200*k,0,0,s,s);g.globalCompositeOperation='destination-out';g.beginPath();g.arc(s/2,s/2,s*.333,0,Math.PI*2);g.fill();g.globalCompositeOperation='source-in';g.fillStyle='#C8342B';g.fillRect(0,0,s,s);RING=cv;res(cv)}catch(e){res(null)}};im.onerror=()=>res(null);im.src=LOGO});
  const paintRing=()=>ringP.then(cv=>{if(!cv||!ov)return;const s=ov.querySelector('.seal');if(s)s.style.backgroundImage='url('+cv.toDataURL()+')'});
  function letterHTML(H){const n=esc(name());const seal='<div class="seal"><svg viewBox="0 0 80 80" width="80" height="80"><text x="40" y="42" text-anchor="middle" fill="#C8342B" stroke="none" font-size="15" font-weight="900" font-family="Noto Serif TC,Songti TC,serif">有法度</text><text x="40" y="52" text-anchor="middle" fill="#C8342B" stroke="none" font-size="6" font-weight="700" letter-spacing=".5" font-family="Arial,sans-serif">YES, WE DO!</text></svg></div>';
-  if(kind==='letter')return `<span class="fun">趣味</span><div class="hd"><img src="${LOGO}" alt=""><div><b>有法度律師函</b><small>德威陽國際法律事務所</small><small class="hd2">主持律師 林柏均（台灣律師・美國紐約州律師）<br>LINE @wylaw｜weiandyang.com</small></div></div>
+  if(kind==='letter')return `<span class="fun">趣味</span><div class="hd"><img src="${LOGO}" alt=""><b>有法度律師函</b><small>德威陽國際法律事務所</small><small class="hd2">主持律師　林柏均<br>台灣律師・美國紐約州律師・前上市公司法務長</small></div>
    <div class="row"><span class="k">受文者</span><span class="who">${n}</span> 台端</div><div class="row"><span class="k">主旨</span>通知台端已正式成為有法度島民，請查照。</div>
    <ol><li>經查台端品味出眾、眼光獨到，完全符合入島資格。</li><li>自即日起，台端得自由探索訴訟、醫療、家庭、企業四座島嶼，各島均有本所相關法律服務之介紹；本所城堡 24 小時燈火通明，台端隨時來訪皆可。</li><li>台端如於島上玩得太開心而忘記時間，本所概不負責，特此函告。</li></ol>
-   <div class="sig"><div><div class="lin">${H[0]?`<img src="${H[0]}" alt="">`:''}德威陽國際法律事務所<br>林律師</div><div class="date">中華民國 ${today()}</div></div><div class="slot">蓋章處</div>${seal}</div><div class="foot">本函為網站遊戲趣味內容，不具任何法律效力</div>`;
+   <div class="sig"><div><div class="lin">${H[0]?`<img src="${H[0]}" alt="">`:''}德威陽國際法律事務所<br>林律師</div><div class="date">中華民國 ${today()}</div></div><div class="slot">蓋章處</div>${seal}</div><div class="promo">中文・English・日本語　24 小時都在<br><b>LINE @wylaw</b>｜weiandyang.com</div><div class="foot">本函為網站遊戲趣味內容，不具任何法律效力</div>`;
   return ''}
  // 鏡頭路徑：雲上 → 俯衝群島 → 人物背後
  let path=null;
