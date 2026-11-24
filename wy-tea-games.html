@@ -63,7 +63,7 @@ body.emb{min-height:0!important;height:100vh;overflow:hidden;display:block!impor
   let AC = null; const ac = () => { if (!AC) try { AC = new (window.AudioContext || window.webkitAudioContext)() } catch (e) { } return AC };
   const tone = (f, d = .12, type = 'triangle', v = .12, t0 = 0) => { const a = ac(); if (!a) return; const t = a.currentTime + t0, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .01); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .02) };
   const box = (k) => { const n = Math.floor(Math.random() * k); return n };
-  const PROMO = ['台美雙律師，跨國案件一次處理', '前上市公司法務長，懂經營也懂風險', '中、英、日三語直接溝通', '台北和紐約接力，24 小時都在', '有事先 LINE @wylaw', '民事、刑事、家事、企業，林柏均律師親自把關'];
+  const PROMO = ['林柏均律師台美雙執照，跨國案件一次處理', '林柏均律師曾任上市公司法務長，懂經營也懂風險', '林柏均律師中英日三語直接溝通', '德威陽台北紐約接力，24 小時都在', '有事先 LINE @wylaw', '民事、刑事、家事、企業，林柏均律師親自把關'];
   const promoBox = () => `<div class="who"><img src="${IMG.lin}"><div><b>德威陽怎麼幫您</b><span>${PROMO[box(PROMO.length)]}</span></div></div>`;
 
   // ───────────────────────── 彈珠有法度（v514 復古規則：三顆球、不計時；YES 燈加倍數、卷宗觸發雙球、雙球打 24H 拿結案大獎）─────────────────────────

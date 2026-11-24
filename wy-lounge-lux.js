@@ -69,7 +69,14 @@ export function applyLoungeLux(ctx) {
   }
   const plant = (x, z, s = 1) => cutePlant(X0 + x, 0, z, s, G);
   const vase = (g, x, y, z, s = 1, m = bloom) => { cyl(g, x, y + .2 * s, z, .16 * s, .22 * s, .4 * s, gold, 16); for (let q = 0; q < 9; q++) { const a = q * 2.4, r = .1 + (q % 3) * .07; sph(g, x + Math.cos(a) * r * s, y + (.55 + (q % 2) * .1) * s, z + Math.sin(a) * r * s, .12 * s, m) } };
-  const rug = (x, z, w, d) => { const g = grp(x, z); box(g, 0, .03, 0, w, .03, d, rugM); box(g, 0, .05, 0, w - .4, .01, d - .4, M('#D9C4A2', { roughness: .9 })); box(g, 0, .055, 0, w - .6, .01, d - .6, rugM); return g };
+  const rug = (x, z, w, d) => { // v514 動森風橢圓地毯：每層頂面高度至少差 0.02，不會閃爍
+    const g = grp(x, z), sx = w / 2, sz = d / 2, rugP = M('#F6B8C6', { roughness: .95 }), rugC = M('#FFF3E2', { roughness: .95 }), rugG = M('#F3D27A', { roughness: .8 });
+    const disc = (r, h, y, m, seg = 48) => { const o = add(new T.CylinderGeometry(r, r, h, seg), m, 0, y, 0, g); o.scale.set(sx, 1, sz); return o };
+    disc(1, .04, .02, rugP);                       // 粉紅外圈（頂面 .04）
+    for (let k = 0; k < 28; k++) { const a2 = k / 28 * Math.PI * 2; const o = add(new T.CylinderGeometry(.22, .22, .04, 14), rugP, Math.cos(a2) * sx, .02, Math.sin(a2) * sz, g) } // 波浪花邊
+    disc(.8, .03, .055, rugC);                     // 奶油內圈（頂面 .07）
+    for (let k = 0; k < 12; k++) { const a2 = k / 12 * Math.PI * 2; add(new T.CylinderGeometry(.1, .1, .02, 12), rugG, Math.cos(a2) * sx * .66, .08, Math.sin(a2) * sz * .66, g) } // 金色小圓點（頂面 .09）
+    return g };
   const coffeeTable = (x, z) => { const g = grp(x, z); cyl(g, 0, .45, 0, .18, .25, .8, gold, 16); cyl(g, 0, .9, 0, 1.0, 1.0, .08, gold, 40); cyl(g, 0, .95, 0, .95, .95, .05, marble, 40); vase(g, 0, .98, 0, .8); box(g, .45, 1.0, .25, .5, .06, .36, M('#C7D7C4')); return g };
   // 環形扇區（θ：x=sinθ、z=cosθ；開口置中在 +Z）
   const sector = (g, rIn, rOut, h, y0, start, open, m) => { const sh = new T.Shape(), N = 40; for (let i = 0; i <= N; i++) { const t = start + open * i / N; const p = [Math.sin(t) * rOut, -Math.cos(t) * rOut]; i ? sh.lineTo(...p) : sh.moveTo(...p) } for (let i = N; i >= 0; i--) { const t = start + open * i / N; sh.lineTo(Math.sin(t) * rIn, -Math.cos(t) * rIn) } const o = add(new T.ExtrudeGeometry(sh, { depth: h, bevelEnabled: true, bevelThickness: .08, bevelSize: .08, bevelSegments: 3 }), m, 0, y0, 0, g); o.rotation.x = -Math.PI / 2; return o };
@@ -120,7 +127,48 @@ export function applyLoungeLux(ctx) {
       for (const s2 of [-1, 1]) box(g, dx + s2 * .6, (H - .5) / 2 + .15, .52, .06, H - .6, .06, gold);
       box(g, dx + .45, (H - .5) / 2 + .15, .58, .06, 1.2, .08, gold) }
   };
-  cooler(fridge, 3, 4.8);
+  // v514 陳老闆 11-22：冰箱移到左牆前段（原粉色半開放沙發位置），做大、往前凸、豪華又可愛的動森風復古大冰箱
+  fridge.position.set(X0 - 11.8, 0, 4.4); fridge.scale.setScalar(1.25); // v515 再放大 1.25 倍（背面仍貼牆）
+  { const g = fridge, W = 3.0, H = 4.7, D = 2.0, zf = D / 2;
+    const pearl = M('#FFF3E0', { roughness: .28, metalness: .08 }), navyP = M('#1D2C52', { roughness: .3, metalness: .15 });
+    const RBb = (w, h, d, r) => new RoundedBoxGeometry(w, h, d, 6, r);
+    add(RBb(W, H - .5, D, .5), pearl, 0, .35 + (H - .5) / 2, 0, g);                       // 圓胖機身
+    add(RBb(W + .2, .36, D + .2, .16), gold, 0, .3, 0, g);                                  // 金色底座
+    for (const [fx, fz] of [[-1.15, -.7], [1.15, -.7], [-1.15, .7], [1.15, .7]]) cyl(g, fx, .1, fz, .16, .2, .22, gold, 20); // 圓金腳
+    const top = H - .15;
+    add(RBb(W + .16, .3, D + .16, .14), gold, 0, top, 0, g);                                // 頂部金飾條
+    add(RBb(1.3, .9, .5, .2), pearl, 0, top + .55, zf - .4, g); // 頂上徽章座（圓胖奶油色）
+    { const t = add(new T.TorusGeometry(.48, .08, 12, 40), gold, 0, top + .6, zf - .02, g); }
+    add(new T.CylinderGeometry(.44, .44, .1, 40), navyP, 0, top + .6, zf - .06, g).rotation.x = Math.PI / 2;  // 深藍徽章
+    add(new T.CylinderGeometry(.2, .2, .08, 5), gold, 0, top + .6, zf + .01, g).rotation.x = Math.PI / 2;     // 金星
+    sph(g, -1.0, top + .32, zf - .3, .13, gold); sph(g, 1.0, top + .32, zf - .3, .13, gold);
+    // 上下兩扇門：上冷凍小門＋下大門（中間金腰帶）
+    const yMid = 3.25;
+    add(RBb(W + .1, .18, D + .12, .08), gold, 0, yMid, 0, g);
+    add(RBb(W - .36, top - yMid - .5, .12, .1), pearl, 0, (top + yMid) / 2 - .05, zf + .02, g);
+    add(RBb(W - .36, yMid - .95, .12, .1), pearl, 0, (yMid + .7) / 2, zf + .02, g);
+    // 大門圓角玻璃窗：冷光內裝＋三層彩色飲料
+    const wy = 1.95, wh = 1.75, ww = 1.9;
+    add(RBb(ww + .24, wh + .24, .1, .14), gold, -.12, wy, zf + .07, g);
+    add(RBb(ww, wh, .08, .1), coolM, -.12, wy, zf + .1, g);
+    for (let j = 0; j < 3; j++) { const y = wy - wh / 2 + .2 + j * .55; box(g, -.12, y - .05, zf + .14, ww - .1, .04, .05, gold);
+      for (let k = 0; k < 5; k++) { const bm = BOT[(j * 2 + k) % BOT.length], bx = -.12 - .72 + k * .36; cyl(g, bx, y + .17, zf + .17, .1, .1, .32, bm, 14); cyl(g, bx, y + .37, zf + .17, .05, .075, .1, bm, 10); sph(g, bx, y + .44, zf + .17, .055, capM) } }
+    add(RBb(ww, wh, .03, .1), glass, -.12, wy, zf + .25, g);
+    // 胖胖金把手（上下門各一）
+    const cap = (h, y) => { const o = add(new T.CapsuleGeometry(.09, h, 8, 16), gold, 1.13, y, zf + .32, g); for (const yy of [y - h / 2, y + h / 2]) cyl(g, 1.13, yy, zf + .18, .05, .05, .26, gold, 10).rotation.x = Math.PI / 2; return o };
+    cap(1.5, wy); cap(.55, (top + yMid) / 2 - .05);
+    // 上門深藍小牌＋金線
+    add(RBb(1.5, .38, .05, .1), navyP, -.2, (top + yMid) / 2 - .05, zf + .1, g); box(g, -.2, (top + yMid) / 2 - .05, zf + .135, 1.2, .05, .02, gold);
+    // 側面金色直條＋可愛腮紅小圓（動森風）
+    for (const s4 of [-1, 1]) add(RBb(.08, H - 1.0, .08, .03), gold, s4 * (W / 2 + .01), (H - .5) / 2 + .35, zf - .35, g);
+    // v515 更豪華：上門金框、四角金飾、把手水晶頭、頂上金珠花邊與兩側小皇冠、窗內暖光燈條
+    const yT = (top + yMid) / 2 - .05, crys = M('#E8F6FF', { roughness: .05, metalness: .1, transparent: true, opacity: .85, emissive: '#BFE6FF', emissiveIntensity: .35 });
+    for (const [fx, fy] of [[-1, 1], [1, 1], [-1, -1], [1, -1]]) { box(g, fx * (W / 2 - .3), yT + fy * .5, zf + .1, .5, .06, .03, gold); box(g, fx * (W / 2 - .55), yT + fy * .25, zf + .1, .06, .5, .03, gold) }
+    for (const yy of [wy + .75 + .09, wy - .75 - .09, (top + yMid) / 2 + .25 + .03, (top + yMid) / 2 - .25 - .1]) sph(g, 1.13, yy, zf + .33, .12, crys);
+    for (let k = 0; k < 11; k++) sph(g, -1.4 + k * .28, top + .17, zf + .02, .07, gold);
+    for (const s4 of [-1, 1]) { cyl(g, s4 * 1.05, top + .33, zf - .3, .16, .2, .14, gold, 16); for (let k = 0; k < 5; k++) { const a3 = k / 5 * Math.PI * 2; sph(g, s4 * 1.05 + Math.cos(a3) * .13, top + .46, zf - .3 + Math.sin(a3) * .13, .045, gold) } sph(g, s4 * 1.05, top + .5, zf - .3, .07, crys) }
+    add(RBb(ww - .2, .06, .04, .02), M('#FFF6D8', { emissive: '#FFE7A8', emissiveIntensity: 1.1 }), -.12, wy + wh / 2 - .08, zf + .16, g);
+  }
   reg(fridge, 'fridge');
   plant(-12.4, -1.5, 1.05); plant(-12.4, -10.0, 1.0);
   // 中央大理石吧台（深藍直紋櫃身＋金邊）＋白色高腳椅
@@ -163,9 +211,9 @@ export function applyLoungeLux(ctx) {
   { const g = grp(12.5, -5.2, -Math.PI / 2); cooler(g, 1, 4.4) }
   plant(12.3, -9.6, 1.05); plant(12.3, -2.8, 1.0);
   // 右前方綠色沙發（綠色沙發互動）＋地毯茶几
-  sofa(7.6, 1.6, 0, 4.6, green, greenD, 'mint'); rug(7.6, 3.2, 6.0, 3.6); coffeeTable(7.6, 3.6);
+  // v514：右前方綠色沙發組（沙發、地毯、茶几）拿掉，八卦改到窗邊粉色沙發
   // 左前方：粉色半開放式沙發（使用者指定，取代花台卡座）
-  booth(-9.4, 4.4, Math.PI * .25, 2.3, pink, M('#E8A3B0', { roughness: .6 }), Math.PI * 1.25);
+  // v514：左前方粉色半開放沙發拿掉，改放大冰箱
   plant(-12.4, 8.6, 1.05);
   // 前方中間：兩座按摩椅包廂（開口朝鏡頭）
   function pod(x, z, key, shellC, chairC, innerC) {
@@ -194,7 +242,8 @@ export function applyLoungeLux(ctx) {
   pod(-3.6, 7.2, 'spaA', '#E8849F', '#FBE3EA', '#FFE9EF'); pod(1.3, 7.2, 'spaB', '#5DB894', '#E3F4EA', '#EAF7EF'); // 使用者指定：按摩椅包廂用鮮豔色（玫瑰紅、翡翠綠）＋花冠
 
   // ---------- 4) 名牌與點擊框跟著新位置 ----------
-  const NEW = { coffee: [-5.4, 4.4, -3.0], fridge: [-11.5, 6.0, -4.4], snacks: [-.5, 4.2, -2.4], spaA: [-3.6, 4.4, 7.2], spaB: [1.3, 4.4, 7.2], pink: [-6.0, 3.9, -9.0], mint: [7.6, 3.9, 1.6] };
+  const NEW = { coffee: [-5.4, 4.4, -3.0], fridge: [-10.5, 7.7, 4.4], snacks: [-.5, 4.2, -2.4], spaA: [-3.6, 4.4, 7.2], spaB: [1.3, 4.4, 7.2], pink: [-6.0, 3.9, -9.0], mint: [7.6, 3.9, 1.6] };
+  root.traverse(o => { const k0 = o.userData && o.userData.wy337; if (k0 === 'mint' && o.isMesh) { o.visible = false; const ti = targets.indexOf(o); if (ti >= 0) targets.splice(ti, 1); return } });
   root.traverse(o => { const k = o.userData && o.userData.wy337; if (!k || !NEW[k] || !o.isMesh) return; if (o.geometry.type === 'PlaneGeometry') { o.position.set(X0 + NEW[k][0], NEW[k][1], NEW[k][2]) } else if (o.material && o.material.visible === false) { o.position.set(X0 + NEW[k][0], 1.25, NEW[k][2]) } });
   // 牆面（使用者參考圖）：淺橡木直條板＋細金線、米色大理石窄板、霧藍素面板、霧藍大理石重點牆（金條分隔）、金色踢腳＋牆頂暖光
   { const room0 = ctx.room || root.parent;

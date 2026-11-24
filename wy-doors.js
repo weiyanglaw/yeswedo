@@ -145,13 +145,16 @@ export function setupDoors(T, { scene, game }) {
   function flagBase() { let F = null; scene.traverse(o => { if (o.name === 'WEIYANG_LITIGATION_FLAG') F = o }); if (!F || F.userData.wyBase) return; F.userData.wyBase = true;
     const pole = F.children.find(c => c.geometry && c.geometry.type === 'CylinderGeometry'); if (!pole) return; F.updateMatrixWorld(true);
     const pp = pole.getWorldPosition(new T.Vector3()), ph = pole.geometry.parameters.height, bottom = pp.y - ph / 2;
-    const ms = []; scene.traverse(o => { if (o.isMesh && !o.isInstancedMesh) { const m = o.material; if (!m || Array.isArray(m) || m.visible === false || (m.transparent && m.opacity < .05)) return; let v = true; for (let q = o; q; q = q.parent) if (!q.visible || q === F) { v = false; break } if (v) ms.push(o) } });
+    const ms = []; scene.traverse(o => { if (o.isMesh && !o.isInstancedMesh) { const m = o.material; if (!m || Array.isArray(m) || m.visible === false || (m.transparent && m.opacity < .05)) return; let v = true; for (let q = o; q; q = q.parent) if (!q.visible || q === F) { v = false; break } if (v) ms.push(o) } }); /* v516 進島要順：只留旗桿正下方那一條範圍內的東西來量屋頂高度，結果一樣、快很多 */{ const sp = new T.Sphere(), keep = []; for (const o of ms) { const g = o.geometry; if (!g) continue; if (!g.boundingSphere) g.computeBoundingSphere(); if (!g.boundingSphere) { keep.push(o); continue } sp.copy(g.boundingSphere).applyMatrix4(o.matrixWorld); const dx = Math.abs(sp.center.x - pp.x), dz = sp.center.z < pp.z - 2 ? pp.z - 2 - sp.center.z : sp.center.z > pp.z + 8 ? sp.center.z - pp.z - 8 : 0; if (dx <= sp.radius + .01 && dz <= sp.radius + .01) keep.push(o) } ms.length = 0; ms.push(...keep) }
     // 旗桿原本立在後面那棟（已拿掉）的屋頂上 → 移到主建築中央頂樓的正中間
     const rc = new T.Raycaster(); rc.far = 40; const S = [];
+    /* v516 進島要順：上次量好的屋頂高度先用一條線確認，對得上就不用再量 50 次 */
+    let fast = null; try { const K = [10.93, -30.3]; rc.set(new T.Vector3(pp.x, 40, K[1]), new T.Vector3(0, -1, 0)); const h0 = rc.intersectObjects(ms, false)[0]; if (h0 && Math.abs(h0.point.y - K[0]) < .03) { let ok = true; for (const dz of [-.4, .4]) { rc.set(new T.Vector3(pp.x, 40, K[1] + dz), new T.Vector3(0, -1, 0)); const h1 = rc.intersectObjects(ms, false)[0]; if (!h1 || Math.abs(h1.point.y - K[0]) > .05) ok = false } if (ok) fast = K } } catch (e) { }
+    if (fast) { } else
     for (let z = pp.z - 2; z <= pp.z + 8; z += .2) { rc.set(new T.Vector3(pp.x, 40, z), new T.Vector3(0, -1, 0)); const h = rc.intersectObjects(ms, false)[0]; S.push([z, h ? +h.point.y.toFixed(2) : -1e9]) }
     // 找「一整片平的屋頂」（至少 1 公尺寬）裡最高的那片，避開圓徽這種薄薄的東西
     let best = null; for (let a = 0; a < S.length;) { let b2 = a; while (b2 + 1 < S.length && Math.abs(S[b2 + 1][1] - S[a][1]) <= .05) b2++; if (b2 - a >= 5 && S[a][1] > -1e8 && (!best || S[a][1] > best[0])) best = [S[a][1], S[a][0], S[b2][0]]; a = b2 + 1 }
-    let top = null, z0 = null, z1 = null; if (best) { top = best[0]; z0 = best[1]; z1 = best[2] }
+    let top = null, z0 = null, z1 = null; if (best) { top = best[0]; z0 = best[1]; z1 = best[2] } if (fast) { top = fast[0]; z0 = z1 = fast[1] }
     if (z0 === null) { window.__wyFlagFix = 'nobest'; return } const y = top, zc = (z0 + z1) / 2;
     F.position.y += y - bottom - .05; F.position.z += zc - pp.z; F.matrixAutoUpdate = true; F.updateMatrix(); F.updateMatrixWorld(true); pp.z = zc; window.__wyFlagFix = [y, zc];
     const gm = new T.MeshStandardMaterial({ color: '#E2BE72', metalness: .6, roughness: .25, emissive: '#5a4214', emissiveIntensity: .3 });

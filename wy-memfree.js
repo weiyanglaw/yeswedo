@@ -128,7 +128,7 @@ export function setupMemFree(THREE, renderer, getScenes) {
     window.wyMemFree = { textures: freedTex, attrs: freedAttr, MB: +(freedBytes / 1048576).toFixed(1) };
   }
   // 每 3 秒處理一小批，不會一次卡住畫面
-  setInterval(() => { try { pass() } catch (e) {} }, 3000);
+  setInterval(() => { try { if (window.wyBusy && window.wyBusy()) return; pass() } catch (e) {} }, 3000); /* v516：開場、剛進島、手指在操作時先不整理，進島才順 */
   const cv = renderer.domElement;
   cv.addEventListener('webglcontextrestored', () => { if (applied) location.reload() }, false);
   return { pass };

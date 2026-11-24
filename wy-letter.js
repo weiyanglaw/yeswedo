@@ -7,7 +7,7 @@ const ISLE = {
   biz: ['企業島', '#9A80D0', '#563C8C'], know: ['知識島', '#3C93B6', '#1F5F78'], castle: ['事務所', '#3F63B5', '#1A2C66'],
 };
 // 視窗外層 id → 島
-const MAP = { wyBench: 'lit', wyJusticeLink: 'lit', wyJustice: 'lit', 'wy-lit-games': 'lit', wyLitigationInfo433: 'lit', wyFee: 'lit', wyFiling: 'lit', wyMediation: 'lit', wyMedicalExperience: 'med', wyFamilyExperience: 'fam', wy410BusinessPanel: 'biz', wyRC: null, wy3MovieModal: 'castle', wy317Overlay: 'castle', wyLF: 'castle', wy3M: 'castle', wy3P: 'castle', wy3U: 'castle', wy3B: 'castle', wy3L: 'castle', wy3F: 'castle', wyLobbyDialog: 'castle' };
+const MAP = { wyBench: 'lit', wyJusticeLink: 'lit', wyJustice: 'lit', 'wy-lit-games': 'lit', wyLitigationInfo433: 'lit', wyFee: 'lit', wyFiling: 'lit', wyMediation: 'lit', wyMedicalExperience: 'med', wyMedRecords: 'med', wyFamPlay: 'fam', wyFamilyExperience: 'fam', wy410BusinessPanel: 'biz', wyRC: null, wy3MovieModal: 'castle', wy317Overlay: 'castle', wyLF: 'castle', wy3M: 'castle', wy3P: 'castle', wy3U: 'castle', wy3B: 'castle', wy3L: 'castle', wy3F: 'castle', wyLobbyDialog: 'castle', wyInfo: null };
 const SKIP = new Set([]); /* v515 陳老闆：訴訟島全部用信紙外框，大法官席、正義女神也一樣 */
 const GR = 'M0,-8 C3.4,-5 3.6,2.5 0,6.5 C-3.6,2.5 -3.4,-5 0,-8Z';
 function wheatSVG() {
@@ -21,6 +21,8 @@ const imp = (n, o) => { if (n) for (const k in o) n.style.setProperty(k, o[k], '
 function islandNow() { try { const f = window.__wyIsleOf; if (f) return f(); } catch (e) { } return 'castle'; }
 function panelOf(shell) {
   // 外層本身就是卡片（不是全螢幕暗底）就直接用；否則找裡面最大的那張卡片
+  /* v523 已套過外框就沿用同一張，避免視窗變高後又在內層再套一層 */
+  if (shell.dataset.wyLetter) return shell; { const d = shell.querySelector('[data-wy-letter]'); if (d) return d; }
   const r0 = shell.getBoundingClientRect(); if (r0.width < innerWidth * .97 || r0.height < innerHeight * .9) return shell;
   const kids = [...shell.children].filter(n => n.nodeType === 1 && n.tagName !== 'STYLE' && n.tagName !== 'SCRIPT');
   const withBtn = kids.filter(n => n.querySelector('button')); const pool = withBtn.length ? withBtn : kids;
@@ -105,7 +107,7 @@ function dress(shell, key) {
     if (!panel.isConnected) { wheat.remove(); if (px) px.remove(); return; }
     const hidden = getComputedStyle(shell).display === 'none' || panel.getClientRects().length === 0;
     wheat.style.display = hidden ? 'none' : 'block'; if (px) px.style.setProperty('visibility', hidden ? 'hidden' : 'visible', 'important');
-    if (!hidden) { if (panel.__wylFix) { const f = panel.__wylFix; panel.__wylFix = null; requestAnimationFrame(() => requestAnimationFrame(f)); setTimeout(f, 500); } window.__wylT = performance.now(); document.body.classList.add('wyl-open'); const r = panel.getBoundingClientRect(); wheat.style.left = Math.min(r.right - 22, innerWidth - 30) + 'px'; wheat.style.top = (r.bottom - 62 - 80) + 'px';
+    if (!hidden) { if (panel.__wylFix) { const f = panel.__wylFix; panel.__wylFix = null; requestAnimationFrame(() => requestAnimationFrame(f)); setTimeout(f, 500); } window.__wylT = performance.now(); document.body.classList.add('wyl-open'); const r = panel.getBoundingClientRect(); /* v522 麥穗收進信紙框內右下角（署名條右端），不被螢幕切掉、不壓按鈕；內容需要捲動時先收起 */wheat.style.left = Math.min(r.right - 48, innerWidth - 48) + 'px'; wheat.style.top = (r.bottom - 92) + 'px'; { let sc = false; for (const e of [panel, shell]) { if (e && e.scrollHeight > e.clientHeight + 4 && /auto|scroll/.test(getComputedStyle(e).overflowY)) sc = true } if (sc) wheat.style.display = 'none'; }
       /* v515 陳老闆：關閉鈕一律放在信紙右上角「框內」、最上層，郵票往左讓位，不再被郵票蓋住或被外層切掉 */
       if (cb) { if (!px) { px = cb.cloneNode(true); px.removeAttribute('id'); px.removeAttribute('onclick'); px.dataset.wylBody = '1'; px.onclick = e => { e.preventDefault(); e.stopPropagation(); const cur = cb.isConnected ? cb : (closeBtnOf(panel) || closeBtnOf(shell)); if (cur) cur.click(); }; document.body.append(px); cb.style.setProperty('display', 'none', 'important'); if (!peekMode) { stamp.style.right = '58px'; const hd = panel.querySelector('.wyl-head'), rl = panel.querySelector('.wyl-rule'); if (hd) hd.style.paddingRight = '138px'; if (rl) rl.style.marginRight = '138px'; } else { head.style.paddingLeft = '44px'; } }
         px.style.setProperty('left', (peekMode ? Math.max(4, r.left + 12) : Math.min(innerWidth - 46, r.right - 52)) + 'px', 'important'); px.style.setProperty('top', Math.max(4, r.top + 12) + 'px', 'important'); } }

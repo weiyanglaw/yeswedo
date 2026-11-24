@@ -53,7 +53,7 @@ export function apply(T, scene) {
     const mg = new T.ExtrudeGeometry(sh, { depth: .04, bevelEnabled: true, bevelThickness: .02, bevelSize: .06, bevelSegments: 2 }); mg.rotateX(-Math.PI / 2); add(mg, M('#BDE3CC', .95), cx + 4.7, .1, cz + .4) }
   const anim = [];
   // 先進器材 1：圓胖的 MRI 掃描環＋會慢慢滑進滑出的床（右前方）
-  { const G = new T.Group(); G.position.set(cx + 4.7, .06, cz - 2.0); G.rotation.y = 0; G.scale.setScalar(.8); root.add(G);
+  { const G = new T.Group(); G.name = 'wyMRI'; G.userData.medicalAction = 'books'; /* v523 書櫃的互動搬到白色圓環 */G.position.set(cx + 4.7, .06, cz - 2.0); G.rotation.y = 0; G.scale.setScalar(.8); root.add(G);
     const ring = add(new T.TorusGeometry(1.15, .42, 18, 40), cream, 0, 1.55, 0, G); add(new T.TorusGeometry(1.16, .07, 10, 40), glow, 0, 1.55, .43, G);
     cyl(.75, .9, .5, mint, 0, .25, 0, G).scale.set(1.4, 1, .9);
     const bedBase = cap(.22, 2.2, mint, 0, .9, 1.3, 'z', G); bedBase.scale.set(2.2, 1, 1);

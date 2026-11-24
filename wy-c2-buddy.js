@@ -26,7 +26,7 @@ export function setupBuddy(o) {
   if (nm) nm.addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(() => { const raw = nm.value.trim(); if (!raw) return; const ok = window.wyCleanName ? window.wyCleanName(raw) : raw; if (ok !== raw) say('這個名字不太適合喔，<br>換一個好嗎？'); else say(raw.slice(0, 6) + '，幫您寫進律師函！') }, 700) });
   // 必填都完成（開始探索按鈕變可按）時說最後一句，接到律師函
   const sb = document.getElementById('startExplore');
-  if (sb) { let was = sb.disabled; new MutationObserver(() => { if (was && !sb.disabled) { clearTimeout(tmr); say('登記完成！<br>林律師要發函給您囉') } was = sb.disabled }).observe(sb, { attributes: true, attributeFilter: ['disabled'] }) }
+  if (sb) { let was = sb.disabled; new MutationObserver(() => { if (was && !sb.disabled) { clearTimeout(tmr); say('登記完成！<br>德威陽要發函給您囉') } was = sb.disabled }).observe(sb, { attributes: true, attributeFilter: ['disabled'] }) }
   const v = new T.Vector3();
   (function loop() {
     if (!g.parent) { b.remove(); return }

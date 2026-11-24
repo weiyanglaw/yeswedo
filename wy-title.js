@@ -21,7 +21,7 @@ const css = `
 #officeUI>div:first-child>strong.wyA2Hidden{visibility:hidden!important}
 #wyV151Controls.wyMenuized{display:none!important}
 body.wyA2On .gu.guBadge{display:none!important}
-body.wyA2On .gu.guTR{top:calc(84px + env(safe-area-inset-top,0px))!important;right:calc(8px + env(safe-area-inset-right,0px))!important}
+body.wyA2On .gu.guTR{top:calc(96px + env(safe-area-inset-top,0px))!important;right:calc(8px + env(safe-area-inset-right,0px))!important}
 body.wyA2On .gu.guSnd{top:calc(170px + env(safe-area-inset-top,0px))!important}
 #wyMenuBtn{position:fixed;z-index:67;right:calc(12px + env(safe-area-inset-right,0px));top:calc(28px + env(safe-area-inset-top,0px));width:48px;height:48px;border-radius:50%;border:0;padding:0;background:linear-gradient(#FFEFB8,#E9C46A 35%,#C08A2E 70%,#F3D27A);box-shadow:0 3px 6px rgba(42,26,5,.35);display:none;cursor:pointer}
 #wyMenuBtn i{position:absolute;left:4px;top:4px;width:40px;height:40px;border-radius:50%;background:#FFF8EA}
@@ -30,7 +30,7 @@ body.wyA2On .gu.guSnd{top:calc(170px + env(safe-area-inset-top,0px))!important}
 #wyMenuBtn{width:42px!important;height:42px!important;right:calc(7px + env(safe-area-inset-right,0px))!important;top:calc(22px + env(safe-area-inset-top,0px))!important;overflow:visible}
 #wyMenuBtn i{left:3.5px!important;top:3.5px!important;width:35px!important;height:35px!important}
 #wyMenuBtn i::before{left:10px!important;right:10px!important;top:16.5px!important;height:2.4px!important;box-shadow:0 -6px 0 #8A6424,0 6px 0 #8A6424!important}
-#wyMenuBtn::after{content:"選單";position:absolute;left:50%;top:41px;transform:translateX(-50%);white-space:nowrap;padding:0 6px;border-radius:99px;background:#1A2B4Cd9;border:1px solid #D9B56A;font:10px/1.5 system-ui;color:#FFE7B0;letter-spacing:1px}
+#wyMenuBtn::after{content:"選單";position:absolute;left:50%;top:49px;transform:translateX(-50%);white-space:nowrap;padding:0 6px;border-radius:99px;background:#1A2B4Cd9;border:1px solid #D9B56A;font:10px/1.5 system-ui;color:#FFE7B0;letter-spacing:1px}
 #wyMenuPanel{position:fixed;z-index:68;right:calc(12px + env(safe-area-inset-right,0px));top:calc(84px + env(safe-area-inset-top,0px));min-width:180px;border:6px solid transparent;border-radius:22px;background:linear-gradient(#FFFBF2,#FFFBF2) padding-box,linear-gradient(#FFEFB8,#E9C46A 35%,#C08A2E 70%,#F3D27A) border-box;box-shadow:inset 0 0 0 1.5px #8A6424,0 8px 20px rgba(20,12,0,.4);padding:6px;display:none}
 #wyMenuPanel button{display:block;width:100%;text-align:left;border:0;background:none;padding:13px 14px;font:900 16px/1.2 'PingFang TC','Noto Sans TC',system-ui;color:#4A3420;border-bottom:1.5px dashed #E2C88C;cursor:pointer}
 #wyMenuPanel button:last-child{border-bottom:0}
@@ -65,7 +65,7 @@ export function install() {
   const shown = b => b && b.style.display !== 'none' && getComputedStyle(b).display !== 'none';
   const items = () => ctl ? [...ctl.querySelectorAll('button')].filter(b => b.id !== 'wyFloorButton' && shown(b)) : [];
   const closeMenu = () => { mp.style.display = 'none'; };
-  mb.onclick = e => { e.stopPropagation(); if (mp.style.display === 'block') return closeMenu(); mp.replaceChildren(); for (const b of items()) { const it = document.createElement('button'); it.type = 'button'; it.textContent = b.textContent.trim(); it.onclick = ev => { ev.stopPropagation(); closeMenu(); b.click(); }; mp.append(it); } mp.style.display = 'block'; };
+  mb.onclick = e => { e.stopPropagation(); /* v516：選單統一打開可愛手機面板 */ if (window.wyOpenPhoneMenu) { try { window.wySfx && window.wySfx('tap') } catch (err) { } window.wyOpenPhoneMenu(); return } if (mp.style.display === 'block') return closeMenu(); mp.replaceChildren(); for (const b of items()) { const it = document.createElement('button'); it.type = 'button'; it.textContent = b.textContent.trim(); it.onclick = ev => { ev.stopPropagation(); closeMenu(); b.click(); }; mp.append(it); } mp.style.display = 'block'; };
   document.addEventListener('pointerdown', e => { if (!mp.contains(e.target) && e.target !== mb) closeMenu(); });
   fab.onclick = e => { e.stopPropagation(); const f = document.getElementById('wyFloorButton'); f && f.click(); };
   const syncCtl = () => {
