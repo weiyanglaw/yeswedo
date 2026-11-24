@@ -17,14 +17,14 @@ const chime = () => [784, 988, 1319].forEach((f, i) => note(f, i * .06, .15, .05
 
 // ---------- 共用宣傳 ----------
 const HELP = [
-  '陪同警詢與偵查程序，現場確認每一句筆錄。林柏均律師處理刑事案件，重視每個程序細節。',
-  '審閱英文合約與跨國交易文件，逐條標出風險。林柏均律師具台灣與美國紐約州律師資格。',
-  '配合美國時差安排視訊會議，即時回覆跨國客戶。台美雙律師，兩地程序都熟悉。',
-  '以中英日三語溝通跨國案件，減少翻譯落差。林柏均律師具美國法律事務所工作經歷。',
-  '出席民事、家事各類開庭，完整陳述每項主張。林柏均律師獲選 2026 台北律師公會優秀公益律師。',
-  '審閱公司契約與治理文件，從經營角度評估風險。林柏均律師曾任上市公司法務長。',
-  '規劃企業勞資、股東與合約制度。前上市公司法務長的實務經驗，貼近公司需求。',
-  '擔任政府機關與工會法律顧問，處理多元法律問題。林柏均律師具豐富顧問經驗。'
+  '德威陽陪同警詢與偵查程序，現場確認每一句筆錄。林柏均律師處理刑事案件，重視每個程序細節。',
+  '德威陽審閱英文合約與跨國交易文件，逐條標出風險。林柏均律師具台灣與美國紐約州律師資格。',
+  '德威陽配合美國時差安排視訊會議，即時回覆跨國客戶。林柏均律師具台美雙執照，兩地程序都熟悉。',
+  '德威陽以中英日三語溝通跨國案件，減少翻譯落差。林柏均律師具美國法律事務所工作經歷。',
+  '德威陽出席民事、家事各類開庭，完整陳述每項主張。林柏均律師獲選 2026 台北律師公會優秀公益律師。',
+  '德威陽審閱公司契約與治理文件，從經營角度評估風險。林柏均律師曾任上市公司法務長。',
+  '德威陽規劃企業勞資、股東與合約制度。林柏均律師曾任上市公司法務長，實務經驗貼近公司需求。',
+  '德威陽擔任政府機關與工會法律顧問，處理多元法律問題。林柏均律師具豐富顧問經驗。'
 ];
 let lastH = -1;
 
@@ -358,10 +358,10 @@ function cFinish(win) {
   const reach = C.m, B = getN(CKEY), isRec = reach > B; if (isRec) setN(CKEY, reach);
   const L = LOT[dayKey() % LOT.length]; CR = { reach, L, isRec, B }; SHARE = 'cof';
   T(() => {
-    const h = reach / 60; const title = win ? '24 小時都在工作的事務所' : h >= 30 ? '咖啡機好夥伴' : h >= 23 ? '咖啡機見習生' : '咖啡機剛暖機';
+    const h = reach / 60; const title = win ? '德威陽，24 小時都在工作' : h >= 30 ? '咖啡機好夥伴' : h >= 23 ? '咖啡機見習生' : '咖啡機剛暖機';
     const rec = isRec ? '<span class="rec">新紀錄！</span>' : `<span class="rec" style="background:#1f6b4f">最久紀錄 ${hmLong(B)}</span>`;
     shell('老闆今天第幾杯？', `<div class="end"><b>${title}</b>${win ? `<p>九杯全部倒完，撐到<b style="color:#b0782a">台北早上 9 點</b>。<br>台北、紐約、東京，今天都顧到了。</p>` : `<p>咖啡機撐到 <b style="color:#b0782a">${hmLong(reach)}</b> 就罷工了，<br>林律師還在處理紐約的案子。</p>`}${rec}</div>
-    <div class="lot"><b>今日咖啡籤</b><p><small>${esc(L[0])}</small>${esc(L[1])}</p><p><small>${esc(L[2])}</small>${esc(L[3])}</p><div class="ft">台美雙律師｜中英日三語｜24 小時都在工作</div></div>
+    <div class="lot"><b>今日咖啡籤</b><p><small>${esc(L[0])}</small>${esc(L[1])}</p><p><small>${esc(L[2])}</small>${esc(L[3])}</p><div class="ft">德威陽 24 小時都在｜林柏均律師 台美雙執照</div></div>
     <button class="big" data-a="go-cof">再倒一次</button>
     ${brand()}
     <div class="row3"><button data-a="share">分享成績卡</button><button data-a="win">看律師行程</button><button data-a="close">回辦公室</button></div>
@@ -378,17 +378,17 @@ async function share() {
   g.fillStyle = '#fff'; g.beginPath(); g.arc(160, 150, 80, 0, 7); g.fill(); if (lg) g.drawImage(lg, 95, 85, 130, 130); if (ln) g.drawImage(ln, 600, 60, 240, 277);
   g.textAlign = 'center'; g.fillStyle = '#f6dc9a';
   if (SHARE === 'win' && WR) {
-    g.font = '900 60px "Noto Serif TC",serif'; g.fillText('我追著林律師跑到', 450, 420); g.font = '900 104px Georgia,serif'; g.fillText(WR.reach ? hmLong(WR.reach) : '起點', 450, 550, 800);
+    g.font = '900 60px "Noto Serif TC",serif'; g.fillText('我追著德威陽的林柏均律師跑到', 450, 420); g.font = '900 104px Georgia,serif'; g.fillText(WR.reach ? hmLong(WR.reach) : '起點', 450, 550, 800);
     g.fillStyle = '#fff3d6'; g.font = '800 40px system-ui'; g.fillText('你追得上他嗎？', 450, 640);
-    g.fillStyle = '#e0b64e'; g.font = '800 32px system-ui'; g.fillText('台灣下班，紐約上班｜台美雙律師', 450, 715, 800);
+    g.fillStyle = '#e0b64e'; g.font = '800 32px system-ui'; g.fillText('台灣下班，紐約上班｜德威陽 24 小時都在', 450, 715, 800);
   } else if (CR) {
     g.font = '900 56px "Noto Serif TC",serif'; g.fillText('咖啡機撐到', 450, 400); g.font = '900 100px Georgia,serif'; g.fillText(hmLong(CR.reach), 450, 520, 800);
-    g.fillStyle = '#fff3d6'; g.font = '800 38px system-ui'; g.fillText('你的咖啡機跟得上林律師嗎？', 450, 600, 800);
+    g.fillStyle = '#fff3d6'; g.font = '800 38px system-ui'; g.fillText('你的咖啡機跟得上德威陽的林柏均律師嗎？', 450, 600, 800);
     g.fillStyle = '#f6dc9a'; g.font = '800 30px system-ui'; g.fillText(`今日咖啡籤｜${CR.L[2]}：${CR.L[3]}`, 450, 670, 800);
-    g.fillStyle = '#e0b64e'; g.font = '800 30px system-ui'; g.fillText('台美雙律師｜中英日三語｜24 小時都在工作', 450, 725, 800);
+    g.fillStyle = '#e0b64e'; g.font = '800 30px system-ui'; g.fillText('德威陽 24 小時都在｜林柏均律師 台美雙執照・中英日三語', 450, 725, 800);
   }
   g.fillStyle = '#fff3d6'; g.font = '800 38px system-ui'; g.fillText('德威陽國際法律事務所', 450, 820); g.font = '700 30px system-ui'; g.fillText(LINE, 450, 862);
   const url = c.toDataURL('image/jpeg', .9), name = SHARE === 'win' ? '林律師今日行程.jpg' : '德威陽今日咖啡籤.jpg';
-  try { const b = await (await fetch(url)).blob(); const f = new File([b], name, { type: 'image/jpeg' }); if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: '德威陽 3D 探索島', text: '林律師今天又去哪了？來德威陽 3D 探索島看看 https://weiyanglaw.github.io/yeswedo/' }); return } } catch (e) { if (e && e.name === 'AbortError') return }
+  try { const b = await (await fetch(url)).blob(); const f = new File([b], name, { type: 'image/jpeg' }); if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: '德威陽 3D 探索島', text: '德威陽的林柏均律師今天又去哪了？來德威陽 3D 探索島看看 https://weiyanglaw.github.io/yeswedo/' }); return } } catch (e) { if (e && e.name === 'AbortError') return }
   const a = document.createElement('a'); a.href = url; a.download = name; document.body.append(a); a.click(); a.remove();
 }

@@ -823,6 +823,7 @@ export function buildChibi(THREE, profile = {}) {
   }
 
   build(profile);
+  root.userData.wyChibi = 1; /* v522 人物不給防閃處理碰（避免臉、皮膚被畫到頭髮上面，看起來像禿頭） */
   const setExpr = e => { if (faceMat && faceSet && faceMat.map !== faceSet[e]) { faceMat.map = faceSet[e]; faceMat.needsUpdate = true; } };
   return {
     group: root,

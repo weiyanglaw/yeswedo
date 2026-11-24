@@ -10,8 +10,8 @@
   f.style.cssText='border:0;background:transparent;width:min(440px,96vw);height:min(calc(86dvh),800px);color-scheme:normal';
   ov.appendChild(f);ov.addEventListener('click',e=>{if(e.target===ov)close()});document.body.appendChild(ov);requestAnimationFrame(()=>ov.style.opacity='1');
   try{window.wySfx&&window.wySfx('tap')}catch(e){}}
- window.wy2fOpen=function(g){open('wy-2f-games.html?v=515#embed=1&g='+g,'德威陽 2 樓互動')};
- window.wyPageOpen=function(page,g){open(page+'?v=515#embed=1'+(g!=null?'&g='+g:''),'德威陽互動')};
+ window.wy2fOpen=function(g){open('wy-2f-games.html?v=518#embed=1&g='+g,'德威陽 2 樓互動')};
+ window.wyPageOpen=function(page,g){open(page+'?v=518#embed=1'+(g!=null?'&g='+g:''),'德威陽互動')};
  window.addEventListener('message',e=>{if(e.data==='wy2fClose')close()});
  window.wy2fClose=close;
 })();

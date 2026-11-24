@@ -13,14 +13,14 @@ const PLATES = [['台美雙律師', '#1f3b57'], ['前上市公司法務長', '#7
 const PLATE_INFO = { '台美雙律師': '台灣與美國紐約州律師資格', '前上市公司法務長': '曾任上市公司法務長', '中英日三語': '中文、英文、日文溝通', '優秀公益律師': '2026 台北律師公會優秀公益律師', '政府法律顧問': '政府機關與工會法律顧問', '美國法律碩士': '美國法律、管理會計雙碩士', '企業法律講師': '企業與職訓機構法律講師', '24小時都在工作': '台北、紐約時差都顧到' };
 const CHEER = [['夢奇奇', '又加一片！'], ['哈姆太郎', '好重的資歷！'], ['薪水掌門人', '這些都是真的經歷！'], ['夢奇奇', '槓鈴快放不下了！'], ['哈姆太郎', '專業的重量！'], ['薪水掌門人', '槓片預算我來出！']];
 const HELP = [
-  '審閱英文合約與跨國交易文件，逐條標出風險。林柏均律師具台灣與美國紐約州律師資格。',
-  '審閱公司契約與治理文件，從經營角度評估風險。林柏均律師曾任上市公司法務長。',
-  '以中英日三語溝通跨國案件，減少翻譯落差。林柏均律師具美國法律事務所工作經歷。',
-  '出席民事、家事各類開庭，完整陳述每項主張。林柏均律師獲選 2026 台北律師公會優秀公益律師。',
-  '擔任政府機關與工會法律顧問，處理多元法律問題。林柏均律師具豐富顧問經驗。',
-  '規劃企業勞資、股東與合約制度。前上市公司法務長的實務經驗，貼近公司需求。',
-  '陪同警詢與偵查程序，現場確認每一句筆錄。林柏均律師處理刑事案件，重視每個程序細節。',
-  '配合美國時差安排視訊會議，即時回覆跨國客戶。台美雙律師，兩地程序都熟悉。'
+  '德威陽審閱英文合約與跨國交易文件，逐條標出風險。林柏均律師具台灣與美國紐約州律師資格。',
+  '德威陽審閱公司契約與治理文件，從經營角度評估風險。林柏均律師曾任上市公司法務長。',
+  '德威陽以中英日三語溝通跨國案件，減少翻譯落差。林柏均律師具美國法律事務所工作經歷。',
+  '德威陽出席民事、家事各類開庭，完整陳述每項主張。林柏均律師獲選 2026 台北律師公會優秀公益律師。',
+  '德威陽擔任政府機關與工會法律顧問，處理多元法律問題。林柏均律師具豐富顧問經驗。',
+  '德威陽規劃企業勞資、股東與合約制度。林柏均律師曾任上市公司法務長，實務經驗貼近公司需求。',
+  '德威陽陪同警詢與偵查程序，現場確認每一句筆錄。林柏均律師處理刑事案件，重視每個程序細節。',
+  '德威陽配合美國時差安排視訊會議，即時回覆跨國客戶。林柏均律師具台美雙執照，兩地程序都熟悉。'
 ];
 let lastH = -1;
 const ROT = { U: 0, R: 90, D: 180, L: 270 };
@@ -191,10 +191,10 @@ async function share() {
   g.fillStyle = '#fff'; g.beginPath(); g.arc(160, 150, 80, 0, 7); g.fill(); if (lg) g.drawImage(lg, 95, 85, 130, 130); if (ln) g.drawImage(ln, 600, 60, 240, 277);
   g.textAlign = 'center'; g.fillStyle = '#f6dc9a'; g.font = '900 64px "Noto Serif TC",serif'; g.fillText('專業的重量', 450, 410);
   g.font = '900 120px Georgia,serif'; g.fillText((R ? R.w : 20) + ' 公斤', 450, 560);
-  g.fillStyle = '#fff3d6'; g.font = '800 38px system-ui'; g.fillText('你能幫林律師舉起更多資歷嗎？', 450, 640, 800);
-  g.fillStyle = '#e0b64e'; g.font = '800 30px system-ui'; g.fillText('台美雙律師｜前上市公司法務長｜中英日三語', 450, 710, 800);
+  g.fillStyle = '#fff3d6'; g.font = '800 38px system-ui'; g.fillText('你能幫德威陽的林柏均律師舉起更多資歷嗎？', 450, 640, 800);
+  g.fillStyle = '#e0b64e'; g.font = '800 30px system-ui'; g.fillText('林柏均律師｜台美雙執照｜前上市公司法務長｜中英日三語', 450, 710, 800);
   g.fillStyle = '#fff3d6'; g.font = '800 38px system-ui'; g.fillText('德威陽國際法律事務所', 450, 800); g.font = '700 30px system-ui'; g.fillText(LINE, 450, 845);
   const url = c.toDataURL('image/jpeg', .9);
-  try { const b = await (await fetch(url)).blob(); const f = new File([b], '德威陽專業的重量.jpg', { type: 'image/jpeg' }); if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: '德威陽｜專業的重量', text: '我在德威陽 3D 探索島幫林律師舉起專業的重量！ https://weiyanglaw.github.io/yeswedo/' }); return } } catch (e) { if (e && e.name === 'AbortError') return }
+  try { const b = await (await fetch(url)).blob(); const f = new File([b], '德威陽專業的重量.jpg', { type: 'image/jpeg' }); if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: '德威陽｜專業的重量', text: '我在德威陽 3D 探索島幫林柏均律師舉起專業的重量！ https://weiyanglaw.github.io/yeswedo/' }); return } } catch (e) { if (e && e.name === 'AbortError') return }
   const a = document.createElement('a'); a.href = url; a.download = '德威陽專業的重量.jpg'; document.body.append(a); a.click(); a.remove();
 }

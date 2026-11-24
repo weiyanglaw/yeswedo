@@ -662,7 +662,7 @@ function play1(){stage.innerHTML=`<div class="hud"><div class="hclock" id="tm">1
   else if(o.k==='sms'){g.fillStyle='#fff';g.strokeStyle='#E0453A';g.lineWidth=2.5;g.beginPath();g.roundRect(o.x-60,GY-o.yy-22,120,28,10);g.fill();g.stroke();g.fillStyle='#E0453A';g.font='900 11px sans-serif';g.textAlign='center';g.fillText('⚠ '+o.t,o.x,GY-o.yy-4)}
   else if(o.k==='tea'){em('🧍',o.x-28,GY-2,30);em('🧍‍♀️',o.x,GY-2,30);em('🧍',o.x+28,GY-2,30);em('🧋',o.x+38,GY-26,18);g.fillStyle='#E0453A';g.font='900 10px sans-serif';g.fillText('新品開賣！',o.x,GY-46)}
   else if(o.k==='flyer'){em('🧍',o.x,GY-2,34);em('📄',o.x+14,GY-26,18);g.fillStyle='#E0453A';g.font='900 9px sans-serif';g.fillText('保證獲利',o.x+14,GY-40)}
-  else if(o.k==='booth'){g.fillStyle='#E0453A';g.fillRect(o.x-42,GY-70,84,10);for(let i=0;i<6;i++){g.fillStyle=i%2?'#fff':'#E0453A';g.beginPath();g.moveTo(o.x-42+i*14,GY-60);g.lineTo(o.x-28+i*14,GY-60);g.lineTo(o.x-35+i*14,GY-50);g.fill()}g.fillStyle='#8A4A2A';g.fillRect(o.x-40,GY-50,4,50);g.fillRect(o.x+36,GY-50,4,50);g.fillStyle='#FFF3D6';g.fillRect(o.x-30,GY-34,60,34);g.fillStyle='#E0453A';g.font='900 11px sans-serif';g.textAlign='center';g.fillText('免費抽獎',o.x,GY-18);em('🎁',o.x,GY-4,14)}
+  else if(o.k==='booth'){g.fillStyle='#E0453A';g.fillRect(o.x-42,GY-70,84,10);for(let i=0;i<6;i++){g.fillStyle=i%2?'#fff':'#E0453A';g.beginPath();g.moveTo(o.x-42+i*14,GY-60);g.lineTo(o.x-28+i*14,GY-60);g.lineTo(o.x-35+i*14,GY-50);g.fill()}g.fillStyle='#8A4A2A';g.fillRect(o.x-40,GY-50,4,50);g.fillRect(o.x+36,GY-50,4,50);g.fillStyle='#FFF3D6';g.fillRect(o.x-30,GY-34,60,34);g.fillStyle='#E0453A';g.font='900 11px sans-serif';g.textAlign='center';g.fillText('幸運抽獎',o.x,GY-18);em('🎁',o.x,GY-4,14)}
   else if(o.k==='bird'){for(let i=0;i<3;i++)em('🐦',o.x+i*16,GY-o.yy-i*6+Math.sin(el*12+i)*4,18)}
   else if(o.k==='pud'){g.fillStyle='#7FB3E0aa';g.beginPath();g.ellipse(o.x,GY+3,28,5,0,0,7);g.fill()}
   else if(o.k==='dog'){em('🧓',o.x+26,GY-2,32);g.strokeStyle='#8A4A2A';g.lineWidth=1.5;g.beginPath();g.moveTo(o.x+8,GY-20);g.lineTo(o.x+20,GY-26);g.stroke();em('🐕',o.x,GY-2,28)}
@@ -758,7 +758,7 @@ const MEME=[
 const RARE={1:['普通','#E2C88C','#FFF8EA'],2:['稀有 ✦','#9AA8BC','#EEF3FA'],3:['超稀有 ★','#E9B53A','#FFF3C4']};
 const MWHO=['lin','meng','sal','ham','aunt','teller'],MNAME={lin:'林律師',meng:'夢奇奇飼養者',sal:'薪水掌門人',ham:'哈姆太郎',aunt:'鄰居阿姨',teller:'銀行行員'};
 const HSAY=['這次一定是好梗！','拉下去！拉下去！','我有預感會出稀有的……','轉轉轉～法律梗轉起來！','圖鑑還差好多張耶'];
-const SETSELL=['租屋糾紛，先看租約再說','遇到可疑匯款，先停、先查、先問','勞資問題，先了解自己的權利','中英日三語、台美雙執照，跨國案件找德威陽'];
+const SETSELL=['租屋糾紛，先看租約再說','遇到可疑匯款，先停、先查、先問','勞資問題，先了解自己的權利','林柏均律師中英日三語、台美雙執照，跨國案件找德威陽'];
 let DEX={};try{DEX=JSON.parse(localStorage.getItem('wyMemeDex2')||'{}')}catch(e){}
 const saveDex=()=>{try{localStorage.setItem('wyMemeDex2',JSON.stringify(DEX))}catch(e){}};
 const talk=(n=6)=>{for(let i=0;i<n;i++)setTimeout(()=>beep(500+Math.random()*500,.05,'sine',.035),i*70)};
